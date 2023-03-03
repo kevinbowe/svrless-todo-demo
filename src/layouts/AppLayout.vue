@@ -1,3 +1,9 @@
+<template>
+	<component :is="layout">
+			<router-view />
+	</component>
+</template>
+
 <script lang="ts" >
 // path: src/layouts/TheAppLayout.vue
 
@@ -13,13 +19,18 @@ export default defineComponent({
          *  of the current route
          */
         const layout = computed(() => {
+					
+						// This returns rout.meta.layout value only
             const layout = route?.meta?.layout;
 
 						console.log(layout)
 
 						// Only 1x layout name is generated based on the current route
             if (layout) {
-                return `The${layout}Layout`;
+                
+							return {layout};
+							// Original
+							// return `The${layout}Layout`;
             }
             return 'div';
         });
@@ -30,8 +41,3 @@ export default defineComponent({
 });
 </script>
 
-<template>
-    <component :is="layout">
-        <router-view />
-    </component>
-</template>

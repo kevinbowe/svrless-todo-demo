@@ -15,6 +15,9 @@ export default defineComponent({
         const layout = computed(() => {
             const layout = route?.meta?.layout;
 
+						console.log(layout)
+
+						// Only 1x layout name is generated based on the current route
             if (layout) {
                 return `The${layout}Layout`;
             }

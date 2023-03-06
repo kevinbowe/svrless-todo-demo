@@ -1,4 +1,18 @@
 <template>
+		<v-app-bar app color="primary" dark>
+			<v-app-bar-nav-icon to="/"></v-app-bar-nav-icon>
+			<v-toolbar-title>Vuetify-Base-2 Dashboard</v-toolbar-title>
+			<v-spacer></v-spacer>
+			<v-btn
+				v-for="link in links"
+				:key="`${link.label}-header-link`"
+				rounded
+				:to="link.url"
+				color="secondary"
+			> 
+			</v-btn>
+			<v-btn @click="toggleTheme" text rounded>Toggle Theme</v-btn>
+			</v-app-bar>
     <v-container class="text-center">
         <h1>Home</h1>
         <v-btn class="pa-3" to="/about">Go To About</v-btn>
@@ -7,4 +21,18 @@
     </v-container>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+
+import { useTheme } from 'vuetify';
+import {ref} from 'vue' // import { ref, computed } from 'vue'
+
+const links = ref( [
+				{label: 'Home', url: '/' },
+				{label: 'Login', url: '/login'},
+				{label: 'Signup',url: '/signup'}]);
+
+const theme = useTheme();
+
+const toggleTheme = () => theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark';
+
+</script>

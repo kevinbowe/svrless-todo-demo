@@ -5,7 +5,7 @@ import { computed, defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
-    name: 'TheAppLayout',
+    name: 'AppLayout',
     setup() {
         const route = useRoute();
         /**
@@ -21,7 +21,7 @@ export default defineComponent({
 
 						// Only 1x layout name is generated based on the current route
             if (layout) {
-							return `The${layout}Layout`;
+							return `${layout}Layout`;
             }
             return 'div';
         });

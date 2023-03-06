@@ -3,7 +3,7 @@
 
 <template>
   <v-app id="app">
-    <TheAppLayout />
+    <AppLayout />
   </v-app>
 </template>
 

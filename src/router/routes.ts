@@ -5,30 +5,29 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'HomeView',
-    component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
-		// component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+    name: 'Home',
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
     meta: {
-      layout: 'DefaultLayout',
+      layout: 'Default',
     },
   },
   {
     path: '/about',
-    name: 'AboutView',
+    name: 'About',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+      import(/* webpackChunkName: "about" */ '../views/About.vue'),
     meta: {
-      layout: 'DefaultLayout',
+      layout: 'Default',
     },
   },
 
   {
     path: '/profile',
-    name: 'ProfileView',
+    name: 'Profile',
     component: () =>
-      import(/* webpackChunkName: "profile" */ '../views/ProfileView.vue'),
+      import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
 		meta: {
-      layout: 'DashboardLayout',
+      layout: 'Dashboard',
     },
   },
 ];

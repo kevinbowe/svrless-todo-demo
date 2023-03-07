@@ -16,12 +16,17 @@
 			<v-btn @click="toggleTheme" text rounded>Toggle Theme</v-btn>
 			</v-app-bar>
 
-    <v-container class="text-center">
-        <h1>Home</h1>
-        <v-btn class="pa-3" to="/about">Go To About</v-btn>
-        <br />
-        <v-btn color="primary" class="ma-3" to="/profile">Go To Profile</v-btn>
-    </v-container>
+<!-- /////////////////////////////////// -->
+			<v-container class="text-center">
+				<h1>Home</h1>
+				<v-btn class="pa-3" to="/about">Go To About</v-btn>
+				<br />
+				<v-btn color="primary" class="ma-3" to="/profile">Go To Profile</v-btn>
+
+				<Sandbox />					
+
+			</v-container>
+<!-- /////////////////////////////////// -->
 
 			<v-footer app color="primary" dark fixed>
       <v-row justify="center" no-gutters>
@@ -46,6 +51,10 @@
 
 import { useTheme } from 'vuetify';
 import {ref} from 'vue' // import { ref, computed } from 'vue'
+
+
+import Sandbox from '../components/Sandbox.vue'
+
 
 const links = ref( [
 				{label: 'Home', url: '/' },

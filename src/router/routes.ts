@@ -20,7 +20,6 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'Default',
     },
   },
-
   {
     path: '/profile',
     name: 'Profile',

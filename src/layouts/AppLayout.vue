@@ -1,3 +1,9 @@
+<template>
+	<component :is="layout">
+			<router-view />
+	</component>
+</template>
+
 <script lang="ts" >
 // path: src/layouts/TheAppLayout.vue
 
@@ -32,8 +38,3 @@ export default defineComponent({
 });
 </script>
 
-<template>
-	<component :is="layout">
-			<router-view />
-	</component>
-</template>

@@ -1,12 +1,8 @@
-<script setup lang="ts">
-</script>
-
 <template>
   <v-app id="app">
-    <AppLayout />
+		<AppLayout />
   </v-app>
 </template>
 
-<style scoped>
-
-</style>
+<script lang='ts' setup />
+<style scoped />

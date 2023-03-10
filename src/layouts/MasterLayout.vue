@@ -121,13 +121,13 @@ const switchLabel = computed(() => {
 });
 
 const blogLinks = ref([
-  { label: "Blog 1", url: "/" },
-  { label: "Blog 2", url: "/" },
+  { label: "Blog 1", url: "/blog1" },
+  { label: "Blog 2", url: "/blog2" },
 ]);
 
 const articleLinks = ref([
-  { label: "Article 1", url: "/" },
-  { label: "Article 1", url: "/" },
+  { label: "Article 1", url: "/article1" },
+  { label: "Article 2", url: "/article2" },
 ]);
 
 const accountLinks = ref([

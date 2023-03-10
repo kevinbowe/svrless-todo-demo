@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
     meta: {
-      layout: 'Default',
+      layout: 'Master',
     },
   },
   {
@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
     meta: {
-      layout: 'Default',
+			layout: 'Master',
     },
   },
   {

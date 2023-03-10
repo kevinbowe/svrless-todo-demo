@@ -3,58 +3,37 @@
     <v-main>
       <v-app-bar app color="primary" dark>
         <v-app-bar-nav-icon to="/"></v-app-bar-nav-icon>
-        <v-toolbar-title>Vue Multi Layouts (v3)</v-toolbar-title>
+        <v-toolbar-title>Vue Multi Layouts (v4)</v-toolbar-title>
         <v-spacer></v-spacer>
 
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> Blogs </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="link in blogLinks"
-              :key="link.label"
-              :value="link.label"
-              :to="link.url"
-            >
-              <v-list-item-title>{{ link.label }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> Articles </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="link in articleLinks"
-              :key="link.label"
-              :value="link.label"
-              :to="link.url"
-            >
-              <v-list-item-title>{{ link.label }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props"> Account </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="link in accountLinks"
-              :key="link.label"
-              :value="link.label"
-              :to="link.url"
-            >
-              <v-list-item-title>{{ link.label }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-
-        <v-btn
+				<v-btn color="white">Blogs
+					<v-menu activator="parent">
+						<v-list>
+							<v-list-item v-for="link in blogLinks" :key="link.label" :value="link.label" :to="link.url" >
+								<v-list-item-title>{{ link.label }}</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</v-btn>
+				<v-btn color="white">Articles
+					<v-menu activator="parent">
+						<v-list>
+							<v-list-item v-for="link in articleLinks" :key="link.label" :value="link.label" :to="link.url" >
+								<v-list-item-title>{{ link.label }}</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</v-btn>
+				<v-btn color="white"> Account
+					<v-menu activator="parent">
+						<v-list>
+							<v-list-item v-for="link in accountLinks" :key="link.label" :value="link.label" :to="link.url" >
+								<v-list-item-title>{{ link.label }}</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</v-btn>
+				<v-btn
           color="white"
           variant="text"
           class="mx-2"

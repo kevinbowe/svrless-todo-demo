@@ -8,11 +8,9 @@
 
 
 <script lang="ts">
-// Path: src\layouts\TheDefaultLayout.vue
-
-import { defineComponent } from "vue";
-
-export default defineComponent({
-    name: "DefaultLayout",
-});
+	import { defineComponent } from "vue";
+	export default defineComponent({ name: "DefaultLayout", });
 </script>
+
+
+<script lang="ts" setup> </script>

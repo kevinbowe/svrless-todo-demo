@@ -7,5 +7,5 @@
 </template>
 
 <script lang="ts" setup>
-// path: src/views/Profile.vue
+// path: src/views/ProfileView.vue
 </script>

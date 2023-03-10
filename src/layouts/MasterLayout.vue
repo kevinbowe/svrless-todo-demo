@@ -2,11 +2,13 @@
   <v-layout>
     <v-main>
       <v-app-bar app color="primary" dark>
-        <v-app-bar-nav-icon to="/"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
+				<!-- <v-app-bar-nav-icon to="/"></v-app-bar-nav-icon> -->
+				<!-- <v-icon color="secondary" icon="mdi-palette" size="30" /> -->
         <v-toolbar-title>Vue Multi Layouts (v4)</v-toolbar-title>
         <v-spacer></v-spacer>
 
-				<v-btn color="white">Blogs
+				<v-btn color="white" variant="plain">Blogs
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item v-for="link in blogLinks" :key="link.label" :value="link.label" :to="link.url" >
@@ -15,7 +17,8 @@
 						</v-list>
 					</v-menu>
 				</v-btn>
-				<v-btn color="white">Articles
+				
+				<v-btn color="white" variant="plain">Articles
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item v-for="link in articleLinks" :key="link.label" :value="link.label" :to="link.url" >
@@ -24,7 +27,8 @@
 						</v-list>
 					</v-menu>
 				</v-btn>
-				<v-btn color="white"> Account
+				
+				<v-btn color="white" variant="plain"> Account
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item v-for="link in accountLinks" :key="link.label" :value="link.label" :to="link.url" >
@@ -33,65 +37,44 @@
 						</v-list>
 					</v-menu>
 				</v-btn>
-				<v-btn
-          color="white"
-          variant="text"
-          class="mx-2"
-          rounded="xl"
-          to="/about"
-        >
-          About Us
-        </v-btn>
 
-        <v-menu v-model="menu" :close-on-content-click="false" location="end">
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" color="red">
-              <v-icon icon="mdi-palette" size="30" />
-            </v-btn>
-          </template>
+				<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/about" >
+					About Us
+				</v-btn>
 
-          <v-card min-width="300">
-            <v-list>
-              <v-list-item
-                prepend-avatar="./src/assets/Beard_DaBowe.svg"
-                title="Da Bowe"
-                subtitle="Mr Bowe if yo' nasty"
-              >
-                <template v-slot:append>
-                  <v-btn
-                    variant="text"
-                    :class="fav ? 'text-red' : ''"
-                    icon="mdi-heart"
-                    @click="fav = !fav"
-                  ></v-btn>
-                </template>
-              </v-list-item>
-            </v-list>
+				<v-btn variant="plain">
+					<v-tooltip activator="parent" location="bottom">Toggle Theme</v-tooltip>
+					<v-icon color="secondary" icon="mdi-palette" size="30" />
+					<v-menu v-model="menu" activator="parent" :close-on-content-click="false" location="end">
+						<v-card min-width="300">
+							<v-list>
+								<v-list-item prepend-avatar="./src/assets/Beard_DaBowe.svg" title="Da Bowe" subtitle="Mr Bowe if yo' nasty" >
+									<template v-slot:append>
+										<v-btn variant="text" :class="fav ? 'text-red' : ''" icon="mdi-heart" @click="fav = !fav" ></v-btn>
+									</template>
+								</v-list-item>
+							</v-list>
+							<v-divider></v-divider>
+							<v-list>
+								<v-list-item>
+									<v-switch @change="toggleDarkMode" :label="`toggle ${switchLabel} mode`" />
+								</v-list-item>
+								<v-divider />
+							</v-list>
+							<v-card-actions>
+								<v-spacer></v-spacer>
+								<v-btn variant="text" @click="menu = false">Cancel</v-btn>
+								<v-btn color="primary" variant="text" @click="menu = false">Save</v-btn>
+							</v-card-actions>
+						</v-card>
+					</v-menu>
+				</v-btn>
 
-            <v-divider></v-divider>
-
-            <v-list>
-              <v-list-item>
-                <v-switch
-                  @change="toggleDarkMode"
-                  :label="`toggle ${switchLabel} mode`"
-                />
-              </v-list-item>
-              <v-divider />
-            </v-list>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn variant="text" @click="menu = false">Cancel</v-btn>
-              <v-btn color="primary" variant="text" @click="menu = false"
-                >Save</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-menu>
       </v-app-bar>
 
-      <slot></slot>
+      <!-- |||||| START Content is insertio |||||| -->
+			<slot></slot>
+      <!-- |||||| START Content is insertio |||||| -->
 
       <v-footer app color="primary" dark fixed>
         <v-row justify="center" no-gutters>
@@ -124,8 +107,7 @@ export default {
 
 <script lang="ts" setup>
 import { useTheme } from "vuetify";
-import { ref } from "vue"; // import { ref, computed } from 'vue'
-import { computed } from "vue";
+import { ref,  computed } from "vue";
 
 const fav = ref(true);
 const menu = ref(false);

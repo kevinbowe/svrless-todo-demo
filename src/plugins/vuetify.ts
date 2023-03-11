@@ -40,7 +40,6 @@ const vuetify = createVuetify({
 		defaultTheme: 'light',
 		themes: {
 			theme1,theme2
-			// ,theme3
 		}
 	}
 });

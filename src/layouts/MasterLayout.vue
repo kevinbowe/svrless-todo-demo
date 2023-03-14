@@ -5,7 +5,7 @@
         <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
 				<!-- <v-app-bar-nav-icon to="/"></v-app-bar-nav-icon> -->
 				<!-- <v-icon color="secondary" icon="mdi-palette" size="30" /> -->
-        <v-toolbar-title>Vue Multi Themes (v5)</v-toolbar-title>
+        <v-toolbar-title>Vue Multi Themes (v6)</v-toolbar-title>
         <v-spacer></v-spacer>
 				
 				<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/dev" >

@@ -20,12 +20,10 @@ export default defineComponent({
          */
         const layout = computed(() => {
 					
-						// This returns rout.meta.layout value only
+				// This returns rout.meta.layout value only
             const layout = route?.meta?.layout;
 
-						console.log(layout)
-
-						// Only 1x layout name is generated based on the current route
+				// Only 1x layout name is generated based on the current route
             if (layout) {
 							return `${layout}Layout`;
             }

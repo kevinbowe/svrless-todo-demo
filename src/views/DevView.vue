@@ -14,6 +14,9 @@
 					<v-list-item>
 						<v-list-item-title class="font-weight-bold"> Theme Name [ {{ eachThemeName }} ] </v-list-item-title>
 						<v-list-item-action>
+							<div>
+								<h1 style="display:inline;margin-right:1em;">{{eachThemeName.toUpperCase() }}</h1>
+							</div>
 							<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
 								<v-icon>mdi-check</v-icon>
 							</v-avatar>
@@ -31,28 +34,21 @@
 
 					<!-- Display each Color Name in the Theme -->
 					<div class="text-center">
-						
-
-						<h1>Dev</h1>
-						<span v-for="(themeAllColors, index) in allThemesAndColors[themeIndex].colorArray" :key="index">
-
-							<v-chip :color="allThemesAndColors[themeIndex].colorArray[index].code" label class="ma-1 py-6 px-3" >
-								<!-- <strong>{{ allThemesAndColors[themeIndex].colorArray[index].color }}</strong> &nbsp <strong>{{ allThemesAndColors[themeIndex].colorArray[4].code }}</strong> -->
-								<strong>{{ allThemesAndColors[themeIndex].colorArray[index].color }}</strong>
-
+						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
+							<v-chip :color="allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code" label class="ma-1 py-6 px-3" >
+								<strong>{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].color }}</strong>
 							</v-chip>
 						</span>
 
-
-
-						<h1>Original</h1>
+						<!-- <h1>Original</h1>
 						<span v-for="(colorCode, colorName) in Object.entries(uTheme.computedThemes.value)[themeIndex][1].colors">
 							<v-chip v-if="!colorName.toString().includes('-')" :color="colorCode" label class="ma-1 py-6 px-3" >
 								<!-- <strong>{{ colorName }} - {{ colorCode }}</strong> -->
 								<strong>{{ colorName }}</strong>
 
 							</v-chip>
-						</span>
+						</span> -->
+
 					</div>
 				</v-card>
 			</v-card-text>
@@ -81,7 +77,7 @@
 		console.log(themeLength)
 		
 		var themeObjs = []
-		var cArray = []
+		var cArray: { color: string; code: string; }[] = []
 		
 		// Create array to store the themes and related VideoColorSpace
 		for(var i=0; i < themeLength; i++)

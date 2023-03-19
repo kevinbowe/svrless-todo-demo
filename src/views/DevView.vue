@@ -1,6 +1,4 @@
 <template>
-	<!-- See version (v7) for code that loaded these <v-cards> from <ThemeChangerMenu>  -->
-
 	<v-container class="text-center">
 		<h1 class="text-primary">Dev Page Content</h1>
 		<v-btn class="pa-3" to="/">Go To Home</v-btn>
@@ -8,7 +6,6 @@
 			<v-card-text>
 				<v-card color="blue-grey-darken-1" class="my-2" @click="setTheme(eachThemeName)" 
 				v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
-										
 					<v-list-item>
 						<v-list-item-action>
 							<div>
@@ -19,8 +16,6 @@
 							</v-avatar>
 						</v-list-item-action>
 					</v-list-item>
-
-
 					<!-- Display each Color Name in the Theme -->
 					<div class="text-center">
 						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
@@ -28,14 +23,6 @@
 								<strong>{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].color }}</strong>
 							</v-chip>
 						</span>
-
-						<!-- <h1>Original</h1>
-						<span v-for="(colorCode, colorName) in Object.entries(uTheme.computedThemes.value)[themeIndex][1].colors">
-							<v-chip v-if="!colorName.toString().includes('-')" :color="colorCode" label class="ma-1 py-6 px-3" >
-								<strong>{{ colorName }}</strong>
-							</v-chip>
-						</span> -->
-
 					</div>
 				</v-card>
 			</v-card-text>
@@ -47,16 +34,12 @@
 	import SandBox from "../components/SandBox.vue";
 	import ThemeChangerMenu from "../components/ThemeChangerMenu.vue";
 	import { ThemeInstance, useTheme } from "vuetify";
-
 	const uTheme = useTheme();
 	const themeMap = new Map();
 	const colorMap = new Map();
-
 	const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value)
 	const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value)
-
 	const themeLength = computedThemesKeysValue.length
-
 	const generateThemesWithAllColors = () => {
 		// Get the total number of themes.
 		var themeLength = computedThemesKeysValue.length
@@ -90,7 +73,6 @@
 		return themeObjs
 	}
 	const allThemesAndColors = generateThemesWithAllColors()
-
 	const computedColors = (themeIndex:number) => {
 		// Comment
 		/* Comment */
@@ -386,22 +368,17 @@
 		// 		// potatoes: 3
 
 return colorObj
-}
-
-	const setTheme = (myTheme: string) => {
-		uTheme.global.name.value = myTheme;
-	};
-
+	}
+	const setTheme = (myTheme: string) => { uTheme.global.name.value = myTheme; };
 </script>
 
 <script lang="ts">
-
-import { defineComponent } from "vue";
-export default defineComponent({
-	name: "DevView",
-	components: {
-		SandBox,
-		ThemeChangerMenu,
-	},
-});
+	import { defineComponent } from "vue";
+	export default defineComponent({
+		name: "DevView",
+		components: {
+			SandBox,
+			ThemeChangerMenu,
+		},
+	});
 </script>

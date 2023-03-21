@@ -2,7 +2,9 @@
 import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+
 import '@mdi/font/css/materialdesignicons.css'
+
 import { createVuetify, ThemeDefinition } from 'vuetify';
 
 const light: ThemeDefinition = {
@@ -20,7 +22,7 @@ const light: ThemeDefinition = {
 		background: '#ffffff',
 		surface: '#424242',
 		primary:'#6F3AB0',
-		secondary: '00838F',
+		secondary: '#00838F',
 		error: '#FF1744',
 		info: '#283593',
 		success: '#00E676',

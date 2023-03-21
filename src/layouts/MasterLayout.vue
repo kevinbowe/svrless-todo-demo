@@ -3,9 +3,7 @@
     <v-main>
       <v-app-bar app color="primary" dark>
         <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
-				<!-- <v-app-bar-nav-icon to="/"></v-app-bar-nav-icon> -->
-				<!-- <v-icon color="secondary" icon="mdi-palette" size="30" /> -->
-        <v-toolbar-title>Vue Multi Themes (v8)</v-toolbar-title>
+        <v-toolbar-title>Vue Multi Themes (v9)</v-toolbar-title>
         <v-spacer></v-spacer>
 				
 				<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/dev" >
@@ -51,13 +49,11 @@
 					<v-icon color="secondary" icon="mdi-palette" size="30" />
 					<v-menu v-model="menu" activator="parent" :close-on-content-click="false" location="end">
 						<v-card min-width="300">
-							<v-list>
-								<v-list-item prepend-avatar="./src/assets/Beard_DaBowe.svg" title="Da Bowe" subtitle="Mr Bowe if yo' nasty" >
-									<template v-slot:append>
-										<v-btn variant="text" :class="fav ? 'text-red' : ''" icon="mdi-heart" @click="fav = !fav" ></v-btn>
-									</template>
-								</v-list-item>
-							</v-list>
+							<v-card-actions>
+								<v-spacer></v-spacer>
+								<v-btn variant="text" @click="menu = false">Cancel</v-btn>
+								<v-btn color="primary" variant="text" @click="menu = false">Save</v-btn>
+							</v-card-actions>
 							<v-divider></v-divider>
 							<v-list>
 								<v-list-item>
@@ -65,15 +61,15 @@
 								</v-list-item>
 								<v-divider />
 							</v-list>
-							<v-card-actions>
-								<v-spacer></v-spacer>
-								<v-btn variant="text" @click="menu = false">Cancel</v-btn>
-								<v-btn color="primary" variant="text" @click="menu = false">Save</v-btn>
-							</v-card-actions>
+
+
+							<!-- Put the Theme Picker below here -->
+							<ThemeChanger />
+
+
 						</v-card>
 					</v-menu>
 				</v-btn>
-
       </v-app-bar>
 
       <!-- |||||| START Content is insertio |||||| -->
@@ -105,13 +101,17 @@
 
 <script lang="ts">
 export default {
-  name: "MasterLayout",
+    name: "MasterLayout",
+    components: { 
+		ThemeChanger 
+	}
 };
 </script>
 
 <script lang="ts" setup>
 import { useTheme } from "vuetify";
 import { ref,  computed } from "vue";
+import ThemeChanger from "../components/ThemeChanger.vue";
 
 const fav = ref(true);
 const menu = ref(false);

@@ -2,7 +2,11 @@
 <!-- <v-app> -->
 	<!-- <v-container class="text-center"> -->
 	<div class="text-center">
-		<h1 class="text-on-error">Theme Switcher</h1>
+		<h1 class="text-left">Theme Switcher</h1>
+		<!-- ORIGINAL: -->
+		<!-- <v-switch  @change="toggleDarkMode" :label="`toggle ${switchLabel} mode`" density="compact" :flat="true"/> -->
+		<v-switch @change="toggleDarkMode" :label="`toggle ${altThemeName} mode`" density="compact" :flat="true" inset/>
+		<div class="text-left"> Toggle Theme {{ altThemeName }}</div>
 		<v-btn @click="computedColors(0)">Debug</v-btn>
 		<div class="text-center">
 			<v-card-text>
@@ -21,25 +25,19 @@
 					<!-- Display each Color Name in the Theme -->
 					<div class="text-center">
 						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
-
 							<v-chip :style="{background: allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code}" 
 								label class="ma-1" :variant="chipVariant">
 								<strong :style="{color: allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code}">
 									{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].color }}</strong>
 							</v-chip>
 						</span>
-
 						<br>
-
 						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
 							<v-chip :color="allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code"
 								label class="ma-1" :variant="chipVariant">
 								<strong>{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].color }}</strong>
 							</v-chip>
 						</span>
-
-
-
 					</div>
 				</v-card>
 			</v-card-text>
@@ -50,15 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import SandBox from "../components/SandBox.vue";
-import ThemeChangerMenu from "../components/ThemeChangerMenu.vue";
 import { ThemeInstance, useTheme } from "vuetify";
 const uTheme = useTheme();
-const themeMap = new Map();
-const colorMap = new Map();
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value)
 const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value)
-const themeLength = computedThemesKeysValue.length
 const chipVariant:string = "outlined"
 const generateThemesWithAllColors = () => {
 	// Get the total number of themes.
@@ -93,297 +86,38 @@ const generateThemesWithAllColors = () => {
 	return themeObjs
 }
 const allThemesAndColors = generateThemesWithAllColors()
-const computedColors = (themeIndex:number) => {
-	/* Comment Block */ // Single Line Comment
-	var x = "double-quote"; var y = 'single-quote'; var z = `back tick`
-	console.log("----------------------------------------- New Theme")
-	var colorObj
-	// colorObj = computedThemesKeysValue
-	// console.log(colorObj)
 
-	// colorObj = computedThemesKeysValue[0]
-	// console.log(colorObj)
-	// colorObj = computedThemesKeysValue[1]
-	// console.log(colorObj)
-	// colorObj = computedThemesKeysValue[2]
-	// console.log(colorObj)
-	// colorObj = computedThemesKeysValue[3]
-	// console.log(colorObj)
-
-	// colorObj = computedThemesKeysValue.length
-	// // Returns the total number of themes in the Theme object.
-	// //	Use this like an index from [ThemeIndex]
-
-
-
-	// colorObj = computedThemesKeysValue.entries()
-	// console.log(colorObj.next().value)
-	// console.log(colorObj.next().value)
-	// console.log(colorObj.next().value)
-	// console.log(colorObj.next().value)
-	// // This code block displays the theme names.
-
-
-	 colorObj = computedThemesEntriesValue[themeIndex][1].colors;
-	// console.log("Theme Index ==> ",themeIndex) 						
-	// displays All Colors for a theme
-
-
-	// colorObj = computedThemesEntriesValue[themeIndex][1].colors.background			
-	// // displays the "background color" - Hex Code for a theme
-
-
-	// colorObj = computedThemesEntriesValue[themeIndex][1].dark							
-	// // displays the Dark Flag <bool> for a theme
-
-
-	// colorObj = computedThemesEntriesValue[themeIndex][1].variables					
-	// // DEBUG Unusable property data for a theme
-
-
-	// //	Object.entries
-	// colorObj = Object.entries(computedThemesEntriesValue[themeIndex][1].colors)			
-	// colorObj.forEach((e)=> {
-	// 	console.log("---------")
-	// 	console.log(e[0]);
-	// 	console.log(e[1]);
-	// }) 
-	// 	// returns all property keys and values, EG: ['background','#ffffff'], 
-	// 	//	as an object that can be iterated over
-	// 	// This isn't practical because of the forEach()
-
-
-	// //	Object.entries
-	// colorObj = Object.entries(computedThemesEntriesValue[themeIndex][0]) 
-	// 	/// Useless: Returns a string array of the theme name in each theme
-
-
-	// //	Object.entries
-	// colorObj = Object.entries(computedThemesEntriesValue[themeIndex][1]) 
-	// 	// Returns all of the toplevel properties associated with a theme: [dark, colors, variables]
-
-
-	// //	Object.entries
-	// colorObj = Object.entries(computedThemesEntriesValue[themeIndex][1].colors) 
-	// 	// Returns all of the color property key/values as array elements, for a themes
-
-
-	// //	Object.entries
-	// var colorPropIndex = 0 // Index of the desired color
-	// const topLevelPropsIndex = 1 // Don't change this value
-	// var colorObj1 = Object.entries(computedThemesEntriesValue[themeIndex][topLevelPropsIndex].colors)
-	// var colorObj2 = colorObj1[colorPropIndex].values()
-	// console.log("Property name == ",colorObj2.next()) // This will return the property name
-	// console.log("Property value == ",colorObj2.next()) // The will return the property value
-
-		
-	// //	Object.entries
-	// var ColorPropIndex = 0
-	// colorObj = Object.entries(computedThemesEntriesValue[themeIndex][1].colors)[ColorPropIndex]		
-	// 	// returns a property key and value by index
-	// 	// ['background','#ffffff'] 
-	// 	// Each pair is an element
-
-
-	// //	Object.entries
-	// colorObj =  Object.entries(computedThemesEntriesValue[themeIndex][1].colors)[0].length	
-	// 	// Returns the number of elements in the property index
-
-
-	// //	Object.entries
-	// var ColorPropIndex = 0
-	// colorObj =  Object.entries(computedThemesEntriesValue[themeIndex][1].colors)[ColorPropIndex]
-	// for(const val of colorObj) 
-	// 	 console.log(val)
-	// 	//	The Object.entries returns the key and value associated with the color at ColorPropIndex.
-	// 	//	The for() iterates over the object, returning the key and value as separate values.
-
-
-	// //	Object.keys
-	// colorObj = Object.entries(computedThemesEntriesValue[themeIndex][1].colors.background)			
-	// // Useless: char array of background - Hex Code /// Not useful
-
-
-	// //	Object.keys
-	// colorObj = Object.keys(computedThemesEntriesValue[themeIndex][1].colors)			
-	// // returns all of color proper names in a theme
-
-
-	// /* Useful */
-	// //	Object.keys
-	// colorObj = Object.keys(computedThemesEntriesValue[themeIndex][1].colors)[0]			
-	// 	// returns property a property name by index in a theme
-
-
-	// //	Object.keys
-	// colorObj = Object.keys(computedThemesEntriesValue[themeIndex][1].colors.background)			
-	// 	// Useless: keys to each char in the color
-
-
-	// //	Object.values
-	// colorObj = Object.values(computedThemesEntriesValue[themeIndex][1].colors)			
-	// 	// returns all of the color hex codes for a theme color		
-
-
-	// //	Object.getOwnPropertyNames
-	// colorObj = Object.getOwnPropertyNames(computedThemesEntriesValue[themeIndex][1].colors)			
-	// 	// returns the property names for all colors in each theme
-
-
-	// colorObj = computedThemesEntriesValue[themeIndex][1].dark			
-	// 	// Dark Flag <bool>
-	// colorObj = computedThemesEntriesValue[themeIndex][1].variables
-	// 	// Nothing interesting
-	// colorObj = computedThemesEntriesValue[themeIndex][0] 					
-	// 	// List of Themes
-	// colorObj = computedThemesEntriesValue	
-	// 	//... Error
-
-	console.log(colorObj)
-	/*
-		****************************************
-		****************************************
-	*/
-	// var population = { male: 4, female: 93, others: 10 };
-	// let numbers = Object.values(population);
-	// let populationArr = Object.entries(population);
-	// const obj = { pizzas: 1, donuts: 2, potatoes: 3 };
-
-
-	// // Iterate through the object
-	// for (const key in population) { 
-	// 	if (population.hasOwnProperty(key)) { 
-	// 		console.log(`${key}: ${population[key]}`); 
-	// 	}}
-	// 		// male: 4
-	// 		// female: 93
-	// 		// others: 10
-
-
-	// /* ----------------- */
-	// /* Using Object.keys */
-	// /* ----------------- */
-
-
-	// let genders = Object.keys(population);
-	// console.log(genders);
-	// 	// (3) ['male', 'female', 'others']
-
-
-	// // var genders = Object.keys(population);
-	// genders.forEach((gender) => console.log(gender));
-	// 	// male
-	// 	// female
-	// 	// others
-
-
-	// // var genders = Object.keys(population);
-	// genders.forEach((gender) => {
-	//   console.log(`There are ${population[gender]} ${gender}`); 
-	// }) 
-	// 		//   "There are 4 male"
-	// 		// 	"There are 93 female"
-	// 		// 	"There are 10 others"
-
-
-	// /* ------------------- */
-	// /* Using Object.values */
-	// /* ------------------- */
-
-
-	// // let numbers = Object.values(population);
-	// console.log(numbers); 
-	// 	// [4,93,10]
-
-	// // let numbers = Object.values(population);
-	// numbers.forEach((number) => console.log(number));
-	// 	// 4
-	// 	// 93
-	// 	// 10
-
-	// /* -------------------- */
-	// /* Using Object.entries */
-	// /* -------------------- */
-
-	// // let populationArr = Object.entries(population);
-	// console.log(populationArr);
-	// // 		// (3) [Array(2), Array(2), Array(2)]
-	// // 		// 	0: (2) ['male', 4]
-	// // 		// 	1: (2) ['female', 93]
-	// // 		// 	2: (2) ['others', 10]
-	// // 		// 	length: 3
-
-
-	// for (var array of populationArr){
-	// 	  console.log(array);
-	// }
-	// 			// (2) ['male', 4]
-	// 			// 	0: "male"
-	// 			// 	1: 4
-	// 			// 	length: 2
-
-
-	// for (const [key, value] of Object.entries(population)) {
-	// 	  console.log(`${key}: ${value}`);
-	// }
-	// 			// male: 4
-	// 			// female: 93
-	// 			// others: 10
-
-
-	// //	const obj = { pizzas: 1, donuts: 2, potatoes: 3 };
-	// for (const key in obj) {
-	// 	console.log(obj[key]);
-	// }
-	// 		// 1
-	// 		// 2
-	// 		// 3
-
-
-	// 	// const obj = { pizzas: 1, donuts: 2, potatoes: 3 };
-	// Object.keys(obj).forEach(key => {
-	// 	  console.log(key);
-	// })
-	// 		// Returns 
-	// 		// 	pizzas
-	// 		// 	donuts
-	// 		// 	potatoes
-
-
-	// 	// const obj = { pizzas: 1, donuts: 2, potatoes: 3 };
-	// Object.values(obj).forEach(value => {
-	// 	  console.log(value);
-	// })
-	// // 		// 1
-	// // 		// 2
-	// // 		// 3
-
-
-	// 	// const obj = { pizzas: 1, donuts: 2, potatoes: 3 };
-	// const entries = Object.entries(obj);
-	// console.log(entries);
-	// 		// (3) [Array(2), Array(2), Array(2)]
-	// 		// 	0: (2) ['pizzas', 1]
-	// 		// 	1: (2) ['donuts', 2]
-	// 		// 	2: (2) ['potatoes', 3]
-	// 		// 	length: 3
-
-
-	// 	// const obj = { pizzas: 1, donuts: 2, potatoes: 3 };
-	// for (const [key, value] of Object.entries(obj)) {
-	// 	console.log(`${key}: ${value}`);
-	// }
-	// 		// This returns a discreat key and value from each entry
-	// 		// pizzas: 1
-	// 		// donuts: 2
-	// 		// potatoes: 3
-	
-}
 const setTheme = (myTheme: string) => { uTheme.global.name.value = myTheme; };
+
+// This needs to be computed
+let altThemeName = ""
+
+
+//// This performs the ACTUAL theme toggle
+////	ORIGINAL
+// const toggleDarkMode = () => { uTheme.global.name.value = uTheme.current.value.dark ? "light" : "dark"; }
+
+////	DEV-WORKS
+////	This version displays the name of the ACTIVE Theme.
+// const toggleDarkMode = () => { 
+// 	uTheme.global.name.value = uTheme.current.value.dark ? "light_custom" : "dark_custom"; 
+// }
+
+const toggleDarkMode = () => { 
+		console.log("-------------------------------------------")
+	altThemeName = uTheme.global.name.value
+		console.log("Old Theme ",altThemeName)
+
+	uTheme.global.name.value = uTheme.current.value.dark ? "light_custom" : "dark_custom"; 
+		console.log("New Theme", uTheme.global.name.value)
+		console.log("Alt Theme >>>---> ", altThemeName)
+}
+
+
 </script>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed, ref } from "vue";
 export default defineComponent({
 	name: "ThemeChanger",
 	components: {

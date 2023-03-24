@@ -4,6 +4,21 @@
 	<div class="text-center">
 		<h1 class="text-left">Theme Switcher</h1>
 		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset/>
+
+
+<!-- THIS WORKS -->
+<v-select class="text-left" persistent-hint return-object single-line
+		xxNotWorkingXxxlabel="Select" 
+		v-model="select"
+		:hint="`${select.state} - ${select.abbr}`"
+		:items="items" 
+		item-title="state" 
+		item-value="abbr"
+		item-disabled="disable" 
+/>
+<p class="text-left"><br>SELECTED VALUE [ {{ select.state }} - {{ select.abbr }} -- [ Disabled: {{ select.disable }}] ]</p><br>
+
+<!-- ------------------------------------------------------ -->
 		<v-btn @click="computedColors(0)">Debug</v-btn>
 		<div class="text-center">
 			<v-card-text>
@@ -46,25 +61,18 @@
 
 <script setup lang="ts">
 import {useTheme } from "vuetify";
+///////////////////////////////////////////////////////////
 const uTheme = useTheme();
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value)
 const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value)
 const chipVariant:string = "outlined"
-
 const defaultLightTheme:string = "light"
 const defaultDarkTheme:string = "dark_custom"
 const altThemeName = ref("")
 altThemeName.value = defaultDarkTheme;
 uTheme.global.name.value = defaultLightTheme;
-const onChangeTheme = () => { 
-	altThemeName.value = uTheme.global.name.value
-	uTheme.global.name.value = uTheme.current.value.dark ? defaultLightTheme : defaultDarkTheme; 
-}
-
-
-
-
-
+const onChangeTheme = () => { altThemeName.value = uTheme.global.name.value
+	uTheme.global.name.value = uTheme.current.value.dark ? defaultLightTheme : defaultDarkTheme; }
 const generateThemesWithAllColors = () => {
 	// Get the total number of themes.
 	var themeLength = computedThemesKeysValue.length
@@ -91,6 +99,25 @@ const generateThemesWithAllColors = () => {
 }
 const allThemesAndColors = generateThemesWithAllColors()
 const setTheme = (myTheme: string) => { uTheme.global.name.value = myTheme; };
+//--------------------------------------------------------- 
+
+// THIS WORKS
+const select = ref({state: 'Select State here...', abbr: '', disable: false });
+// THIS WORKS -- Sets the 'default' to 'Hawaii' -- I was missing the ref({ ... })
+const selectX = ref({state: 'Hawaii', abbr: 'AH' });
+
+// THIS WORKS
+const items = [
+	{ state: 'Florida', abbr: 'FL', disable: true  },
+	{ state: 'Georgia', abbr: 'GA', disable: true  },
+	{ state: 'Nebraska', abbr: 'NE', disable: false  },
+	{ state: 'California', abbr: 'CA', disable: false  },
+	{ state: 'New York', abbr: 'NY', disable: false  }
+];
+
+// THIS WORKS -- What is the purpos of 'IS_ACTIVE' ??? 
+const itemsZ = [ { NAME: 'Florida', ID: 'FL', IS_ACTIVE: true } ]
+
 </script>
 
 <script lang="ts">

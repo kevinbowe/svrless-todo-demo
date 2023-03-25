@@ -5,70 +5,63 @@
 		<h1 class="text-left">Theme Switcher</h1>
 		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset />
 
-					<!-- REF -- WORKING -->
-					<!-- <v-select label="Select Foo Bar Items"
-					v-model="valueX" :items="itemsX" multiple class="class=text-left pa-3 ma-3">
-						<template v-slot:selection="{ item, index }">
-							<v-chip v-if="index < 2"> <span> {{ item.title }} </span> </v-chip>
-							<span v-if="index === 2" class="text-grey text-caption align-self-center" >
-								(+{{ valueX.length - 2 }} others)
-							</span>
-						</template>
-					</v-select> -->
+		<!-- REF -- WORKING -->
+		<!-- <v-select label="Select Foo Bar Items"
+		v-model="valueFooBar" :items="itemsFooBar" multiple class="class=text-left pa-3 ma-3">
+			<template v-slot:selection="{ item, index }">
+				<v-chip v-if="index < 2"> <span> {{ item.title }} </span> </v-chip>
+				<span v-if="index === 2" class="text-grey text-caption align-self-center" >
+					(+{{ valueFooBar.length - 2 }} others)
+				</span>
+			</template>
+		</v-select> -->
 
-					<!-- REF -- WORKING -->
-					<!-- <v-select label="Select a State -- GOLD" 
-					v-model="select" :items="items"  class="class=text-left pa-3 ma-3">
-						<template v-slot:selection="{ item }" SelectedResults> 
-							{{ select.value.state }}, {{ select.value.abbr }} -- {{ select.value.disable }} </template>
-						<template v-slot:item="item" FormattedOptions>
-							<v-list-item @click="toggle(item)">
-								<div>Choose <span style="color: cyan">{{ item.props.value.state }}</span></div>
-							</v-list-item>
-						</template>
-					</v-select>
-					<p class="text-center" v-if="select"><br />
-						SELECTED VALUE [ {{ select.value.state }} - {{ select.value.abbr }} -- [ Disabled: {{ select.value.disable }}] ]</p><br /> -->
+		<!-- REF -- WORKING -->
+		<!-- <p class="text-center" v-if="selectState"><br />
+			SELECTED VALUE [ {{ selectState.value.state }} - {{ selectState.value.abbr }} -- [ Disabled: {{ selectState.value.disable }}] ]</p><br />
+		<v-select label="Select a State -- GOLD" 
+		v-model="selectState" :items="itemsStates"  class="class=text-left pa-3 ma-3">
+			<template v-slot:selection="{ item }" SelectedResults> 
+				{{ selectState.value.state }}, {{ selectState.value.abbr }} -- {{ selectState.value.disable }} </template>
+			<template v-slot:item="item" FormattedOptions>
+				<v-list-item @click="toggleState(item)">
+					<div>Choose <span style="color: blue">{{ item.props.value.state }}</span></div>
+				</v-list-item>
+			</template>
+		</v-select> -->
 
-											<!-- WIP -->
-											<!-- <v-select label="Select Theme" 
-											v-model="selectTheme" :items="itemsTheme"  class="class=text-left pa-3 ma-3">
-												<template v-slot:selection>
-													{{ selectTheme.value.state }} 
-												</template>
-												<template v-slot:item="item">
-													<v-list-item @click="updateTheme(item)">
-														<div>Choose <span style="color: cyan">{{ item.props.value.state }}</span></div>
-													</v-list-item>
-												</template>
-											</v-select>
-											<p class="text-center" v-if="selectTheme"><br />
-												SELECTED VALUE [ {{ selectTheme.value.state }} ]</p><br /> -->
 
-		<!-- WIP -->
-		<v-select label="Select Theme 2" 
-		v-model="selectThemeX" 
-		zzz:items="itemsThemeX"  
+		<!-- WORKING -- WIP -->
+		<!-- <p class="text-center" v-if="selectTheme__ONE"><br />
+			SELECTED VALUE [ {{ selectTheme__ONE.value.state }} ]</p><br />
+		<v-select label="Select Theme__ONE" 
+		v-model="selectTheme__ONE" :items="itemsTheme__ONE"  class="class=text-left pa-3 ma-3">
+			<template v-slot:selection>
+				{{ selectTheme__ONE.value.state }} 
+			</template>
+			<template v-slot:item="item">
+				<v-list-item @click="updateTheme__ONE(item)">
+					<div>Choose <span style="color: blue">{{ item.props.value.state }}</span></div>
+				</v-list-item>
+			</template>
+		</v-select> -->
+
+		<!-- WORKING -- FINI -->
+		<p class="text-center" v-if="selectTheme"><br />
+			SELECTED VALUE [ {{ selectTheme.value }} ]</p><br />		
+		<v-select label="Select Theme__TWO" 
+		v-model="selectTheme" 
 		:items="computedThemesKeysValue"  
 		class="class=text-left pa-3 ma-3">
 			<template v-slot:selection>
-				{{ selectThemeX.value }} 
+				{{ selectTheme.value }} 
 			</template>
 			<template v-slot:item="item">
-				<v-list-item @click="updateThemeXX(item)">
-					<!-- <div>Choose <span style="color: cyan">{{ item.props.value.state }}</span></div> -->
-					{{ item.props.title }}<br>
-					<!-- ZZZ -- {{ item.props.value }}<br>
-					AAA -- {{ item.value }}<br>
-					BBB -- {{ item.title }}<br>
-					CCC -- {{ item }}<br>
-					------------------------------------ -->
+				<v-list-item @click="updateTheme(item)">
+					{{ item.props.title }}
 				</v-list-item>
 			</template>
 		</v-select>
-		<p class="text-center" v-if="selectThemeX"><br />
-			SELECTED VALUE [ {{ selectThemeX.value }} ]</p><br />
-
 
 		<!-- ------------------------------------------------------ -->
 		<v-btn @click="computedColors(0)">Debug</v-btn>
@@ -153,49 +146,40 @@ const setTheme = (myTheme: string) => {
 //---------------------------------------------------------
 
 
-////	DEV -- METHODS-FUNCTIONS
-function updateThemeX(itemTheme) { selectThemeX.value = itemTheme.props; }
-function updateThemeXX(itemTheme) { 
-	selectThemeX.value = itemTheme.props;
-	console.log(itemTheme.props.value) 
+////	DEV -- FINAL -- METHODS-FUNCTIONS
+function updateTheme(itemTheme) { 
+	selectTheme.value = itemTheme.props;
 	setTheme(itemTheme.props.value)
 }
+////	DEV -- FINAL -- DATA
+let selectTheme = ref();
 
-
-
-////	DEV-X -- DATA
-let selectThemeX = ref();
-const itemsThemeX = [ "light", "dark", "light_custom", "dark_custom" ]
-
-
-						////	DEV -- METHODS-FUNCTIONS
-						function updateTheme(itemTheme) { selectTheme.value = itemTheme.props; }
-						////	DEV -- DATA
-						let selectTheme = ref();
-						const itemsTheme = [
-							{ state: "light" },
-							{ state: "dark" },
-							{ state: "light_custom" },
-							{ state: "dark_custom" },
-						];
-
+////	DEV -- ONE -- METHODS-FUNCTIONS
+// function updateTheme__ONE(itemTheme) { selectTheme__ONE.value = itemTheme.props; }
+////	DEV -- DATA
+// let selectTheme__ONE = ref();
+// const itemsTheme__ONE = [
+// 	{ state: "light" },
+// 	{ state: "dark" },
+// 	{ state: "light_custom" },
+// 	{ state: "dark_custom" },
+// ];
 
 ////	REF -- METHODS-FUNCTIONS
-function toggle(item) { select.value = item.props; }
+// function toggleState(item) { selectState.value = item.props; }
 ////	REF -- DATA
-let select = ref();
-const items = [
-	{ state: "Florida", abbr: "FL", disable: true },
-	{ state: "Georgia", abbr: "GA", disable: true },
-	{ state: "Nebraska", abbr: "NE", disable: true },
-	{ state: "California", abbr: "CA", disable: false },
-	{ state: "New York", abbr: "NY", disable: false },
-];
+// let selectState = ref();
+// const itemsStates = [
+// 	{ state: "Florida", abbr: "FL", disable: true },
+// 	{ state: "Georgia", abbr: "GA", disable: true },
+// 	{ state: "Nebraska", abbr: "NE", disable: true },
+// 	{ state: "California", abbr: "CA", disable: false },
+// 	{ state: "New York", abbr: "NY", disable: false },
+// ];
 
 ////	REF -- DATA
-const itemsX = ['foo', 'bar', 'fizz', 'buzz', 'fizzbuzz', 'foobar']
-const valueX = ref(['foo', 'bar', 'fizz'])
-
+// const itemsFooBar = ['foo', 'bar', 'fizz', 'buzz', 'fizzbuzz', 'foobar']
+// const valueFooBar = ref(['foo', 'bar', 'fizz'])
 
 </script>
 

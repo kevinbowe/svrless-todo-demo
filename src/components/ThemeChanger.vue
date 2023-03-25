@@ -21,29 +21,6 @@
 			</template>
 		</v-select>
 
-		<!-- THIS WORKS -->
-		<v-select label="Select State here..."
-		v-model="select" :items="items" item-title="state" item-value="abbr" item-disabled="disable"
-		bg-color="blue-grey-lighten-4" class="class=text-left pa-3 ma-3"
-		persistent-hint return-object single-line :hint="`${select.state} - ${select.abbr}`" />
-
-		<!-- WORKING -->
-		<v-select label="Favorite Fruits" 
-		v-model="selectedFruits" :items="fruits"  class="class=text-left pa-3 ma-3">
-			<template v-slot:selection="{ item }" FormattedSelectedResults>
-				<div>
-					This is 'selection results' <span style="color: red"> {{ item.title }}</span>
-				</div>
-			</template>
-			<template v-slot:item="{ item }" FormattedOptions>
-				<v-list-item @click="toggleX(item)">
-					<div>
-						Choose <span style="color: cyan">{{ item.value }}</span>
-					</div>
-				</v-list-item>
-			</template>
-		</v-select>
-
 		<!-- WORKING -->
 		<v-select label="Select a State -- GOLD" 
 		v-model="selectX" :items="itemsX"  class="class=text-left pa-3 ma-3">
@@ -148,53 +125,14 @@ function toggleZ(item) {
 	selectX.value = item.props;
 }
 
-const fruits = ["Apples", "Apricots", "Avocado", "Bananas", "Blueberries", "Blackberries"];
-let selectedFruits = ref([]);
 
-//// COMPUTED STUFF
-// const likesAllFruit = computed(() => {
-// 	return selectedFruits.length === fruits.length;
-// });
-// const likesSomeFruit = computed(() => {
-// 	return selectedFruits.length > 0;
-// });
-// const title = computed(() => {
-// 	if (likesAllFruit) return "Holy smokes, someone call the fruit police!";
-// 	if (likesSomeFruit) return "Fruit Count";
-// 	return "How could you not like fruit?";
-// });
-// const subtitle = computed(() => {
-// 	if (likesAllFruit) return undefined;
-// 	if (likesSomeFruit) return selectedFruits.length;
-// 	return "Go ahead, make a selection above!";
-// });
 
-//// METHODS-FUNCTIONS
-function toggleX(item: { value: never[] }) {
-	/*selectedFruits is the model*/
-	selectedFruits.value = item.value;
-}
 
-// function toggle() {
-// 	if (likesAllFruit) {
-// 		selectedFruits = [];
-// 	} else {
-// 		selectedFruits = fruits.slice();
-// 	}
-// }
 
 // THIS WORKS
-const select = ref({ state: "Select State here...", abbr: "", disable: false });
 let selectX = ref();
 
 // THIS WORKS
-const items = [
-	{ state: "Florida", abbr: "FL", disable: true },
-	{ state: "Georgia", abbr: "GA", disable: true },
-	{ state: "Nebraska", abbr: "NE", disable: false },
-	{ state: "California", abbr: "CA", disable: false },
-	{ state: "New York", abbr: "NY", disable: false },
-];
 const itemsX = [
 	{ state: "Florida", abbr: "FL", disable: true },
 	{ state: "Georgia", abbr: "GA", disable: true },

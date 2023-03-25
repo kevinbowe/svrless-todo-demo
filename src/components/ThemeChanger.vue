@@ -5,7 +5,7 @@
 		<h1 class="text-left">Theme Switcher</h1>
 		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset />
 
-		<!-- WORKING -->
+		<!-- WORKING
 		<v-select label="Choose a Political Party" 
 		v-model="select" :items="items" class="text-left pa-3 ma-3" >
 			<template v-slot:selection="{ item }" SelectedResults>
@@ -18,7 +18,7 @@
 					<p v-else>{{ item.props.value.state }} -- <span style="color: cyan">Democrate</span></p>
 				</v-list-item>
 			</template>
-		</v-select>
+		</v-select> -->
 
 		<!-- WORKING -->
 		<v-select label="Select a State -- GOLD" 

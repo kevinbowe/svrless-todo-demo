@@ -1,33 +1,74 @@
 <template>
-<!-- <v-app> -->
+	<!-- <v-app> -->
 	<!-- <v-container class="text-center"> -->
 	<div class="text-center">
 		<h1 class="text-left">Theme Switcher</h1>
-		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset/>
+		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset />
 
+		<!-- DEV -->
+		<v-select label="Choose a Political Party" 
+		v-model="selectX" :items="itemsX" class="text-left pa-3 ma-3" >
+			<template v-slot:selection="{ item }" SelectedResults>
+				<p v-if="item.props.value.disable">{{ item.props.value.state }} -- <span style="color: red">Republican</span></p>
+				<p v-else>{{ item.props.value.state }} -- <span style="color: blue">Democrate</span></p>
+			</template>
 
-<!-- THIS WORKS -->
-<v-select class="text-left" persistent-hint return-object single-line
-		xxNotWorkingXxxlabel="Select" 
-		v-model="select"
-		:hint="`${select.state} - ${select.abbr}`"
-		:items="items" 
-		item-title="state" 
-		item-value="abbr"
-		item-disabled="disable" 
-/>
-<p class="text-left"><br>SELECTED VALUE [ {{ select.state }} - {{ select.abbr }} -- [ Disabled: {{ select.disable }}] ]</p><br>
+			<template v-slot:item="item" FormattedOptions>
+				<v-list-item @click="toggleZ(item)">
+					<p v-if="item.props.value.disable">{{ item.props.value.state }} -- <span style="color: pink">Republican</span></p>
+					<p v-else>{{ item.props.value.state }} -- <span style="color: cyan">Democrate</span></p>
+				</v-list-item>
+			</template>
+		</v-select>
 
-<!-- ------------------------------------------------------ -->
+		<!-- THIS WORKS -->
+		<v-select label="Select State here..."
+		v-model="select" :items="items" item-title="state" item-value="abbr" item-disabled="disable"
+		bg-color="blue-grey-lighten-4" class="class=text-left pa-3 ma-3"
+		persistent-hint return-object single-line :hint="`${select.state} - ${select.abbr}`" />
+
+		<!-- WORKING -->
+		<v-select label="Favorite Fruits" 
+		v-model="selectedFruits" :items="fruits"  class="class=text-left pa-3 ma-3">
+			<template v-slot:selection="{ item }" FormattedSelectedResults>
+				<div>
+					This is 'selection results' <span style="color: red"> {{ item.title }}</span>
+				</div>
+			</template>
+			<template v-slot:item="{ item }" FormattedOptions>
+				<v-list-item @click="toggleX(item)">
+					<div>
+						Choose <span style="color: cyan">{{ item.value }}</span>
+					</div>
+				</v-list-item>
+			</template>
+		</v-select>
+
+		<!-- WORKING -->
+		<v-select label="Select a State -- GOLD" 
+		v-model="selectX" :items="itemsX"  class="class=text-left pa-3 ma-3">
+			<template v-slot:selection="{ item }" SelectedResults> {{ selectX.value.state }}, {{ selectX.value.abbr }} -- {{ selectX.value.disable }} </template>
+			<template v-slot:item="item" FormattedOptions>
+				<v-list-item @click="toggleZ(item)">
+					<div>
+						Choose <span style="color: cyan">{{ item.props.value.state }}</span>
+					</div>
+				</v-list-item>
+			</template>
+		</v-select>
+
+		<p class="text-left" v-if="selectX"><br />
+			SELECTED VALUE [ {{ selectX.value.state }} - {{ selectX.value.abbr }} -- [ Disabled: {{ selectX.value.disable }}] ]</p><br />
+
+		<!-- ------------------------------------------------------ -->
 		<v-btn @click="computedColors(0)">Debug</v-btn>
 		<div class="text-center">
 			<v-card-text>
-				<v-card color="blue-grey-darken-1" class="my-2" @click="setTheme(eachThemeName)" 
-				v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
+				<v-card color="blue-grey-darken-1" class="my-2" @click="setTheme(eachThemeName)" v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
 					<v-list-item>
 						<v-list-item-action>
 							<div>
-								<h1 style="display:inline;margin-right:1em;">{{eachThemeName.toUpperCase() }}</h1>
+								<h1 style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
 							</div>
 							<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
 								<v-icon>mdi-check</v-icon>
@@ -37,17 +78,14 @@
 					<!-- Display each Color Name in the Theme -->
 					<div class="text-center">
 						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
-							<v-chip :style="{background: allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code}" 
-								label class="ma-1" :variant="chipVariant">
-								<strong :style="{color: allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code}">
-									{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].color }}</strong>
+							<v-chip :style="{ background: allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
+								<strong :style="{ color: allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].code }"> {{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
 							</v-chip>
 						</span>
-						<br>
+						<br />
 						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
-							<v-chip :color="allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].code"
-								label class="ma-1" :variant="chipVariant">
-								<strong>{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex-1].color }}</strong>
+							<v-chip :color="allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
+								<strong>{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
 							</v-chip>
 						</span>
 					</div>
@@ -56,75 +94,120 @@
 		</div>
 	</div>
 	<!-- </v-container> -->
-<!-- </v-app> -->
+	<!-- </v-app> -->
 </template>
 
 <script setup lang="ts">
-import {useTheme } from "vuetify";
+import { useTheme } from "vuetify";
 ///////////////////////////////////////////////////////////
 const uTheme = useTheme();
-const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value)
-const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value)
-const chipVariant:string = "outlined"
-const defaultLightTheme:string = "light"
-const defaultDarkTheme:string = "dark_custom"
-const altThemeName = ref("")
+const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
+const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value);
+const chipVariant: string = "outlined";
+const defaultLightTheme: string = "light";
+const defaultDarkTheme: string = "dark_custom";
+const altThemeName = ref("");
 altThemeName.value = defaultDarkTheme;
 uTheme.global.name.value = defaultLightTheme;
-const onChangeTheme = () => { altThemeName.value = uTheme.global.name.value
-	uTheme.global.name.value = uTheme.current.value.dark ? defaultLightTheme : defaultDarkTheme; }
+const onChangeTheme = () => {
+	altThemeName.value = uTheme.global.name.value;
+	uTheme.global.name.value = uTheme.current.value.dark ? defaultLightTheme : defaultDarkTheme;
+};
 const generateThemesWithAllColors = () => {
 	// Get the total number of themes.
-	var themeLength = computedThemesKeysValue.length
-	var themeObjs = []
-	var cArray: { color: string; code: string; }[] = []
+	var themeLength = computedThemesKeysValue.length;
+	var themeObjs = [];
+	var cArray: { color: string; code: string }[] = [];
 	// Create array to store the themes and related VideoColorSpace
-	for(var i=0; i < themeLength; i++) {
+	for (var i = 0; i < themeLength; i++) {
 		// Fetch the Theme name
-		var tName = computedThemesKeysValue[i]
+		var tName = computedThemesKeysValue[i];
 		// Fetch the Color elements
-		var tColorProps =	computedThemesEntriesValue[i][1].colors
+		var tColorProps = computedThemesEntriesValue[i][1].colors;
 		Object.entries(tColorProps).forEach((e) => {
-			if (e[0].includes('-')) return;
-			var o ={"color":e[0], "code":e[1]}
-			cArray.push(o)
-		})
+			if (e[0].includes("-")) return;
+			var o = { color: e[0], code: e[1] };
+			cArray.push(o);
+		});
 		// create the themeObject
-		var o = {"theme": tName, "colors": tColorProps, "colorArray":cArray}
+		var o = { theme: tName, colors: tColorProps, colorArray: cArray };
 		themeObjs.push(o);
 		// Clear the cArray for the next theme pass
 		cArray = [];
 	}
-	return themeObjs
+	return themeObjs;
+};
+const allThemesAndColors = generateThemesWithAllColors();
+const setTheme = (myTheme: string) => {
+	uTheme.global.name.value = myTheme;
+};
+//---------------------------------------------------------
+
+//// METHODS-FUNCTIONS
+function toggleZ(item) {
+	selectX.value = item.props;
 }
-const allThemesAndColors = generateThemesWithAllColors()
-const setTheme = (myTheme: string) => { uTheme.global.name.value = myTheme; };
-//--------------------------------------------------------- 
+
+const fruits = ["Apples", "Apricots", "Avocado", "Bananas", "Blueberries", "Blackberries"];
+let selectedFruits = ref([]);
+
+//// COMPUTED STUFF
+// const likesAllFruit = computed(() => {
+// 	return selectedFruits.length === fruits.length;
+// });
+// const likesSomeFruit = computed(() => {
+// 	return selectedFruits.length > 0;
+// });
+// const title = computed(() => {
+// 	if (likesAllFruit) return "Holy smokes, someone call the fruit police!";
+// 	if (likesSomeFruit) return "Fruit Count";
+// 	return "How could you not like fruit?";
+// });
+// const subtitle = computed(() => {
+// 	if (likesAllFruit) return undefined;
+// 	if (likesSomeFruit) return selectedFruits.length;
+// 	return "Go ahead, make a selection above!";
+// });
+
+//// METHODS-FUNCTIONS
+function toggleX(item: { value: never[] }) {
+	/*selectedFruits is the model*/
+	selectedFruits.value = item.value;
+}
+
+// function toggle() {
+// 	if (likesAllFruit) {
+// 		selectedFruits = [];
+// 	} else {
+// 		selectedFruits = fruits.slice();
+// 	}
+// }
 
 // THIS WORKS
-const select = ref({state: 'Select State here...', abbr: '', disable: false });
-// THIS WORKS -- Sets the 'default' to 'Hawaii' -- I was missing the ref({ ... })
-const selectX = ref({state: 'Hawaii', abbr: 'AH' });
+const select = ref({ state: "Select State here...", abbr: "", disable: false });
+let selectX = ref();
 
 // THIS WORKS
 const items = [
-	{ state: 'Florida', abbr: 'FL', disable: true  },
-	{ state: 'Georgia', abbr: 'GA', disable: true  },
-	{ state: 'Nebraska', abbr: 'NE', disable: false  },
-	{ state: 'California', abbr: 'CA', disable: false  },
-	{ state: 'New York', abbr: 'NY', disable: false  }
+	{ state: "Florida", abbr: "FL", disable: true },
+	{ state: "Georgia", abbr: "GA", disable: true },
+	{ state: "Nebraska", abbr: "NE", disable: false },
+	{ state: "California", abbr: "CA", disable: false },
+	{ state: "New York", abbr: "NY", disable: false },
 ];
-
-// THIS WORKS -- What is the purpos of 'IS_ACTIVE' ??? 
-const itemsZ = [ { NAME: 'Florida', ID: 'FL', IS_ACTIVE: true } ]
-
+const itemsX = [
+	{ state: "Florida", abbr: "FL", disable: true },
+	{ state: "Georgia", abbr: "GA", disable: true },
+	{ state: "Nebraska", abbr: "NE", disable: true },
+	{ state: "California", abbr: "CA", disable: false },
+	{ state: "New York", abbr: "NY", disable: false },
+];
 </script>
 
 <script lang="ts">
 import { defineComponent, computed, ref } from "vue";
 export default defineComponent({
 	name: "ThemeChanger",
-	components: {
-	},
+	components: {},
 });
 </script>

@@ -5,51 +5,10 @@
 		<h1 class="text-left">Theme Switcher</h1>
 		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset />
 
-		<!-- REF -- WORKING -->
-		<!-- <v-select label="Select Foo Bar Items"
-		v-model="valueFooBar" :items="itemsFooBar" multiple class="class=text-left pa-3 ma-3">
-			<template v-slot:selection="{ item, index }">
-				<v-chip v-if="index < 2"> <span> {{ item.title }} </span> </v-chip>
-				<span v-if="index === 2" class="text-grey text-caption align-self-center" >
-					(+{{ valueFooBar.length - 2 }} others)
-				</span>
-			</template>
-		</v-select> -->
+		<!-- WORKING -->
+		<p class="text-center" v-if="selectTheme"><br />SELECTED VALUE [ {{ selectTheme.value }} ]</p><br />
 
-		<!-- REF -- WORKING -->
-		<!-- <p class="text-center" v-if="selectState"><br />
-			SELECTED VALUE [ {{ selectState.value.state }} - {{ selectState.value.abbr }} -- [ Disabled: {{ selectState.value.disable }}] ]</p><br />
-		<v-select label="Select a State -- GOLD" 
-		v-model="selectState" :items="itemsStates"  class="class=text-left pa-3 ma-3">
-			<template v-slot:selection="{ item }" SelectedResults> 
-				{{ selectState.value.state }}, {{ selectState.value.abbr }} -- {{ selectState.value.disable }} </template>
-			<template v-slot:item="item" FormattedOptions>
-				<v-list-item @click="toggleState(item)">
-					<div>Choose <span style="color: blue">{{ item.props.value.state }}</span></div>
-				</v-list-item>
-			</template>
-		</v-select> -->
-
-
-		<!-- WORKING -- WIP -->
-		<!-- <p class="text-center" v-if="selectTheme__ONE"><br />
-			SELECTED VALUE [ {{ selectTheme__ONE.value.state }} ]</p><br />
-		<v-select label="Select Theme__ONE" 
-		v-model="selectTheme__ONE" :items="itemsTheme__ONE"  class="class=text-left pa-3 ma-3">
-			<template v-slot:selection>
-				{{ selectTheme__ONE.value.state }} 
-			</template>
-			<template v-slot:item="item">
-				<v-list-item @click="updateTheme__ONE(item)">
-					<div>Choose <span style="color: blue">{{ item.props.value.state }}</span></div>
-				</v-list-item>
-			</template>
-		</v-select> -->
-
-		<!-- WORKING -- FINI -->
-		<p class="text-center" v-if="selectTheme"><br />
-			SELECTED VALUE [ {{ selectTheme.value }} ]</p><br />		
-		<v-select label="Select Theme__TWO" 
+		<v-select label="Select Theme" 
 		v-model="selectTheme" 
 		:items="computedThemesKeysValue"  
 		class="class=text-left pa-3 ma-3">
@@ -63,7 +22,7 @@
 			</template>
 		</v-select>
 
-		<!-- ------------------------------------------------------ -->
+		<!-- HIDDEN - CODE ----------------------------------------------------------------------------------------------- -->
 		<v-btn @click="computedColors(0)">Debug</v-btn>
 		<div class="text-center">
 			<v-card-text>
@@ -143,8 +102,7 @@ const allThemesAndColors = generateThemesWithAllColors();
 const setTheme = (myTheme: string) => {
 	uTheme.global.name.value = myTheme;
 };
-//---------------------------------------------------------
-
+//--- HIDDEN CODE --------------------------------------------------------------------------------------HIDDEN CODE-----
 
 ////	DEV -- FINAL -- METHODS-FUNCTIONS
 function updateTheme(itemTheme) { 
@@ -153,33 +111,6 @@ function updateTheme(itemTheme) {
 }
 ////	DEV -- FINAL -- DATA
 let selectTheme = ref();
-
-////	DEV -- ONE -- METHODS-FUNCTIONS
-// function updateTheme__ONE(itemTheme) { selectTheme__ONE.value = itemTheme.props; }
-////	DEV -- DATA
-// let selectTheme__ONE = ref();
-// const itemsTheme__ONE = [
-// 	{ state: "light" },
-// 	{ state: "dark" },
-// 	{ state: "light_custom" },
-// 	{ state: "dark_custom" },
-// ];
-
-////	REF -- METHODS-FUNCTIONS
-// function toggleState(item) { selectState.value = item.props; }
-////	REF -- DATA
-// let selectState = ref();
-// const itemsStates = [
-// 	{ state: "Florida", abbr: "FL", disable: true },
-// 	{ state: "Georgia", abbr: "GA", disable: true },
-// 	{ state: "Nebraska", abbr: "NE", disable: true },
-// 	{ state: "California", abbr: "CA", disable: false },
-// 	{ state: "New York", abbr: "NY", disable: false },
-// ];
-
-////	REF -- DATA
-// const itemsFooBar = ['foo', 'bar', 'fizz', 'buzz', 'fizzbuzz', 'foobar']
-// const valueFooBar = ref(['foo', 'bar', 'fizz'])
 
 </script>
 

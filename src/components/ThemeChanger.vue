@@ -7,7 +7,7 @@
 
 		<!-- DEV -->
 		<v-select label="Choose a Political Party" 
-		v-model="selectX" :items="itemsX" class="text-left pa-3 ma-3" >
+		v-model="select" :items="items" class="text-left pa-3 ma-3" >
 			<template v-slot:selection="{ item }" SelectedResults>
 				<p v-if="item.props.value.disable">{{ item.props.value.state }} -- <span style="color: red">Republican</span></p>
 				<p v-else>{{ item.props.value.state }} -- <span style="color: blue">Democrate</span></p>
@@ -23,8 +23,8 @@
 
 		<!-- WORKING -->
 		<v-select label="Select a State -- GOLD" 
-		v-model="selectX" :items="itemsX"  class="class=text-left pa-3 ma-3">
-			<template v-slot:selection="{ item }" SelectedResults> {{ selectX.value.state }}, {{ selectX.value.abbr }} -- {{ selectX.value.disable }} </template>
+		v-model="select" :items="items"  class="class=text-left pa-3 ma-3">
+			<template v-slot:selection="{ item }" SelectedResults> {{ select.value.state }}, {{ select.value.abbr }} -- {{ select.value.disable }} </template>
 			<template v-slot:item="item" FormattedOptions>
 				<v-list-item @click="toggleZ(item)">
 					<div>
@@ -34,8 +34,8 @@
 			</template>
 		</v-select>
 
-		<p class="text-left" v-if="selectX"><br />
-			SELECTED VALUE [ {{ selectX.value.state }} - {{ selectX.value.abbr }} -- [ Disabled: {{ selectX.value.disable }}] ]</p><br />
+		<p class="text-left" v-if="select"><br />
+			SELECTED VALUE [ {{ select.value.state }} - {{ select.value.abbr }} -- [ Disabled: {{ select.value.disable }}] ]</p><br />
 
 		<!-- ------------------------------------------------------ -->
 		<v-btn @click="computedColors(0)">Debug</v-btn>
@@ -122,7 +122,7 @@ const setTheme = (myTheme: string) => {
 
 //// METHODS-FUNCTIONS
 function toggleZ(item) {
-	selectX.value = item.props;
+	select.value = item.props;
 }
 
 
@@ -130,10 +130,10 @@ function toggleZ(item) {
 
 
 // THIS WORKS
-let selectX = ref();
+let select = ref();
 
 // THIS WORKS
-const itemsX = [
+const items = [
 	{ state: "Florida", abbr: "FL", disable: true },
 	{ state: "Georgia", abbr: "GA", disable: true },
 	{ state: "Nebraska", abbr: "NE", disable: true },

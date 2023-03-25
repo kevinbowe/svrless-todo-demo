@@ -5,16 +5,15 @@
 		<h1 class="text-left">Theme Switcher</h1>
 		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset />
 
-		<!-- DEV -->
+		<!-- WORKING -->
 		<v-select label="Choose a Political Party" 
 		v-model="select" :items="items" class="text-left pa-3 ma-3" >
 			<template v-slot:selection="{ item }" SelectedResults>
 				<p v-if="item.props.value.disable">{{ item.props.value.state }} -- <span style="color: red">Republican</span></p>
 				<p v-else>{{ item.props.value.state }} -- <span style="color: blue">Democrate</span></p>
 			</template>
-
 			<template v-slot:item="item" FormattedOptions>
-				<v-list-item @click="toggleZ(item)">
+				<v-list-item @click="toggle(item)">
 					<p v-if="item.props.value.disable">{{ item.props.value.state }} -- <span style="color: pink">Republican</span></p>
 					<p v-else>{{ item.props.value.state }} -- <span style="color: cyan">Democrate</span></p>
 				</v-list-item>
@@ -26,10 +25,8 @@
 		v-model="select" :items="items"  class="class=text-left pa-3 ma-3">
 			<template v-slot:selection="{ item }" SelectedResults> {{ select.value.state }}, {{ select.value.abbr }} -- {{ select.value.disable }} </template>
 			<template v-slot:item="item" FormattedOptions>
-				<v-list-item @click="toggleZ(item)">
-					<div>
-						Choose <span style="color: cyan">{{ item.props.value.state }}</span>
-					</div>
+				<v-list-item @click="toggle(item)">
+					<div>Choose <span style="color: cyan">{{ item.props.value.state }}</span></div>
 				</v-list-item>
 			</template>
 		</v-select>
@@ -76,7 +73,6 @@
 
 <script setup lang="ts">
 import { useTheme } from "vuetify";
-///////////////////////////////////////////////////////////
 const uTheme = useTheme();
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
 const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value);
@@ -121,18 +117,9 @@ const setTheme = (myTheme: string) => {
 //---------------------------------------------------------
 
 //// METHODS-FUNCTIONS
-function toggleZ(item) {
-	select.value = item.props;
-}
-
-
-
-
-
-// THIS WORKS
+function toggle(item) { select.value = item.props; }
+////	DATA
 let select = ref();
-
-// THIS WORKS
 const items = [
 	{ state: "Florida", abbr: "FL", disable: true },
 	{ state: "Georgia", abbr: "GA", disable: true },

@@ -76,15 +76,15 @@
 						</v-list-item-action>
 					</v-list-item>
 					<div class="text-center">
-						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
-							<v-chip :style="{ background: allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
-								<strong :style="{ color: allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].code }"> {{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
+						<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
+							<v-chip :style="{ background: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
+								<strong :style="{ color: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }"> {{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
 							</v-chip>
 						</span>
 						<br />
-						<span v-for="colorArrayIndex in allThemesAndColors[themeIndex].colorArray.length">
-							<v-chip :color="allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
-								<strong>{{ allThemesAndColors[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
+						<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
+							<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
+								<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
 							</v-chip>
 						</span>
 					</div>
@@ -111,24 +111,24 @@ let ThemeSwitchFlag = false // false == left
 let selectedThemeModelLeft:string = "light"
 let selectedThemeModelRight:string = "dark"
 
-// This is called by the <v-switch>/Toggle Theme
+//// This is called by the <v-switch>/Toggle Theme
 const onChangeTheme = () => {
-	// toggle the ThemeSwitchFlag
+	//// toggle the ThemeSwitchFlag
 	ThemeSwitchFlag = !ThemeSwitchFlag;
-	//Set the new active theme to the opposit of the current active theme
+	//// Set the new active theme to the opposit of the current active theme
 	uTheme.global.name.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
-	// Update the Toggle Theme lable to display the 'alt' theme.
+	//// Update the Toggle Theme lable to display the 'alt' theme.
 	altThemeName.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
 };
-
+//// Builds data for Theme Preview, Theme Switcher, and Left/Right Selector
 const generateThemesWithAllColors = () => {
-	// Get the total number of themes.
+	//// Get the total number of themes.
 	var themeLength = computedThemesKeysValue.length;
 	var themeObjs = [];
 	var cArray: { color: string; code: string }[] = [];
-	// Create array to store the themes and related VideoColorSpace
+	//// Create array to store the themes and related VideoColorSpace
 	for (var i = 0; i < themeLength; i++) {
-		// Fetch the Theme name
+		//// Fetch the Theme name
 		var tName = computedThemesKeysValue[i];
 		// Fetch the Color elements
 		var tColorProps = computedThemesEntriesValue[i][1].colors;
@@ -137,69 +137,68 @@ const generateThemesWithAllColors = () => {
 			var o = { color: e[0], code: e[1] };
 			cArray.push(o);
 		});
-		// create the themeObject
+		//// create the themeObject
 		var o = { theme: tName, colors: tColorProps, colorArray: cArray };
 		themeObjs.push(o);
-		// Clear the cArray for the next theme pass
+		//// Clear the cArray for the next theme pass
 		cArray = [];
 	}
 	return themeObjs;
 };
 
-const allThemesAndColors = generateThemesWithAllColors();
-
-// Update Preview only
+//// Update Preview only
 function updatePreview(myTheme:string){
-	// Set the active theme to myTheme.
-	//	The Theme Switcher and the left/right Theme selectors should NOT be changed.
+	//// Set the active theme to myTheme.
+	////	The Theme Switcher and the left/right Theme selectors should NOT be changed.
 	uTheme.global.name.value = myTheme;
 }
 
-// This is called when a Option/Item is selected.
+//// This is called when a Option/Item is selected in the v-select Left or Right.
 function updateSelectorAndTheme(itemTheme: { props: { value: string; }; }, selectorSide: boolean ) { 
 	if (!selectorSide /* false -- left */){
 		// This is going to set the selected left model based on the left item that was selected.
 		selectedThemeModelLeft = itemTheme.props.value;
 
 	} else { /* true -- right */
-		// This is going to set the selected right model based on the left item that was selected.
+		//// This is going to set the selected right model based on the left item that was selected.
 		selectedThemeModelRight = itemTheme.props.value;
 	}
-	// The updates the active theme for the whole system.
+	//// This updates the active theme for the whole system.
 	UpdateTheme(itemTheme.props.value, selectorSide)
 }
 
+//// This updates the Active Theme based on the Switch/Toggle position (left/right).
+//// This also sets the Switch/Toggle position label based on the other theme.
 const UpdateTheme = (myTheme: string, ThemeSelectorSide: boolean) => {
-	// Which switch is currently active (left or right)?
+	//// Which switch is currently active (left or right)?
 	if(!ThemeSwitchFlag /* false == left-switch | true == right */) {
-		// If we get here, the switch is set to the left... (false)
+		//// If we get here, the switch is set to the left... (false)
 
-		// Which selected theme (left or right) got passed to this function?
+		//// Which selected theme (left or right) got passed to this function?
 		if(!ThemeSelectorSide /* false == left-selected */) {
 			// If we get here, the active theme should be updated.
 
 			uTheme.global.name.value = myTheme;
 
 		} else {
-			// If we get here, the right-selected was passed in.
+			//// If we get here, the right-selected was passed in.
 			
-			// Update the switch label to be equal to the right-selected value
+			//// Update the switch label to be equal to the right-selected value
 			altThemeName.value = myTheme;
 		}
 	} else {
-		//--------------------------------------------------
-		// If we get here, the switch is set to the right... (true)
+		//// If we get here, the switch is set to the right... (true)
 
-		// Which theme selector (left or right) got passed to this function?
+		//// Which theme selector (left or right) got passed to this function?
 		if(ThemeSelectorSide /* true == right-selected */){
-			// If we get here, the active theme should be updated.
+			//// If we get here, the active theme should be updated.
 
 			uTheme.global.name.value = myTheme;
 
 		} else {
-			// If we get here, the left-selected was passed in.
+			//// If we get here, the left-selected was passed in.
 
-			// Update the switch label to be equal to the left-selected value <<VERIFY>>
+			//// Update the switch label to be equal to the left-selected value <<VERIFY>>
 			altThemeName.value = myTheme;
 		}
 	}

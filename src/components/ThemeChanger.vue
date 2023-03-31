@@ -1,13 +1,163 @@
 <template>
 	<!-- <v-app> -->
 	<!-- <v-container class="text-center"> -->
-	<div class="text-center">
-		<h1 class="text-left">Theme Switcher</h1>
-		<v-switch @change="onChangeTheme" :label="`Toggle [${altThemeName}] Theme`" density="compact" :flat="true" inset />
+	<v-row no-gutters class="d-none d-sm-flex" EverythingExceptExtraSmal>
+		<v-col>
+			<v-select style="max-width:10em" label="Left Theme-Not xs" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue" >
+					<template v-slot:selection> {{ selectedThemeModelLeft }} </template>
+					<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }} </v-list-item> </template>
+			</v-select>
+		</v-col>
+		<v-col>
+			<v-icon>arrow-up-left-bold</v-icon>
+			<v-switch density="compact" :flat="true" inset @change="onChangeTheme"  />
+			<v-icon>arrow-down-right-bold</v-icon>
+		</v-col>
+		<v-col>
+			<v-select style="max-width:10em"
+				label="Right Theme-Not xs" v-model="selectedThemeModelRight" :items="computedThemesKeysValue" >
+					<template v-slot:selection> {{ selectedThemeModelRight }} </template>
+					<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }} </v-list-item> </template>
+			</v-select>
+		</v-col>
+	</v-row>
 
-		<p class="text-center" v-if="selectedThemeModelLeft"><br />LEFT SELECTED VALUE [ {{ selectedThemeModelLeft }} ]</p><br />
-		<p class="text-left"> Left Theme Selector</p>
-		<v-select label="Select Theme" 
+														<!-- <v-row no-gutters class="d-flex d-sm-none" OnlyOnExtraSmall>
+															<v-col>
+																<v-switch density="compact" :flat="true" inset @change="onChangeTheme"  />
+															</v-col>
+														</v-row>
+														<v-row no-gutters class="d-flex d-sm-none" OnlyOnExtraSmall>
+															<v-col>
+																<v-select style="max-width:10em" label="Left Theme-Just sx" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue" >
+																		<template v-slot:selection> {{ selectedThemeModelLeft }} </template>
+																		<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }} </v-list-item> </template>
+																</v-select>
+															</v-col>
+														</v-row>
+														<v-row no-gutters class="d-flex d-sm-none" OnlyOnExtraSmall>
+															<v-col>
+																<v-select style="max-width:10em" label="Right Theme-Just sx" v-model="selectedThemeModelRight" :items="computedThemesKeysValue" >
+																		<template v-slot:selection> {{ selectedThemeModelRight }} </template>
+																		<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }} </v-list-item> </template>
+																</v-select>
+															</v-col>
+														</v-row> -->
+
+	<div class="d-sm-none" OnlyOnExtraSmall>
+
+
+
+														<!-- <v-select label="Left Theme-Just sx" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue" >
+																<template v-slot:selection><span class="d-flex justify-center"> {{ selectedThemeModelLeft }} </span></template>
+																<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }} </v-list-item> </template>
+														</v-select>
+
+														<v-row no-gutters>
+															<v-col class="text-right">
+																<v-icon icon="mdi-arrow-up-left-bold" size="x-large" style="margin-top: -6px;"></v-icon>
+															</v-col>
+
+															<v-col cols="2"><v-switch style="justify-content:center;display:flex;" density="compact" :flat="true" inset @change="onChangeTheme" /></v-col>
+															
+															<v-col class="text-left">
+																<v-icon icon="mdi-arrow-down-right-bold" size="x-large" style="margin-top: 14px;"></v-icon>
+															</v-col>
+														</v-row>
+
+
+														<v-select label="Right Theme-Just sx" v-model="selectedThemeModelRight" :items="computedThemesKeysValue" style="padding-top:6px;">
+																<template v-slot:selection><span class="d-flex justify-center"> {{ selectedThemeModelRight }} </span></template>
+																<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }} </v-list-item> </template>
+														</v-select> -->
+
+		<v-list-item>
+			<v-list-item-action>
+				<v-select label="Left Theme-Just sx" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue" >
+					<template v-slot:selection><span class="d-flex justify-center"> {{ selectedThemeModelLeft }} </span></template>
+					<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }} </v-list-item> </template>
+				</v-select>
+				<v-avatar color="success" size="30" v-if="!ThemeSwitchFlag">
+					<v-icon icon="mdi-check" ></v-icon>	
+				</v-avatar>
+				<v-avatar color="grey" size="30" v-else>
+					<v-icon icon="mdi-circle-outline" ></v-icon>	
+				</v-avatar>
+			</v-list-item-action>
+		</v-list-item>
+
+
+
+		<v-row no-gutters>
+			<v-col class="text-right">
+				<v-icon icon="mdi-arrow-up-left-bold" size="x-large" style="margin-top: -6px;"></v-icon>
+			</v-col>
+			<v-col cols="2"><v-switch style="justify-content:center;display:flex;" density="compact" :flat="true" inset @change="onChangeTheme" /></v-col>
+			<v-col class="text-left">
+				<v-icon icon="mdi-arrow-down-right-bold" size="x-large" style="margin-top: 14px;"></v-icon>
+			</v-col>
+		</v-row>
+
+
+
+		<v-list-item>
+			<v-list-item-action>
+				<v-select label="Right Theme-Just sx" v-model="selectedThemeModelRight" :items="computedThemesKeysValue" style="padding-top:6px;">
+						<template v-slot:selection><span class="d-flex justify-center"> {{ selectedThemeModelRight }} </span></template>
+						<template v-slot:item="item"> <v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }} </v-list-item> </template>
+				</v-select>
+
+				<v-avatar color="success" size="30" v-if="ThemeSwitchFlag">
+					<v-icon icon="mdi-check" ></v-icon>	
+				</v-avatar>
+				<v-avatar color="grey" size="30" v-else>
+					<v-icon icon="mdi-circle-outline" ></v-icon>	
+				</v-avatar>		
+			</v-list-item-action>
+		</v-list-item>
+
+	</div>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+		<!-- <h1>Toggle [{{ altThemeName }}] Theme</h1>
+		<v-row justify="center" no-gutters>
+			<v-col cols="auto">
+				<v-select label="Select Theme" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue" class="class=text-left pa-3 ma-3">
+					<template v-slot:selection>
+						{{ selectedThemeModelLeft }} 
+					</template>
+					<template v-slot:item="item">
+							<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)">
+							{{ item.props.title }}
+						</v-list-item>
+					</template>
+				</v-select>
+			</v-col>
+			<v-col cols="1">
+				<v-switch style="display: flex; justify-content: center; margin-top: 2em;" @change="onChangeTheme" density="compact" :flat="true" inset />
+			</v-col>
+			<v-col cols="auto">
+				<v-select label="Select Theme" 
+				v-model="selectedThemeModelRight" 
+				:items="computedThemesKeysValue"  
+				class="class=text-left pa-3 ma-3">
+					<template v-slot:selection>
+						{{ selectedThemeModelRight }} 
+					</template>
+					<template v-slot:item="item">
+						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)">
+							{{ item.props.title }}
+						</v-list-item>
+					</template>
+				</v-select>
+			</v-col>
+		</v-row> -->
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+	<!-- <div class="text-center"> -->
+		<!-- <p class="text-center" v-if="selectedThemeModelLeft"><br />LEFT SELECTED VALUE [ {{ selectedThemeModelLeft }} ]</p><br /> -->
+		<!-- <p class="text-left"> Left Theme Selector</p> -->
+		<!-- <v-select label="Select Theme" 
 		v-model="selectedThemeModelLeft" 
 		:items="computedThemesKeysValue"  
 		class="class=text-left pa-3 ma-3">
@@ -19,11 +169,13 @@
 					{{ item.props.title }}
 				</v-list-item>
 			</template>
-		</v-select>
+		</v-select> -->
+		<!-- <h1>Toggle [{{ altThemeName }}] Theme</h1> -->
+		<!-- <v-switch style="display:flex;justify-content:center;"  @change="onChangeTheme" density="compact" :flat="true" inset /> -->
 
-		<p class="text-center" v-if="selectedThemeModelLeft"><br />RIGHT SELECTED VALUE [ {{ selectedThemeModelRight }} ]</p><br />
-		<p class="text-left"> Right Theme Selector</p>
-		<v-select label="Select Theme" 
+		<!-- <p class="text-center" v-if="selectedThemeModelLeft"><br />RIGHT SELECTED VALUE [ {{ selectedThemeModelRight }} ]</p><br /> -->
+		<!-- <p class="text-left"> Right Theme Selector</p> -->
+		<!-- <v-select label="Select Theme" 
 		v-model="selectedThemeModelRight" 
 		:items="computedThemesKeysValue"  
 		class="class=text-left pa-3 ma-3">
@@ -35,55 +187,35 @@
 					{{ item.props.title }}
 				</v-list-item>
 			</template>
-		</v-select>
+		</v-select> -->
 
-		<!-- PREVIEW BLOCK -->
-		<ThemePreview></ThemePreview>
-		<!-- <div class="text-center">
-			<v-card-text>
-				<v-card color="blue-grey-darken-1" class="my-2" @click="updatePreview(eachThemeName)" 
-				v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
-					<v-list-item>
-						<v-list-item-action>
-							<div>
-								<h1 style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
-							</div>
-							<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
-								<v-icon>mdi-check</v-icon>
-							</v-avatar>
-						</v-list-item-action>
-					</v-list-item>
-					<div class="text-center">
-						<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
-							<v-chip :style="{ background: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
-								<strong :style="{ color: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }"> {{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
-							</v-chip>
-						</span>
-						<br />
-						<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
-							<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
-								<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
-							</v-chip>
-						</span>
-					</div>
-				</v-card>
-			</v-card-text>
-		</div> -->
-	</div>
+		<!-- <ThemePreview /> -->
+
+	<!-- </div> -->
 	<!-- </v-container> -->
 	<!-- </v-app> -->
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { useTheme } from "vuetify";
+//... import { useTheme, useDisplay } from "vuetify";
+import ThemePreview from "../components/ThemePreview.vue";
+//... import { Property } from "csstype";
+
 const uTheme = useTheme();
+//... const display = ref(useDisplay)
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
 const defaultLightTheme: string = "light";
 const defaultDarkTheme: string = "dark";
 const altThemeName = ref("");
 altThemeName.value = defaultDarkTheme;
 uTheme.global.name.value = defaultLightTheme;
-let ThemeSwitchFlag = false // false == left
+
+// let ThemeSwitchFlag = false // false == left
+let ThemeSwitchFlag:Boolean = false // false == left
+
+
 let selectedThemeModelLeft:string = "light"
 let selectedThemeModelRight:string = "dark"
 
@@ -147,16 +279,4 @@ const UpdateTheme = (myTheme: string, ThemeSelectorSide: boolean) => {
 		}
 	}
 };
-</script>
-
-<script lang="ts">
-	import { defineComponent, computed, ref } from "vue";
-	import ThemePreview from "../components/ThemePreview.vue";
-	// import { Property } from "csstype";
-	export default defineComponent({
-		name: "ThemeChanger",
-		components: {
-			ThemePreview
-		},
-	});
 </script>

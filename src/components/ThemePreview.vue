@@ -34,7 +34,10 @@
 </template>
 
 <script setup lang="ts">
+import { defineComponent } from "vue";
 import { useTheme } from "vuetify";
+// import { Property } from "csstype";
+
 const uTheme = useTheme();
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
 const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value);
@@ -72,13 +75,4 @@ function updateActiveTheme(myTheme:string){
 	////	The Theme Switcher and the left/right Theme selectors should NOT be changed.
 	uTheme.global.name.value = myTheme;
 }
-</script>
-
-<script lang="ts">
-import { defineComponent, computed, ref } from "vue";
-// import { Property } from "csstype";
-export default defineComponent({
-	name: "ThemeChanger",
-	components: {},
-});
 </script>

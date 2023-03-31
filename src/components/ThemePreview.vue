@@ -34,9 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent } from "vue";
 import { useTheme } from "vuetify";
-// import { Property } from "csstype";
 
 const uTheme = useTheme();
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
@@ -53,7 +51,7 @@ const generateThemesWithAllColors = () => {
 	for (var i = 0; i < themeLength; i++) {
 		//// Fetch the Theme name
 		var tName = computedThemesKeysValue[i];
-		// Fetch the Color elements
+		//// Fetch the Color elements
 		var tColorProps = computedThemesEntriesValue[i][1].colors;
 		Object.entries(tColorProps).forEach((e) => {
 			if (e[0].includes("-")) return;

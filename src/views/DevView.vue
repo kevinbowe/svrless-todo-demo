@@ -1,7 +1,8 @@
 <template>
-	<v-app>
+<v-app>
+	<v-btn class="pa-3 ma-5" to="/">Go To Home</v-btn>
+	<h1 class="text-primary">Dev View Content</h1>
 	<v-container class="text-center">
-		<h1 class="text-primary">Dev View Content</h1>
 		<ThemePreview />
 	</v-container>
 </v-app>

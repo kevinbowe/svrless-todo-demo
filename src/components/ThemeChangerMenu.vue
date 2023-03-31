@@ -38,7 +38,6 @@
 									variant="outlined">
 
 									<strong>{{ colorName }}</strong>
-									<!-- <strong>{{ colorName }}<br> [ {{ colorCode }} ]</strong> -->
 								</v-chip>
 							</span>
 						</div>
@@ -52,7 +51,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useTheme } from "vuetify";
-import { computed } from "vue";
 const menu = ref(false);
 const uTheme = useTheme();
 
@@ -61,7 +59,7 @@ function setTheme(myTheme: string) { uTheme.global.name.value = myTheme; }
 function loadAllColors__EXPERIMENT__(themeIndex: number) {
 	const themes = Object.entries(uTheme.computedThemes.value);
 	var tt = themes[themeIndex][1].colors;
-	// Display all color names in the theme.
+	//// Display all color names in the theme.
 	for (var i = 0; i < Object.entries(themes[themeIndex][1].colors).length; i++) {
 		console.log("Color-Name: [" + Object.entries(tt)[i][0] + "] == Code: [" + Object.entries(tt)[i][1] + "]")
 	}

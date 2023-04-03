@@ -1,10 +1,11 @@
 <template>
-	<v-container class="d-none d-sm-flex">
+	<DESKTOP_ONLY/>
+	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger> <!-- VERIFY -->
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col>
-				<v-select style="max-width:10em" label="Left DSK" v-model="selectedThemeModelLeft"
-					:items="computedThemesKeysValue">
+				<v-select class="float-right" style="max-width:10em" 
+						label="Left DSK" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
 					<template v-slot:selection> {{ selectedThemeModelLeft }} </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }}
@@ -12,13 +13,17 @@
 					</template>
 				</v-select>
 			</v-col>
-			<v-col align-self="center">
-				<v-switch style="justify-content:center; display:flex;" density="compact" :flat="true" inset
-					@change="onChangeTheme" />
+
+			<v-col cols="lg-1" align-self="center">
+				<v-switch style="justify-content:center; display:flex;margin-bottom:1em;" 
+						density="compact" :flat="true" inset @change="onChangeTheme" />
 			</v-col>
+			
 			<v-col>
-				<v-select style="max-width:10em" label="Right DSK" v-model="selectedThemeModelRight"
-					:items="computedThemesKeysValue">
+				<v-select 
+				
+				style="max-width:10em" class="float-left" 
+						label="Right DSK" v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
 					<template v-slot:selection> {{ selectedThemeModelRight }} </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }}
@@ -30,20 +35,23 @@
 		</v-row>
 	</v-container>
 
+	<MOBILE_ONLY/>
 	<v-container class="d-sm-none">
 		<v-list-item>
 			<v-list-item-action>
-				<v-select label="Left Theme-Just sx" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
+				<v-select label="Left MOB" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ selectedThemeModelLeft }} </span> </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
 				</v-select>
-				<v-avatar v-if="!ThemeSwitchFlag" color="success" size="30">
-					<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-				<v-avatar v-else color="grey" size="30">
-					<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
+				<div style="margin:0em 0em 1em 1em;">
+					<v-avatar v-if="!ThemeSwitchFlag" color="success" size="30">
+						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
+					<v-avatar v-else color="grey" size="30">
+						<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
+				</div>
 			</v-list-item-action>
 		</v-list-item>
 
@@ -59,7 +67,7 @@
 
 		<v-list-item>
 			<v-list-item-action>
-				<v-select label="Right Theme-Just sx" v-model="selectedThemeModelRight" :items="computedThemesKeysValue"
+				<v-select label="Right MOB" v-model="selectedThemeModelRight" :items="computedThemesKeysValue"
 					style="padding-top:6px;">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ selectedThemeModelRight }} </span></template>
@@ -67,10 +75,12 @@
 						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
 				</v-select>
-				<v-avatar v-if="ThemeSwitchFlag" color="success" size="30">
-					<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-				<v-avatar v-else color="grey" size="30">
-					<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+				<div style="margin:0em 0em 1em 1em;">
+					<v-avatar v-if="ThemeSwitchFlag" color="success" size="30">
+						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
+					<v-avatar v-else color="grey" size="30">
+						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+				</div>
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>
@@ -99,10 +109,16 @@ let selectedThemeModelRight:string = "dark"
 const onChangeTheme = () => {
 	//// toggle the ThemeSwitchFlag
 	ThemeSwitchFlag = !ThemeSwitchFlag;
+	// //// Set the new active theme to the opposit of the current active theme
+	// uTheme.global.name.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
+	// //// Update the Toggle Theme lable to display the 'alt' theme.
+	// altThemeName.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
+
 	//// Set the new active theme to the opposit of the current active theme
-	uTheme.global.name.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
 	//// Update the Toggle Theme lable to display the 'alt' theme.
-	altThemeName.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
+					/* Verify this code */
+	uTheme.global.name.value = altThemeName.value = 
+		uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
 };
 
 //// This is called when a Option/Item is selected in the v-select Left or Right.

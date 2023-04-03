@@ -2,33 +2,42 @@
 <div class="text-center">
 	<div class="text-center">
 		<v-card-text>
-			<v-card color="blue-grey-darken-1" class="my-2" @click="updateActiveTheme(eachThemeName)" 
-			v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
+			<v-card color="blue-grey-darken-1" class="my-2" @click="updateActiveTheme(eachThemeName)"
+				v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
+
+			
+				
 				<v-list-item>
 					<v-list-item-action>
-						<div>
-							<h1 style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
-						</div>
+							<h1 class="text-grey" style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
 						<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
 							<v-icon>mdi-check</v-icon>
 						</v-avatar>
 					</v-list-item-action>
 				</v-list-item>
-				<div class="text-center">
-					<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
-						<v-chip :style="{ background: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
-							<strong :style="{ color: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }"> {{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
-						</v-chip>
-					</span>
-					<br />
-					<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
-						<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
-							<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].color }}</strong>
-						</v-chip>
-					</span>
-				</div>
+				
+				<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
+
+					<v-chip :style="{ background: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
+						<strong :style="{ color: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }"> 
+							{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].displayColor }}</strong>
+					</v-chip>
+				</span>
+
+				<br />
+				
+				<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
+
+					<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
+						<strong>
+							{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].displayColor }}</strong>
+					</v-chip>
+				</span>
+
 			</v-card>
+
 		</v-card-text>
+
 	</div>
 </div>
 </template>
@@ -46,18 +55,47 @@ const generateThemesWithAllColors = () => {
 	//// Get the total number of themes.
 	var themeLength = computedThemesKeysValue.length;
 	var themeObjs = [];
-	var cArray: { color: string; code: string }[] = [];
+	var cArray: { color: string; displayColor: string; code: string }[] = [];
 	//// Create array to store the themes and related VideoColorSpace
 	for (var i = 0; i < themeLength; i++) {
 		//// Fetch the Theme name
 		var tName = computedThemesKeysValue[i];
 		//// Fetch the Color elements
 		var tColorProps = computedThemesEntriesValue[i][1].colors;
+
 		Object.entries(tColorProps).forEach((e) => {
-			if (e[0].includes("-")) return;
-			var o = { color: e[0], code: e[1] };
-			cArray.push(o);
+			switch(e[0]){
+				// case 'background':
+				// case 'surface':
+				// case 'primary':
+				// case 'secondary':
+				// case 'info':
+				// 	cArray.push({color: e[0], code: e[1]});
+
+				// case 'background':
+				// 	cArray.push({color: "bgnd", displayColor: e[0], code: e[1]}); break
+				// case 'surface':
+				// 	cArray.push({color: "surf", displayColor: e[0], code: e[1]}); break
+				// case 'primary':
+				// 	cArray.push({color: "prime", displayColor: e[0], code: e[1]}); break
+				// case 'secondary':
+				// 	cArray.push({color: "scndry", displayColor: e[0], code: e[1]}); break
+				// case 'info':
+				//	cArray.push({color: "info", displayColor: e[0], code: e[1]}); break
+
+				case 'background':
+					cArray.push({color:e[0], displayColor: "bkgnd", code: e[1]}); break
+				case 'surface':
+					cArray.push({color: e[0], displayColor: "surf", code: e[1]}); break
+				case 'primary':
+					cArray.push({color: e[0], displayColor: "prime", code: e[1]}); break
+				case 'secondary':
+					cArray.push({color: e[0], displayColor: "scndry", code: e[1]}); break
+				case 'info':
+					cArray.push({color: e[0], displayColor: "info", code: e[1]}); break
+			}
 		});
+
 		//// create the themeObject
 		var o = { theme: tName, colors: tColorProps, colorArray: cArray };
 		themeObjs.push(o);

@@ -2,11 +2,10 @@
 <div class="text-center">
 	<div class="text-center">
 		<v-card-text>
-			<v-card color="blue-grey-darken-1" class="my-2" @click="updateActiveTheme(eachThemeName)"
+			<v-card  style="border:3px solid grey"
+				class="my-2" @click="updateActiveTheme(eachThemeName)"
+				:color="generateThemesWithAllColors()[themeIndex].colorArray[0].code"
 				v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
-
-			
-				
 				<v-list-item>
 					<v-list-item-action>
 							<h1 class="text-grey" style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
@@ -15,29 +14,21 @@
 						</v-avatar>
 					</v-list-item-action>
 				</v-list-item>
-				
 				<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
-
 					<v-chip :style="{ background: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }" label class="ma-1" :variant="chipVariant">
 						<strong :style="{ color: generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code }"> 
 							{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].displayColor }}</strong>
 					</v-chip>
 				</span>
-
 				<br />
-				
 				<span v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length">
-
 					<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].code" label class="ma-1" :variant="chipVariant">
 						<strong>
 							{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex - 1].displayColor }}</strong>
 					</v-chip>
 				</span>
-
 			</v-card>
-
 		</v-card-text>
-
 	</div>
 </div>
 </template>

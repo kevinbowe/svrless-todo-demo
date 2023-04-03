@@ -45,6 +45,12 @@
 	<v-container class="d-sm-none">
 		<v-list-item>
 			<v-list-item-action>
+				<div style="margin:0em 1em 1em 0em;">
+					<v-avatar v-if=!ThemeSwitchFlag color="success" size="30">
+						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
+					<v-avatar v-else color="grey" size="30">
+						<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
+				</div>
 				<v-select label="Left MOB" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ selectedThemeModelLeft }} </span> </template>
@@ -52,12 +58,6 @@
 						<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
 				</v-select>
-				<div style="margin:0em 0em 1em 1em;">
-					<v-avatar v-if=ThemeSwitchFlag color="success" size="30">
-						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-					<v-avatar v-else color="grey" size="30">
-						<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
-				</div>
 			</v-list-item-action>
 		</v-list-item>
 
@@ -73,6 +73,12 @@
 
 		<v-list-item>
 			<v-list-item-action>
+				<div style="margin:0em 1em 1em 0em;">
+					<v-avatar v-if=ThemeSwitchFlag color="success" size="30">
+						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
+					<v-avatar v-else color="grey" size="30">
+						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+				</div>
 				<v-select label="Right MOB" v-model="selectedThemeModelRight" :items="computedThemesKeysValue"
 					style="padding-top:6px;">
 					<template v-slot:selection>
@@ -81,12 +87,6 @@
 						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
 				</v-select>
-				<div style="margin:0em 0em 1em 1em;">
-					<v-avatar v-if=!ThemeSwitchFlag color="success" size="30">
-						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-					<v-avatar v-else color="grey" size="30">
-						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
-				</div>
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>

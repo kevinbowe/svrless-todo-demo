@@ -1,41 +1,47 @@
 <template>
-	<DESKTOP_ONLY/>
 	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger> <!-- VERIFY -->
 		<v-row no-gutters>
 			<v-spacer />
-			<v-col>
-				<v-select class="float-right" style="max-width:10em" 
-						label="Left DSK" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
+			<v-col cols="5">
+				<v-select label="Left DSK" style="max-width:10em" class="float-right" 
+						v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
 					<template v-slot:selection> {{ selectedThemeModelLeft }} </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item>
 					</template>
-				</v-select>
+				</v-select>			
+				<div class="float-right" style="margin:.6em 1em 0em 0em;">
+					<v-avatar v-if="!ThemeSwitchFlag" color="success" size="30">
+						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
+					<v-avatar v-else color="grey" size="30">
+						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+				</div>
 			</v-col>
-
-			<v-col cols="lg-1" align-self="center">
+			<v-col cols="2" align-self="center" style="margin:0em 0em .8em 0em;">
 				<v-switch style="justify-content:center; display:flex;margin-bottom:1em;" 
 						density="compact" :flat="true" inset @change="onChangeTheme" />
-			</v-col>
-			
-			<v-col>
-				<v-select 
-				
-				style="max-width:10em" class="float-left" 
-						label="Right DSK" v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
+			</v-col>	
+			<v-col cols="5">
+				<v-select label="Right DSK" style="max-width:10em" class="float-left" 
+						v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
 					<template v-slot:selection> {{ selectedThemeModelRight }} </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }}
 						</v-list-item>
 					</template>
 				</v-select>
+				<div class="float-left" style="margin:.7em 0em 0em 1em;">
+					<v-avatar v-if="ThemeSwitchFlag" color="success" size="30">
+						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
+					<v-avatar v-else color="grey" size="30">
+						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+				</div>
 			</v-col>
 			<v-spacer />
 		</v-row>
 	</v-container>
 
-	<MOBILE_ONLY/>
 	<v-container class="d-sm-none">
 		<v-list-item>
 			<v-list-item-action>
@@ -47,7 +53,7 @@
 						</v-list-item> </template>
 				</v-select>
 				<div style="margin:0em 0em 1em 1em;">
-					<v-avatar v-if="!ThemeSwitchFlag" color="success" size="30">
+					<v-avatar v-if=ThemeSwitchFlag color="success" size="30">
 						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
 					<v-avatar v-else color="grey" size="30">
 						<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
@@ -76,7 +82,7 @@
 						</v-list-item> </template>
 				</v-select>
 				<div style="margin:0em 0em 1em 1em;">
-					<v-avatar v-if="ThemeSwitchFlag" color="success" size="30">
+					<v-avatar v-if=!ThemeSwitchFlag color="success" size="30">
 						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
 					<v-avatar v-else color="grey" size="30">
 						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
@@ -102,21 +108,16 @@ const altThemeName = ref("");
 altThemeName.value = defaultDarkTheme;
 uTheme.global.name.value = defaultLightTheme;
 
-let ThemeSwitchFlag:Boolean = false //// false == left
+const ThemeSwitchFlag = ref(false) //// false == left
 let selectedThemeModelLeft:string = "light"
 let selectedThemeModelRight:string = "dark"
 
 const onChangeTheme = () => {
 	//// toggle the ThemeSwitchFlag
-	ThemeSwitchFlag = !ThemeSwitchFlag;
-	// //// Set the new active theme to the opposit of the current active theme
-	// uTheme.global.name.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
-	// //// Update the Toggle Theme lable to display the 'alt' theme.
-	// altThemeName.value = uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
+	ThemeSwitchFlag.value = !ThemeSwitchFlag.value;
 
 	//// Set the new active theme to the opposit of the current active theme
 	//// Update the Toggle Theme lable to display the 'alt' theme.
-					/* Verify this code */
 	uTheme.global.name.value = altThemeName.value = 
 		uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
 };
@@ -139,7 +140,7 @@ function updateSelectorAndTheme(itemTheme: { props: { value: string; }; }, selec
 //// This also sets the Switch/Toggle position label based on the other theme.
 const UpdateTheme = (myTheme: string, ThemeSelectorSide: boolean) => {
 	//// Which switch is currently active (left or right)?
-	if(!ThemeSwitchFlag /* false == left-switch | true == right */) {
+	if(!ThemeSwitchFlag.value /* false == left-switch | true == right */) {
 		//// If we get here, the switch is set to the left... (false)
 
 		//// Which selected theme (left or right) got passed to this function?

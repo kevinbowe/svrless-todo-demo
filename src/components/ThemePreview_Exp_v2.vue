@@ -1,32 +1,45 @@
 <template>
 <div class="text-center">
-	<h1>ThemePreview (Exp v2)</h1>
-	<div class="text-center">
-		<v-card-text>
-			<v-card style="border:3px solid grey"
-					class="my-2" @click="updateActiveTheme(eachThemeName)"
-					:color="generateThemesWithAllColors()[themeIndex].colorArray[0].code"
-					v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
-				<v-list-item>
-					<v-list-item-action>
-							<h1 class="text-grey" style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
-						<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
-							<v-icon>mdi-check</v-icon>
-						</v-avatar>
-					</v-list-item-action>
-				</v-list-item>
-				<v-chip BACKGROUND_CHIP_ONLY color="grey" label class="ma-1" :variant="chipVariant">
-					<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[0].color }}</strong>
-					<v-avatar variant="outlined" style="margin-left:1em" size="25"></v-avatar>
-				</v-chip>
-				<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code" label class="ma-1" :variant="chipVariant"
-						v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length-1">
-					<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].color }}</strong>
-					<v-avatar :style="{marginLeft:`1em`, background:generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code } " size="25"></v-avatar>
-				</v-chip>
-			</v-card>
-		</v-card-text>
-	</div>
+	<v-expansion-panels>
+		<v-expansion-panel>
+			<v-expansion-panel-title 
+					zzzcolor="surface-lighten-3"
+					color="grey-lighten-3">
+				<template v-slot:default="{expanded}">
+					ThemePreview (Exp v2)
+				</template>
+			</v-expansion-panel-title>
+			<v-expansion-panel-text>
+				<div class="text-center">
+					ThemePreview (Exp v2)
+					<v-card-text>
+						<v-card style="border:3px solid grey"
+								class="my-2" @click="updateActiveTheme(eachThemeName)"
+								:color="generateThemesWithAllColors()[themeIndex].colorArray[0].code"
+								v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
+							<v-list-item>
+								<v-list-item-action>
+										<h1 class="text-grey" style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
+									<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
+										<v-icon>mdi-check</v-icon>
+									</v-avatar>
+								</v-list-item-action>
+							</v-list-item>
+							<v-chip BACKGROUND_CHIP_ONLY color="grey" label class="ma-1" :variant="chipVariant">
+								<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[0].color }}</strong>
+								<v-avatar variant="outlined" style="margin-left:1em" size="25"></v-avatar>
+							</v-chip>
+							<v-chip :color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code" label class="ma-1" :variant="chipVariant"
+									v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length-1">
+								<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].color }}</strong>
+								<v-avatar :style="{marginLeft:`1em`, background:generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code } " size="25"></v-avatar>
+							</v-chip>
+						</v-card>
+					</v-card-text>
+				</div>
+			</v-expansion-panel-text>
+		</v-expansion-panel>
+	</v-expansion-panels>
 </div>
 </template>
 

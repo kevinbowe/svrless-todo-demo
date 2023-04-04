@@ -75,15 +75,24 @@ const generateThemesWithAllColors = () => {
 				//	cArray.push({color: "info", displayColor: e[0], code: e[1]}); break
 
 				case 'background':
-					cArray.push({color:e[0], displayColor: "bkgnd", code: e[1]}); break
+					cArray.push({color:e[0], displayColor: "background", code: e[1]}); break
 				case 'surface':
-					cArray.push({color: e[0], displayColor: "surf", code: e[1]}); break
+					cArray.push({color: e[0], displayColor: "surface", code: e[1]}); break
 				case 'primary':
-					cArray.push({color: e[0], displayColor: "prime", code: e[1]}); break
+					cArray.push({color: e[0], displayColor: "primary", code: e[1]}); break
 				case 'secondary':
-					cArray.push({color: e[0], displayColor: "scndry", code: e[1]}); break
+					cArray.push({color: e[0], displayColor: "secondary", code: e[1]}); break
+
 				case 'info':
 					cArray.push({color: e[0], displayColor: "info", code: e[1]}); break
+				case 'error':
+					cArray.push({color: e[0], displayColor: "error", code: e[1]}); break
+				case 'success':
+					cArray.push({color: e[0], displayColor: "success", code: e[1]}); break
+				case 'warning':
+					cArray.push({color: e[0], displayColor: "warning", code: e[1]}); break
+				default :
+				 	if (e[0].includes("-")) break
 			}
 		});
 

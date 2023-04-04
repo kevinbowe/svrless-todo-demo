@@ -3,7 +3,7 @@
     <v-main>
       <v-app-bar app color="primary" dark>
         <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
-        <v-toolbar-title>Vue Multi Themes (v16)</v-toolbar-title>
+        <v-toolbar-title>Vue Multi Themes (v17)</v-toolbar-title>
         <v-spacer></v-spacer>
 		  <v-btn variant="plain">
 					<v-tooltip activator="parent" location="bottom">Toggle Theme</v-tooltip>

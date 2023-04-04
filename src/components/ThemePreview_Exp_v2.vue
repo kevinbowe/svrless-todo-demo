@@ -1,6 +1,6 @@
 <template>
 <div class="text-center">
-	<h1>ThemePreview (Experiment: Latest)</h1>
+	<h1>ThemePreview (Exp v2)</h1>
 	<div class="text-center">
 		<v-card-text>
 			<v-card style="border:3px solid grey"

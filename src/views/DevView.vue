@@ -6,11 +6,13 @@
 
 <v-container class="text-center">
 	<hr style="height:1em;background:black;">
-	<ThemePreview />
-	<hr style="height:1em;background:black;">
-	<ThemePreview_Exp_v0 />
-	<hr style="height:1em;background:black;">
-	<ThemePreview_Exp_v1 />
+	<ThemePreview_Exp_v2 />
+	<!-- <hr style="height:1em;background:black;"> -->
+	<!-- <ThemePreview /> -->
+	<!-- <hr style="height:1em;background:black;"> -->
+	<!-- <ThemePreview_Exp_v0 /> -->
+	<!-- <hr style="height:1em;background:black;"> -->
+	<!-- <ThemePreview_Exp_v1 /> -->
 </v-container>
 
 </v-app>
@@ -20,6 +22,7 @@
 // Experiments
 import ThemePreview_Exp_v0 from "../components/ThemePreview_Exp_v0.vue";
 import ThemePreview_Exp_v1 from "../components/ThemePreview_Exp_v1.vue";
+import ThemePreview_Exp_v2 from "../components/ThemePreview_Exp_v2.vue";
 // Latest version
 import ThemePreview from "../components/ThemePreview.vue";
 </script>

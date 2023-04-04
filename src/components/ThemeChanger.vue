@@ -93,7 +93,9 @@
 
 	<!-- <ThemePreview_Exp_v0 /> -->
 	<!-- <ThemePreview_Exp_v1 /> -->
-	<ThemePreview />
+	<ThemePreview_Exp_v2 />
+	
+	<!-- <ThemePreview FINAL_ITERATION/> -->
 
 </template>
 
@@ -103,6 +105,7 @@ import { useTheme } from "vuetify";
 
 import ThemePreview_Exp_v0 from "./ThemePreview_Exp_v0.vue";
 import ThemePreview_Exp_v1 from "./ThemePreview_Exp_v1.vue";
+import ThemePreview_Exp_v2 from "./ThemePreview_Exp_v2.vue";
 import ThemePreview from "./ThemePreview.vue";
 
 const uTheme = useTheme();

@@ -11,7 +11,7 @@
 			</v-expansion-panel-title>
 			<v-expansion-panel-text>
 				<div class="text-center">
-					ThemePreview (v2)
+
 					<v-card-text>
 						<v-card style="border:3px solid grey"
 								class="my-2" @click="updateActiveTheme(eachThemeName)"

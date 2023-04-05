@@ -1,10 +1,8 @@
 <template>
 <div class="text-center">
-	<v-expansion-panels>
+	<v-expansion-panels variant="popout">
 		<v-expansion-panel>
-			<v-expansion-panel-title 
-					zzzcolor="surface-lighten-3"
-					color="grey-lighten-3">
+			<v-expansion-panel-title color="grey-lighten-3">
 				<template v-slot:default="{expanded}">
 					ThemePreview
 				</template>
@@ -12,20 +10,20 @@
 			<v-expansion-panel-text>
 				<div class="text-center">
 
-					<v-card-text>
+					<v-card-text style="padding:0 7px;">
 						<v-card style="border:3px solid grey"
 								class="my-2" @click="updateActiveTheme(eachThemeName)"
 								:color="generateThemesWithAllColors()[themeIndex].colorArray[0].code"
 								v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex">
 							<v-list-item>
 								<v-list-item-action>
-										<h1 class="text-grey" style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h1>
+									<h2 class="text-grey" style="display: inline; margin-right: 1em">{{ eachThemeName.toUpperCase() }}</h2>
 									<v-avatar v-if="uTheme.global.name.value === eachThemeName" color="success" size="30">
 										<v-icon>mdi-check</v-icon>
 									</v-avatar>
 								</v-list-item-action>
 							</v-list-item>
-							<v-chip BACKGROUND_CHIP_ONLY color="grey" label class="ma-1" :variant="chipVariant">
+							<v-chip __BACKGROUND_CHIP_ONLY__ color="grey" label class="ma-1" :variant="chipVariant">
 								<strong>{{ generateThemesWithAllColors()[themeIndex].colorArray[0].color }}</strong>
 								<v-avatar variant="outlined" style="margin-left:1em" size="25"></v-avatar>
 							</v-chip>
@@ -75,7 +73,6 @@ const generateThemesWithAllColors = () => {
 					cArray.push({color: e[0], code: e[1]}); break
 				case 'secondary':
 					cArray.push({color: e[0], code: e[1]}); break
-
 				case 'info':
 					cArray.push({color: e[0], code: e[1]}); break
 				case 'error':
@@ -105,3 +102,8 @@ function updateActiveTheme(myTheme:string){
 	uTheme.global.name.value = myTheme;
 }
 </script>
+<style>
+.v-expansion-panel-text__wrapper {
+    padding:0px;
+}
+</style>

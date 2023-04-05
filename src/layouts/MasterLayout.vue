@@ -5,20 +5,6 @@
         <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
         <v-toolbar-title>Vue Multi Themes (v17)</v-toolbar-title>
         <v-spacer></v-spacer>
-		  <v-btn variant="plain">
-				<v-tooltip activator="parent" location="bottom">Toggle Theme</v-tooltip>
-				<v-icon color="secondary" icon="mdi-palette" size="30" />
-				<v-menu v-model="menu" activator="parent" :close-on-content-click="false" location="end">
-					<v-card>
-						<v-card-actions>
-							<v-spacer></v-spacer>
-							<v-btn variant="text" @click="menu = false">Cancel</v-btn>
-							<v-btn color="primary" variant="text" @click="menu = false">Save</v-btn>
-						</v-card-actions>
-						<ThemeChanger />
-					</v-card>
-				</v-menu>
-			</v-btn>
 			<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/dev" >
 				Dev
 			</v-btn>
@@ -49,6 +35,20 @@
 						<v-list-item v-for="link in accountLinks" :key="link.label" :value="link.label" :to="link.url" >
 							<v-list-item-title>{{ link.label }}</v-list-item-title>
 						</v-list-item>
+						<v-btn variant="plain">
+							<v-tooltip activator="parent" location="bottom">Toggle Theme</v-tooltip>
+							<v-icon color="secondary" icon="mdi-palette" size="30" />
+							<v-menu v-model="menu" activator="parent" :close-on-content-click="false" location="end">
+								<v-card>
+									<v-card-actions>
+										<v-spacer></v-spacer>
+										<v-btn variant="text" @click="menu = false">Cancel</v-btn>
+										<v-btn color="primary" variant="text" @click="menu = false">Save</v-btn>
+									</v-card-actions>
+									<ThemeChanger />
+								</v-card>
+							</v-menu>
+						</v-btn>
 					</v-list>
 				</v-menu>
 			</v-btn>

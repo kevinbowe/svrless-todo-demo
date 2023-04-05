@@ -55,42 +55,24 @@ const generateThemesWithAllColors = () => {
 	var themeLength = computedThemesKeysValue.length;
 	var themeObjs = [];
 	// var cArray: { color: string; displayColor: string; code: string }[] = [];
-	var cArray: { color: string; code: string }[] = [];
+	var colorArray: { color: string; code: string }[] = [];
 	//// Create array to store the themes and related VideoColorSpace
 	for (var i = 0; i < themeLength; i++) {
 		//// Fetch the Theme name
-		var tName = computedThemesKeysValue[i];
+		var themeName = computedThemesKeysValue[i];
 		//// Fetch the Color elements
-		var tColorProps = computedThemesEntriesValue[i][1].colors;
-
-		Object.entries(tColorProps).forEach((e) => {
-			switch(e[0]){
-				case 'background':
-					cArray.push({color:e[0], code: e[1]}); break
-				case 'surface':
-					cArray.push({color: e[0], code: e[1]}); break
-				case 'primary':
-					cArray.push({color: e[0], code: e[1]}); break
-				case 'secondary':
-					cArray.push({color: e[0], code: e[1]}); break
-				case 'info':
-					cArray.push({color: e[0], code: e[1]}); break
-				case 'error':
-					cArray.push({color: e[0], code: e[1]}); break
-				case 'success':
-					cArray.push({color: e[0], code: e[1]}); break
-				case 'warning':
-					cArray.push({color: e[0], code: e[1]}); break
-				default :
-				 	if (e[0].includes("-")) break
-			}
-		});
-
-		//// create the themeObject
-		var o = { theme: tName, colors: tColorProps, colorArray: cArray };
+		var themeColorProps = computedThemesEntriesValue[i][1].colors;
+		//// Filter the Theme Colors
+		let colorFilter = ['background','surface','primary','secondary','info','error','success','warning']
+		////	Look for matching colors
+		let matches = Object.entries(themeColorProps).filter(val => colorFilter.includes(val[0]) )
+		////	Hydrate the colorArray with matching colors
+		matches.forEach(match => colorArray.push( {color: match[0], code: match[1]} ) )
+		//// create a themeObject
+		var o = { theme: themeName, colors: themeColorProps, colorArray: colorArray };
 		themeObjs.push(o);
-		//// Clear the cArray for the next theme pass
-		cArray = [];
+		//// Clear the colorArray for the next theme
+		colorArray = [];
 	}
 	return themeObjs;
 };

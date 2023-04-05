@@ -19,16 +19,6 @@
 				</v-menu>
 			</v-btn>
 				
-			<v-btn color="white" variant="plain">Articles
-				<v-menu activator="parent">
-					<v-list>
-						<v-list-item v-for="link in articleLinks" :key="link.label" :value="link.label" :to="link.url" >
-							<v-list-item-title>{{ link.label }}</v-list-item-title>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-			</v-btn>
-				
 			<v-btn color="white" variant="plain"> Account
 				<v-menu activator="parent">
 					<v-list>
@@ -81,9 +71,6 @@ const menu = ref(false);
 const blogLinks = ref([
   { label: "Blog 1", url: "/blog1" },
   { label: "Blog 2", url: "/blog2" },
-]);
-
-const articleLinks = ref([
   { label: "Article 1", url: "/article1" },
   { label: "Article 2", url: "/article2" },
 ]);

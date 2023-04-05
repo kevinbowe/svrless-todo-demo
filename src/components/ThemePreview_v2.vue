@@ -54,7 +54,6 @@ const generateThemesWithAllColors = () => {
 	//// Get the total number of themes.
 	var themeLength = computedThemesKeysValue.length;
 	var themeObjs = [];
-	// var cArray: { color: string; displayColor: string; code: string }[] = [];
 	var colorArray: { color: string; code: string }[] = [];
 	//// Create array to store the themes and related VideoColorSpace
 	for (var i = 0; i < themeLength; i++) {

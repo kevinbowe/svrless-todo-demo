@@ -44,9 +44,9 @@
 			</v-btn>
       </v-app-bar>
 
-      <!-- |||||| START Content is insertio |||||| -->
+      <!-- |||||| START Content insertion here |||||| -->
 			<slot></slot>
-      <!-- |||||| START Content is insertio |||||| -->
+      <!-- |||||| END Content insertion here |||||| -->
 
       <v-footer app color="primary" dark fixed>
         <v-row justify="center" no-gutters>

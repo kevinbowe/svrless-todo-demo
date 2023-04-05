@@ -3,7 +3,7 @@
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col cols="5">
-				<v-select label="Left Theme" style="max-width:10em" class="float-right" 
+				<v-select label="Left Theme" style="width:10em;" class="float-right" 
 						v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
 					<template v-slot:selection> {{ selectedThemeModelLeft }} </template>
 					<template v-slot:item="item">
@@ -23,7 +23,7 @@
 						density="compact" :flat="true" inset @change="onChangeTheme" />
 			</v-col>	
 			<v-col cols="5">
-				<v-select label="Right Theme" style="max-width:10em" class="float-left" 
+				<v-select label="Right Theme" style="width:10em;" class="float-left" 
 						v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
 					<template v-slot:selection> {{ selectedThemeModelRight }} </template>
 					<template v-slot:item="item">
@@ -51,7 +51,7 @@
 					<v-avatar v-else color="grey" size="30">
 						<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
 				</div>
-				<v-select label="Left Theme" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
+				<v-select label="Left Theme" style="min-width:10em;" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ selectedThemeModelLeft }} </span> </template>
 					<template v-slot:item="item">
@@ -79,8 +79,7 @@
 					<v-avatar v-else color="grey" size="30">
 						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
 				</div>
-				<v-select label="Right Theme" v-model="selectedThemeModelRight" :items="computedThemesKeysValue"
-					style="padding-top:6px;">
+				<v-select label="Right Theme" style="padding-top:6px;min-width:10em;" v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ selectedThemeModelRight }} </span></template>
 					<template v-slot:item="item">

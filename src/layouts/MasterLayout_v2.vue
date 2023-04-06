@@ -1,10 +1,10 @@
 <template>
-  <v-layout>
-    <v-main>
-      <v-app-bar app color="primary" dark>
-        <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
-        <v-toolbar-title>Vue Multi Themes (v18)</v-toolbar-title>
-        <v-spacer></v-spacer>
+<v-layout>
+	<v-main>
+		<v-app-bar app color="primary" dark>
+			<v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
+			<v-toolbar-title>Vue Multi Themes (v18)</v-toolbar-title>
+			<v-spacer></v-spacer>
 			<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/dev" >
 				Dev
 			</v-btn>
@@ -18,7 +18,7 @@
 					</v-list>
 				</v-menu>
 			</v-btn>
-				
+					
 			<v-btn color="white" variant="plain"> Account
 				<v-menu activator="parent">
 					<v-list>
@@ -48,18 +48,18 @@
 			<slot></slot>
       <!-- |||||| END Content insertion here |||||| -->
 
-      <v-footer app color="primary" dark fixed>
-        <v-row justify="center" no-gutters>
+		<v-footer app color="primary" dark fixed>
+			<v-row justify="center" no-gutters>
 				<v-btn v-for="link in footerLinks" :key="link.label" color="white" variant="text" class="mx-2" rounded="xl" :to="link.url" >
-            {{ link.label }}
-          </v-btn>
-          <v-col class="text-center mt-4" cols="12">
-            <strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
-          </v-col>
-        </v-row>
-      </v-footer>
-    </v-main>
-  </v-layout>
+					{{ link.label }}
+				</v-btn>
+				<v-col class="text-center mt-4" cols="12">
+					<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
+				</v-col>
+			</v-row>
+		</v-footer>
+	</v-main>
+</v-layout>
 </template>
 
 <script setup lang="ts" >

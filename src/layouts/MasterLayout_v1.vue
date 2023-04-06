@@ -3,7 +3,7 @@
     <v-main>
       <v-app-bar app color="primary" dark>
         <v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
-        <v-toolbar-title>Vue Multi Themes (v17)</v-toolbar-title>
+        <v-toolbar-title>Vue Multi Themes (v18)</v-toolbar-title>
         <v-spacer></v-spacer>
 			<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/dev" >
 				Dev

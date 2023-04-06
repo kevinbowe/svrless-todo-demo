@@ -5,14 +5,14 @@
 			<v-app-bar-nav-icon to="/" icon="mdi-home" size="30"></v-app-bar-nav-icon>
 			<v-toolbar-title>Vue Multi Themes (v18)</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn color="white" variant="plain" class="mx-2" rounded="xl" to="/dev" >
+			<v-btn class="mx-2" color="white" variant="plain"  rounded="xl" to="/dev" >
 				Dev
 			</v-btn>
 
 			<v-btn color="white" variant="plain">Blogs
 				<v-menu activator="parent">
 					<v-list>
-						<v-list-item v-for="link in blogLinks" :key="link.label" :value="link.label" :to="link.url" >
+						<v-list-item :to="link.url" v-for="link in blogLinks" :key="link.label" :value="link.label"  >
 							<v-list-item-title>{{ link.label }}</v-list-item-title>
 						</v-list-item>
 					</v-list>
@@ -22,13 +22,13 @@
 			<v-btn color="white" variant="plain"> Account
 				<v-menu activator="parent">
 					<v-list>
-						<v-list-item v-for="link in accountLinks" :key="link.label" :value="link.label" :to="link.url" >
+						<v-list-item :to="link.url" :value="link.label" v-for="link in accountLinks" :key="link.label" >
 							<v-list-item-title>{{ link.label }}</v-list-item-title>
 						</v-list-item>
 						<v-btn variant="plain">
 							<v-tooltip activator="parent" location="bottom">Toggle Theme</v-tooltip>
 							<v-icon color="secondary" icon="mdi-palette" size="30" />
-							<v-menu v-model="menu" activator="parent" :close-on-content-click="false" location="end">
+							<v-menu  activator="parent" location="end" v-model="menu" :close-on-content-click="false" >
 								<v-card>
 									<v-card-actions>
 										<v-spacer></v-spacer>
@@ -50,7 +50,7 @@
 
 		<v-footer app color="primary" dark fixed>
 			<v-row justify="center" no-gutters>
-				<v-btn v-for="link in footerLinks" :key="link.label" color="white" variant="text" class="mx-2" rounded="xl" :to="link.url" >
+				<v-btn class="mx-2" color="white" variant="text" rounded="xl" :to="link.url" v-for="link in footerLinks" :key="link.label" >
 					{{ link.label }}
 				</v-btn>
 				<v-col class="text-center mt-4" cols="12">

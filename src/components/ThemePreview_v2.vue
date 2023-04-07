@@ -62,7 +62,7 @@ const generateThemesWithAllColors = () => {
 		//// Fetch the Color elements
 		var themeColorProps = computedThemesEntriesValue[i][1].colors;
 		//// Filter the Theme Colors
-		let colorFilter = ['background','surface','primary','secondary','info','error','success','warning']
+		let colorFilter = ['background','surface','primary','secondary','info','error','success','warning','important']
 		////	Look for matching colors
 		let matches = Object.entries(themeColorProps).filter(val => colorFilter.includes(val[0]) )
 		////	Hydrate the colorArray with matching colors

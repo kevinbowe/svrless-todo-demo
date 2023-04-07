@@ -11,6 +11,5 @@
 
 <script lang="ts" setup>
 import ThemeChanger from "../components/ThemeChanger.vue";
-////	import MasterLayout_v1 from "../layouts/MasterLayout_v1.vue";
 import MasterLayout from "../layouts/MasterLayout.vue";
 </script>

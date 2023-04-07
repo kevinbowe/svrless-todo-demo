@@ -9,6 +9,5 @@
 </template>
 
 <script lang="ts" setup>
-	////	import MasterLayout_v1 from "../layouts/MasterLayout_v1.vue";
 	import MasterLayout from "../layouts/MasterLayout.vue";
 </script>

@@ -3,7 +3,6 @@
 	<v-expansion-panels>
 		<v-expansion-panel>
 			<v-expansion-panel-title 
-					zzzcolor="surface-lighten-3"
 					color="grey-lighten-3">
 				<template v-slot:default="{expanded}">
 					ThemePreview (Exp v2)

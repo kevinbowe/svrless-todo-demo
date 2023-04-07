@@ -1,5 +1,4 @@
 <template>
-<div class="text-center">
 	<v-expansion-panels variant="popout">
 		<v-expansion-panel>
 			<v-expansion-panel-title color="grey-lighten-3">
@@ -7,9 +6,7 @@
 					ThemePreview
 				</template>
 			</v-expansion-panel-title>
-			<v-expansion-panel-text>
-				<div class="text-center">
-
+			<v-expansion-panel-text class="text-center">
 					<v-card-text style="padding:0 7px;">
 						<v-card style="border:3px solid grey"
 								class="my-2" @click="updateActiveTheme(eachThemeName)"
@@ -34,11 +31,9 @@
 							</v-chip>
 						</v-card>
 					</v-card-text>
-				</div>
 			</v-expansion-panel-text>
 		</v-expansion-panel>
 	</v-expansion-panels>
-</div>
 </template>
 
 <script setup lang="ts">

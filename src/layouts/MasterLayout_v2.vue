@@ -30,6 +30,7 @@
 						</v-list>
 					</v-menu>
 				</v-app-bar-nav-icon>
+				
 				<v-app-bar-title><a style="text-decoration:none;" href="/">{{ mainTitle }}</a></v-app-bar-title>
 
 				<v-spacer />
@@ -123,7 +124,7 @@
 import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 
-const mainTitle: string = "Vue MultiTheme v19"
+const mainTitle: string = "Vue MultiTheme v20"
 
 const menu = ref(false);
 

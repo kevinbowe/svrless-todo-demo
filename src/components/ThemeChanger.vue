@@ -4,8 +4,8 @@
 			<v-spacer />
 			<v-col cols="5">
 				<v-select label="Left Theme" style="width:10em;" class="float-right" 
-						v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
-					<template v-slot:selection> {{ selectedThemeModelLeft }} </template>
+						v-model="leftModel" :items="computedThemesKeysValue">
+					<template v-slot:selection> {{ leftModel }} </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item>
@@ -24,8 +24,8 @@
 			</v-col>	
 			<v-col cols="5">
 				<v-select label="Right Theme" style="width:10em;" class="float-left" 
-						v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
-					<template v-slot:selection> {{ selectedThemeModelRight }} </template>
+						v-model="rightModel" :items="computedThemesKeysValue">
+					<template v-slot:selection> {{ rightModel }} </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }}
 						</v-list-item>
@@ -51,9 +51,9 @@
 					<v-avatar v-else color="grey" size="30">
 						<v-icon icon="mdi-circle-outline"> </v-icon> </v-avatar>
 				</div>
-				<v-select label="Left Theme" style="min-width:10em;" v-model="selectedThemeModelLeft" :items="computedThemesKeysValue">
+				<v-select label="Left Theme" style="min-width:10em;" v-model="leftModel" :items="computedThemesKeysValue">
 					<template v-slot:selection>
-						<span class="d-flex justify-center"> {{ selectedThemeModelLeft }} </span> </template>
+						<span class="d-flex justify-center"> {{ leftModel }} </span> </template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
@@ -79,9 +79,9 @@
 					<v-avatar v-else color="grey" size="30">
 						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
 				</div>
-				<v-select label="Right Theme" style="padding-top:6px;min-width:10em;" v-model="selectedThemeModelRight" :items="computedThemesKeysValue">
+				<v-select label="Right Theme" style="padding-top:6px;min-width:10em;" v-model="rightModel" :items="computedThemesKeysValue">
 					<template v-slot:selection>
-						<span class="d-flex justify-center"> {{ selectedThemeModelRight }} </span></template>
+						<span class="d-flex justify-center"> {{ rightModel }} </span></template>
 					<template v-slot:item="item">
 						<v-list-item @click="updateSelectorAndTheme(item, true /* Right Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
@@ -99,78 +99,87 @@ import { ref } from "vue";
 import { useTheme } from "vuetify";
 import ThemePreview from "./ThemePreview.vue";
 
-
-const uTheme = useTheme();
-const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
-const defaultLightTheme: string = "light";
-const defaultDarkTheme: string = "dark";
-const altThemeName = ref("");
-
-altThemeName.value = defaultDarkTheme;
-uTheme.global.name.value = defaultLightTheme;
-
+const theme = useTheme();
+const computedThemesKeysValue = Object.keys(theme.computedThemes.value);
+//...const altThemeName = ref("");
 const ThemeSwitchFlag = ref(false) //// false == left
-let selectedThemeModelLeft:string = "light"
-let selectedThemeModelRight:string = "dark"
+let leftModel:string = "light"
+let rightModel:string = "dark"
+theme.global.name.value = "light";
 
 const onChangeTheme = () => {
 	//// toggle the ThemeSwitchFlag
 	ThemeSwitchFlag.value = !ThemeSwitchFlag.value;
 
-	//// Set the new active theme to the opposit of the current active theme
+	//// Toggle the active theme (theme.global.name.value).
 	//// Update the Toggle Theme lable to display the 'alt' theme.
-	uTheme.global.name.value = altThemeName.value = 
-		uTheme.global.name.value === selectedThemeModelLeft ? selectedThemeModelRight : selectedThemeModelLeft;
+	theme.global.name.value = /* altThemeName.value = */ 
+		theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
-//// This is called when a Option/Item is selected in the v-select Left or Right.
-function updateSelectorAndTheme(itemTheme: { props: { value: string; }; }, selectorSide: boolean ) { 
+//// This is called when a Option/Item is selected in the v-select (Left or Right).
+function updateSelectorAndTheme(itemTheme: { props: { value: string; }; }, selectorSide: boolean) { 
 	if (!selectorSide /* false -- left */){
-		//// This is going to set the selected left model based on the left item that was selected.
-		selectedThemeModelLeft = itemTheme.props.value;
+		//// This is going to set the model based on the item that was selected.
+		leftModel = itemTheme.props.value;
 
 	} else { /* true -- right */
-		//// This is going to set the selected right model based on the left item that was selected.
-		selectedThemeModelRight = itemTheme.props.value;
+		//// This is going to set the model based on the item that was selected.
+		rightModel = itemTheme.props.value;
 	}
 	//// This updates the active theme for the whole system.
-	UpdateTheme(itemTheme.props.value, selectorSide)
+	//...UpdateTheme(itemTheme.props.value)0
+	theme.global.name.value = itemTheme.props.value;
 }
 
-//// This updates the Active Theme based on the Switch/Toggle position (left/right).
-//// This also sets the Switch/Toggle position label based on the other theme.
-const UpdateTheme = (myTheme: string, ThemeSelectorSide: boolean) => {
-	//// Which switch is currently active (left or right)?
-	if(!ThemeSwitchFlag.value /* false == left-switch | true == right */) {
-		//// If we get here, the switch is set to the left... (false)
+// //// This updates the Active Theme based on the Switch/Toggle position (left/right).
+// //// This also sets the Switch/Toggle position label based on the theme selected in the alternate selector.
+// const UpdateTheme_EXP1 = (selectedTheme: string, themeSelector: boolean) => {
 
-		//// Which selected theme (left or right) got passed to this function?
-		if(!ThemeSelectorSide /* false == left-selected */) {
-			//// If we get here, the active theme should be updated.
+// 	//// Which switch is currently active (left or right)?
+// 	if(!ThemeSwitchFlag.value /* false == left-switch | true == right */) {
+// 		//// If we get here, the switch is set to the left. (false)
 
-			uTheme.global.name.value = myTheme;
+// 		//// Which selected theme (left or right) got passed to this function?
+// 		if(!themeSelector /* false == left-selector */) 
+// 			//// If we get here, set the active theme to the selectedTheme arg.
+// 			theme.global.name.value = selectedTheme;
+// 		return	
+// 	}
 
-		} else {
-			//// If we get here, the right-selected was passed in.
-			
-			//// Update the switch label to be equal to the right-selected value
-			altThemeName.value = myTheme;
-		}
-	} else {
-		//// If we get here, the switch is set to the right... (true)
+// 	//// If we get here, the switch is set to the right (true)
 
-		//// Which theme selector (left or right) got passed to this function?
-		if(ThemeSelectorSide /* true == right-selected */){
-			//// If we get here, the active theme should be updated.
+// 	//// Which theme selector (left or right) got passed to this function?
+// 	if(themeSelector /* true == right-selector */){
+// 		//// If we get here, set the active theme to the selectedTheme arg.
 
-			uTheme.global.name.value = myTheme;
+// 		theme.global.name.value = selectedTheme;
+// 	}
+// };
 
-		} else {
-			//// If we get here, the left-selected was passed in.
 
-			//// Update the switch label to be equal to the left-selected value <<VERIFY>>
-			altThemeName.value = myTheme;
-		}
-	}
-};
+// //// This updates the Active Theme based on the Switch/Toggle position (left/right).
+// //// This also sets the Switch/Toggle position label based on the theme selected in the alternate selector.
+// const UpdateTheme__ORG = (selectedTheme: string, themeSelector: boolean) => {
+// 	//// Which switch is currently active (left or right)?
+// 	if(!ThemeSwitchFlag.value /* false == left-switch | true == right */) {
+// 		//// If we get here, the switch is set to the left. (false)
+
+// 		//// Which selected theme (left or right) got passed to this function?
+// 		if(!themeSelector /* false == left-selector */) {
+// 			//// If we get here, set the active theme to the selectedTheme arg.
+
+// 			theme.global.name.value = selectedTheme;
+// 		} 
+// 	} else {
+// 		//// If we get here, the switch is set to the right (true)
+
+// 		//// Which theme selector (left or right) got passed to this function?
+// 		if(themeSelector /* true == right-selector */){
+// 			//// If we get here, set the active theme to the selectedTheme arg.
+
+// 			theme.global.name.value = selectedTheme;
+// 		}
+// 	}
+// };
 </script>

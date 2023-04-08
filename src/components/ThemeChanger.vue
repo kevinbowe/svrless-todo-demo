@@ -1,5 +1,5 @@
 <template>
-	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger> <!-- VERIFY -->
+	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col cols="5">
@@ -12,10 +12,7 @@
 					</template>
 				</v-select>			
 				<div class="float-right" style="margin:.6em 1em 0em 0em;">
-					<v-avatar v-if="!switchFlag" color="success" size="30">
-						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-					<v-avatar v-else color="grey" size="30">
-						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+					<StatusIcons :stat="!switchFlag" />
 					
 				</div>
 			</v-col>
@@ -36,10 +33,7 @@
 					</template>
 				</v-select>
 				<div class="float-left" style="margin:.7em 0em 0em 1em;">
-					<v-avatar v-if="switchFlag" color="success" size="30">
-						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-					<v-avatar v-else color="grey" size="30">
-						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+					<StatusIcons :stat="switchFlag" />
 
 				</div>
 			</v-col>
@@ -51,10 +45,7 @@
 		<v-list-item>
 			<v-list-item-action>
 				<div style="margin:0em 1em 1em 0em;">
-					<v-avatar v-if="!switchFlag" color="success" size="30">
-						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-					<v-avatar v-else color="grey" size="30">
-						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+					<StatusIcons :stat="!switchFlag" />
 	
 				</div>
 				<v-select label="Left Theme" style="min-width:10em;" v-model="leftModel" :items="themeVals">
@@ -71,7 +62,7 @@
 			<v-col class="text-right">
 				<v-icon icon="mdi-arrow-up-left-bold" size="x-large" style="margin-top: -6px;"></v-icon> </v-col>
 			<v-col cols="2">
-				<v-switch style="justify-content:center;display:flex;" density="compact" :flat="true" inset
+				<v-switch :model-value="switchFlag" style="justify-content:center;display:flex;" density="compact" :flat="true" inset
 					@change="onChangeSwitch" /></v-col>
 			<v-col class="text-left">
 				<v-icon icon="mdi-arrow-down-right-bold" size="x-large" style="margin-top: 14px;"></v-icon> </v-col>
@@ -80,10 +71,7 @@
 		<v-list-item>
 			<v-list-item-action>
 				<div style="margin:0em 1em 1em 0em;">
-					<v-avatar v-if="switchFlag" color="success" size="30">
-						<v-icon icon="mdi-check"> </v-icon> </v-avatar>
-					<v-avatar v-else color="grey" size="30">
-						<v-icon icon="mdi-circle-outline"></v-icon> </v-avatar>
+					<StatusIcons :stat="switchFlag" />
 
 				</div>
 				<v-select label="Right Theme" style="padding-top:6px;min-width:10em;" v-model="rightModel" :items="themeVals">
@@ -105,6 +93,7 @@
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 import ThemePreview from "./ThemePreview.vue";
+import StatusIcons from "./ThemeParts/StatusIcons.vue"
 
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);

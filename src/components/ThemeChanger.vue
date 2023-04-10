@@ -3,6 +3,8 @@
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col cols="5">
+				
+				
 				<v-select label="Left Theme" style="width:10em;" class="float-right" 
 						v-model="leftModel" :items="themeVals">
 					<template v-slot:selection> {{ leftModel }} </template>
@@ -10,20 +12,21 @@
 						<v-list-item @click="onClickSelector(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item>
 					</template>
-				</v-select>			
+				</v-select>
+
+				
 				<div class="float-right" style="margin:.6em 1em 0em 0em;">
 					<StatusIcons :stat="!switchFlag" />
-					
 				</div>
 			</v-col>
-
 			<v-col cols="2" align-self="center" style="margin:0em 0em .8em 0em;">
 				<v-switch :model-value="switchFlag"
 						style="justify-content:center; display:flex;margin-bottom:1em;" 
 						density="compact" :flat="true" inset @change="onChangeSwitch" />
 			</v-col>	
-
 			<v-col cols="5">
+
+
 				<v-select label="Right Theme" style="width:10em;" class="float-left" 
 						v-model="rightModel" :items="themeVals">
 					<template v-slot:selection> {{ rightModel }} </template>
@@ -32,9 +35,10 @@
 						</v-list-item>
 					</template>
 				</v-select>
+
+
 				<div class="float-left" style="margin:.7em 0em 0em 1em;">
 					<StatusIcons :stat="switchFlag" />
-
 				</div>
 			</v-col>
 			<v-spacer />
@@ -46,8 +50,9 @@
 			<v-list-item-action>
 				<div style="margin:0em 1em 1em 0em;">
 					<StatusIcons :stat="!switchFlag" />
-	
 				</div>
+
+
 				<v-select label="Left Theme" style="min-width:10em;" v-model="leftModel" :items="themeVals">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ leftModel }} </span> </template>
@@ -55,6 +60,8 @@
 						<v-list-item @click="onClickSelector(item, false /* Left Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
 				</v-select>
+
+
 			</v-list-item-action>
 		</v-list-item>
 
@@ -72,8 +79,9 @@
 			<v-list-item-action>
 				<div style="margin:0em 1em 1em 0em;">
 					<StatusIcons :stat="switchFlag" />
-
 				</div>
+
+
 				<v-select label="Right Theme" style="padding-top:6px;min-width:10em;" v-model="rightModel" :items="themeVals">
 					<template v-slot:selection>
 						<span class="d-flex justify-center"> {{ rightModel }} </span></template>
@@ -81,12 +89,12 @@
 						<v-list-item @click="onClickSelector(item, true /* Right Selector */)"> {{ item.props.title }}
 						</v-list-item> </template>
 				</v-select>
+
+
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>
-
 	<ThemePreview />
-
 </template>
 
 <script setup lang="ts">

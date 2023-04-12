@@ -109,12 +109,12 @@ const onChangeSwitch = () => {
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
-function onClickSelectorXP( localModel: string, switchFlagX: boolean ){
+function onClickSelectorXP( selectorModel: string  , switchFlagX: boolean ){
 	// // Update the right or left model depending on switchFlag
-	switchFlagX ? rightModel = localModel : leftModel = localModel 
+	switchFlagX ? rightModel = selectorModel : leftModel = selectorModel 
 	// //	Update the switch.
 	if(switchFlagX != switchFlag.value) switchFlag.value = !switchFlag.value;
 	//	// Update active theme
-	theme.global.name.value = localModel;
+	theme.global.name.value = selectorModel;
 }
 </script>∫

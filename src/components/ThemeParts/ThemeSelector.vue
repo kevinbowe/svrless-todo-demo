@@ -1,5 +1,5 @@
 <template>
-<v-select  v-model="selectModel" :items="props.selectorItems" :label="selectorLabel">	
+<v-select  v-model="selectorModel" :items="props.selectorItems" :label="selectorLabel">	
 
 												<!-- <template #item="{ item, props: {onClick, title, value} }" >
 													<v-list-item :title="item.title"  @click="onClick"/>
@@ -22,10 +22,10 @@ const props = defineProps({
 	selectorItems: Array<string|undefined>,
 	switchFlagX: Boolean
 })
-const selectModel = ref(props.defaultItem)
+const selectorModel = ref(props.defaultItem)
 
 function clickIt(){
-	emit('clickSelectorEvent', selectModel.value, props.switchFlagX)
+	emit('clickSelectorEvent', selectorModel.value, props.switchFlagX)
 }
 
 </script>

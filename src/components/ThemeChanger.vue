@@ -28,9 +28,22 @@
 								@ClickSelectorEvent="onClickSelectorXP"
 								:selectorItems="themeVals"
 							/> -->
-							<ThemeSelector @clickSelectorEvent="onClickSelectorXP"></ThemeSelector>
+							
 							<!-- <ThemeSelector @clickSelectorEvent="ping"></ThemeSelector> -->
+							<!-- <ThemeSelector :selectorItems="['One','Two','Three']" @clickSelectorEvent="onClickSelectorXP"></ThemeSelector> -->
 
+							<ThemeSelector 
+								:selectorItems=themeVals 
+								selectorLabel="Left Theme" 
+								@clickSelectorEvent="onClickSelectorXP"
+								:switchFlagX=false
+							></ThemeSelector>
+
+							<!-- <ThemeSelector 
+								:selectorItems=themeVals 
+								selectorLabel="Left Theme" 
+								@clickSelectorEvent="onClickSelectorXP"
+							></ThemeSelector> -->
 </v-container>
 
 	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
@@ -132,6 +145,8 @@
 	<ThemePreview />
 </template>
 
+
+
 <script setup lang="ts">
 import { ref } from "vue";
 import { useTheme } from "vuetify";
@@ -142,6 +157,8 @@ import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
 
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);
+
+
 const switchFlag = ref(false) //// false == left
 
 // Set the default Models and Theme
@@ -159,8 +176,11 @@ const ping = () => {
 }
 
 
+
 function onClickSelectorXP(
-	message:string
+	message: string,
+	localModel: string,
+	switchFlagX: boolean
 	){
 	// itemTheme: string, 
 	// selectorSide: boolean, 
@@ -171,7 +191,9 @@ function onClickSelectorXP(
 
 	console.log("-------------------------------------------") 
 	console.log("---> Enter onClickSelectorXP")
-	console.log("      ",message)
+	console.log("      ", message)
+	console.log("      ", localModel, " <--<<< local model received by onClickSelectorXP")
+	console.log("      ", switchFlagX, " <--<<< switchFlagX")
 	console.log("<--- Exit onClickSelectorXP")
 	// console.log("onClickSelectorXP called by onSelectorEvent")
 	// console.log(itemTheme, " <-- itemTheme ")

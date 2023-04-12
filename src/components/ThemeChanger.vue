@@ -8,7 +8,7 @@
 					selectorLabel="Left Theme" 
 					:selectorItems=themeVals 
 					defaultItem="light"
-					:switchFlagX=false
+					:selectSwitchFlag=false
 					@clickSelectorEvent="onClickSelectorXP"
 				></ThemeSelector>
 
@@ -28,7 +28,7 @@
 					selectorLabel="Right Theme" 
 					:selectorItems=themeVals 
 					defaultItem="dark"
-					:switchFlagX=true
+					:selectSwitchFlag=true
 					@clickSelectorEvent="onClickSelectorXP"
 				></ThemeSelector>
 
@@ -53,7 +53,7 @@
 					:selectorItems=themeVals 
 					defaultItem="light"
 					@clickSelectorEvent="onClickSelectorXP"
-					:switchFlagX=false
+					:selectSwitchFlag=false
 				></ThemeSelector>
 
 			</v-list-item-action>
@@ -79,7 +79,7 @@
 				selectorLabel="Right Theme" 
 				:selectorItems=themeVals 
 				defaultItem="dark"
-				:switchFlagX=true
+				:selectSwitchFlag=true
 				@clickSelectorEvent="onClickSelectorXP"
 				></ThemeSelector>
 
@@ -109,11 +109,11 @@ const onChangeSwitch = () => {
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
-function onClickSelectorXP( selectorModel: string  , switchFlagX: boolean ){
+function onClickSelectorXP( selectorModel: string  , selectSwitchFlag: boolean ){
 	// // Update the right or left model depending on switchFlag
-	switchFlagX ? rightModel = selectorModel : leftModel = selectorModel 
+	selectSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
 	// //	Update the switch.
-	if(switchFlagX != switchFlag.value) switchFlag.value = !switchFlag.value;
+	if(selectSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
 	//	// Update active theme
 	theme.global.name.value = selectorModel;
 }

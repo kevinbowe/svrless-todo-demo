@@ -1,45 +1,22 @@
 <template>
-	<v-container class="text-center">
+	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
+		<v-row no-gutters>
+			<v-spacer />
+			<v-col cols="5">
 
-							<ThemeSelector 
+				<ThemeSelector style="width:10em;" class="float-right" 
 								:selectorItems=themeVals 
 								selectorLabel="Left Theme" 
 								@clickSelectorEvent="onClickSelectorXP"
 								:switchFlagX=false
 								defaultItem="light"
-							></ThemeSelector>
+				></ThemeSelector>
 
-							<ThemeSelector 
-								:selectorItems=themeVals 
-								selectorLabel="Right Theme" 
-								@clickSelectorEvent="onClickSelectorXP"
-								:switchFlagX=true
-								defaultItem="dark"
-							></ThemeSelector>
-
-	</v-container>
-
-	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
-		<v-row no-gutters>
-			<v-spacer />
-			<v-col cols="5">
-				
-				
-				<v-select label="Left Theme" style="width:10em;" class="float-right" 
-						v-model="leftModel" :items="themeVals">
-					<template v-slot:selection> {{ leftModel }} </template>
-					<template v-slot:item="item">
-						<v-list-item @click="onClickSelector(item, false /* Left Selector */)"> 
-							{{ item.props.title }}
-						</v-list-item>
-					</template>
-				</v-select>
-
-				
 				<div class="float-right" style="margin:.6em 1em 0em 0em;">
 					<StatusIcons :stat="!switchFlag" />
 				</div>
 			</v-col>
+
 			<v-col cols="2" align-self="center" style="margin:0em 0em .8em 0em;">
 				<v-switch :model-value="switchFlag"
 						style="justify-content:center; display:flex;margin-bottom:1em;" 
@@ -47,21 +24,19 @@
 			</v-col>	
 			<v-col cols="5">
 
-
-				<v-select label="Right Theme" style="width:10em;" class="float-left" 
-						v-model="rightModel" :items="themeVals">
-					<template v-slot:selection> {{ rightModel }} </template>
-					<template v-slot:item="item">
-						<v-list-item @click="onClickSelector(item, true /* Right Selector */)"> {{ item.props.title }}
-						</v-list-item>
-					</template>
-				</v-select>
-
+				<ThemeSelector style="width:10em;" class="float-left" 
+								:selectorItems=themeVals 
+								selectorLabel="Right Theme" 
+								@clickSelectorEvent="onClickSelectorXP"
+								:switchFlagX=true
+								defaultItem="dark"
+				></ThemeSelector>
 
 				<div class="float-left" style="margin:.7em 0em 0em 1em;">
 					<StatusIcons :stat="switchFlag" />
 				</div>
 			</v-col>
+
 			<v-spacer />
 		</v-row>
 	</v-container>
@@ -73,15 +48,13 @@
 					<StatusIcons :stat="!switchFlag" />
 				</div>
 
-
-				<v-select label="Left Theme" style="min-width:10em;" v-model="leftModel" :items="themeVals">
-					<template v-slot:selection>
-						<span class="d-flex justify-center"> {{ leftModel }} </span> </template>
-					<template v-slot:item="item">
-						<v-list-item @click="onClickSelector(item, false /* Left Selector */)"> {{ item.props.title }}
-						</v-list-item> </template>
-				</v-select>
-
+				<ThemeSelector style="min-width:10em;"
+									:selectorItems=themeVals 
+									selectorLabel="Left Theme" 
+									@clickSelectorEvent="onClickSelectorXP"
+									:switchFlagX=false
+									defaultItem="light"
+				></ThemeSelector>
 
 			</v-list-item-action>
 		</v-list-item>
@@ -102,23 +75,19 @@
 					<StatusIcons :stat="switchFlag" />
 				</div>
 
-
-				<v-select label="Right Theme" style="padding-top:6px;min-width:10em;" v-model="rightModel" :items="themeVals">
-					<template v-slot:selection>
-						<span class="d-flex justify-center"> {{ rightModel }} </span></template>
-					<template v-slot:item="item">
-						<v-list-item @click="onClickSelector(item, true /* Right Selector */)"> {{ item.props.title }}
-						</v-list-item> </template>
-				</v-select>
-
+				<ThemeSelector style="padding-top:6px;min-width:10em;" 
+								:selectorItems=themeVals 
+								selectorLabel="Right Theme" 
+								@clickSelectorEvent="onClickSelectorXP"
+								:switchFlagX=true
+								defaultItem="dark"
+				></ThemeSelector>
 
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>
 	<ThemePreview />
 </template>
-
-
 
 <script setup lang="ts">
 import { ref } from "vue";
@@ -141,30 +110,11 @@ const onChangeSwitch = () => {
 };
 
 function onClickSelectorXP( localModel: string, switchFlagX: boolean ){
-
-							console.log("-------------------------------------------") 
-							console.log("---> Enter onClickSelectorXP")
-							console.log("      ", localModel, " <--<<< local model received by onClickSelectorXP")
-							console.log("      ", switchFlagX, " <--<<< switchFlagX")
-							console.log("<--- Exit onClickSelectorXP")
-	
+	// // Update the right or left model depending on switchFlag
+	switchFlagX ? rightModel = localModel : leftModel = localModel 
 	// //	Update the switch.
 	if(switchFlagX != switchFlag.value) switchFlag.value = !switchFlag.value;
-	//	Update active theme
+	//	// Update active theme
 	theme.global.name.value = localModel;
 }
-
-function onClickSelector(itemTheme: { props: { value: string; }; }, selectorSide: boolean) { 
-	console.log("Calling the onClickSelector...")
-	// Update the selector
-	if ( selectorSide /* true -- right */) rightModel = itemTheme.props.value;
-	else leftModel = itemTheme.props.value; /* false -- left */
-
-	//	Update the switch.
-	if(switchFlag.value != selectorSide ) switchFlag.value = !switchFlag.value;
-	
-	//	Update active theme
-	theme.global.name.value = itemTheme.props.value;
-}
-
-</script>
+</script>∫

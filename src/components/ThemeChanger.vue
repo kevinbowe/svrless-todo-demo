@@ -1,4 +1,38 @@
 <template>
+<v-container class="text-center">
+							<!-- <v-select 
+									label="Left Theme" 
+									style="width:10em;" 
+									v-model="leftModel" 
+									:items="themeVals">
+								<template v-slot:selection> 
+									{{ leftModel }} 
+								</template>
+								<template v-slot:item="item">
+									<v-list-item 
+									@click="onClickSelector(item, false)"> 
+										{{ item.props.title }}
+									</v-list-item>
+								</template>
+							</v-select> -->
+
+							<!-- <ThemeSelector 
+								:stat=false
+								selectorLabel="Left Theme X" 
+								:selectorModel="leftModel"
+								@ClickSelectorEvent="onClickSelectorXP"
+								:selectorItems="themeVals"
+							/> -->
+							<!-- <ThemeSelector 
+								:selectorModel="rightModel"
+								@ClickSelectorEvent="onClickSelectorXP"
+								:selectorItems="themeVals"
+							/> -->
+							<ThemeSelector @clickSelectorEvent="onClickSelectorXP"></ThemeSelector>
+							<!-- <ThemeSelector @clickSelectorEvent="ping"></ThemeSelector> -->
+
+</v-container>
+
 	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
 		<v-row no-gutters>
 			<v-spacer />
@@ -9,7 +43,8 @@
 						v-model="leftModel" :items="themeVals">
 					<template v-slot:selection> {{ leftModel }} </template>
 					<template v-slot:item="item">
-						<v-list-item @click="onClickSelector(item, false /* Left Selector */)"> {{ item.props.title }}
+						<v-list-item @click="onClickSelector(item, false /* Left Selector */)"> 
+							{{ item.props.title }}
 						</v-list-item>
 					</template>
 				</v-select>
@@ -102,6 +137,8 @@ import { ref } from "vue";
 import { useTheme } from "vuetify";
 import ThemePreview from "./ThemePreview.vue";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
+import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
+
 
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);
@@ -117,7 +154,51 @@ const onChangeSwitch = () => {
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
+const ping = () => {
+	console.log("Hello")
+}
+
+
+function onClickSelectorXP(
+	message:string
+	){
+	// itemTheme: string, 
+	// selectorSide: boolean, 
+	// selectorItems:object, 
+	// selItem:String,
+	//item:any
+	// ) {
+
+	console.log("-------------------------------------------") 
+	console.log("---> Enter onClickSelectorXP")
+	console.log("      ",message)
+	console.log("<--- Exit onClickSelectorXP")
+	// console.log("onClickSelectorXP called by onSelectorEvent")
+	// console.log(itemTheme, " <-- itemTheme ")
+	// console.log(selectorSide, " <-- selectorSide ")
+	// console.log(selectorItems, " <-- selectorItems")
+	// console.log(selItem.item.value, " <-- selItem")
+	//console.log(item.props.value, " <-- localModel.props.value")
+
+	//... // Update the selector
+	//... if ( selectorSide) rightModel = itemTheme;
+	//... else leftModel = itemTheme;
+	// if ( selectorSide) rightModel = selItem.item.value;
+	// else leftModel = selItem.item.value;
+	
+	// //	Update the switch.
+	// if(switchFlag.value != selectorSide ) switchFlag.value = !switchFlag.value;
+	
+	// //	Update active theme
+	// theme.global.name.value = itemTheme;
+	// theme.global.name.value = selItem.item.value;
+	//theme.global.name.value = item.props.value;
+}
+
+
+
 function onClickSelector(itemTheme: { props: { value: string; }; }, selectorSide: boolean) { 
+	console.log("Calling the onClickSelector...")
 	// Update the selector
 	if ( selectorSide /* true -- right */) rightModel = itemTheme.props.value;
 	else leftModel = itemTheme.props.value; /* false -- left */

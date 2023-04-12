@@ -167,24 +167,25 @@
 					combined with a v-on listener 
 						that emits update:x event instead. 
 	-->
-localMode --- {{ selectModel }}<br>
-props.selectorItems --- {{ props.selectorItems }}<br>
+
+localModel --- {{ selectModel }}<br>
+<!-- props.selectorItems --- {{ props.selectorItems }}<br>
 props.selectorLabel --- {{ props.selectorLabel }}<br>
-switchFlagX --- {{ switchFlagX }}
+switchFlagX --- {{ switchFlagX }}<br> -->
+defaultItem --- {{ defaultItem }}
 
 <v-select  v-model="selectModel" :items="props.selectorItems" :label="selectorLabel">	
 
-		<!-- <template #item="{ item, props: {onClick, title, value} }" >
-			<v-list-item :title="item.title"  @click="onClick"/>
-		</template> -->
+																				<!-- <template #item="{ item, props: {onClick, title, value} }" >
+																					<v-list-item :title="item.title"  @click="onClick"/>
+																				</template> -->
+
 		<template v-slot:item="{ item, props: {onClick, title, value} }" >
 			<v-list-item :title="item.title"  @click="onClick(); clickIt()">
 			</v-list-item>
 		</template>
 		
 </v-select>
-
-<v-btn v-on:click="clickIt()">Click Me</v-btn>
 
 </template>
 
@@ -193,15 +194,20 @@ switchFlagX --- {{ switchFlagX }}
 import { ref, computed } from "vue";
 const emit = defineEmits(['clickSelectorEvent'])
 const props = defineProps({
+	defaultItem: String,
 	selectorLabel: String,
 	selectorItems: Array<string|undefined>,
 	switchFlagX: Boolean
 })
 
-const selectModel = ref("light")
+// const selectModel = ref("light")
+const selectModel = ref(props.defaultItem)
+
 
 function clickIt(){
-	emit('clickSelectorEvent', "This is a message from ThemeSelector", selectModel.value, props.switchFlagX)
+																				// emit('clickSelectorEvent', selectModel.value, props.switchFlagX)
+	emit('clickSelectorEvent', selectModel.value, props.switchFlagX)
+
 }
 
 // const selModel = ref();

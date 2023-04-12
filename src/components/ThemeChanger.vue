@@ -6,6 +6,15 @@
 								selectorLabel="Left Theme" 
 								@clickSelectorEvent="onClickSelectorXP"
 								:switchFlagX=false
+								defaultItem="light"
+							></ThemeSelector>
+
+							<ThemeSelector 
+								:selectorItems=themeVals 
+								selectorLabel="Right Theme" 
+								@clickSelectorEvent="onClickSelectorXP"
+								:switchFlagX=true
+								defaultItem="dark"
 							></ThemeSelector>
 
 	</v-container>
@@ -131,49 +140,19 @@ const onChangeSwitch = () => {
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
+function onClickSelectorXP( localModel: string, switchFlagX: boolean ){
 
-
-function onClickSelectorXP(
-	message: string,
-	localModel: string,
-	switchFlagX: boolean
-	){
-	// itemTheme: string, 
-	// selectorSide: boolean, 
-	// selectorItems:object, 
-	// selItem:String,
-	//item:any
-	// ) {
-
-	console.log("-------------------------------------------") 
-	console.log("---> Enter onClickSelectorXP")
-	console.log("      ", message)
-	console.log("      ", localModel, " <--<<< local model received by onClickSelectorXP")
-	console.log("      ", switchFlagX, " <--<<< switchFlagX")
-	console.log("<--- Exit onClickSelectorXP")
-	// console.log("onClickSelectorXP called by onSelectorEvent")
-	// console.log(itemTheme, " <-- itemTheme ")
-	// console.log(selectorSide, " <-- selectorSide ")
-	// console.log(selectorItems, " <-- selectorItems")
-	// console.log(selItem.item.value, " <-- selItem")
-	//console.log(item.props.value, " <-- localModel.props.value")
-
-	//... // Update the selector
-	//... if ( selectorSide) rightModel = itemTheme;
-	//... else leftModel = itemTheme;
-	// if ( selectorSide) rightModel = selItem.item.value;
-	// else leftModel = selItem.item.value;
+							console.log("-------------------------------------------") 
+							console.log("---> Enter onClickSelectorXP")
+							console.log("      ", localModel, " <--<<< local model received by onClickSelectorXP")
+							console.log("      ", switchFlagX, " <--<<< switchFlagX")
+							console.log("<--- Exit onClickSelectorXP")
 	
 	// //	Update the switch.
-	// if(switchFlag.value != selectorSide ) switchFlag.value = !switchFlag.value;
-	
-	// //	Update active theme
-	// theme.global.name.value = itemTheme;
-	// theme.global.name.value = selItem.item.value;
-	// theme.global.name.value = item.props.value;
+	if(switchFlagX != switchFlag.value) switchFlag.value = !switchFlag.value;
+	//	Update active theme
+	theme.global.name.value = localModel;
 }
-
-
 
 function onClickSelector(itemTheme: { props: { value: string; }; }, selectorSide: boolean) { 
 	console.log("Calling the onClickSelector...")

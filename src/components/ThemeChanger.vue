@@ -5,11 +5,11 @@
 			<v-col cols="5">
 
 				<ThemeSelector style="width:10em;" class="float-right" 
-								:selectorItems=themeVals 
-								selectorLabel="Left Theme" 
-								@clickSelectorEvent="onClickSelectorXP"
-								:switchFlagX=false
-								defaultItem="light"
+					selectorLabel="Left Theme" 
+					:selectorItems=themeVals 
+					defaultItem="light"
+					:switchFlagX=false
+					@clickSelectorEvent="onClickSelectorXP"
 				></ThemeSelector>
 
 				<div class="float-right" style="margin:.6em 1em 0em 0em;">
@@ -25,11 +25,11 @@
 			<v-col cols="5">
 
 				<ThemeSelector style="width:10em;" class="float-left" 
-								:selectorItems=themeVals 
-								selectorLabel="Right Theme" 
-								@clickSelectorEvent="onClickSelectorXP"
-								:switchFlagX=true
-								defaultItem="dark"
+					selectorLabel="Right Theme" 
+					:selectorItems=themeVals 
+					defaultItem="dark"
+					:switchFlagX=true
+					@clickSelectorEvent="onClickSelectorXP"
 				></ThemeSelector>
 
 				<div class="float-left" style="margin:.7em 0em 0em 1em;">
@@ -49,11 +49,11 @@
 				</div>
 
 				<ThemeSelector style="min-width:10em;"
-									:selectorItems=themeVals 
-									selectorLabel="Left Theme" 
-									@clickSelectorEvent="onClickSelectorXP"
-									:switchFlagX=false
-									defaultItem="light"
+					selectorLabel="Left Theme" 
+					:selectorItems=themeVals 
+					defaultItem="light"
+					@clickSelectorEvent="onClickSelectorXP"
+					:switchFlagX=false
 				></ThemeSelector>
 
 			</v-list-item-action>
@@ -76,11 +76,11 @@
 				</div>
 
 				<ThemeSelector style="padding-top:6px;min-width:10em;" 
-								:selectorItems=themeVals 
-								selectorLabel="Right Theme" 
-								@clickSelectorEvent="onClickSelectorXP"
-								:switchFlagX=true
-								defaultItem="dark"
+				selectorLabel="Right Theme" 
+				:selectorItems=themeVals 
+				defaultItem="dark"
+				:switchFlagX=true
+				@clickSelectorEvent="onClickSelectorXP"
 				></ThemeSelector>
 
 		</v-list-item-action>

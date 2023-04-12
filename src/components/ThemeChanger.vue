@@ -1,36 +1,5 @@
 <template>
-<v-container class="text-center">
-							<!-- <v-select 
-									label="Left Theme" 
-									style="width:10em;" 
-									v-model="leftModel" 
-									:items="themeVals">
-								<template v-slot:selection> 
-									{{ leftModel }} 
-								</template>
-								<template v-slot:item="item">
-									<v-list-item 
-									@click="onClickSelector(item, false)"> 
-										{{ item.props.title }}
-									</v-list-item>
-								</template>
-							</v-select> -->
-
-							<!-- <ThemeSelector 
-								:stat=false
-								selectorLabel="Left Theme X" 
-								:selectorModel="leftModel"
-								@ClickSelectorEvent="onClickSelectorXP"
-								:selectorItems="themeVals"
-							/> -->
-							<!-- <ThemeSelector 
-								:selectorModel="rightModel"
-								@ClickSelectorEvent="onClickSelectorXP"
-								:selectorItems="themeVals"
-							/> -->
-							
-							<!-- <ThemeSelector @clickSelectorEvent="ping"></ThemeSelector> -->
-							<!-- <ThemeSelector :selectorItems="['One','Two','Three']" @clickSelectorEvent="onClickSelectorXP"></ThemeSelector> -->
+	<v-container class="text-center">
 
 							<ThemeSelector 
 								:selectorItems=themeVals 
@@ -39,12 +8,7 @@
 								:switchFlagX=false
 							></ThemeSelector>
 
-							<!-- <ThemeSelector 
-								:selectorItems=themeVals 
-								selectorLabel="Left Theme" 
-								@clickSelectorEvent="onClickSelectorXP"
-							></ThemeSelector> -->
-</v-container>
+	</v-container>
 
 	<v-container class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
 		<v-row no-gutters>
@@ -153,12 +117,8 @@ import { useTheme } from "vuetify";
 import ThemePreview from "./ThemePreview.vue";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
 import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
-
-
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);
-
-
 const switchFlag = ref(false) //// false == left
 
 // Set the default Models and Theme
@@ -170,10 +130,6 @@ const onChangeSwitch = () => {
 	switchFlag.value = !switchFlag.value;
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
-
-const ping = () => {
-	console.log("Hello")
-}
 
 
 
@@ -214,7 +170,7 @@ function onClickSelectorXP(
 	// //	Update active theme
 	// theme.global.name.value = itemTheme;
 	// theme.global.name.value = selItem.item.value;
-	//theme.global.name.value = item.props.value;
+	// theme.global.name.value = item.props.value;
 }
 
 

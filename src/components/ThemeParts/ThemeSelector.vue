@@ -167,43 +167,21 @@
 					combined with a v-on listener 
 						that emits update:x event instead. 
 	-->
-localMode --- {{ localModel }}<br>
+localMode --- {{ selectModel }}<br>
 props.selectorItems --- {{ props.selectorItems }}<br>
 props.selectorLabel --- {{ props.selectorLabel }}<br>
 switchFlagX --- {{ switchFlagX }}
-												<!-- <v-select :label="selectorLabel" v-model="selModel" :items="selectorItems"> -->
-<!-- <v-select  v-model="localModel" :items="localItems" >	 -->
-<v-select  v-model="localModel" :items="props.selectorItems" :label="selectorLabel">	
-		<!-- {{ localModel }} -->
-		<!-- <template v-slot:selection="{ item }">  -->
-			<!-- {{ localModel }} -->
-				<!-- {{ item.value }} -->
-		<!-- </template> -->
 
-		
+<v-select  v-model="selectModel" :items="props.selectorItems" :label="selectorLabel">	
 
 		<!-- <template #item="{ item, props: {onClick, title, value} }" >
 			<v-list-item :title="item.title"  @click="onClick"/>
 		</template> -->
-
 		<template v-slot:item="{ item, props: {onClick, title, value} }" >
 			<v-list-item :title="item.title"  @click="onClick(); clickIt()">
 			</v-list-item>
 		</template>
-
 		
-												<!-- <template __FAIL__ v-slot:item="item">
-													<v-list-item value="item.props.value">
-														{{ item.props.value }}
-													</v-list-item>
-												</template> -->
-
-												<!-- <template __FAIL__ v-slot:item="item"> -->
-													<!-- <v-listItem @click="$emit('clickSelectorEvent')"></v-listItem> -->
-													<!-- <v-listItem @click="clickIt"> -->
-														<!-- {{ item.props.value }} -->
-													<!-- </v-listItem> -->
-												<!-- </template> -->
 </v-select>
 
 <v-btn v-on:click="clickIt()">Click Me</v-btn>
@@ -212,38 +190,18 @@ switchFlagX --- {{ switchFlagX }}
 
 
 <script setup lang="ts">
-												// import { ref, computed, defineEmits } from "vue";
 import { ref, computed } from "vue";
-import { useTheme } from "vuetify";
-const theme = useTheme();
+const emit = defineEmits(['clickSelectorEvent'])
 const props = defineProps({
-	//stat: Boolean,
 	selectorLabel: String,
-	// selectorModel: String,
 	selectorItems: Array<string|undefined>,
 	switchFlagX: Boolean
 })
 
+const selectModel = ref("light")
 
-
-//let localItems: Array<string|undefined>|undefined =  props.selectorItems
-let localItems: Array<string|undefined>|undefined =  ["light","dark","custom_light","custom_dark"]
-
-// const localModel = ref(props.selectorModel)
-//let localModel = props.selectorModel
-const localModel = ref("light")
-
-const emit = defineEmits(['clickSelectorEvent'])
 function clickIt(){
-		console.log("----------------------------------------")
-		// console.log("--> Enter clickIt()")
-		console.log(localModel.value, " <---<<< localModel")
-		// console.log(item.props.value, " <---<<< litem.props.value")
-
-												// emit('clickSelectorEvent', "This is a message from ThemeSelector")
-	emit('clickSelectorEvent', "This is a message from ThemeSelector", localModel.value, props.switchFlagX)
-	
-		// console.log("<-- Exit clickIt()")
+	emit('clickSelectorEvent', "This is a message from ThemeSelector", selectModel.value, props.switchFlagX)
 }
 
 // const selModel = ref();

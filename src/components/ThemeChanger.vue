@@ -4,12 +4,9 @@
 			<v-spacer />
 			<v-col cols="5">
 
-				<ThemeSelector style="width:10em;" class="float-right" 
-					selectorLabel="Left Theme" 
-					:selectorItems=themeVals 
-					defaultItem="light"
-					:selectSwitchFlag=false
-					@clickSelectorEvent="onClickSelectorXP"
+				<ThemeSelector selectorLabel="Left Theme" :selectorItems=themeVals defaultItem="light" 
+					:selectSwitchFlag=false @clickSelectorEvent="onClick" 
+					style="width:10em;" class="float-right" 
 				></ThemeSelector>
 
 				<div class="float-right" style="margin:.6em 1em 0em 0em;">
@@ -24,12 +21,9 @@
 			</v-col>	
 			<v-col cols="5">
 
-				<ThemeSelector style="width:10em;" class="float-left" 
-					selectorLabel="Right Theme" 
-					:selectorItems=themeVals 
-					defaultItem="dark"
-					:selectSwitchFlag=true
-					@clickSelectorEvent="onClickSelectorXP"
+				<ThemeSelector	selectorLabel="Right Theme" :selectorItems=themeVals defaultItem="dark" 
+					:selectSwitchFlag=true @clickSelectorEvent="onClick"
+					style="width:10em;" class="float-left"
 				></ThemeSelector>
 
 				<div class="float-left" style="margin:.7em 0em 0em 1em;">
@@ -48,12 +42,9 @@
 					<StatusIcons :stat="!switchFlag" />
 				</div>
 
-				<ThemeSelector style="min-width:10em;"
-					selectorLabel="Left Theme" 
-					:selectorItems=themeVals 
-					defaultItem="light"
-					@clickSelectorEvent="onClickSelectorXP"
-					:selectSwitchFlag=false
+				<ThemeSelector selectorLabel="Left Theme" :selectorItems=themeVals defaultItem="light"
+					:selectSwitchFlag=false @clickSelectorEvent="onClick"
+					style="min-width:10em;"
 				></ThemeSelector>
 
 			</v-list-item-action>
@@ -75,12 +66,9 @@
 					<StatusIcons :stat="switchFlag" />
 				</div>
 
-				<ThemeSelector style="padding-top:6px;min-width:10em;" 
-				selectorLabel="Right Theme" 
-				:selectorItems=themeVals 
-				defaultItem="dark"
-				:selectSwitchFlag=true
-				@clickSelectorEvent="onClickSelectorXP"
+				<ThemeSelector selectorLabel="Right Theme" :selectorItems=themeVals defaultItem="dark"
+					:selectSwitchFlag=true @clickSelectorEvent="onClick"
+					style="padding-top:6px;min-width:10em;" 
 				></ThemeSelector>
 
 		</v-list-item-action>
@@ -109,12 +97,22 @@ const onChangeSwitch = () => {
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
-function onClickSelectorXP( selectorModel: string  , selectSwitchFlag: boolean ){
+function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 	// // Update the right or left model depending on switchFlag
-	selectSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
+	selectorSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
 	// //	Update the switch.
-	if(selectSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
+	if(selectorSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
 	//	// Update active theme
 	theme.global.name.value = selectorModel;
 }
+
+
+// function onClickSelectorXP( selectorModel: string  , selectSwitchFlag: boolean ){
+// 	// // Update the right or left model depending on switchFlag
+// 	selectSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
+// 	// //	Update the switch.
+// 	if(selectSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
+// 	//	// Update active theme
+// 	theme.global.name.value = selectorModel;
+// }
 </script>∫

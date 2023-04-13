@@ -2,10 +2,11 @@
 import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-
 import '@mdi/font/css/materialdesignicons.css'
-
 import { createVuetify, ThemeDefinition } from 'vuetify';
+
+// import colors from 'vuetify/lib/util/colors';
+
 
 const light: ThemeDefinition = {
 	dark: false,
@@ -61,6 +62,7 @@ const dark_custom: ThemeDefinition = {
 		success: '#4CAF50',
 		warning: '#FB8C00',
 		important: '#795548',
+		//minor: colors.red.lighten4 // // #FFCDD2
 	}
 }
 

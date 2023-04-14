@@ -6,7 +6,8 @@ import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify, ThemeDefinition } from 'vuetify';
 
 // import colors from 'vuetify/lib/util/colors';
-
+/* Cannot find module 'vuetify/lib/util/colors' or its corresponding type declarations.ts(2307) 
+ * The file exists here: /node_modules/vuetify/lib/util/colors.mjs  */
 
 const light: ThemeDefinition = {
 	dark: false,
@@ -48,6 +49,7 @@ const light_custom: ThemeDefinition = {
 		success: '#006304',
 		warning: '#FF9800',
 		important: '#795548',
+		major: '#FF80AB', // .............. // pink-accent-1 // WORKS
 	},
 }
 const dark_custom: ThemeDefinition = {
@@ -57,12 +59,12 @@ const dark_custom: ThemeDefinition = {
 		surface: '#000000',
 		primary:'#E74C3C',
 		secondary: '#8E44AD',
+		minor: '#FFCDD2', // .............. // red-lighten-4 // WORKS
 		error: '#B00020',
 		info: '#2196F3',
 		success: '#4CAF50',
 		warning: '#FB8C00',
 		important: '#795548',
-		//minor: colors.red.lighten4 // // #FFCDD2
 	}
 }
 

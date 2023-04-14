@@ -152,9 +152,3 @@ const footerLinks = ref([
 .v-toolbar-title__placeholder {
 	overflow: unset;
 }</style>
-
-<style>
-.v-toolbar-title__placeholder {
-	overflow: unset;
-}
-</style>

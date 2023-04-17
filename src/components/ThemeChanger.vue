@@ -1,140 +1,71 @@
 <template>
 	<v-container 
-	
 		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
-
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col cols="5">
-
 				<ThemeSelector selectorLabel="Left Theme" :selectorItems=themeVals defaultItem="light" 
-					:selectSwitchFlag=false @clickSelectorEvent="onClick" 
-
-					style="width:10em;" 
-
+					:selectSwitchFlag=false selectorWidth="width:10em;" @clickSelectorEvent="onClick" 
 					class="float-right" 
-
 				></ThemeSelector>
-
-				<div 
-					class="float-right mr-4"
-					ZZZ_class="float-right" 
-					style="margin:.6em 0em 0em 0em;"
-					ZZZ_style="margin:.6em 1em 0em 0em;">
-
+				<div class="float-right mr-4 mt-3">
 					<StatusIcons :stat="!switchFlag" />
 				</div>
 			</v-col>
-
-			<v-col cols="2" align-self="center" 
-
-				style="margin:0em 0em .8em 0em;"
-				ZZZ_style="margin:0em 0em .8em 0em;">
-
+			<v-col cols="2" align-self="center">
 				<v-switch :model-value="switchFlag"
-
-						class="mb-4"
-						style="justify-content:center; display:flex;"
-						ZZZ_style="justify-content:center; display:flex;margin-bottom:1em;" 
-				
-						density="compact" :flat="true" inset @change="onChangeSwitch" />
+					class="mb-4 d-flex justify-center"
+					density="compact" :flat="true" inset @change="onChangeSwitch" />
 			</v-col>	
 			<v-col cols="5">
-
 				<ThemeSelector	selectorLabel="Right Theme" :selectorItems=themeVals defaultItem="dark" 
-					:selectSwitchFlag=true @clickSelectorEvent="onClick"
-
-					style="width:10em;"
-
+					:selectSwitchFlag=true selectorWidth="width:10em;" @clickSelectorEvent="onClick"
 					class="float-left"
-
 				></ThemeSelector>
-
-				<div 
-
-					class="float-left ml-4"
-					style="margin:.7em 0em 0em 0em;"
-					ZZZ_class="float-left" 
-					ZZZ_style="margin:.7em 0em 0em 1em;">
-
+				<div class="float-left ml-4 mt-4">
 					<StatusIcons :stat="switchFlag" />
 				</div>
 			</v-col>
-
 			<v-spacer />
 		</v-row>
 	</v-container>
-
 	<v-container 
-
 		class="d-sm-none">
-
 		<v-list-item>
 			<v-list-item-action>
-				
-				<div 
-					class="mr-4 mb-4"
-					ZZZstyle="margin:0em 1em 1em 0em;">
-
+				<div class="mr-4 mb-4" >
 					<StatusIcons :stat="!switchFlag" />
 				</div>
-
 				<ThemeSelector selectorLabel="Left Theme" :selectorItems=themeVals defaultItem="light"
-					:selectSwitchFlag=false @clickSelectorEvent="onClick"
-
-					style="min-width:10em;"
-
+					:selectSwitchFlag=false electorWidth="width:10em;" @clickSelectorEvent="onClick"
 				></ThemeSelector>
-
 			</v-list-item-action>
 		</v-list-item>
-
-		<v-row no-gutters 
-		
-			style="margin-left:3em;">
-
+		<v-row no-gutters> 
 			<v-col 
-			
 				class="text-right">
-
-				<v-icon icon="mdi-arrow-up-left-bold" size="x-large" 
-
-					style="margin-top: -6px;"></v-icon> </v-col>
-
+				<v-icon icon="mdi-arrow-up-left-bold" size="x-large" class="pb-2" />
+			</v-col>
 			<v-col cols="2">
-				<v-switch :model-value="switchFlag"
-				
-				style="justify-content:center;display:flex;" density="compact" :flat="true" inset
-
+				<v-switch :model-value="switchFlag" 
+					class="d-flex justify-center"
+					density="compact" :flat="true" inset
 					@change="onChangeSwitch" /></v-col>
-
 			<v-col 
-			
 			class="text-left">
-
 				<v-icon icon="mdi-arrow-down-right-bold" size="x-large" 
-				
-				style="margin-top: 14px;"></v-icon> </v-col>
-
+					class="mt-4">
+				</v-icon></v-col>
 		</v-row>
-
 		<v-list-item>
 			<v-list-item-action>
-
-				<div 
-					class="mr-4 mb-4"
-					ZZZ_style="margin:0em 1em 1em 0em;">
-
+				<div class="mr-4 mb-4">
 					<StatusIcons :stat="switchFlag" />
 				</div>
-
 				<ThemeSelector selectorLabel="Right Theme" :selectorItems=themeVals defaultItem="dark"
-					:selectSwitchFlag=true @clickSelectorEvent="onClick"
-					
-					style="padding-top:6px;min-width:10em;" 
-
+					:selectSwitchFlag=true selectorWidth="width:10em;" @clickSelectorEvent="onClick" 
+					class="pt-4"
 				></ThemeSelector>
-
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>

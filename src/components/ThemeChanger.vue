@@ -89,9 +89,9 @@ import { ref } from "vue";
 import { useTheme } from "vuetify";
 import ThemePreview from "./ThemePreview.vue";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
-import ThemeSelectoß from "./ThemeParts/ThemeSelector.vue"
+import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
 const theme = useTheme();
-const themeVals = Object.keys(theme.compßtedThemes.value);
+const themeVals = Object.keys(theme.computedThemes.value);
 const switchFlag = ref(false) // false == left
 
 // Set the default Models and Theme
@@ -101,7 +101,7 @@ theme.global.name.value = "light";
 
 const onChangeSwitch = () => {
 	switchFlag.value = !switchFlag.value;
-	theme.global.name.value = theme.global.name.value =ß== leftModel ? rightModel : leftModel;
+	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
 function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){

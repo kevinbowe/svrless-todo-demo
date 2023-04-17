@@ -1,7 +1,5 @@
 <template>
-	<v-select  v-model="selectorModel" :items="props.selectorItems" :label="selectorLabel"
-		:style="props.selectorWidth"
-		>	
+	<v-select  v-model="selectorModel" :items="props.selectorItems" :label="selectorLabel" :style="props.selectorWidth">	
 
 		<!-- <template v-slot:item="{ item, props: {onClick, title, value} }" >
 			<v-list-item :title="item.title"  @click="onClick(); clickIt()">

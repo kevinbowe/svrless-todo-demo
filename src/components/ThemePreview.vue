@@ -1,6 +1,6 @@
 <template>
 
-<v-row>
+<!-- <v-row>
 <v-spacer />
 <v-col><v-sheet 
 		color="surface"
@@ -21,7 +21,7 @@
 		color="minor" 
 		rounded="rounded" class="mx-auto" height="50" width="50" />Minor</v-col>
 <v-spacer />
-</v-row>
+</v-row> -->
 
 <v-expansion-panels variant="popout">
 	<v-expansion-panel>

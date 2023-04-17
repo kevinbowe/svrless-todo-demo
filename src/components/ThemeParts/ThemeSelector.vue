@@ -1,5 +1,7 @@
 <template>
-	<v-select  v-model="selectorModel" :items="props.selectorItems" :label="selectorLabel">	
+	<v-select  v-model="selectorModel" :items="props.selectorItems" :label="selectorLabel"
+		:style="props.selectorWidth"
+		>	
 
 		<!-- <template v-slot:item="{ item, props: {onClick, title, value} }" >
 			<v-list-item :title="item.title"  @click="onClick(); clickIt()">
@@ -44,7 +46,8 @@ const props = defineProps({
 	defaultItem: String,
 	selectorLabel: String,
 	selectorItems: Array<string|undefined>,
-	selectSwitchFlag: Boolean
+	selectSwitchFlag: Boolean,
+	selectorWidth: String,
 })
 const selectorModel = ref(props.defaultItem)
 

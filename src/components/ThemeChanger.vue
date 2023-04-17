@@ -17,22 +17,25 @@
 				></ThemeSelector>
 
 				<div 
-
-					class="float-right" 
-
-					style="margin:.6em 1em 0em 0em;">
+					class="float-right mr-4"
+					ZZZ_class="float-right" 
+					style="margin:.6em 0em 0em 0em;"
+					ZZZ_style="margin:.6em 1em 0em 0em;">
 
 					<StatusIcons :stat="!switchFlag" />
 				</div>
 			</v-col>
 
 			<v-col cols="2" align-self="center" 
-			
-				style="margin:0em 0em .8em 0em;">
+
+				style="margin:0em 0em .8em 0em;"
+				ZZZ_style="margin:0em 0em .8em 0em;">
 
 				<v-switch :model-value="switchFlag"
 
-						style="justify-content:center; display:flex;margin-bottom:1em;" 
+						class="mb-4"
+						style="justify-content:center; display:flex;"
+						ZZZ_style="justify-content:center; display:flex;margin-bottom:1em;" 
 				
 						density="compact" :flat="true" inset @change="onChangeSwitch" />
 			</v-col>	
@@ -49,9 +52,10 @@
 
 				<div 
 
-					class="float-left" 
-
-					style="margin:.7em 0em 0em 1em;">
+					class="float-left ml-4"
+					style="margin:.7em 0em 0em 0em;"
+					ZZZ_class="float-left" 
+					ZZZ_style="margin:.7em 0em 0em 1em;">
 
 					<StatusIcons :stat="switchFlag" />
 				</div>
@@ -68,7 +72,9 @@
 		<v-list-item>
 			<v-list-item-action>
 				
-				<div style="margin:0em 1em 1em 0em;">
+				<div 
+					class="mr-4 mb-4"
+					ZZZstyle="margin:0em 1em 1em 0em;">
 
 					<StatusIcons :stat="!switchFlag" />
 				</div>
@@ -116,8 +122,8 @@
 			<v-list-item-action>
 
 				<div 
-				
-					style="margin:0em 1em 1em 0em;">
+					class="mr-4 mb-4"
+					ZZZ_style="margin:0em 1em 1em 0em;">
 
 					<StatusIcons :stat="switchFlag" />
 				</div>
@@ -173,4 +179,4 @@ function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 // 	//	// Update active theme
 // 	theme.global.name.value = selectorModel;
 // }
-</script>∫
+</script>

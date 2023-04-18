@@ -124,7 +124,7 @@
 import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 
-const mainTitle: string = "Vue MultiTheme v25 -- WIP"
+const mainTitle: string = "Vue MultiTheme v26 -- WIP"
 
 const menu = ref(false);
 

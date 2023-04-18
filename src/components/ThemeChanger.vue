@@ -14,8 +14,7 @@
 				</div>
 			</v-col>
 			<v-col cols="2" align-self="center">
-				<v-switch 
-					density="compact" :flat="true" inset class="mb-4 d-flex justify-center"
+				<v-switch density="compact" :flat="true" inset class="mb-4 d-flex justify-center"
 					:model-value="switchFlag"
 					@change="onChangeSwitch" 
 				></v-switch>
@@ -52,8 +51,7 @@
 				<v-icon icon="mdi-arrow-up-left-bold" size="x-large" class="pb-2" />
 			</v-col>
 			<v-col cols="2">
-				<v-switch 
-					density="compact" :flat="true" inset class="d-flex justify-center"
+				<v-switch density="compact" :flat="true" inset class="d-flex justify-center"
 					:model-value="switchFlag" 
 					@change="onChangeSwitch"
 				></v-switch>

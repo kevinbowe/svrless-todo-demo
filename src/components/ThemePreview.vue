@@ -8,59 +8,45 @@
 			</template>
 		</v-expansion-panel-title>
 		<v-expansion-panel-text 
-		class="text-center">
+			class="text-center"
+		>
 			<v-card-text>
-				<v-card
-					:color="generateThemesWithAllColors()[themeIndex].colorArray[0].code"
+				<v-card :color="generateThemesWithAllColors()[themeIndex].colorArray[0].code" 
+					class="my-2" style="border:3px solid grey"
 					@click="updateActiveTheme(eachThemeName)"
 					v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex"
-					class="my-2" style="border:3px solid grey"
 				>
 					<v-list-item>
 						<v-list-item-action>
-							<h2 class="text-grey mr-4" >
+							<h2 class="text-grey mr-4">
 								{{ eachThemeName.toUpperCase() }}
 							</h2>
-							<v-avatar 
-								color="success" size="30"
+							<v-avatar color="success" size="30"
 								v-if="uTheme.global.name.value === eachThemeName" 
 							>
 								<v-icon>mdi-check</v-icon>
 							</v-avatar>
 						</v-list-item-action>
 					</v-list-item>
-
 					<v-chip __BACKGROUND_CHIP_ONLY__ 
-						color="grey" label :variant="chipVariant"
-						class="ma-1" 
+						color="grey" label :variant="chipVariant" class="ma-1" 
 					>
 						<strong>
 							{{ generateThemesWithAllColors()[themeIndex].colorArray[0].color }}
 						</strong>
-						<v-avatar 
-							variant="outlined" size="25" 
-							class="ml-4"
-						></v-avatar>
+						<v-avatar variant="outlined" size="25" class="ml-4" />
 					</v-chip>
-
-					<v-chip 
-						label :variant="chipVariant"
-						:color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code" 
+					<v-chip label :variant="chipVariant" 
+						:color="generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code" class="ma-1"
 						v-for="colorArrayIndex in generateThemesWithAllColors()[themeIndex].colorArray.length-1"
-						class="ma-1"
 					>
 						<strong>
 							{{ generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].color }}
 						</strong>
-
-						<v-avatar 
-							size="25"
-							class="ml-4"
+						<v-avatar size="25" class="ml-4" 
 							:style="{background:generateThemesWithAllColors()[themeIndex].colorArray[colorArrayIndex].code } " 
 						></v-avatar>
-
 					</v-chip>
-
 					</v-card>
 				</v-card-text>
 		</v-expansion-panel-text>

@@ -5,8 +5,7 @@
 			<v-spacer />
 			<v-col cols="5">
 				<ThemeSelector selectorLabel="Left Theme" 
-					:selectorItems=themeVals defaultItem="light" 
-					:selectSwitchFlag=false selectorWidth="width:10em;" 
+					:selectorItems=themeVals defaultItem="light" :selectSwitchFlag=false selectorWidth="width:10em;" 
 					class="float-right" 
 					@clickSelectorEvent="onClick" 
 				></ThemeSelector>
@@ -16,17 +15,15 @@
 			</v-col>
 			<v-col cols="2" align-self="center">
 				<v-switch 
+					density="compact" :flat="true" inset class="mb-4 d-flex justify-center"
 					:model-value="switchFlag"
-					density="compact" :flat="true" inset 
-					class="mb-4 d-flex justify-center"
 					@change="onChangeSwitch" 
 				></v-switch>
 			</v-col>	
 			<v-col cols="5">
 				<ThemeSelector	selectorLabel="Right Theme" 
-					:selectorItems=themeVals defaultItem="dark" 
-					:selectSwitchFlag=true selectorWidth="width:10em;" 
 					class="float-left"
+					:selectorItems=themeVals defaultItem="dark" :selectSwitchFlag=true selectorWidth="width:10em;" 
 					@clickSelectorEvent="onClick"
 				></ThemeSelector>
 				<div class="float-left ml-4 mt-4">
@@ -45,8 +42,7 @@
 					<StatusIcons :stat="!switchFlag" />
 				</div>
 				<ThemeSelector selectorLabel="Left Theme" 
-					:selectorItems=themeVals defaultItem="light"
-					:selectSwitchFlag=false electorWidth="width:10em;" 
+					:selectorItems=themeVals defaultItem="light" :selectSwitchFlag=false electorWidth="width:10em;" 
 					@clickSelectorEvent="onClick"
 				></ThemeSelector>
 			</v-list-item-action>
@@ -57,9 +53,8 @@
 			</v-col>
 			<v-col cols="2">
 				<v-switch 
+					density="compact" :flat="true" inset class="d-flex justify-center"
 					:model-value="switchFlag" 
-					density="compact" :flat="true" inset
-					class="d-flex justify-center"
 					@change="onChangeSwitch"
 				></v-switch>
 			</v-col>
@@ -73,9 +68,8 @@
 					<StatusIcons :stat="switchFlag" />
 				</div>
 				<ThemeSelector selectorLabel="Right Theme" 
-					:selectorItems=themeVals defaultItem="dark"
-					:selectSwitchFlag=true selectorWidth="width:10em;" 
 					class="pt-4"
+					:selectorItems=themeVals defaultItem="dark" :selectSwitchFlag=true selectorWidth="width:10em;" 
 					@clickSelectorEvent="onClick" 
 				></ThemeSelector>
 		</v-list-item-action>

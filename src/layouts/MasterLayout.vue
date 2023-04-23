@@ -179,7 +179,7 @@ import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 
 // <v-app-bar-title>
-const mainTitle: string = "Vue AWS Auth Raw v3 -- WIP"
+const mainTitle: string = "Vue AWS Auth Raw v4 -- DEBUG"
 
 const menu = ref(false);
 const blogLinks = ref([

@@ -33,8 +33,6 @@ const light: ThemeDefinition = {
 		// error: 'red',
 		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
 		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
-
-
 	},
 }
 const dark: ThemeDefinition = {

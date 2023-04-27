@@ -1,10 +1,7 @@
 // path: src/main.ts
-
 import { createApp } from 'vue';
 import './style.css';
-
 import App from './App.vue';
-
 import vuetify from './plugins/vuetify';
 import router from './router';
 
@@ -14,14 +11,13 @@ import AmplifyVue from '@aws-amplify/ui-vue'
 //	NOTE: aws-exports.js had to be renamed to aws-exports.ts
 import awsExports from './aws-exports'
 Amplify.configure(awsExports)
-
 import { registerLayouts } from './layouts/register';
 
 const app = createApp(App);
-	app.use(router);
-	app.use(AmplifyVue)
-	app.use(vuetify);
+
+app.use(router);
+app.use(AmplifyVue)
+app.use(vuetify);
 	
-	registerLayouts(app);
-	
-	app.mount('#app');
+registerLayouts(app);	
+app.mount('#app');

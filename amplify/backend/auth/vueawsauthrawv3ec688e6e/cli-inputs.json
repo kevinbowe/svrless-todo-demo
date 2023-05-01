@@ -33,6 +33,7 @@
       "email"
     ],
     "userpoolClientReadAttributes": [
+			"email_verified",
       "email",
       "name",
       "nickname",

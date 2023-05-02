@@ -190,7 +190,7 @@ const blogLinks = ref([
 ]);
 const accountLinks = ref([
 	{ label: "Profile", url: "/profile" },
-	{ label: "Signup", url: "/signup" },
+	// { label: "Signup", url: "/signup" },
 	{ label: "Login", url: "/login" },
 ]);
 const footerLinks = ref([

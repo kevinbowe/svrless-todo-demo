@@ -37,14 +37,14 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'master',
     },
   },
-	{
-    path: '/signup',
-    name: 'Signup',
-    component: () => import(/* webpackChunkName: "home" */ '../views/SignupView.vue'),
-    meta: {
-      layout: 'default',
-    },
-  },
+// 	{
+//     path: '/signup',
+//     name: 'Signup',
+//     component: () => import(/* webpackChunkName: "home" */ '../views/SignupView.vue'),
+//     meta: {
+//       layout: 'default',
+//     },
+//   },
 	{
     path: '/login',
     name: 'Login',

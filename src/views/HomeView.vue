@@ -46,3 +46,24 @@
 		password: { order: 3 }, confirm_password: { order: 4 } }, }
 
 </script>
+
+<style>
+/* .amplify-button[data-variation='primary'] {
+  background: linear-gradient(
+    to right,
+    var(--amplify-colors-green-80),
+    var(--amplify-colors-orange-40)
+  );} */
+
+.amplify-button--link { color: rgb(var(--v-theme-primary)); }
+
+.amplify-button[data-variation='primary'] { background-color: rgb(var(--v-theme-primary)); }
+
+.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
+
+.amplify-tabs-item:focus { color: rgb(var(--v-theme-primary)); }
+
+.amplify-tabs-item:hover { color: rgb(var(--v-theme-primary)); }
+
+.amplify-tabs-item[data-state=active] { color: rgb(var(--v-theme-primary)); border-color: rgb(var(--v-theme-primary)); }
+</style>

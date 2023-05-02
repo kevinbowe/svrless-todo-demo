@@ -1,6 +1,6 @@
 <template>
   <v-container class="text-center">
-    <h1 class="text-primary">Login Page Content</h1>
+    <h1 class="text-primary">Sign In Page Content</h1>
 		<v-btn class="pa-3" to="/">Go To Home</v-btn>
   </v-container>
 </template>

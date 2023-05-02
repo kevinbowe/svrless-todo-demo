@@ -38,14 +38,14 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "home" */ '../views/LoginView.vue'),
-    meta: {
-      layout: 'default',
-    },
+	path: '/signin',
+	name: 'Sign In',
+	component: () => import(/* webpackChunkName: "home" */ '../views/SigninView.vue'),
+	meta: {
+	  layout: 'default',
+	},
   },
-	{
+  {
     path: '/blog1',
     name: 'Blog1',
     component: () =>

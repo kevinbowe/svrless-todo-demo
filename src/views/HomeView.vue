@@ -48,12 +48,9 @@
 </script>
 
 <style>
-/* .amplify-button[data-variation='primary'] {
-  background: linear-gradient(
-    to right,
-    var(--amplify-colors-green-80),
-    var(--amplify-colors-orange-40)
-  );} */
+/* Documentation Example
+	.amplify-button[data-variation='primary'] 
+	{ background: linear-gradient( to right, var(--amplify-colors-green-80), var(--amplify-colors-orange-40) );} */
 
 .amplify-button--link { color: rgb(var(--v-theme-primary)); }
 

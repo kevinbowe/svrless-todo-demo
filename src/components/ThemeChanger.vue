@@ -73,7 +73,7 @@
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>
-	<ThemePreview />
+	<!-- <ThemePreview /> -->
 </template>
 
 <script setup lang="ts">

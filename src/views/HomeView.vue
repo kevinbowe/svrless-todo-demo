@@ -1,6 +1,15 @@
 <template>
 <v-app>
 <MasterLayout>
+
+	<!-- Col Start -->
+
+	<ThemeChanger />
+	<!-- <ThemePreview /> -->
+
+<!-- Col End -->
+	<!-- Col Start -->
+
 	<v-container class="text-center">
 		<h1 class="text-primary">Home Page Content</h1>
 		<hr>
@@ -11,7 +20,6 @@
 		<h4 class="text-secondary">kevinbowe1957+53e@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Chester - 53 E  </h4><hr>
 		<h4 class="text-error">kevinbowe1957+53f@mail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp      KB      - 53 F  </h4><hr>
 		<h4 class="text-black">kevinbowe1957+53g@gmail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp     GitGud  - 53 G  </h4>
-
 	</v-container>
 
 	<authenticator initialState="signIn" :formFields="formFields" :signUpAttributes="['email', 'nickname']">
@@ -27,7 +35,9 @@
 		<v-btn v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
 	</div>
 	
-	<ThemeChanger />
+<!-- Col End -->
+
+
 
 </MasterLayout>
 </v-app>
@@ -36,6 +46,7 @@
 <script setup lang="ts">
 	import MasterLayout from "../layouts/MasterLayout.vue";
 	import ThemeChanger from "../components/ThemeChanger.vue";
+	//... import ThemePreview from "../components/ThemePreview.vue";
 	import {	AuthenticatorSignUpFormFields, useAuthenticator } from '@aws-amplify/ui-vue';
 	import { Amplify } from 'aws-amplify';
 	//	NOTE: aws-exports.js had to be renamed to aws-exports.ts

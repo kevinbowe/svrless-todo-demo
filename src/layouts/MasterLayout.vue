@@ -43,6 +43,7 @@
 											</v-btn>
 										</v-card-actions>
 										<ThemeChanger />
+										<ThemePreview />
 									</v-card>
 								</v-menu>
 							</v-btn>
@@ -87,6 +88,7 @@
 											</v-card-actions>
 
 											<ThemeChanger />
+											<ThemePreview />
 										
 										</v-card>
 									</v-menu>
@@ -146,6 +148,7 @@
 												</v-btn>
 											</v-card-actions>
 											<ThemeChanger />
+											<ThemePreview />
 										</v-card>
 									</v-menu>
 								</v-btn>
@@ -177,7 +180,7 @@
 <script setup lang="ts" >
 import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
-
+import ThemePreview from "../components/ThemePreview.vue";
 // <v-app-bar-title>
 const mainTitle: string = "v3-Auth-v3"
 

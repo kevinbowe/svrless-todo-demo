@@ -182,7 +182,7 @@ import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
 // <v-app-bar-title>
-const mainTitle: string = "v3-Auth-v5"
+const mainTitle: string = "v3-Auth-v6"
 
 const menu = ref(false);
 const blogLinks = ref([

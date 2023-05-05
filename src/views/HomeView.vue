@@ -61,7 +61,6 @@
 		</MasterLayout>
 	</v-app>
 </template>
-
 <script setup lang="ts">
 import MasterLayout from "../layouts/MasterLayout.vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
@@ -82,17 +81,16 @@ const formFields = {
 		password: { order: 3 }, confirm_password: { order: 4 }
 	},
 }
-
-async function submitNickname() {
-	console.log("%cexecuting updateUserAttributes == ", "color: black; background-color:orange;", myNickname.value)
-	const user = await Auth.currentAuthenticatedUser();
-	await Auth.updateUserAttributes(user, { 'nickname': myNickname.value });
-}
 const myNickname = ref("")
 
-function testFieldEmptyTWO(value: String) {
-	if (value === null || value.length === 0) return "empty validation error"
-	return true
+function callRulePromise(i: string) {
+	testFieldExists(i)
+		.then(testFieldLength)
+		.then(submitNickname)
+		.then((successMessage) => log("Final resolve message == ", successMessage))
+		.catch(function (error) {
+			console.error(error)
+		})
 }
 
 function testFieldExists(i: String) {
@@ -108,16 +106,6 @@ function testFieldExists(i: String) {
 	})
 }
 
-function callRulePromise(i: string) {
-	testFieldExists(i)
-		.then(testFieldLength)
-		.then(submitNickname)
-		.then((successMessage) => log("Final resolve message == ", successMessage))
-		.catch(function (error) {
-			console.error(error)
-		})
-}
-
 function testFieldLength(value: any) {
 	console.log("testFieldLengthTWO Check -- Value == ", value)
 	return new Promise((resolve, reject) => {
@@ -131,43 +119,36 @@ function testFieldLength(value: any) {
 	})
 }
 
-// const myNicknameRules__ORG__ = [
-// 	(value: String) => {
-// 		console.warn("Start Validation >>>-->")
-// 		if (value) {
-// 			console.log("%c<--<<< Exit Validation -- SUCCESS", "color: black; background-color:green;")
-// 			// isValid = true
-// 			return true
-// 		}
-// 		console.error("<--<<< Exit Validation -- FAIL")
-// 		// isValid = false
-// 		return 'Nickname required...'
-// 	}
-// ]
+async function submitNickname() {
+	progress("Executing 'update User Attributes' == ", myNickname.value)
+	const user = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(user, { 'nickname': myNickname.value });
+}
+					
+
 					const log = console.log;     // normal log
 					
 					const warn = console.warn;   // Orange on Brown
 					
 					const err = console.error;   // Pink on DkRed
 
-					// const joy =     (msg: string, value: any = "") => { 
-					//						console.log(`%c${msg}`, "color: black; background-color:orange;", value) }
+					const progress =  (msg: string, value: any = "") => { 
+											console.log(`%c${msg}`, "color: black; background-color:orange;", value) }
 
-					const joy =     (msg: string, value: any = "") => { 
+					const joy =     	(msg: string, value: any = "") => { 
 											console.log(`%c${msg}`, "color: pink;", value) }
 
-					const info =    (msg: string, value: any = "") => { 
+					const info =    	(msg: string, value: any = "") => { 
 											console.log(`%c${msg}`, "color: cyan;"), value }
 					
 					// const success = (msg: string, value: any = "") => { 
 					//						console.log(`%c${msg}`, "color: black; background-color:green;", value) }
 
-					const success = (msg: string, value: any = "") => { 
+					const success = 	(msg: string, value: any = "") => { 
 											console.log(`%c${msg}`, "color: green; background-color:black;", value) }
 
-					const bar = ((msg: string = "", value: any = "") => { 
+					const bar = 		((msg: string = "", value: any = "") => { 
 											console.log(`%c|||||||||||||||||||||||||||||||||%c ${msg}`, "color: white; background-color:black;", value) })
-
 </script>
 
 <style>

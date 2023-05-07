@@ -1,154 +1,147 @@
 <template>
-	<v-app>
-		<MasterLayout>
-			<v-row justify="center">
+<v-app>
+<MasterLayout>
+	<v-row class="my-5" justify="center">
 
-				<v-col cols="6">
-					<ThemeChanger />
-					<ThemePreview />
+			<v-sheet width="300" color="background" class="mx-auto">
+				<h1>EXPERIMENT</h1>
+				
+				<v-btn color="blue" @click="testClick" block class="mt-2">Submit -- Experiment</v-btn>
 
-					<v-form validate-on="submit" @submit.prevent="callRulePromise(myNickname)">
-						<v-text-field 
-							v-model="myNickname" 
-							label="Your Nickname"
-						></v-text-field>
-						<v-btn type="submit" block class="mt-2">Submit</v-btn>
-					</v-form>
-				</v-col>
+				<p v-if="test.wordEvenOdd" class="my-5">{{ `Got: ${test.value}, ${test.wordEvenOdd} `  }}</p>
+				<p v-if="testMsg.msg" class="my-5">{{ `Error: [${testMsg.msg}] -- [${testMsg.cause}] `  }}</p>
+			</v-sheet>
 
-				<v-col cols="6">
 
-					<v-container class="text-center">
-						<h1 class="text-primary">Home Page Content</h1>
-						<hr>
-						<h4 class="text-secondary">kevinbowe1957+53a@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Kranky -
-							53 A </h4>
-						<hr>
-						<h4 class="text-primary">kevinbowe1957+53b@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp DaBowe - 53
-							B </h4>
-						<hr>
-						<h4 class="text-error">kevinbowe1957+53c@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Nevik - 53 C
-						</h4>
-						<hr>
-						<h4 class="text-primary">kevinbowe1957+53d@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Mz G - 53 D
-						</h4>
-						<hr>
-						<h4 class="text-secondary">kevinbowe1957+53e@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Chester -
-							53 E </h4>
-						<hr>
-						<h4 class="text-error">kevinbowe1957+53f@mail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp KB - 53 F
-						</h4>
-						<hr>
-						<h4 class="text-black">kevinbowe1957+53g@gmail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp GitGud - 53 G
-						</h4>
-					</v-container>
-
-					<authenticator initialState="signIn" :formFields="formFields" :signUpAttributes="['email', 'nickname']">
-						<template v-slot:sign-up-fields>
-							<authenticator-sign-up-form-fields />
-						</template>
-					</authenticator>
-
-					<div v-if="route === 'authenticated'">
-						<h1>Hello {{ user.attributes.nickname }} !</h1>
-						<div>Email == {{ user.attributes.email }}</div>
-						<div>NickName == {{ user.attributes.nickname }}</div>
-						<v-btn v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
-					</div>
-
-				</v-col>
-			</v-row>
-		</MasterLayout>
-	</v-app>
+	</v-row>
+</MasterLayout>
+</v-app>
 </template>
+
 <script setup lang="ts">
 import MasterLayout from "../layouts/MasterLayout.vue";
-import ThemeChanger from "../components/ThemeChanger.vue";
-import ThemePreview from "../components/ThemePreview.vue";
-import { AuthenticatorSignUpFormFields, useAuthenticator } from '@aws-amplify/ui-vue';
-import { Amplify, Auth } from 'aws-amplify';
-//	NOTE: aws-exports.js had to be renamed to aws-exports.ts
-import awsconfig from '../aws-exports';
-import "@aws-amplify/ui-vue/styles.css";
-import { toRefs, ref } from 'vue'
-import { resolveComponent } from "vue";
-Amplify.configure(awsconfig);
+import {ref} from "vue"
+import  { log, warn, err , progress, joy, info, enter, exit, success, bar, whitebar, fini, start } from "../my-util-code/MyConsoleUtil"
+// import "../my-util-code/MyConsoleUtil"
 
-const { route, user, signOut } = toRefs(useAuthenticator());
-const formFields = {
-	signUp: {
-		nickname: { order: 1 }, email: { order: 2 },
-		password: { order: 3 }, confirm_password: { order: 4 }
-	},
+const test = ref({})
+const testMsg = ref({})
+const testClick = (input:string) => {
+																											whitebar(" <--<<< START"); 
+																											// bar()
+																											// start("Ptest")
+	let rtn = PTest()
+																											// fini("PTest")
 }
-const myNickname = ref("")
 
-function callRulePromise(i: string) {
-	testFieldExists(i)
-		.then(testFieldLength)
-		.then(submitNickname)
-		.then((successMessage) => log("Final resolve message == ", successMessage))
-		.catch(function (error) {
-			console.error(error)
+
+
+// To experiment with error handling, "threshold" values cause errors randomly
+const THRESHOLD_A = 4 //0 //8 // can use zero 0 to guarantee error
+
+function tetheredGetNumber(resolve: (arg0: number) => void, reject: (arg0: string) => void) {
+																											// bar()
+																											// enter("tethered  GetNumber")
+	setTimeout( 
+		() => {
+			const randomInt = Date.now();
+			const value = randomInt % 10;
+																											info(`Random value == ${value} Threshold == ${THRESHOLD_A}`)
+			if (value < THRESHOLD_A) {
+																											// info("resolve == ", value)
+				resolve(value);
+			} else {
+																											// info("reject == ", value)
+				reject(`Too large: ${value}`);
+			}
+		}, 
+		500
+	); // End of setTimeout()
+																											// exit("tethered  GetNumber")
+}
+
+function determineParity(value: number) {
+																											// bar()
+																											// enter("determine  Parity")
+	const isOdd = value % 2 === 1;
+																											// info("isOdd == ", isOdd)
+																											// exit("determine  Parity")
+	return { value, isOdd };
+}
+
+function troubleWithGetNumber(reason: any) {
+																											bar()
+																											enter("trouble  With  GetNumber")
+	const err = new Error("Trouble getting number", { cause: reason });
+	console.error(err);
+																											exit("trouble  With  GetNumber")
+	throw err;
+}
+
+function promiseGetWord(parityInfo: unknown) {
+																											// bar()
+																											// enter("promise  Get  Word")
+	return new Promise((resolve, reject) => {
+		const { value, isOdd } = parityInfo;
+		if (value >= THRESHOLD_A - 1) {
+			reject(`Still too large: ${value}`);
+		} else {
+			parityInfo.wordEvenOdd = isOdd ? "odd" : "even";
+			resolve(parityInfo);
+		}	
+																											// exit("promise  Get  Word")
+	});
+}
+
+function PTest() { 
+																											// bar()
+																											// enter("PTest")
+	var prtn = new Promise(tetheredGetNumber)
+	
+		.then(determineParity, troubleWithGetNumber)
+
+		.then(promiseGetWord)
+
+		.then((infoArg) => {
+																											bar()
+																											enter("final 'then'")
+			// console.log(`Got: ${info.value}, ${info.wordEvenOdd}`);
+																											info(`Got: ${infoArg.value}, ${infoArg.wordEvenOdd}`);
+			test.value = {value:infoArg.value, wordEvenOdd: infoArg.wordEvenOdd}
+			testMsg.value = {}
+																											exit("final 'then'")
+			return infoArg;
+		})  
+
+		.catch((reasonArg) => {
+																											bar()
+																											enter("Catch == ", reasonArg)
+			let catchMsg: unknown = {}
+			if (reasonArg.cause) {
+				catchMsg = {msg: "Had previously handled error", cause:"value == ThreshHold" }
+				console.error("Had previously handled error");
+			} else {
+				catchMsg = {msg: `Trouble with promiseGetWord()` , cause: reasonArg}
+				console.error(`Trouble with promiseGetWord(): ${reasonArg}`);
+			}
+			test.value = {}
+			testMsg.value = catchMsg;
+
+			// const testMsg = ref({msg:"Init Msg",cause:"Init Cause"})
+
+			
+																											exit("Catch")
 		})
+
+		.finally(() => {
+																											bar(" >>>--> END")
+																											// whitebar()													
+		});
+
+	return prtn
+
 }
 
-function testFieldExists(i: String) {
-	log("myNicknme input == ", i)
-	return new Promise((resolve, reject) => {
-		if (i === null || i.length === 0) {
-			info("reject -- Empty Check")
-			reject("empty validation error")
-		} else {
-			info("resolve - Empty Check")
-			resolve(i)
-		}
-	})
-}
-
-function testFieldLength(value: any) {
-	console.log("testFieldLengthTWO Check -- Value == ", value)
-	return new Promise((resolve, reject) => {
-		if (value.length <= 4) {
-			info("reject -- Length Check")
-			reject("length validation error")
-		} else {
-			info("resolve - Length Check")
-			resolve(value)
-		}
-	})
-}
-
-async function submitNickname() {
-	progress("Executing 'update User Attributes' == ", myNickname.value)
-	const user = await Auth.currentAuthenticatedUser();
-	await Auth.updateUserAttributes(user, { 'nickname': myNickname.value });
-}
-					
-
-					const log = console.log;     // normal log
-					
-					const warn = console.warn;   // Orange on Brown
-					
-					const err = console.error;   // Pink on DkRed
-
-					const progress =  (msg: string, value: any = "") => { 
-											console.log(`%c${msg}`, "color: black; background-color:orange;", value) }
-
-					const joy =     	(msg: string, value: any = "") => { 
-											console.log(`%c${msg}`, "color: pink;", value) }
-
-					const info =    	(msg: string, value: any = "") => { 
-											console.log(`%c${msg}`, "color: cyan;"), value }
-					
-					// const success = (msg: string, value: any = "") => { 
-					//						console.log(`%c${msg}`, "color: black; background-color:green;", value) }
-
-					const success = 	(msg: string, value: any = "") => { 
-											console.log(`%c${msg}`, "color: green; background-color:black;", value) }
-
-					const bar = 		((msg: string = "", value: any = "") => { 
-											console.log(`%c|||||||||||||||||||||||||||||||||%c ${msg}`, "color: white; background-color:black;", value) })
 </script>
 
 <style>

@@ -1,6 +1,7 @@
 <template>
 	<v-app>
 		<MasterLayout>
+			<h1>DEV View</h1>
 			<v-row justify="center">
 
 				<v-col cols="6">

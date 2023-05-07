@@ -12,6 +12,14 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+	path: '/dev2',
+	name: 'Dev 2',
+	component: () => import(/* webpackChunkName: "home" */ '../views/DevView2.vue'),
+	meta: {
+	  layout: 'default',
+	},
+ },
+  {
     path: '/',
     name: 'Home',
     component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),

@@ -73,7 +73,7 @@ function troubleWithGetNumber(reason: any) {
 																											bar()
 																											enter("trouble  With  GetNumber")
 	const err = new Error("Trouble getting number", { cause: reason });
-	console.error(err);
+																											console.error(err);
 																											exit("trouble  With  GetNumber")
 	throw err;
 }
@@ -105,7 +105,7 @@ function PTest() {
 		.then((infoArg) => {
 																											bar()
 																											enter("final 'then'")
-			// console.log(`Got: ${info.value}, ${info.wordEvenOdd}`);
+																											// console.log(`Got: ${info.value}, ${info.wordEvenOdd}`);
 																											info(`Got: ${infoArg.value}, ${infoArg.wordEvenOdd}`);
 			test.value = {value:infoArg.value, wordEvenOdd: infoArg.wordEvenOdd}
 			testMsg.value = {}
@@ -119,10 +119,10 @@ function PTest() {
 			let catchMsg: unknown = {}
 			if (reasonArg.cause) {
 				catchMsg = {msg: "Had previously handled error", cause:"value == ThreshHold" }
-				console.error("Had previously handled error");
+																											console.error("Had previously handled error");
 			} else {
 				catchMsg = {msg: `Trouble with promiseGetWord()` , cause: reasonArg}
-				console.error(`Trouble with promiseGetWord(): ${reasonArg}`);
+																											console.error(`Trouble with promiseGetWord(): ${reasonArg}`);
 			}
 			test.value = {}
 			testMsg.value = catchMsg;

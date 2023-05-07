@@ -96,11 +96,20 @@
 							</v-list>
 						</v-menu>
 					</v-btn>
+
 					<v-btn to="/dev" color="white" variant="plain" rounded="xl" 
 						class="mx-2 d-none d-sm-flex"
 					> 
 						Dev
 					</v-btn>
+
+					<v-btn to="/dev2" color="white" variant="plain" rounded="xl" 
+						class="mx-2 d-none d-sm-flex"
+					> 
+						Dev 2
+					</v-btn>
+
+
 					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> 
 						Blogs
 						<v-menu activator="parent">
@@ -115,7 +124,6 @@
 							</v-list>
 						</v-menu>
 					</v-btn>
-
 
 					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> 
 						Account

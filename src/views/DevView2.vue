@@ -2,7 +2,7 @@
 <v-app>
 <MasterLayout>
 
-<h1>DEV View 2</h1>
+<h1>DEV View 2 -- Mdn Promise example </h1>
 
 	<v-row class="my-5" justify="center">
 

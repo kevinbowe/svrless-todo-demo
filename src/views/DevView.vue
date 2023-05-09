@@ -2,6 +2,7 @@
 	<v-app>
 		<MasterLayout>
 			<h1>DEV View</h1>
+			<h1>TWO "Then().Then().Catch()" Examples</h1>
 			<v-row justify="center">
 
 				<v-col cols="6">

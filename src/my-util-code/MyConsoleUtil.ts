@@ -19,11 +19,14 @@
 
 export const log = console.log;     // normal log
 export const warn = console.warn;   // Orange on Brown
-export const err = console.error;   // Pink on DkRed
+
+export const err2 = console.error;   // Pink on DkRed
+
+export const err = (msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: red;", value) }
 
 export const progress = (msg: string, value: any = "") => { console.log(`%c${msg}`, "color: black; background-color:orange;", value) }
 
-export const joy =     	(msg: string, value: any = "") => { console.log(`%c${msg}`, "color: pink;", value) }
+export const joy =     	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: pink;", value) }
 
 export const info =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: cyan;", value) }
 

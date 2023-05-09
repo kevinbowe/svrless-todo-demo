@@ -96,11 +96,11 @@
 							</v-list>
 						</v-menu>
 					</v-btn>
-
-					<v-btn to="/dev" color="white" variant="plain" rounded="xl" 
+					
+					<v-btn to="/dev3" color="white" variant="plain" rounded="xl" 
 						class="mx-2 d-none d-sm-flex"
 					> 
-						Dev
+						Dev 3
 					</v-btn>
 
 					<v-btn to="/dev2" color="white" variant="plain" rounded="xl" 
@@ -108,6 +108,14 @@
 					> 
 						Dev 2
 					</v-btn>
+
+					<v-btn to="/dev" color="white" variant="plain" rounded="xl" 
+						class="mx-2 d-none d-sm-flex"
+					> 
+						Dev
+					</v-btn>
+
+
 
 
 					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> 

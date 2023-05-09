@@ -4,6 +4,22 @@ import { RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
 	{
+		path: '/dev3',
+		name: 'Dev 3',
+		component: () => import(/* webpackChunkName: "home" */ '../views/DevView3.vue'),
+		meta: {
+		  layout: 'default',
+		},
+	 },
+	{
+		path: '/dev2',
+		name: 'Dev 2',
+		component: () => import(/* webpackChunkName: "home" */ '../views/DevView2.vue'),
+		meta: {
+		  layout: 'default',
+		},
+	 },
+	{
     path: '/dev',
     name: 'Dev',
     component: () => import(/* webpackChunkName: "home" */ '../views/DevView.vue'),
@@ -11,14 +27,6 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'default',
     },
   },
-  {
-	path: '/dev2',
-	name: 'Dev 2',
-	component: () => import(/* webpackChunkName: "home" */ '../views/DevView2.vue'),
-	meta: {
-	  layout: 'default',
-	},
- },
   {
     path: '/',
     name: 'Home',

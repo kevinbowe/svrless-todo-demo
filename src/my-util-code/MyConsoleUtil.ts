@@ -21,8 +21,14 @@ export const log = console.log;     // normal log
 export const warn = console.warn;   // Orange on Brown
 
 export const err2 = console.error;   // Pink on DkRed
-
 export const err = (msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: red;", value) }
+
+export const pass_SAFE = (msg: string, value: any = "") => { console.log(`%c   PASS %c --  ${msg}`, "color: green;", value) }
+export const fail_SAFE = (msg: string, value: any = "") => { console.log(`%c   FAIL %c --  ${msg}`, "color: red;", value) }
+
+export const pass = (msg: string, value: any = "") => { console.log(`%c   PASS --  ${msg}`, "color: green;", value) }
+export const fail = (msg: string, value: any = "") => { console.log(`%c   FAIL --  ${msg}`, "color: red;", value) }
+
 
 export const progress = (msg: string, value: any = "") => { console.log(`%c${msg}`, "color: black; background-color:orange;", value) }
 
@@ -36,12 +42,14 @@ export const exit =    	(msg: string, value: any = "") => { console.log(`%c<--<<
 
 export const success = 	(msg: string, value: any = "") => { console.log(`%c${msg}`, "color: green; background-color:black;", value) }
 
-export const bar = 		((msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: white; background-color:black;", value) })
+export const bar =		(msg: string = "", value: any = "") => { console.log(`%c                                 ${msg}`, "color: white; background-color:black;", value) }
 
-export const whitebar = ((msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) })
+export const whitebar = (msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) }
 
 
-export const start =    (msg: string, value: any = "") => { console.log(`%cSTART ${msg}`, "color: yellow;", value) }
+export const whitebar_SAFE = ((msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) })
 
-export const fini =    	(msg: string, value: any = "") => { console.log(`%cFINI - ${msg}`, "color: magenta;", value) }
+export const start =    (msg: string, value: any = "") => { console.log(`%c${msg}`, "color: yellow;", value) }
+
+export const fini =    	(msg: string, value: any = "") => { console.log(`%c${msg}`, "color: magenta;", value) }
 

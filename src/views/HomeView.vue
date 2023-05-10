@@ -11,7 +11,9 @@
 					<v-text-field
 						v-model="userName"
 						label="User name"
-						:rules="[value => callPromises3(value)]"
+						:rules="[value => checkNameLength(value), 
+									value => checkApi(value),
+									value => checkNameType(value)]"
 					></v-text-field>
 					<v-btn type="submit" block class="mt-2">Submit</v-btn>
 				</v-form>
@@ -26,122 +28,174 @@
 import MasterLayout from "../layouts/MasterLayout.vue";
 import {ref} from "vue"
 import  { log, warn, err , progress, joy, info, enter,
-			exit, success, bar, whitebar, fini, start }
+			exit, success, bar, whitebar, fini, start, pass, fail }
 	from "../my-util-code/MyConsoleUtil"
 
 const userName = ref<string>("")
+const startMark =  new Date(Date.now())
+const formattedDateTime = startMark.toLocaleString('en-US');
+function now () {
+	let d = new Date(Date.now()).toLocaleString('en-US',{
+    minute:'2-digit',
+    second:'2-digit',
+    fractionalSecondDigits: '3'});
+	return `NOW == ${d} (d.sec)`
+}
+
+function mark() {
+	let CurMark = new Date(Date.now() - startMark)
+	let fmtSecondsElap = CurMark.getSeconds()
+	let fmtMsElap = CurMark.getMilliseconds()
+	return `MARK == ${fmtSecondsElap}:${fmtMsElap} ms`
+}
+
+function elap() {
+	let e = new Date(Date.now() - startMark)
+	let fmtSecondsElap = e.getSeconds()
+	let fmtMsElap = e.getMilliseconds()
+	return `ELAP == ${fmtSecondsElap}:${fmtMsElap} ms`
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 async function myFunctionSubmit (event) {
-	whitebar("Start Submit");
+	bar(`START -- Submit `, now()); 
+	
+	const t0 = performance.now();
+	start(`   (START) (SUBMIT-Waiting) (await event) @ `,now())
+
 	const results = await event
+	fini(`   (FINI) (SUBMIT-Waiting) (await event) @ `, now())
 
-	if (!results.valid)
-		err("Do not continue to perform submission")
-	else
-		joy("A-OK -- Continue to perform submission")
-	whitebar("End Submit")
+	if (!results.valid) {
+		fail("Do not continue to perform submission")
+	} else {
+		pass("(SUBMIT) A-OK -- Continue to perform submission")
+	}
+	
+	info(`(SUBMIT)`, elap() ); 
+	bar(`END -- Submit `, now())
 } //////////////////////////////////////////////////////////////////////////////
 
-
-const callPromises2 = (userName: string) => {
-	bar( "Start Validation"); info("Promise 2()")
-	// This return sends the Promise results to the submit method [ myFunctionSubmit ]
-	return Promise.all( [
-		checkNameLengthPromise(userName),
-		checkApiPromise(userName),
-		checkNameTypePromise (userName)
-	]).then (result => {
-		// result is an <string>[] when using Promise.all()
-		log("Inside validation .Then() -- ",result)
-		for(let i = 0; i <= result.length; i++) {
-			if (typeof result[i] == 'string'){
-				// This return exits the '.then'
-				return result[i]
-			}
-		}
-		// This return exists the '.then'
-		// Do this when no string was found (validation found no errors)
-		return true
-	} ) // END_.then()
-
-}
+// const callPromises2 = (userName: string) => {
+// 	bar( "Start Validation"); info("Promise 2()")
+// 	// This return sends the Promise results to the submit method [ myFunctionSubmit ]
+// 	return Promise.all( [
+// 		checkNameLengthPromise(userName),
+// 		checkApiPromise(userName),
+// 		checkNameTypePromise (userName)
+// 	]).then (result => {
+// 		// result is an <string>[] when using Promise.all()
+// 		log("Inside validation .Then() -- ",result)
+// 		for(let i = 0; i <= result.length; i++) {
+// 			if (typeof result[i] == 'string'){
+// 				// This return exits the '.then'
+// 				return result[i]
+// 			}
+// 		}
+// 		// This return exists the '.then'
+// 		// Do this when no string was found (validation found no errors)
+// 		return true
+// 	} ) // END_.then()
+// }
 ////////////////////////////////////////////////////////////////////////////////
+// const callPromises3 = (userName: string) => {
+// 	bar( "Start Validation"); info("Promise 2()")
+// 	// This return sends the Promise results to the submit method [ myFunctionSubmit ]
+// 	return Promise.all( [
+// 		checkNameLengthPromise(userName),
+// 		checkApiPromise(userName),
+// 		checkNameTypePromise (userName),
+// 	]).then (resultArray => {
+// 		// This return exists all the way to the return Promise.all()
+// 		return checkValidationResults(resultArray)
+// 	} ) // END_.then()
+// } //////////////////////////////////////////////////////////////////////////////
 
-const callPromises3 = (userName: string) => {
-	bar( "Start Validation"); info("Promise 2()")
-	// This return sends the Promise results to the submit method [ myFunctionSubmit ]
-	return Promise.all( [
-		checkNameLengthPromise(userName),
-		checkApiPromise(userName),
-		checkNameTypePromise (userName),
-	]).then (resultArray => {
-		// This return exists all the way to the return Promise.all()
-		return checkValidationResults(resultArray)
-	} ) // END_.then()
-}
-////////////////////////////////////////////////////////////////////////////////
-
-function checkValidationResults(resultsArray) {
-		// result is an <string>[] when using Promise.all()
-		log("checkResults()",resultsArray)
-		for(let i = 0; i <= resultsArray.length; i++) {
-			if (typeof resultsArray[i] == 'string'){
-				// This return exits the '.then'
-				return resultsArray[i]
-			}
-		}
-		return true
-} //////////////////////////////////////////////////////////////////////////////
+// function checkValidationResults(resultsArray) {
+// 	log("check Results()",resultsArray)
+// 	for(let i = 0; i <= resultsArray.length; i++) {
+// 		if (typeof resultsArray[i] == 'string'){
+// 			// This return exits the '.then'
+// 			return resultsArray[i]
+// 		}
+// 	}
+// 	return true
+// } //////////////////////////////////////////////////////////////////////////////
 
 /* This Promise is called FIRST */
-async function checkNameLengthPromise (userName) {
-	info("check Name Length Promise()")
-	// whitebar(); start("checkNameLength() - Arg0 == ", userName)
-	return new Promise(resolve => {
+async function checkNameLength (userName) {
+	whitebar("START -- Check Name Length");
+	if (userName.length <= 3) {
+		fail("check Name Length() -- Too Short ", userName)
 
-		if (userName.length <= 3) {
-			// fini("checkNameLength() - User Name is too short -- in-valid ", userName)
-			return resolve('User name is too short.')
-		}
-		// fini("checkNameLength() - User Name -- valid ", userName)
-		return resolve(true)}
-	)
+		info(``, elap() ); 
+		info(``, now() ); 
+		whitebar(`FINI -- Check Name Length`, elap()); 
+		return 'User name is too short.'
+	}
+	pass("check Name Length() -- OK ", userName)
+
+	info(``, elap() ); 
+	info(``, now() ); 
+	whitebar("FINI -- Check Name Length", elap()); 
+	return true
 } ////////////////////////////////////////////////////////////////////////////////
 
 /* This Promise is called SECOND */
-async function checkApiPromise (userName) {
-	info("check Api Promise()")
-	// bar(); start("checkApi() - Arg0 == ", userName)
-	return new Promise(resolve => {
+async function checkApi (userName) {
+	whitebar("START -- Check Api");
+	if (!userName) {
+		fail("Please enter a user name. -- No Name Input", `<empty>`)
+	
+		info(``, elap() ); 
+		info(``, now() ); 
+		whitebar(`FINI -- checkApi`, elap()); 
+		
+		return 'Please enter a user name.'
+	}
+	if (userName === 'kevin') {
+		fail("User name already taken. Please try another one.", userName)
+	
+		info(``, elap() ); 
+		info(``, now() ); 
+		whitebar(`FINI -- checkApi`, elap()); 
+		
+		return 'User name already taken. Please try another one.'
+	}
+	pass("Check Api() [empty userName | all ready used userName] -- OK ", userName)
 
-		if (!userName) {
-				// fini("checkApi() - User Name is empty -- in-valid ", userName)
-				return resolve('Please enter a user name.')
-			}
-			if (userName === 'kevin') {
-				// fini("checkApi() - User Name 'kevin' -- in-valid ", userName)
-				return resolve('User name already taken. Please try another one.')
-			}
-			// fini("checkApi() - User Name -- valid ", userName)
-			return resolve(true)
-	})
+	info(``, elap() ); 
+	info(``, now() ); 
+	whitebar("FINI - Check Api", elap()); 
+	return true
 } ////////////////////////////////////////////////////////////////////////////////
 
 /* This Promise is called THIRD */
-async function checkNameTypePromise (userName) {
-	info("check Name Type Promise()")
-	// whitebar();
-	// start("checkNameLength() - Arg0 == ", userName)
-	return new Promise(resolve => {
+function checkNameType (userName) {
+	whitebar("START -- Check Name Type",);
+	
+	if (userName.match(/\d+/g) !== null) {
+		fail("UserName can not contain numbers", userName)
+	
+		info(``, elap() )
+		info(``, now() ) 
+		
+		whitebar("FINI -- Check Name Type", elap()); 
 
-		if (userName.match(/\d+/g) !== null) {
-			return resolve('Username can not contain numbers')
-		}
-		// fini("checkNameLength() - User Name -- valid ", userName)
-		return resolve(true)}
-	)
-} ////////////////////////////////////////////////////////////////////////////////
+
+		return 'Username can not contain numbers'
+	}
+	pass("Check Name Type() -- OK ", userName)
+
+	info(``, elap() ); 
+	info(``, now() ); 
+	whitebar("FINI -- Check Name Type", elap()); 
+
+
+	return true
+} ///////////////////////////////////////////////////////////////////////////////
 
 
 </script>

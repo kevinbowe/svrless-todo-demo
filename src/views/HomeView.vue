@@ -56,7 +56,6 @@ function elap() {
 	return `ELAP == ${fmtSecondsElap}:${fmtMsElap} ms`
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 
 async function myFunctionSubmit (event) {
@@ -82,15 +81,15 @@ async function myFunctionSubmit (event) {
 async function checkNameLength (userName) {
 	whitebar("START -- Check Name Length");
 	if (userName.length <= 3) {
-		fail("check Name Length() -- Too Short ", userName)
 
+		fail("check Name Length() -- Too Short ", userName)
 		info(``, elap() ); 
 		info(``, now() ); 
 		whitebar(`FINI -- Check Name Length`, elap()); 
 		return 'User name is too short.'
 	}
-	pass("check Name Length() -- OK ", userName)
 
+	pass("check Name Length() -- OK ", userName)
 	info(``, elap() ); 
 	info(``, now() ); 
 	whitebar("FINI -- Check Name Length", elap()); 
@@ -101,21 +100,19 @@ async function checkNameLength (userName) {
 async function checkApi (userName) {
 	whitebar("START -- Check Api");
 	if (!userName) {
+
 		fail("Please enter a user name. -- No Name Input", `<empty>`)
-	
 		info(``, elap() ); 
 		info(``, now() ); 
 		whitebar(`FINI -- checkApi`, elap()); 
-		
 		return 'Please enter a user name.'
 	}
 	if (userName === 'kevin') {
+
 		fail("User name already taken. Please try another one.", userName)
-	
 		info(``, elap() ); 
 		info(``, now() ); 
 		whitebar(`FINI -- checkApi`, elap()); 
-		
 		return 'User name already taken. Please try another one.'
 	}
 	pass("Check Api() [empty userName | all ready used userName] -- OK ", userName)
@@ -131,20 +128,18 @@ function checkNameType (userName) {
 	whitebar("START -- Check Name Type",);
 	
 	if (userName.match(/\d+/g) !== null) {
+
 		fail("UserName can not contain numbers", userName)
-	
 		info(``, elap() )
 		info(``, now() ) 
 		whitebar("FINI -- Check Name Type", elap()); 
-
 		return 'Username can not contain numbers'
 	}
-	pass("Check Name Type() -- OK ", userName)
 
+	pass("Check Name Type() -- OK ", userName)
 	info(``, elap() ); 
 	info(``, now() ); 
 	whitebar("FINI -- Check Name Type", elap()); 
-
 	return true
 } ///////////////////////////////////////////////////////////////////////////////
 </script>

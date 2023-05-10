@@ -78,53 +78,7 @@ async function myFunctionSubmit (event) {
 	bar(`END -- Submit `, now())
 } //////////////////////////////////////////////////////////////////////////////
 
-// const callPromises2 = (userName: string) => {
-// 	bar( "Start Validation"); info("Promise 2()")
-// 	// This return sends the Promise results to the submit method [ myFunctionSubmit ]
-// 	return Promise.all( [
-// 		checkNameLengthPromise(userName),
-// 		checkApiPromise(userName),
-// 		checkNameTypePromise (userName)
-// 	]).then (result => {
-// 		// result is an <string>[] when using Promise.all()
-// 		log("Inside validation .Then() -- ",result)
-// 		for(let i = 0; i <= result.length; i++) {
-// 			if (typeof result[i] == 'string'){
-// 				// This return exits the '.then'
-// 				return result[i]
-// 			}
-// 		}
-// 		// This return exists the '.then'
-// 		// Do this when no string was found (validation found no errors)
-// 		return true
-// 	} ) // END_.then()
-// }
-////////////////////////////////////////////////////////////////////////////////
-// const callPromises3 = (userName: string) => {
-// 	bar( "Start Validation"); info("Promise 2()")
-// 	// This return sends the Promise results to the submit method [ myFunctionSubmit ]
-// 	return Promise.all( [
-// 		checkNameLengthPromise(userName),
-// 		checkApiPromise(userName),
-// 		checkNameTypePromise (userName),
-// 	]).then (resultArray => {
-// 		// This return exists all the way to the return Promise.all()
-// 		return checkValidationResults(resultArray)
-// 	} ) // END_.then()
-// } //////////////////////////////////////////////////////////////////////////////
-
-// function checkValidationResults(resultsArray) {
-// 	log("check Results()",resultsArray)
-// 	for(let i = 0; i <= resultsArray.length; i++) {
-// 		if (typeof resultsArray[i] == 'string'){
-// 			// This return exits the '.then'
-// 			return resultsArray[i]
-// 		}
-// 	}
-// 	return true
-// } //////////////////////////////////////////////////////////////////////////////
-
-/* This Promise is called FIRST */
+/* This Function is called FIRST */
 async function checkNameLength (userName) {
 	whitebar("START -- Check Name Length");
 	if (userName.length <= 3) {
@@ -141,9 +95,9 @@ async function checkNameLength (userName) {
 	info(``, now() ); 
 	whitebar("FINI -- Check Name Length", elap()); 
 	return true
-} ////////////////////////////////////////////////////////////////////////////////
+} //////////////////////////////////////////////////////////////////////////////
 
-/* This Promise is called SECOND */
+/* This Function is called SECOND */
 async function checkApi (userName) {
 	whitebar("START -- Check Api");
 	if (!userName) {
@@ -172,7 +126,7 @@ async function checkApi (userName) {
 	return true
 } ////////////////////////////////////////////////////////////////////////////////
 
-/* This Promise is called THIRD */
+/* This Function is called THIRD */
 function checkNameType (userName) {
 	whitebar("START -- Check Name Type",);
 	
@@ -181,9 +135,7 @@ function checkNameType (userName) {
 	
 		info(``, elap() )
 		info(``, now() ) 
-		
 		whitebar("FINI -- Check Name Type", elap()); 
-
 
 		return 'Username can not contain numbers'
 	}
@@ -193,39 +145,15 @@ function checkNameType (userName) {
 	info(``, now() ); 
 	whitebar("FINI -- Check Name Type", elap()); 
 
-
 	return true
 } ///////////////////////////////////////////////////////////////////////////////
-
-
 </script>
 
 <style>
-/* Documentation Example
-	.amplify-button[data-variation='primary']
-	{ background: linear-gradient( to right, var(--amplify-colors-green-80), var(--amplify-colors-orange-40) );} */
-
-.amplify-button--link {
-	color: rgb(var(--v-theme-primary));
-}
-
-.amplify-button[data-variation='primary'] {
-	background-color: rgb(var(--v-theme-primary));
-}
-
-.amplify-tabs-item {
-	color: rgb(var(--v-theme-primary));
-}
-
-.amplify-tabs-item:focus {
-	color: rgb(var(--v-theme-primary));
-}
-
-.amplify-tabs-item:hover {
-	color: rgb(var(--v-theme-primary));
-}
-
-.amplify-tabs-item[data-state=active] {
-	color: rgb(var(--v-theme-primary));
-	border-color: rgb(var(--v-theme-primary));
+.amplify-button--link { color: rgb(var(--v-theme-primary)); }
+.amplify-button[data-variation='primary'] { background-color: rgb(var(--v-theme-primary)); }
+.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
+.amplify-tabs-item:focus { color: rgb(var(--v-theme-primary)); }
+.amplify-tabs-item:hover { color: rgb(var(--v-theme-primary)); }
+.amplify-tabs-item[data-state=active] { color: rgb(var(--v-theme-primary)); border-color: rgb(var(--v-theme-primary));
 }</style>

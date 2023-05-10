@@ -15,6 +15,14 @@
 									value => checkApi(value),
 									value => checkNameType(value)]"
 					></v-text-field>
+
+					<v-text-field
+						v-model="phoneNumber"
+						label="Phone Number"
+						:rules="[value => checkPhoneMissingInvalidChar(value),
+									value => checkPhoneFormatAreaCode(value)]"
+					></v-text-field>
+
 					<v-btn type="submit" block class="mt-2">Submit</v-btn>
 				</v-form>
 
@@ -32,8 +40,10 @@ import  { log, warn, err , progress, joy, info, enter,
 	from "../my-util-code/MyConsoleUtil"
 
 const userName = ref<string>("")
-const startMark =  new Date(Date.now())
-const formattedDateTime = startMark.toLocaleString('en-US');
+const phoneNumber = ref<string>("")
+
+let startMark =  new Date(Date.now())
+// const formattedDateTime = startMark.toLocaleString('en-US');
 function now () {
 	let d = new Date(Date.now()).toLocaleString('en-US',{
     minute:'2-digit',
@@ -77,8 +87,83 @@ async function myFunctionSubmit (event) {
 	bar(`END -- Submit `, now())
 } //////////////////////////////////////////////////////////////////////////////
 
+//...async 
+function checkPhoneMissingInvalidChar(phoneNumber){
+	const testMsg1 = "Phone number is missing" // "<-P1-name-of-test-1>"
+	const testMsg2 = "Alpha charaters are invalid"
+	whitebar(`START -- ${testMsg1} | ${testMsg2}`);
+	
+	if(phoneNumber == ""){
+		fail(`Check Phone Missing Invalid Char() -- ${testMsg1}`/* , userName */)
+		// fail(`check Phone ONE() -- ${testMsg1}`/* , userName */)
+		info(``, elap() ); 
+		info(``, now() ); 
+		whitebar(`FINI -- Check Phone Missing Invalid Char()`, elap()); 
+		return testMsg1
+	}	
+		
+	// let expression = /^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]+$/ // matches letters AND numbers
+	// let expression = /^(?=.*[a-zA-Z])[A-Za-z]+$/ // matches letters
+	// let expression = /^(?=.*[0-9])[0-9]+$/ // matches numbers
+	// let expression = /^(?=.*[0-9])[0-9\s]+$/ // matches numbers & spaces
+	let expression = /^(?=.*[0-9])[0-9\s-]+$/ // matches numbers, spaces and hyphens
+	let match = phoneNumber.match(expression)
+
+	if(!match){
+		fail(`Check Phone Missing Invalid Char() -- ${testMsg2}`/* , userName */)
+		info(``, elap() ); 
+		info(``, now() ); 
+		whitebar(`FINI -- Check Phone Missing Invalid Char()`, elap()); 
+		return testMsg2
+	}
+
+	pass("Check Phone Missing Invalid Char() -- OK", phoneNumber)
+	info(``, elap() ); 
+	info(``, now() ); 
+	whitebar(`FINI -- ${testMsg1} | ${testMsg2}`, elap());
+	return true
+} //////////////////////////////////////////////////////////////////////////////
+
+function checkPhoneFormatAreaCode(phoneNumber){
+	const testMsg1 = "Invalid format -- Check area code"		// "<-P.TWO-name-of-test-1>"
+	const testMsg2 = "Invalid Area Code - Must be 919"	// "Invalid area-code"	// "<-P.TWO-name-of-test-2>"
+	const re = /^(1[\s\-]?)?(\d{3}|\(\d{3}\))[\s\-]?\d{3}[\s\-]?\d{4}$/
+	const match = phoneNumber.match(re)
+
+	whitebar(`START -- ${testMsg1} | ${testMsg2}`);
+	
+	// Check the format
+	if(!match){
+		fail(`Check Phone Format Area Code() -- ${testMsg1}`, phoneNumber)
+		info(``, elap() ); 
+		info(``, now() ); 
+		whitebar(`FINI -- Check Phone Format Area Code()`, elap()); 
+		return testMsg1
+	}
+
+	// Group2 will be the area code based on the regex
+	 if(match[2] !== '919'){
+
+			fail(`Check Phone Format Area Code() -- ${testMsg2}`, phoneNumber)
+			info(``, elap() ); 
+			info(``, now() ); 
+			whitebar(`FINI -- CCheck Phone Format Area Code()`, elap()); 
+			return testMsg2
+	}
+
+	pass("Check Phone Format Area Code() -- OK", phoneNumber)
+	info(``, elap() ); 
+	info(``, now() ); 
+	whitebar(`FINI -- ${testMsg1} | ${testMsg2}`, elap());
+	return true
+} //////////////////////////////////////////////////////////////////////////////
+
 /* This Function is called FIRST */
 async function checkNameLength (userName) {
+	//// Reset elap
+	//		This is the first validator function that is called
+	startMark = new Date(Date.now())
+
 	whitebar("START -- Check Name Length");
 	if (userName.length <= 3) {
 

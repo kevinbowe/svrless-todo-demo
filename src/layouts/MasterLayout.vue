@@ -198,7 +198,7 @@ import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
 // <v-app-bar-title>
-const mainTitle: string = "v3-Auth-v9"
+const mainTitle: string = "v3-Auth-Form-v0"
 
 const menu = ref(false);
 const blogLinks = ref([

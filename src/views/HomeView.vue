@@ -4,14 +4,20 @@
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr>
 			<v-row justify="center">
+				<v-col cols="6"> <!-- START Column ONE -->
 
-				<v-col cols="6">
 
+
+					
 					<!-- Add Experimental Code Here -->
 
-				</v-col>
 
-				<v-col cols="6">
+
+
+
+				</v-col> <!-- END Column ONE -->
+
+				<v-col cols="6"> <!-- START Column TWO -->
 					<v-container class="text-center">
 						<!-- <h4 class="text-secondary">kevinbowe1957+53a@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Kranky -
 							53 A </h4>
@@ -48,8 +54,7 @@
 
 					<ThemeChanger />
 
-				</v-col>
-
+				</v-col> <!-- END Column TWO -->
 			</v-row>
 		</MasterLayout>
 	</v-app>

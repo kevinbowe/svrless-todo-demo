@@ -77,8 +77,15 @@
 						</v-row>
 					</v-form> -->
 				<!-- END Forms -->
-				
-					<v-btn class="w-50 mx-auto mt-5" @click="GetTest">TEST</v-btn>
+
+
+					<v-row class="justify-end">
+						<v-col cols="7" class="mr-3 mt-5">
+							<v-btn color=secondary @click="GetTest"> 
+								TEST 
+							</v-btn></v-col></v-row>
+
+
 
 				</v-col> <!-- END Column ONE -->
 
@@ -157,16 +164,36 @@ import {
 
 import { CognitoUser, CognitoUserPool, AuthenticationDetails, CognitoUserAttribute, } from "amazon-cognito-identity-js";
 
+// This is the arn (Amazon Resource Name)
+// 	arn:aws:cognito-idp:us-east-1:716677688107:userpool/us-east-1_FrbKYTqmg
+	/* 	Keywords	==	arn:aws:
+			Service === cognito-idp:
+			Region ====	us-east-1:
+			AWS Account ID === 716677688107:
+			Resource-type == userpool/
+			Resource-ID ==== us-east-1_FrbKYTqmg		*/
+	
 let cConfig = {
-	region: "us-east-1", // ""eu-west-1",
-	IdentityPoolId: "us-east-1:716677688107", //"eu-west-1_9IBAarCx9",
-	UserPoolId: "us-east-1_FrbKYTqmg", // verified // "eu-west-1:853957954650",
-	ClientId: "1u6oke9flr3b35b3q8me9fn8r2" // "3t98j3h14i4ao1m63ng25o19im", //"43duengi4ldb6jel18p84sgq22"
+	// IAM > IAM Identity Center > Settings > Details > Regiom
+	region: "us-east-1", // 
+	// 2 Parts: Region ========== AWS-Home > Region(us-east-1 | N.Virginia)
+	//				AWS Account Id == AWS-Home > Account Name(KB Experiemnt) > Account ID
+	IdentityPoolId: "us-east-1:716677688107", //
+	// AWS Cognito > User pools > User pool ID
+	UserPoolId: "us-east-1_FrbKYTqmg", //
+	// Cognito > User pool > User pool name(vueawsauthrawv3ec688e6e_userpool_ec688e6e-dev)
+	// 	> App integration > App client list > Client Name(vueawsec688e6e_app_webClient) > Client ID 
+	ClientId: "1u6oke9flr3b35b3q8me9fn8r2" // 
 }
 let myUsername = "cfc00cf6-ffa8-400e-b279-c3ec9d5e5d4c"
+
 let myCredentials = {
-	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", // Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
-	secretAccessKey: "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"  // Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key // also here -- ~/Documents/aws-dev access keys.txt
+	// Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
+	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
+
+	// Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
+	// also here -- ~/Documents/aws-dev access keys.txt
+	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -185,9 +212,40 @@ const eMail:Ref<string> = ref("")
 
 
 const nickNameX:Ref<string> = ref("Mr Kranky -- placehold")
-// const nickNameX:Ref<string> = ref(user.attributes.nickname)
 
 					async function GetTest() {
+
+						const currentUserSession /* user */ = await Auth.currentAuthenticatedUser()//.then(rtn => { info(rtn); return rtn});
+						info(currentUserSession.attributes.nickname)
+						info(currentUserSession.attributes.email)
+						info("(username/sub) == ", currentUserSession.attributes.sub)
+						
+						const curCredentials = await Auth.currentCredentials()
+						info("currentCredentials", curCredentials)
+
+						const curSession = await Auth.currentSession()
+						info("currentSession", curSession)
+
+						const curUserCredentials = await Auth.currentUserCredentials()
+						info("curUserCredentials", curUserCredentials)
+
+						const curUserInfo = await Auth.currentUserInfo()
+						info("curUserInfo", curUserInfo)
+						info("curUserInfo.attributes", curUserInfo.attributes)
+						info("curUserInfo.id", curUserInfo.id)
+						info("curUserInfo.username", curUserInfo.username)
+
+						const curUserPoolUser = await Auth.currentUserPoolUser()
+						info("curUserPoolUser", curUserPoolUser)
+
+						
+										info("aws_cognito_identity_pool_id == ", awsconfig.aws_cognito_identity_pool_id)
+										// info("aws_cognito_username_attributes[0] == ", awsconfig.aws_cognito_username_attributes[0])
+										info("awsconfig.aws_user_pools_id == ", awsconfig.aws_user_pools_id)
+										// info("aws_cognito_signup_attributes[0] == ", awsconfig.aws_cognito_signup_attributes[0])
+										// info("aws_cognito_signup_attributes[1] == ", awsconfig.aws_cognito_signup_attributes[1])
+										info("awsconfig.aws_user_pools_web_client_id == ", awsconfig.aws_user_pools_web_client_id)
+
 						const client = new CognitoIdentityProviderClient({
 							region: cConfig.region,
 							credentials: {
@@ -200,12 +258,12 @@ const nickNameX:Ref<string> = ref("Mr Kranky -- placehold")
 							Username: myUsername
 						};
 						const command = new AdminGetUserCommand(input);
-						const response = await client.send(command);
-						log(response)
-						log(response.UserAttributes) // nickname
-						log(response.UserAttributes[2]) // nickname
-						log(response.UserAttributes[2].Name) // nickname
-						log(response.UserAttributes[2].Value) // DaBode
+						// const response = await client.send(command);
+						// // log(response)
+						// // log(response.UserAttributes) // nickname
+						// log(response.UserAttributes[2]) // nickname
+						// // log(response.UserAttributes[2].Name) // nickname
+						// // log(response.UserAttributes[2].Value) // DaBowe
 					}
 
 const nickName = computed(() => {

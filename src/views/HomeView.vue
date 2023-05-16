@@ -82,8 +82,7 @@
 					</v-row>
 
 				</v-col> 
-				<!-- END Column ONE -->
-				
+				<!-- END Column ONE -->	
 				<!-- START Column TWO -->
 				<v-col cols="6"> 
 					<v-container class="text-center">
@@ -158,31 +157,30 @@ const formFields = {
 
 async function GetTest() {
 	
-	const cognitoUserSession = await Auth.currentSession()
 	const currentUserPoolUserUsername = await Auth.currentUserPoolUser().then(user => user.attributes.sub)
-	
 	const adminGetUserCommandInput = {
 		UserPoolId: awsconfig.aws_user_pools_id,
 		Username: currentUserPoolUserUsername
 	};
-	const adminGetUserCommand = new AdminGetUserCommand(adminGetUserCommandInput);	
 	const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 		region: awsconfig.aws_cognito_region,
 		credentials: awsCredentialIdentity
 	});
+	const adminGetUserCommand = new AdminGetUserCommand(adminGetUserCommandInput);	
 	const response = await cognitoIdentityProviderClient.send(adminGetUserCommand);
-
+	
 	/////////////////////////////////////////////////////////////////////////////
 	// 		Create GetUserRequest object instance // See class/interface below
 	// 		Hydrate the GetUserRequest object with access token
 	const getUserRequestInput = new GetUserRequestInput()
+	const cognitoUserSession = await Auth.currentSession()
 	getUserRequestInput.AccessToken = cognitoUserSession.getAccessToken().getJwtToken()
 	// 		Create the GetUserCommand object with the input argument "getUserRequest object"
 	const getUserCommand = new GetUserCommand(getUserRequestInput);	
 	// 		Submit the GetUserCommand for execution 
 	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
 	// 		Display results object
-	log("\nGetUserCommand - getUserCommandOutput (object)\n", getUserCommandOutput)
+	log("\nGetUserCommandOutput (object)\n", getUserCommandOutput)
 }
 
 //			Derive Class from GetUserRequest Interface

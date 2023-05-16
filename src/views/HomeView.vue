@@ -5,10 +5,12 @@
 			<hr class="mb-10">
 
 			<v-row justify="center">
-				<v-col cols="6"> <!-- START Column ONE -->
+
+				<!-- START Column ONE -->
+				<v-col cols="6">
 					
-				<!-- START Status -->
-					<!-- <v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
+					<!-- START Status -->
+					<v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
 						<v-col cols="3" class="text-right my-0 py-0"> Nick Name </v-col>
 						<v-col cols="5" class="text-left my-0 py-0"> {{ user.attributes.nickname }} </v-col>
 					</v-row>
@@ -26,13 +28,10 @@
 					<v-row class="my-0 py-0" justify="center">
 						<v-col cols="3" class="text-right my-0 py-0"> Theme (alt) </v-col>
 						<v-col cols="5" class="text-left my-0 py-0"> {{ themeAlt }} </v-col>
-					</v-row> -->
-				<!-- END Status -->
+					</v-row>
+					<!-- END Status -->
 
-				<!-- START Forms -->
-
-					<!-- {{ user.pool }} -->
-
+					<!-- START Forms -->
 					<v-form :disabled="route !== 'authenticated'"
 								class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="" >
 						<v-row>
@@ -44,9 +43,6 @@
 						</v-row>
 					</v-form>
 
-
-
-				<!-- 
 					<v-form class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="" >
 						<v-row>
 							<v-text-field label="Phone Number" hint="Short & Simple" variant="outlined" density="compact" v-model="phoneNumber" :rules="[]" />
@@ -75,39 +71,22 @@
 							<v-btn color="surface" size="large" @click="resetThemeAlt"> Cancel </v-btn>
 							<v-btn class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 						</v-row>
-					</v-form> -->
-				<!-- END Forms -->
-
+					</v-form>
+					<!-- END Forms -->
 
 					<v-row class="justify-end">
 						<v-col cols="7" class="mr-3 mt-5">
 							<v-btn color=secondary @click="GetTest"> 
 								TEST 
-							</v-btn></v-col></v-row>
+							</v-btn></v-col>
+					</v-row>
 
-
-
-				</v-col> <!-- END Column ONE -->
-
-				<v-col cols="6"> <!-- START Column TWO -->
+				</v-col> 
+				<!-- END Column ONE -->
+				
+				<!-- START Column TWO -->
+				<v-col cols="6"> 
 					<v-container class="text-center">
-				<!-- <h4 class="text-secondary">kevinbowe1957+53a@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Kranky -
-							53 A </h4>
-						<hr>
-						<h4 class="text-primary">kevinbowe1957+53b@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp DaBowe - 53
-							B </h4>
-						<hr>
-						<h4 class="text-error">kevinbowe1957+511a@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Mista Bo - 511 A
-						</h4>
-						<hr>
-						<h4 class="text-primary">kevinbowe1957+511b@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ??</h4>
-						<hr>
-						<h4 class="text-secondary">kevinbowe1957+53c@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ??</h4>
-						<hr>
-						<h4 class="text-error">kevinbowe1957+53d@mail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ??</h4>
-						<hr>
-						<h4 class="text-primary">kevinbowe1957+53e@gmail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ??</h4> 
-						<hr> -->
 						<h4 class="text-grey">kevinbowe1957+511a@gmail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Mista Bo - 511 A </h4>
 						<hr>
 						<h4 class="text-grey">kevinbowe1957+511b@gmail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Double Bo 2 Go - 511 B </h4>
@@ -130,7 +109,8 @@
 
 					<ThemeChanger />
 
-				</v-col> <!-- END Column TWO -->
+				</v-col> 
+				<!-- END Column TWO -->
 			</v-row>
 		</MasterLayout>
 	</v-app>
@@ -152,48 +132,14 @@ import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import { 
-	AdminGetUserCommand, 
-	CognitoIdentityProviderClient, 
-	AddCustomAttributesCommand, 
-	AwsCredentialIdentity,
-	GetUserCommand,
-	GetUserCommandInput,
-	GetUserRequest
-} from "@aws-sdk/client-cognito-identity-provider";
-
-// import { createClientForDefaultRegion } from "../../libs/utils/util-aws-sdk.js";
-// import { Config, CognitoIdentityCredentials } from "@aws-sdk";
-
-import { CognitoUser, CognitoUserPool, AuthenticationDetails, CognitoUserAttribute, } from "amazon-cognito-identity-js";
-
-// This is the arn (Amazon Resource Name)
-// 	arn:aws:cognito-idp:us-east-1:716677688107:userpool/us-east-1_FrbKYTqmg
-	/* 	Keywords	==	arn:aws:
-			Service === cognito-idp:
-			Region ====	us-east-1:
-			AWS Account ID === 716677688107:
-			Resource-type == userpool/
-			Resource-ID ==== us-east-1_FrbKYTqmg		*/
+import { AdminGetUserCommand, CognitoIdentityProviderClient, GetUserCommand, GetUserRequest } 
+	from "@aws-sdk/client-cognito-identity-provider";
 	
-let cConfig = {
-	// IAM > IAM Identity Center > Settings > Details > Regiom
-	region: "us-east-1", // get this from awsconfig
-	// 2 Parts: Region ========== AWS-Home > Region(us-east-1 | N.Virginia)
-	//				AWS Account Id == AWS-Home > Account Name(KB Experiemnt) > Account ID
-	IdentityPoolId: "us-east-1:716677688107", // get this from awsconfig
-	// AWS Cognito > User pools > User pool ID
-	UserPoolId: "us-east-1_FrbKYTqmg", //
-	// Cognito > User pool > User pool name(vueawsauthrawv3ec688e6e_userpool_ec688e6e-dev)
-	// 	> App integration > App client list > Client Name(vueawsec688e6e_app_webClient) > Client ID 
-	ClientId: "1u6oke9flr3b35b3q8me9fn8r2" // 
-}
-let myUsername = "cfc00cf6-ffa8-400e-b279-c3ec9d5e5d4c"
-let myCredentials = {
-	// Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
+const awsCredentialIdentity = {
+				// Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
 	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
-	// Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
-	// also here -- ~/Documents/aws-dev access keys.txt
+				// Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
+				// also here -- ~/Documents/aws-dev access keys.txt
 	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
 }
 
@@ -212,171 +158,65 @@ const formFields = {
 
 async function GetTest() {
 	
-	// const currentUserSession /* user */ = await Auth.currentAuthenticatedUser()//.then(rtn => { info(rtn); return rtn});
-	// info(currentUserSession.attributes.nickname)
-	// info(currentUserSession.attributes.email)
-	// info("(username/sub) == ", currentUserSession.attributes.sub)
+	const cognitoUserSession = await Auth.currentSession()
+	const currentUserPoolUserUsername = await Auth.currentUserPoolUser().then(user => user.attributes.sub)
 	
-	const curSession = await Auth.currentSession()
-	// info("currentSession", curSession)
-	// info("currentSession.getAccessToken", curSession.getAccessToken)
-	// /* n - Access Key
-	// 	n - Secret Access Key
-	// 	n - User Pool Id
-	// 	y - Username */
-	
-	// const curUserInfo = await Auth.currentUserInfo()
-	// info("curUserInfo", curUserInfo)
-	// // info("curUserInfo.attributes", curUserInfo.attributes)
-	// // info("curUserInfo.id", curUserInfo.id)
-	// // info("curUserInfo.username", curUserInfo.username)
-	// /* n - Access Key
-	// 	n - Secret Access Key
-	// 	n - User Pool Id
-	// 	y - Username */
-	// Includes Attributes: email, nickname, (sub|username)
-	
-	/* 
-		Both of these return the same vaules I need.
-		Note that "accessKeyId, secretAccessKey and 
-		sessionToken are different. 
-	*/
-	// const curCredentials = await Auth.currentCredentials()
-	// // info("currentCredentials", curCredentials)
-	// // /* y - Access Key -- doesn't work
-	// // 	y - Secret Access Key -- doesn't work
-	// // 	SKIP n - Region
-	// // 	n - User Pool Id
-	// // 	n - Username */
-	// 	info("currentCredentials.accessKeyId", curCredentials.accessKeyId)
-	// 	info("currentCredentials.secretAccessKey", curCredentials.secretAccessKey)
-
-		// info("myCredentials.accessKeyId", myCredentials.accessKeyId)
-		// info("myCredentials.secretAccessKey", myCredentials.secretAccessKey)
-										
-		// const curUserCredentials = await Auth.currentUserCredentials()
-		// // info("curUserCredentials", curUserCredentials)
-		// // /* y - Access Key -- doesn't work
-		// // 	y - Secret Access Key -- doesn't worl
-		// // 	n - Region -- must be parsed into 2x parts: region and ??? // split by colen ':'
-		// // 	n - User Pool Id
-		// // 	n - Username */
-		// info("curUserCredentials.accessKeyId", curUserCredentials.accessKeyId)
-		// info("curUserCredentials.secretAccessKey", curUserCredentials.secretAccessKey)
-
-
-
-
-
-
-		/* Fetch the User Pool Id, Username and Attributes */
-		// const curUserPoolUser = await Auth.currentUserPoolUser()
-		const userPoolUserUsername = await Auth.currentUserPoolUser().then(user => user.attributes.sub)
-		// info("userPoolUserUsername", userPoolUserUsername)
-		// info("curUserPoolUser", curUserPoolUser)
-		// info("curUserPoolUser.attributes.sub (username)" , curUserPoolUser.attributes.sub)
-
-		// // /* n - Access Key
-		// // 	n - Secret Access Key
-		// // 	SKIP n - region
-		// // 	SKIP y - User Pool Id
-		// // 	y - Username / Attribte.sub */
-		// // // Includes Attributes: email, nickname, (sub|username)
-		// // info("curUserPoolUser.pool.userPoolId", curUserPoolUser.pool.userPoolId)
-		// // info("curUserPoolUser.username", curUserPoolUser.username)
-
-	
-	// 				info("aws_cognito_identity_pool_id == ", awsconfig.aws_cognito_identity_pool_id)
-	// 				// info("aws_cognito_username_attributes[0] == ", awsconfig.aws_cognito_username_attributes[0])
-	// 				info("awsconfig.aws_user_pools_id == ", awsconfig.aws_user_pools_id)
-	// 				// info("aws_cognito_signup_attributes[0] == ", awsconfig.aws_cognito_signup_attributes[0])
-	// 				// info("aws_cognito_signup_attributes[1] == ", awsconfig.aws_cognito_signup_attributes[1])
-	// 				info("awsconfig.aws_user_pools_web_client_id == ", awsconfig.aws_user_pools_web_client_id)
-	
-	
-	const input = {
+	const adminGetUserCommandInput = {
 		UserPoolId: awsconfig.aws_user_pools_id,
-		Username: userPoolUserUsername
+		Username: currentUserPoolUserUsername
 	};
-	const adminGetUserCommand = new AdminGetUserCommand(input);	
-	const client = new CognitoIdentityProviderClient({
+	const adminGetUserCommand = new AdminGetUserCommand(adminGetUserCommandInput);	
+	const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 		region: awsconfig.aws_cognito_region,
-		credentials: myCredentials
+		credentials: awsCredentialIdentity
 	});
-	const response = await client.send(adminGetUserCommand);
-	// log("\nAdminGetUserCommand - response (object) == ", response) 
-	// log("\nAdminGetUserCommand - response.UserAttributes[2] nickname == ", response.UserAttributes[2]) // (Field) Name= nickname, Value = DaBowe
+	const response = await cognitoIdentityProviderClient.send(adminGetUserCommand);
 
-
-
-					/**
-					 * START WORKING HERE : GetUserCommand()
-					 *  */
-
+	/////////////////////////////////////////////////////////////////////////////
 	// 		Create GetUserRequest object instance // See class/interface below
 	// 		Hydrate the GetUserRequest object with access token
 	const getUserRequestInput = new GetUserRequestInput()
-	getUserRequestInput.AccessToken = curSession.getAccessToken().getJwtToken()
-	
+	getUserRequestInput.AccessToken = cognitoUserSession.getAccessToken().getJwtToken()
 	// 		Create the GetUserCommand object with the input argument "getUserRequest object"
-	const command2 = new GetUserCommand(getUserRequestInput);	
-	
+	const getUserCommand = new GetUserCommand(getUserRequestInput);	
 	// 		Submit the GetUserCommand for execution 
-	const response2 = await client.send(command2);
-	
+	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
 	// 		Display results object
-	log("\nAdminGetUserCommand - response2 (object)\n", response2)
-
-	// log("\nAdminGetUserCommand - response2.UserAttributes (object) == ", response2.UserAttributes)
-	// log("\nAdminGetUserCommand - response2.UserAttributes[] - username/sub == ", response2.UserAttributes[0])
-	// log("\nAdminGetUserCommand - response2.UserAttributes[] - email_verified == ", response2.UserAttributes[1])
-	// log("\nAdminGetUserCommand - response2.UserAttributes[] - nickname == ", response2.UserAttributes[2])
-	// log("\nAdminGetUserCommand - response2.UserAttributes[] - email == ", response2.UserAttributes[3])
-	// log("\nAdminGetUserCommand - response2.Username == ", response2.Username)
-	// log("\nAdminGetUserCommand - response2.$metadata (object) == ", response2.$metadata)
+	log("\nGetUserCommand - getUserCommandOutput (object)\n", getUserCommandOutput)
 }
+
 //			Derive Class from GetUserRequest Interface
 class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined ; }
-	
-
-
+				//////
 const nickName = computed(() => { return "Mr Kranky -- placeholder" });
 const phoneNumber:Ref<string> = ref("1 (919) 272-7866 -- placehold")
-const eMail:Ref<string> = ref("")
 const themeDefault:Ref<string> = ref("light -- palcehold")
 const themeAlt:Ref<string> = ref("dark -- placehold")
-const password:Ref<string> = ref("")
+				//////
 const resetNickname = () => { return "Original Nickname" }
 const resetPhoneNumber = () => { return "Original Phone Number" }
 const resetThemeAlt = () => { return "Name of Alt Theme" }
 const resetThemeDefault = () => { return "Name of Alt Theme" }
-
 </script>
 
 <style>
 	.amplify-button--link { color: rgb(var(--v-theme-primary)); }
 	.amplify-button[data-variation='primary'] { background-color: rgb(var(--v-theme-primary)); }
-
 	.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
-
 	.amplify-tabs-item:focus { color: rgb(var(--v-theme-primary)); }
 	.amplify-tabs-item:hover { color: rgb(var(--v-theme-primary)); }
-	
 	.amplify-tabs-item[data-state=inactive] { 
 		color: rgb(var(--v-theme-primary)); 
 		border-color: rgb(var(--v-theme-primary));
 		background-color: #E0E0E0;
 		/* border-bottom-width: 5px; */
 	}
-
 	.amplify-tabs-item[data-state=active] { 
 		color: rgb(var(--v-theme-primary)); 
 		border-color: rgb(var(--v-theme-primary));
 		border-top-width: 5px;
 		/* border-right-width: 5px; ; */
 	}
-
-
 	.amplify-alert--error {
 		/* color: black; */
 		/* background-color: rgb(var(--v-theme-error)); */

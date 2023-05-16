@@ -15,7 +15,7 @@
 						<v-col cols="5" class="text-left my-0 py-0"> {{ user.attributes.nickname }} </v-col>
 					</v-row>
 
-					<v-row class="my-0 py-0" justify="center">
+					<!-- <v-row class="my-0 py-0" justify="center">
 						<v-col cols="3" class="text-right my-0 py-0"> Phone </v-col>
 						<v-col cols="5" class="text-left my-0 py-0"> {{ phoneNumber }} </v-col>
 					</v-row>
@@ -28,7 +28,7 @@
 					<v-row class="my-0 py-0" justify="center">
 						<v-col cols="3" class="text-right my-0 py-0"> Theme (alt) </v-col>
 						<v-col cols="5" class="text-left my-0 py-0"> {{ themeAlt }} </v-col>
-					</v-row>
+					</v-row> -->
 					<!-- END Status -->
 
 					<!-- START Forms -->
@@ -43,7 +43,7 @@
 						</v-row>
 					</v-form>
 
-					<v-form class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="" >
+					<!-- <v-form class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="" >
 						<v-row>
 							<v-text-field label="Phone Number" hint="Short & Simple" variant="outlined" density="compact" v-model="phoneNumber" :rules="[]" />
 						</v-row>
@@ -71,7 +71,7 @@
 							<v-btn color="surface" size="large" @click="resetThemeAlt"> Cancel </v-btn>
 							<v-btn class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 						</v-row>
-					</v-form>
+					</v-form> -->
 					<!-- END Forms -->
 
 					<v-row class="justify-end">
@@ -155,37 +155,32 @@ const formFields = {
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
+const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
+	region: awsconfig.aws_cognito_region,
+	credentials: awsCredentialIdentity
+});
+
 async function GetTest() {
-	
-	const currentUserPoolUserUsername = await Auth.currentUserPoolUser().then(user => user.attributes.sub)
-	const adminGetUserCommandInput = {
-		UserPoolId: awsconfig.aws_user_pools_id,
-		Username: currentUserPoolUserUsername
-	};
-	const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-		region: awsconfig.aws_cognito_region,
-		credentials: awsCredentialIdentity
-	});
-	const adminGetUserCommand = new AdminGetUserCommand(adminGetUserCommandInput);	
-	const response = await cognitoIdentityProviderClient.send(adminGetUserCommand);
-	
-	/////////////////////////////////////////////////////////////////////////////
-	// 		Create GetUserRequest object instance // See class/interface below
-	// 		Hydrate the GetUserRequest object with access token
-	const getUserRequestInput = new GetUserRequestInput()
-	const cognitoUserSession = await Auth.currentSession()
-	getUserRequestInput.AccessToken = cognitoUserSession.getAccessToken().getJwtToken()
-	// 		Create the GetUserCommand object with the input argument "getUserRequest object"
+
+	//			Fetch the current Cognito Session Action Token
+	const cognitoAccessToken = await Auth.currentSession()
+			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()})
+	// 		Create and instantiate a GetUserRequestInput object
+	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
+	// 		Hydrate the GetUserRequestInput object with the Session datas access token
+	getUserRequestInput.AccessToken = cognitoAccessToken	
+	// 		Create the GetUserCommand object with the input argument "getUserRequestInput object"
 	const getUserCommand = new GetUserCommand(getUserRequestInput);	
-	// 		Submit the GetUserCommand for execution 
+	// 		Send the GetUserCommand for execution 
 	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
 	// 		Display results object
 	log("\nGetUserCommandOutput (object)\n", getUserCommandOutput)
+
+	log("\nGetUserCommandOutput.UserAttributes (object)\n", getUserCommandOutput.UserAttributes)
+	log("\nGetUserCommandOutput.UserAttrigutes.nickname (object)\n", getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value )
+
 }
 
-//			Derive Class from GetUserRequest Interface
-class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined ; }
-				//////
 const nickName = computed(() => { return "Mr Kranky -- placeholder" });
 const phoneNumber:Ref<string> = ref("1 (919) 272-7866 -- placehold")
 const themeDefault:Ref<string> = ref("light -- palcehold")

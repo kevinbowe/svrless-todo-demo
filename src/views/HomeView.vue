@@ -46,7 +46,7 @@
 
 
 
-<!-- 
+				<!-- 
 					<v-form class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="" >
 						<v-row>
 							<v-text-field label="Phone Number" hint="Short & Simple" variant="outlined" density="compact" v-model="phoneNumber" :rules="[]" />
@@ -91,7 +91,7 @@
 
 				<v-col cols="6"> <!-- START Column TWO -->
 					<v-container class="text-center">
-						<!-- <h4 class="text-secondary">kevinbowe1957+53a@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Kranky -
+				<!-- <h4 class="text-secondary">kevinbowe1957+53a@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Kranky -
 							53 A </h4>
 						<hr>
 						<h4 class="text-primary">kevinbowe1957+53b@gmail.com&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp DaBowe - 53
@@ -156,7 +156,10 @@ import {
 	AdminGetUserCommand, 
 	CognitoIdentityProviderClient, 
 	AddCustomAttributesCommand, 
-	AwsCredentialIdentity
+	AwsCredentialIdentity,
+	GetUserCommand,
+	GetUserCommandInput,
+	GetUserRequest
 } from "@aws-sdk/client-cognito-identity-provider";
 
 // import { createClientForDefaultRegion } from "../../libs/utils/util-aws-sdk.js";
@@ -175,10 +178,10 @@ import { CognitoUser, CognitoUserPool, AuthenticationDetails, CognitoUserAttribu
 	
 let cConfig = {
 	// IAM > IAM Identity Center > Settings > Details > Regiom
-	region: "us-east-1", // 
+	region: "us-east-1", // get this from awsconfig
 	// 2 Parts: Region ========== AWS-Home > Region(us-east-1 | N.Virginia)
 	//				AWS Account Id == AWS-Home > Account Name(KB Experiemnt) > Account ID
-	IdentityPoolId: "us-east-1:716677688107", //
+	IdentityPoolId: "us-east-1:716677688107", // get this from awsconfig
 	// AWS Cognito > User pools > User pool ID
 	UserPoolId: "us-east-1_FrbKYTqmg", //
 	// Cognito > User pool > User pool name(vueawsauthrawv3ec688e6e_userpool_ec688e6e-dev)
@@ -186,11 +189,9 @@ let cConfig = {
 	ClientId: "1u6oke9flr3b35b3q8me9fn8r2" // 
 }
 let myUsername = "cfc00cf6-ffa8-400e-b279-c3ec9d5e5d4c"
-
 let myCredentials = {
 	// Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
 	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
-
 	// Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
 	// also here -- ~/Documents/aws-dev access keys.txt
 	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
@@ -208,97 +209,147 @@ const formFields = {
 	},
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const eMail:Ref<string> = ref("")
+
+async function GetTest() {
+	
+	// const currentUserSession /* user */ = await Auth.currentAuthenticatedUser()//.then(rtn => { info(rtn); return rtn});
+	// info(currentUserSession.attributes.nickname)
+	// info(currentUserSession.attributes.email)
+	// info("(username/sub) == ", currentUserSession.attributes.sub)
+	
+	const curSession = await Auth.currentSession()
+	// info("currentSession", curSession)
+	// info("currentSession.getAccessToken", curSession.getAccessToken)
+	// /* n - Access Key
+	// 	n - Secret Access Key
+	// 	n - User Pool Id
+	// 	y - Username */
+	
+	// const curUserInfo = await Auth.currentUserInfo()
+	// info("curUserInfo", curUserInfo)
+	// // info("curUserInfo.attributes", curUserInfo.attributes)
+	// // info("curUserInfo.id", curUserInfo.id)
+	// // info("curUserInfo.username", curUserInfo.username)
+	// /* n - Access Key
+	// 	n - Secret Access Key
+	// 	n - User Pool Id
+	// 	y - Username */
+	// Includes Attributes: email, nickname, (sub|username)
+	
+	/* 
+		Both of these return the same vaules I need.
+		Note that "accessKeyId, secretAccessKey and 
+		sessionToken are different. 
+	*/
+	// const curCredentials = await Auth.currentCredentials()
+	// // info("currentCredentials", curCredentials)
+	// // /* y - Access Key -- doesn't work
+	// // 	y - Secret Access Key -- doesn't work
+	// // 	SKIP n - Region
+	// // 	n - User Pool Id
+	// // 	n - Username */
+	// 	info("currentCredentials.accessKeyId", curCredentials.accessKeyId)
+	// 	info("currentCredentials.secretAccessKey", curCredentials.secretAccessKey)
+
+		// info("myCredentials.accessKeyId", myCredentials.accessKeyId)
+		// info("myCredentials.secretAccessKey", myCredentials.secretAccessKey)
+										
+		// const curUserCredentials = await Auth.currentUserCredentials()
+		// // info("curUserCredentials", curUserCredentials)
+		// // /* y - Access Key -- doesn't work
+		// // 	y - Secret Access Key -- doesn't worl
+		// // 	n - Region -- must be parsed into 2x parts: region and ??? // split by colen ':'
+		// // 	n - User Pool Id
+		// // 	n - Username */
+		// info("curUserCredentials.accessKeyId", curUserCredentials.accessKeyId)
+		// info("curUserCredentials.secretAccessKey", curUserCredentials.secretAccessKey)
 
 
-const nickNameX:Ref<string> = ref("Mr Kranky -- placehold")
-
-					async function GetTest() {
-
-						const currentUserSession /* user */ = await Auth.currentAuthenticatedUser()//.then(rtn => { info(rtn); return rtn});
-						info(currentUserSession.attributes.nickname)
-						info(currentUserSession.attributes.email)
-						info("(username/sub) == ", currentUserSession.attributes.sub)
-						
-						const curCredentials = await Auth.currentCredentials()
-						info("currentCredentials", curCredentials)
-
-						const curSession = await Auth.currentSession()
-						info("currentSession", curSession)
-
-						const curUserCredentials = await Auth.currentUserCredentials()
-						info("curUserCredentials", curUserCredentials)
-
-						const curUserInfo = await Auth.currentUserInfo()
-						info("curUserInfo", curUserInfo)
-						info("curUserInfo.attributes", curUserInfo.attributes)
-						info("curUserInfo.id", curUserInfo.id)
-						info("curUserInfo.username", curUserInfo.username)
-
-						const curUserPoolUser = await Auth.currentUserPoolUser()
-						info("curUserPoolUser", curUserPoolUser)
-
-						
-										info("aws_cognito_identity_pool_id == ", awsconfig.aws_cognito_identity_pool_id)
-										// info("aws_cognito_username_attributes[0] == ", awsconfig.aws_cognito_username_attributes[0])
-										info("awsconfig.aws_user_pools_id == ", awsconfig.aws_user_pools_id)
-										// info("aws_cognito_signup_attributes[0] == ", awsconfig.aws_cognito_signup_attributes[0])
-										// info("aws_cognito_signup_attributes[1] == ", awsconfig.aws_cognito_signup_attributes[1])
-										info("awsconfig.aws_user_pools_web_client_id == ", awsconfig.aws_user_pools_web_client_id)
-
-						const client = new CognitoIdentityProviderClient({
-							region: cConfig.region,
-							credentials: {
-								accessKeyId: myCredentials.accessKeyId,
-								secretAccessKey: myCredentials.secretAccessKey,
-							}
-						});
-						const input = {
-							UserPoolId: cConfig.UserPoolId,
-							Username: myUsername
-						};
-						const command = new AdminGetUserCommand(input);
-						// const response = await client.send(command);
-						// // log(response)
-						// // log(response.UserAttributes) // nickname
-						// log(response.UserAttributes[2]) // nickname
-						// // log(response.UserAttributes[2].Name) // nickname
-						// // log(response.UserAttributes[2].Value) // DaBowe
-					}
-
-const nickName = computed(() => {
-	// info("aws_cognito_identity_pool_id == ", awsconfig.aws_cognito_identity_pool_id)
-	// info("aws_cognito_username_attributes[0] == ", awsconfig.aws_cognito_username_attributes[0])
-	// info("awsconfig.aws_user_pools_id == ", awsconfig.aws_user_pools_id)
-	// info("aws_cognito_signup_attributes[0] == ", awsconfig.aws_cognito_signup_attributes[0])
-	// info("aws_cognito_signup_attributes[1] == ", awsconfig.aws_cognito_signup_attributes[1])
-	// info("awsconfig.aws_user_pools_web_client_id == ", awsconfig.aws_user_pools_web_client_id)
-	let rtn:string = "Mr Kranky -- placeholder"
-	if (user)	//info("TRUE -- user == ", user)
-	return rtn
-});
 
 
+
+
+		/* Fetch the User Pool Id, Username and Attributes */
+		// const curUserPoolUser = await Auth.currentUserPoolUser()
+		const userPoolUserUsername = await Auth.currentUserPoolUser().then(user => user.attributes.sub)
+		// info("userPoolUserUsername", userPoolUserUsername)
+		// info("curUserPoolUser", curUserPoolUser)
+		// info("curUserPoolUser.attributes.sub (username)" , curUserPoolUser.attributes.sub)
+
+		// // /* n - Access Key
+		// // 	n - Secret Access Key
+		// // 	SKIP n - region
+		// // 	SKIP y - User Pool Id
+		// // 	y - Username / Attribte.sub */
+		// // // Includes Attributes: email, nickname, (sub|username)
+		// // info("curUserPoolUser.pool.userPoolId", curUserPoolUser.pool.userPoolId)
+		// // info("curUserPoolUser.username", curUserPoolUser.username)
+
+	
+	// 				info("aws_cognito_identity_pool_id == ", awsconfig.aws_cognito_identity_pool_id)
+	// 				// info("aws_cognito_username_attributes[0] == ", awsconfig.aws_cognito_username_attributes[0])
+	// 				info("awsconfig.aws_user_pools_id == ", awsconfig.aws_user_pools_id)
+	// 				// info("aws_cognito_signup_attributes[0] == ", awsconfig.aws_cognito_signup_attributes[0])
+	// 				// info("aws_cognito_signup_attributes[1] == ", awsconfig.aws_cognito_signup_attributes[1])
+	// 				info("awsconfig.aws_user_pools_web_client_id == ", awsconfig.aws_user_pools_web_client_id)
+	
+	
+	const input = {
+		UserPoolId: awsconfig.aws_user_pools_id,
+		Username: userPoolUserUsername
+	};
+	const adminGetUserCommand = new AdminGetUserCommand(input);	
+	const client = new CognitoIdentityProviderClient({
+		region: awsconfig.aws_cognito_region,
+		credentials: myCredentials
+	});
+	const response = await client.send(adminGetUserCommand);
+	// log("\nAdminGetUserCommand - response (object) == ", response) 
+	// log("\nAdminGetUserCommand - response.UserAttributes[2] nickname == ", response.UserAttributes[2]) // (Field) Name= nickname, Value = DaBowe
+
+
+
+					/**
+					 * START WORKING HERE : GetUserCommand()
+					 *  */
+
+	// 		Create GetUserRequest object instance // See class/interface below
+	// 		Hydrate the GetUserRequest object with access token
+	const getUserRequestInput = new GetUserRequestInput()
+	getUserRequestInput.AccessToken = curSession.getAccessToken().getJwtToken()
+	
+	// 		Create the GetUserCommand object with the input argument "getUserRequest object"
+	const command2 = new GetUserCommand(getUserRequestInput);	
+	
+	// 		Submit the GetUserCommand for execution 
+	const response2 = await client.send(command2);
+	
+	// 		Display results object
+	log("\nAdminGetUserCommand - response2 (object)\n", response2)
+
+	// log("\nAdminGetUserCommand - response2.UserAttributes (object) == ", response2.UserAttributes)
+	// log("\nAdminGetUserCommand - response2.UserAttributes[] - username/sub == ", response2.UserAttributes[0])
+	// log("\nAdminGetUserCommand - response2.UserAttributes[] - email_verified == ", response2.UserAttributes[1])
+	// log("\nAdminGetUserCommand - response2.UserAttributes[] - nickname == ", response2.UserAttributes[2])
+	// log("\nAdminGetUserCommand - response2.UserAttributes[] - email == ", response2.UserAttributes[3])
+	// log("\nAdminGetUserCommand - response2.Username == ", response2.Username)
+	// log("\nAdminGetUserCommand - response2.$metadata (object) == ", response2.$metadata)
+}
+//			Derive Class from GetUserRequest Interface
+class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined ; }
+	
+
+
+const nickName = computed(() => { return "Mr Kranky -- placeholder" });
 const phoneNumber:Ref<string> = ref("1 (919) 272-7866 -- placehold")
+const eMail:Ref<string> = ref("")
 const themeDefault:Ref<string> = ref("light -- palcehold")
 const themeAlt:Ref<string> = ref("dark -- placehold")
 const password:Ref<string> = ref("")
-
-const resetNickname = () => {
-	return "Original Nickname"
-}
-
-const resetPhoneNumber = () => {
-	return "Original Phone Number"
-}
-
-const resetThemeAlt = () => {
-	return "Name of Alt Theme"
-}
-
-const resetThemeDefault = () => {
-	return "Name of Alt Theme"
-}
+const resetNickname = () => { return "Original Nickname" }
+const resetPhoneNumber = () => { return "Original Phone Number" }
+const resetThemeAlt = () => { return "Name of Alt Theme" }
+const resetThemeDefault = () => { return "Name of Alt Theme" }
 
 </script>
 

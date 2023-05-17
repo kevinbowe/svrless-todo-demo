@@ -17,8 +17,12 @@
 <script setup lang="ts">
 import MasterLayout from "../layouts/MasterLayout.vue";
 import {Ref, ref} from "vue"
-import  { log, warn, err , progress, joy, info, enter,
-			exit, success, bar, whitebar, fini, start, pass, fail }
+
+
+import { info, infor , infog, infob, infoy, infoo, infop, infom,
+			info1, info2 , info3, info4, info5, info6, info7,
+			log, warn, err , progress, joy, enter, exit,
+			success, bar, whitebar, fini, start, pass, fail }
 	from "../my-util-code/MyConsoleUtil"
 
 	const something:Ref<string> = ref<string>("")

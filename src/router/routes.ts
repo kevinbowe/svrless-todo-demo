@@ -114,6 +114,15 @@ const routes: Array<RouteRecordRaw> = [
 			layout: 'dashboard',
     },
   },
+  {
+    path: '/tandc',
+    name: 'Terms-and-Conditions',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/TermsConditionsView.vue'),
+    meta: {
+			layout: 'dashboard',
+    },
+  },
 
 ];
 

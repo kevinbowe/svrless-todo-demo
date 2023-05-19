@@ -27,9 +27,13 @@
 					<!-- END Status -->
 
 					<!-- START Forms -->
-					<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="" >
+					<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
 						<v-row>
-							<v-text-field label="Nickname" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" :rules="[]" />
+							<v-text-field :rules="[	value => checkReservedNickname(value), 
+															value => checkShortNickname(value),
+															value => checkFirstChar(value),
+															value => checkSpecialChars(value)]" 
+									label="Nickname" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel"   />
 						</v-row>
 						<v-row class="justify-end">
 							<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetNickname"> Cancel </v-btn>
@@ -54,9 +58,14 @@
 						<h3 class="text-grey">kevinbowe1957+512a@gmail.com &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp DaBowe - 512 A </h3>
 					</v-container>
 
-					<authenticator initialState="signIn" :formFields="formFields" :signUpAttributes="['email', 'nickname']">
+					<authenticator :services="services" initialState="signIn" :formFields="formFields" :signUpAttributes="['email',/*  'nickname' *//* , 'phone_number' */ ]">
+
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
+							<v-row>
+								<v-col cols="9"><AmplifyCheckBox/></v-col>
+								<v-col><a href="/profile">Read Here</a></v-col>
+							</v-row>
 						</template>
 					</authenticator>
 
@@ -88,7 +97,7 @@ import { info, infor , infog, infob, infoy, infoo, infop, infom,
 				/*  */
 import ThemeChanger from "../components/ThemeChanger.vue";
 				/*  */
-import { AuthenticatorSignUpFormFields, SignIn, useAuthenticator, } from '@aws-amplify/ui-vue';
+import { AuthenticatorSignUpFormFields, SignIn, useAuthenticator, AmplifyCheckBox} from '@aws-amplify/ui-vue';
 import { Amplify, Auth, Hub, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
@@ -96,6 +105,7 @@ import "@aws-amplify/ui-vue/styles.css";
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 import { AdminGetUserCommand, CognitoIdentityProviderClient, GetUserCommand, GetUserRequest } 
 	from "@aws-sdk/client-cognito-identity-provider";
+import { registerLayouts } from "../layouts/register";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const awsCredentialIdentity = {
@@ -110,14 +120,66 @@ const awsCredentialIdentity = {
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const { route, user, signOut } = toRefs(useAuthenticator());
+// const { route, user, signOut } = toRefs(useAuthenticator());
+const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
 	signUp: {
-		nickname: { order: 1 }, email: { order: 2 },
-		password: { order: 3 }, confirm_password: { order: 4 }
+		/* phone_numner: { order: 1 }, */
+		/*	nickname: { order: 2 },  */
+		email: { order: 3 },
+		password: { order: 4 }, 
+		confirm_password: { order: 5 },
 	},
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const services = {
+  async validateCustomSignUp(formData) {
+	info("Enter validateCustomSignUp()")
+    if (!formData.acknowledgement) {
+      return {
+        acknowledgement: "You must agree: Resistence is Futile",
+      };
+		
+    }
+  },
+};
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+async function submitNickname(event) {
+	const results = await event
+	if(!results.valid) return
+				/*  */
+	const user = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(user, { 'nickname': workingNicknameModel.value });
+	nicknameModel.value = workingNicknameModel.value
+}
+async function checkReservedNickname (workingNickname) {
+	if (workingNickname === 'kevin') {
+		return 'User nickname reserved. Please try another one.'
+	}
+	return true
+}
+async function checkShortNickname (workingNickname) {
+	if (workingNickname.length > 0 && workingNickname.length <= 3) {
+		return 'User nickname is too short. Please try another one.'
+	}
+	return true
+}
+async function checkFirstChar (workingNickname) {
+	if (!isNaN(workingNickname[0])) {
+		return 'User nickname can not begin with a Number. Please try another one.'
+	}
+	return true
+}
+async function checkSpecialChars (workingNickname) {
+	const re = /[!@#$%\^&*(){}[\]<>?/|]/
+	const match = workingNickname.match(re)
+	// Check the format
+	if(match) {
+		return 'User nickname can not contain special characters. Please try another one.'
+	}
+	return true
+}
 
 Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
@@ -138,28 +200,28 @@ Hub.listen('auth', (data) => {
 	} // END_SWITCH
 })
 
-const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-	region: awsconfig.aws_cognito_region,
-	credentials: awsCredentialIdentity
-});
+// const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
+// 	region: awsconfig.aws_cognito_region,
+// 	credentials: awsCredentialIdentity
+// });
 
-			async function getNickname(){
-				const cognitoAccessToken = await Auth.currentSession()
-						.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
-				if (cognitoAccessToken === "No current user") { 
-					return ""
-				}
-				const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
-				getUserRequestInput.AccessToken = cognitoAccessToken	
-				const getUserCommand = new GetUserCommand(getUserRequestInput);	
-				const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
-				//				Update the Model based on the GetUserCommandOutput
-				const temp = nicknameModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
-				//... return temp
-			};
+// async function getNickname(){
+// 	const cognitoAccessToken = await Auth.currentSession()
+// 			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
+// 	if (cognitoAccessToken === "No current user") { 
+// 		return ""
+// 	}
+// 	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
+// 	getUserRequestInput.AccessToken = cognitoAccessToken	
+// 	const getUserCommand = new GetUserCommand(getUserRequestInput);	
+// 	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
+// 	//				Update the Model based on the GetUserCommandOutput
+// 	const temp = nicknameModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
+// 	//... return temp
+// };
 				
 const workingNicknameModel = ref("")
-const nicknameModel = ref("" /* defaultNickname */)
+const nicknameModel = ref("")
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 </script>
 

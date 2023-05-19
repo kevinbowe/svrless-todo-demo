@@ -235,11 +235,13 @@ const blogLinks = ref([
 const accountLinks = ref([
 	{ label: "Profile", url: "/profile" },
 	{ label: "Sign In", url: "/signin" },
+	{ label: "Terms & Conditions", url: "/tandc" },
 ]);
 const footerLinks = ref([
 	{ label: "Home", url: "/" },
 	{ label: "About Us", url: "/about" },
 	{ label: "Profile", url: "/profile" },
+	{ label: "Terms & Conditions", url: "/tandc" },
 ]);
 </script>
 <style>

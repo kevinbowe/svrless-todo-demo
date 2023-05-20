@@ -64,7 +64,7 @@
 							<authenticator-sign-up-form-fields />
 							<v-row>
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
-								<v-col><a href="/profile">Read Here</a></v-col>
+								<v-col><a href="/tandc">Read Here</a></v-col>
 							</v-row>
 						</template>
 					</authenticator>

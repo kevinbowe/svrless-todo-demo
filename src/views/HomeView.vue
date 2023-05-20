@@ -57,21 +57,18 @@
 								<hr>
 								<h4 class="text-grey">kevinbowe1957+511b@gmail.com</h4>
 								<hr>
-								<h4 class="text-grey">kevinbowe1957+512a@gmail.com</h4>
-								
+								<h4 class="text-grey">kevinbowe1957+512a@gmail.com</h4>		
 							</v-col>
+
 							<v-col cols="6">
 								<h4>Mista Bo - 511 A</h4>
 								<hr>
 								<h4>Double Bo 2 Go - 511 B </h4>
 								<hr>
 								<h4>DaBowe - 512 A </h4>
-
 							</v-col>
 						</v-row>
 
-
-						
 					</v-container>
 
 					<authenticator :services="services" initialState="signIn" :formFields="formFields" :signUpAttributes="['email',/*  'nickname' *//* , 'phone_number' */ ]">
@@ -87,22 +84,27 @@
 
 					<div v-if="route === 'authenticated'">
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
+						
 						<v-row>
 							<v-col cols="4" style="text-align:end;">
 								<div>attribute.email</div>
 								<div>attribute.nickname</div>
 							</v-col>
+						
 							<v-col cols="6" style="text-align:start;">
 								<div>{{ user.attributes.email }}</div>
 								<div>{{ user.attributes.nickname }}</div>
 							</v-col>
 						</v-row>
+						
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
+
 						<v-row>
 							<v-col cols="4" style="text-align:end;">
 								<div>emailModel</div>
 								<div>nicknameModel</div>
 							</v-col>
+
 							<v-col cols="6" style="text-align:start;">
 								<div>{{ emailModel }}</div>
 								<div>{{ nicknameModel }}</div>
@@ -110,9 +112,8 @@
 						</v-row>
 
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
-						<h1>Hello {{ nicknameModel }} !</h1>
-				
 
+						<h1>Hello {{ nicknameModel }} !</h1>
 
 						<v-btn v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
 					</div>
@@ -149,8 +150,6 @@ import { AdminGetUserCommand, CognitoIdentityProviderClient, GetUserCommand, Get
 import { registerLayouts } from "../layouts/register";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-
 const awsCredentialIdentity = {
 	//				Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
 	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
@@ -163,65 +162,35 @@ const awsCredentialIdentity = {
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// const { route, user, signOut } = toRefs(useAuthenticator());
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
 	signUp: {
-		/* phone_numner: { order: 1 }, */
-		/*	nickname: { order: 2 },  */
-		email: { order: 3 },
-		password: { order: 4 }, 
-		confirm_password: { order: 5 },
+		email: { order: 1 },
+		password: { order: 2 }, 
+		confirm_password: { order: 3 },
 	},
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
-  async validateCustomSignUp(formData) {
-	info("Enter validateCustomSignUp()")
-    if (!formData.acknowledgement) {
-      return {
-        acknowledgement: "You must agree: Resistence is Futile",
-      };
-		
-    }
-  },
+	async validateCustomSignUp(formData) {
+   	if (!formData.acknowledgement) {
+      	return { acknowledgement: "You must agree: Resistence is Futile" }
+		}
+	},
 };
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-
-
 	async function submitNickname(event) {
-																											enter("submitNickname", event)
-	const results = await event
-	if(!results.valid) return
-	
-	// This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser();
-																											info("Current Authenticated 'user'", newuser.attributes.nickname)
-	// await Auth.updateUserAttributes(user, {
-	// 	'nickname': workingNicknameModel.value });
-	// // Cog is getting updated but...
-	// //		the user.attributes.nickname are NOT getting Updated
-	// // See "Returned info1"
+		const results = await event
+		if(!results.valid) return
 
-	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-	await Auth.currentUserInfo().then(result => {
-																					info3("CurrentUserInfo.Then (after update)", result.attributes.nickname)	
-																					// info3("Current user",user.attributes.nickname)
-		// update user attributes.
-		// user.attributes = result.attributes
-																					// info3("Current user - after update == ",user.attributes.nickname)
-																					info2(`Updating nicknameModel: [${nicknameModel.value}] with result.attributes ${result.attributes.nickname}`)
-																					// info3(`Updating workingNicknameModel: [${workingNicknameModel.value}] with result.attributes ${result.attributes.nickname}`)
-																					
-		// Add this here
-		nicknameModel.value = result.attributes.nickname
-																					bar()
-	}) // END_THEN
-																					// info1("Returned 'user.attributes.nickname'", user.attributes.nickname)
-																					// info2(`Updating nicknameModel: [${nicknameModel.value}] with workingNicknameModel ${workingNicknameModel.value}`)
-	// nicknameModel is empty on first update. Subsequent updates has previous value...
-	// nicknameModel.value = workingNicknameModel.value
+		// This will return the user in the user pool (not updated )
+		const newuser = await Auth.currentAuthenticatedUser();
+		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
+		await Auth.currentUserInfo().then(result => {
+			nicknameModel.value = result.attributes.nickname
+		}) // END_THEN
 	}
 
 
@@ -253,15 +222,12 @@ async function checkSpecialChars (workingNickname) {
 	return true
 }
 
-
 Hub.listen('auth', (data) => {
-
 	switch(data.payload.event) {
 		case "signIn" :
 			nicknameModel.value = workingNicknameModel.value =  data.payload.data.attributes.nickname
 			Auth.currentAuthenticatedUser().then(results => { emailModel.value = results.attributes.email})
 			return
-		
 		case "signOut" : 
 			workingNicknameModel.value = nicknameModel.value = ""
 			return
@@ -273,15 +239,10 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 	credentials: awsCredentialIdentity
 });
 
-// This function executs every time Home page is loaded 
-//		or the nickname form is updated.
 async function getNicknameEmail(){
-																											// enter("(ASYNC) getNickname()")
 	const cognitoAccessToken = await Auth.currentSession()
 			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
 	if (cognitoAccessToken === "No current user") { 
-																											// infoy("(ASYNC) No Current USer")
-																											// exit("(ASYNC) getNickname -- No User")
 		return ""
 	}
 	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
@@ -291,37 +252,20 @@ async function getNicknameEmail(){
 	//				Update the Model based on the GetUserCommandOutput
 	const temp = nicknameModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
 	emailModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
-
-																											// infoy("(ASYNC) getNickname() -- temp?.valueOf()", temp?.valueOf())
-																											// exit(" (ASYNC) getNickname()")
-	// let obj = {nicknameModel, emailModel}
-	// info(obj.nicknameModel.value)
-	// info(obj.emailModel.value)
-	
 	return {nicknameModel, emailModel}
-
-	return temp?.valueOf()
 };
 
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
 const emailModel = ref("")
 
-																											// info("(sync) Calling getNickname()")
-// This executes EVERY TIME HOME is Reload... ---------------------------------- // 
-// Rejects if not signed in.
- //  let rtn = 
 getNicknameEmail().then(result => { 
-																											// info("(ASYNC.THEN()) -- getNickname result",result)
-																											// info("(ASYNC.THEN()) -- setting Model and workingModel to ",result)
 	nicknameModel.value = workingNicknameModel.value = result.nicknameModel.value
 	emailModel.value = result.emailModel.value
 	return result
 })
-																											// info("(sync) Returning getNickname()")
 
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
-
 
 </script>
 

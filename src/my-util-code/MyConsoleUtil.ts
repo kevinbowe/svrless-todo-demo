@@ -57,7 +57,7 @@ export const info7 =    	(msg: string, value: any = "") => { console.log(`%c   $
 
 
 
-export const enter =    (msg: string, value: any = "") => { console.log(`%cENTER >>>-->  ${msg}`, "color: yellow;font-weight:bold;", value) }
+export const enter =    (msg: string, value: any = "") => { console.log(`%c>>>- > ENTER -  ${msg}`, "color: yellow;font-weight:bold;", value) }
 
 export const exit =    	(msg: string, value: any = "") => { console.log(`%c<--<<< EXIT - ${msg}`, "color: green;font-weight:bold;", value) }
 

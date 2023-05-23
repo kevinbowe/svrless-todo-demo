@@ -12,7 +12,7 @@
 					<!-- START Status -->
 					nickNameModel [ {{ nicknameModel }} ]
 					<br>
-					workingNicknameMode; [ {{ workingNicknameModel }} ]
+					workingNicknameModel [ {{ workingNicknameModel }} ]
 
 					<v-divider :thickness="20"  class="ma-5"></v-divider>
 					
@@ -169,10 +169,8 @@ const awsCredentialIdentity = {
 	//				also here -- ~/Documents/aws-dev access keys.txt
 	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Amplify.configure(awsconfig);
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
@@ -183,12 +181,10 @@ const formFields = {
 		// nickname: { order:4 }
 	},
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
-		// bar()
-		// info("validateCustomSignUp -- formData", formData)
+
 		if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
 		if (formData.myNickname) {
 			//				This is going to return an ValidationError string 
@@ -206,9 +202,7 @@ const services = {
 			if(typeof nicknameValidationRtn == 'boolean') {
 				//			Update the nicknameModel
 				nicknameModel.value = formData.myNickname
-				// info3("nicknameValidationRtn - True", nicknameValidationRtn)
 			} else {
-				// info5("!nicknameValidationRtn - False", !nicknameValidationRtn)
 				return nicknameValidationRtn
 			}
 		}
@@ -216,8 +210,6 @@ const services = {
 };
 
 function checkValidationResults(resultsArray) {
-		// result is an <string>[] when using Promise.all()
-		// log("checkResults()",resultsArray)
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
 				// This return exits the '.then'
@@ -226,10 +218,6 @@ function checkValidationResults(resultsArray) {
 		}
 		return true
 	}
-
-	
-	
-	
 	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 	async function submitNickname(event) {
 		const results = await event
@@ -241,9 +229,7 @@ function checkValidationResults(resultsArray) {
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
 		}) // END_THEN
-	}
-	
-	
+	}	
 	async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
@@ -271,49 +257,22 @@ function checkValidationResults(resultsArray) {
 		}
 		return true
 	}
-	
 	Hub.listen('auth', (data) => {
-		// info1("data.payload.event", data.payload.event)
 		switch(data.payload.event) {
-			case "signUp" :
-				// enter("Hub.listen > signUp")
-				// info("   nicknameModel.value", nicknameModel.value)
-				return
-				
-			case "confirmSignUp" :
-				// enter("Hub.listen > confirmSignup")
-				// info("   nicknameModel.value", nicknameModel.value)
-				return
-
+			// case "signUp" :
+			// case "confirmSignUp" :
+			// case "autoSignIn" :
 			case "signIn" :
-				// enter("Hub.listen > signIn")
-				// info("   nicknameModel", nicknameModel.value)
-				UpdateNickname(nicknameModel)
+				// Does the nicknameModel exist?
+				if (!!nicknameModel.value.length) UpdateNickname(nicknameModel)
 
-
-
-
-													/**
-													 * 		The nickname is getting overwritten here when the Cx is NOT SigningUp
-													 * 		Fix the issue.
-													 */
-
-
-
-				
-				// SAFE -- nicknameModel.value = workingNicknameModel.value =  data.payload.data.attributes.nickname
-				Auth.currentAuthenticatedUser().then(results => { emailModel.value = results.attributes.email})
+				Auth.currentAuthenticatedUser().then(results => { 
+					emailModel.value = results.attributes.email
+					workingNicknameModel.value =  data.payload.data.attributes.nickname
+					nicknameModel.value =  data.payload.data.attributes.nickname
+				})
 				return
-					
-			case "autoSignIn" :
-				// enter("Hub.listen > autoSignIn")
-				// info("   nicknameModel.value", nicknameModel.value)
-				return
-						
-
 			case "signOut" :
-				// enter("Hub.listen > SignOut") 
-				// info("   nicknameModel", nicknameModel)
 				workingNicknameModel.value = nicknameModel.value = ""
 				return
 			} // END_SWITCH
@@ -321,21 +280,16 @@ function checkValidationResults(resultsArray) {
 						
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function UpdateNickname(nicknameModel){
-		
-		// enter("Get Cur Auth User")
 		// This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser();
-		
-		// enter("Update User Attr")
 		await Auth.updateUserAttributes(newuser, {'nickname': nicknameModel.value })
-		// enter("Return Cur User Info -- nickname")
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
 		}) // END_THEN
 
 }
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-							region: awsconfig.aws_cognito_region,
+	region: awsconfig.aws_cognito_region,
 	credentials: awsCredentialIdentity
 });
 
@@ -350,7 +304,7 @@ async function getNicknameEmail(){
 	const getUserCommand = new GetUserCommand(getUserRequestInput);	
 	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
 	//				Update the Model based on the GetUserCommandOutput
-	const temp = nicknameModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
+	nicknameModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
 	emailModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
 	return {nicknameModel, emailModel}
 };
@@ -360,7 +314,8 @@ const nicknameModel = ref("")
 const emailModel = ref("")
 
 getNicknameEmail().then(result => { 
-	nicknameModel.value = workingNicknameModel.value = result.nicknameModel.value
+	nicknameModel.value = result.nicknameModel.value
+	workingNicknameModel.value = result.nicknameModel.value
 	emailModel.value = result.emailModel.value
 	return result
 })

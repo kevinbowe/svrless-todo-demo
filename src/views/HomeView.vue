@@ -33,7 +33,7 @@
 															value => checkShortNickname(value),
 															value => checkFirstChar(value),
 															value => checkSpecialChars(value)]" 
-									label="Nickname" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel"   />
+									label="Nickname (optional)" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel"   />
 						</v-row>
 						<v-row class="justify-end">
 							<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetNickname"> Cancel </v-btn>
@@ -71,16 +71,28 @@
 
 					</v-container>
 
-					<authenticator :services="services" initialState="signIn" :formFields="formFields" :signUpAttributes="['email',/*  'nickname' *//* , 'phone_number' */ ]">
+					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']">
 
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
+							<v-text-field 
+									:rules="[	value => checkReservedNickname(value), 
+															value => checkShortNickname(value),
+															value => checkFirstChar(value),
+															value => checkSpecialChars(value)]"
+									label="Nickname (optional)"
+									name="myNickname"
+									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
+								</v-text-field>
 							<v-row>
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
 								<v-col><a href="/tandc">Read Here</a></v-col>
 							</v-row>
 						</template>
+
 					</authenticator>
+
+
 
 					<div v-if="route === 'authenticated'">
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
@@ -168,23 +180,61 @@ const formFields = {
 		email: { order: 1 },
 		password: { order: 2 }, 
 		confirm_password: { order: 3 },
+		// nickname: { order:4 }
 	},
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
-   	if (!formData.acknowledgement) {
-      	return { acknowledgement: "You must agree: Resistence is Futile" }
+		// bar()
+		// info("validateCustomSignUp -- formData", formData)
+		if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
+		if (formData.myNickname) {
+			//				This is going to return an ValidationError string 
+			//				--OR-- a "passed validation" boolean true.
+			let nicknameValidationRtn = await Promise.all( [
+						checkReservedNickname(formData.myNickname),
+						checkShortNickname(formData.myNickname),
+						checkSpecialChars (formData.myNickname),
+					]).then (resultArray => {
+						// This return exists to await Promise.all()
+						return checkValidationResults(resultArray)
+			} )
+			//			At this point we have a validation error message "string" == fail
+			//			--OR-- a validation passed "boolean".
+			if(typeof nicknameValidationRtn == 'boolean') {
+				//			Update the nicknameModel
+				nicknameModel.value = formData.myNickname
+				// info3("nicknameValidationRtn - True", nicknameValidationRtn)
+			} else {
+				// info5("!nicknameValidationRtn - False", !nicknameValidationRtn)
+				return nicknameValidationRtn
+			}
 		}
 	},
 };
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+function checkValidationResults(resultsArray) {
+		// result is an <string>[] when using Promise.all()
+		// log("checkResults()",resultsArray)
+		for(let i = 0; i <= resultsArray.length; i++) {
+			if (typeof resultsArray[i] == 'string'){
+				// This return exits the '.then'
+				return resultsArray[i]
+			}
+		}
+		return true
+	}
+
+	
+	
+	
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 	async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
-
+		
 		// This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser();
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
@@ -192,50 +242,100 @@ const services = {
 			nicknameModel.value = result.attributes.nickname
 		}) // END_THEN
 	}
+	
+	
+	async function checkReservedNickname (workingNickname) {
+		if (workingNickname === 'kevin') {
+			return 'User nickname reserved. Please try another one.'
+		}
+		return true
+	}
+	async function checkShortNickname (workingNickname) {
+		if (workingNickname.length > 0 && workingNickname.length <= 3) {
+			return 'User nickname is too short. Please try another one.'
+		}
+		return true
+	}
+	async function checkFirstChar (workingNickname) {
+		if (!isNaN(workingNickname[0])) {
+			return 'User nickname can not begin with a Number. Please try another one.'
+		}
+		return true
+	}
+	async function checkSpecialChars (workingNickname) {
+		const re = /[!@#$%\^&*(){}[\]<>?/|]/
+		const match = workingNickname.match(re)
+		// Check the format
+		if(match) {
+			return 'User nickname can not contain special characters. Please try another one.'
+		}
+		return true
+	}
+	
+	Hub.listen('auth', (data) => {
+		// info1("data.payload.event", data.payload.event)
+		switch(data.payload.event) {
+			case "signUp" :
+				// enter("Hub.listen > signUp")
+				// info("   nicknameModel.value", nicknameModel.value)
+				return
+				
+			case "confirmSignUp" :
+				// enter("Hub.listen > confirmSignup")
+				// info("   nicknameModel.value", nicknameModel.value)
+				return
+
+			case "signIn" :
+				// enter("Hub.listen > signIn")
+				// info("   nicknameModel", nicknameModel.value)
+				UpdateNickname(nicknameModel)
 
 
-async function checkReservedNickname (workingNickname) {
-	if (workingNickname === 'kevin') {
-		return 'User nickname reserved. Please try another one.'
-	}
-	return true
-}
-async function checkShortNickname (workingNickname) {
-	if (workingNickname.length > 0 && workingNickname.length <= 3) {
-		return 'User nickname is too short. Please try another one.'
-	}
-	return true
-}
-async function checkFirstChar (workingNickname) {
-	if (!isNaN(workingNickname[0])) {
-		return 'User nickname can not begin with a Number. Please try another one.'
-	}
-	return true
-}
-async function checkSpecialChars (workingNickname) {
-	const re = /[!@#$%\^&*(){}[\]<>?/|]/
-	const match = workingNickname.match(re)
-	// Check the format
-	if(match) {
-		return 'User nickname can not contain special characters. Please try another one.'
-	}
-	return true
-}
 
-Hub.listen('auth', (data) => {
-	switch(data.payload.event) {
-		case "signIn" :
-			nicknameModel.value = workingNicknameModel.value =  data.payload.data.attributes.nickname
-			Auth.currentAuthenticatedUser().then(results => { emailModel.value = results.attributes.email})
-			return
-		case "signOut" : 
-			workingNicknameModel.value = nicknameModel.value = ""
-			return
-	} // END_SWITCH
-})
 
+													/**
+													 * 		The nickname is getting overwritten here when the Cx is NOT SigningUp
+													 * 		Fix the issue.
+													 */
+
+
+
+				
+				// SAFE -- nicknameModel.value = workingNicknameModel.value =  data.payload.data.attributes.nickname
+				Auth.currentAuthenticatedUser().then(results => { emailModel.value = results.attributes.email})
+				return
+					
+			case "autoSignIn" :
+				// enter("Hub.listen > autoSignIn")
+				// info("   nicknameModel.value", nicknameModel.value)
+				return
+						
+
+			case "signOut" :
+				// enter("Hub.listen > SignOut") 
+				// info("   nicknameModel", nicknameModel)
+				workingNicknameModel.value = nicknameModel.value = ""
+				return
+			} // END_SWITCH
+		})
+						
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function UpdateNickname(nicknameModel){
+		
+		// enter("Get Cur Auth User")
+		// This will return the user in the user pool (not updated )
+		const newuser = await Auth.currentAuthenticatedUser();
+		
+		// enter("Update User Attr")
+		await Auth.updateUserAttributes(newuser, {'nickname': nicknameModel.value })
+		// enter("Return Cur User Info -- nickname")
+		await Auth.currentUserInfo().then(result => {
+			nicknameModel.value = result.attributes.nickname
+		}) // END_THEN
+
+}
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-	region: awsconfig.aws_cognito_region,
+							region: awsconfig.aws_cognito_region,
 	credentials: awsCredentialIdentity
 });
 
@@ -293,4 +393,16 @@ const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 			background-color: rgb(var(--v-theme-error));
 	} */
 	.v-input { margin-top: 2px;}
+
+	.v-text-field .v-label {
+		left: 50% !important;
+		transform: translateX(-50%);
+		transform-origin: top 50%;
+	}
+
+	.v-text-field .v-label .v-label--active { 
+		transform: translateY(-18px) scale(.75) translateX(-50%);
+	}
+
+
 </style>

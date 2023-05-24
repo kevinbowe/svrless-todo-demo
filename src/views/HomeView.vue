@@ -264,7 +264,13 @@ function checkValidationResults(resultsArray) {
 			// case "autoSignIn" :
 			case "signIn" :
 				// Does the nicknameModel exist?
-				if (!!nicknameModel.value.length) UpdateNickname(nicknameModel)
+				if (!!nicknameModel.value.length) { 
+					// If we get here, the nicknameModel exists.
+					//	This only happens during the SignUp work flow.
+					start("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
+					UpdateNickname(nicknameModel) 
+					fini("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
+				}
 
 				Auth.currentAuthenticatedUser().then(results => { 
 					emailModel.value = results.attributes.email
@@ -285,6 +291,7 @@ async function UpdateNickname(nicknameModel){
 		await Auth.updateUserAttributes(newuser, {'nickname': nicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
+			workingNicknameModel.value = result.attributes.nickname
 		}) // END_THEN
 
 }

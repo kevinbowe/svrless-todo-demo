@@ -53,25 +53,23 @@
 					<v-container style="text-align:start;">
 						<v-row>
 							<v-col cols="6">
-								<h4 class="text-grey">kevinbowe1957+511a@gmail.com</h4>
-								<hr>
-								<h4 class="text-grey">kevinbowe1957+511b@gmail.com</h4>
-								<hr>
-								<h4 class="text-grey">kevinbowe1957+512a@gmail.com</h4>		
 							</v-col>
-
 							<v-col cols="6">
-								<h4>Mista Bo - 511 A</h4>
-								<hr>
-								<h4>Double Bo 2 Go - 511 B </h4>
-								<hr>
-								<h4>DaBowe - 512 A </h4>
 							</v-col>
 						</v-row>
-
 					</v-container>
 
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']">
+
+						<!-- <template v-slot:sign-up-header>
+							<h3
+							class="amplify-heading"
+							style="padding: var(--amplify-space-xl) 0 0 var(--amplify-space-xl)"
+							>
+							Sign In
+							</h3>
+						</template> -->
+
 
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
@@ -151,8 +149,8 @@ import { info, infor , infog, infob, infoy, infoo, infop, infom,
 				/*  */
 import ThemeChanger from "../components/ThemeChanger.vue";
 				/*  */
-import { AuthenticatorSignUpFormFields, SignIn, useAuthenticator, AmplifyCheckBox} from '@aws-amplify/ui-vue';
-import { Amplify, Auth, Hub, } from 'aws-amplify';
+import { AuthenticatorSignUpFormFields, SignIn, useAuthenticator, AmplifyCheckBox, translations} from '@aws-amplify/ui-vue';
+import { Amplify, Auth, Hub, I18n } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 
@@ -160,6 +158,13 @@ import "@aws-amplify/ui-vue/styles.css";
 import { AdminGetUserCommand, CognitoIdentityProviderClient, GetUserCommand, GetUserRequest } 
 	from "@aws-sdk/client-cognito-identity-provider";
 import { registerLayouts } from "../layouts/register";
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+I18n.putVocabularies(translations)
+I18n.setLanguage('en')
+I18n.putVocabulariesForLanguage('en', {
+  'Create Account': 'Sign Up', // Tab header
+});
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const awsCredentialIdentity = {

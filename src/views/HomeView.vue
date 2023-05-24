@@ -151,6 +151,7 @@ import "@aws-amplify/ui-vue/styles.css";
 import { AdminGetUserCommand, CognitoIdentityProviderClient, GetUserCommand, GetUserRequest } 
 	from "@aws-sdk/client-cognito-identity-provider";
 import { registerLayouts } from "../layouts/register";
+import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -265,8 +266,9 @@ function checkValidationResults(resultsArray) {
 			case "signIn" :
 				// Does the nicknameModel exist?
 				if (!!nicknameModel.value.length) { 
-					// If we get here, the nicknameModel exists.
-					//	This only happens during the SignUp work flow.
+					//
+					// 			If we get here, the nicknameModel exists.
+					//				This only happens during the SignUp work flow.
 					start("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
 					UpdateNickname(nicknameModel) 
 					fini("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
@@ -276,6 +278,9 @@ function checkValidationResults(resultsArray) {
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
 					nicknameModel.value =  data.payload.data.attributes.nickname
+					//				
+					// 			Redirect to the Profile page.
+					router.push({path: '/profile'})
 				})
 				return
 			case "signOut" :
@@ -286,7 +291,8 @@ function checkValidationResults(resultsArray) {
 						
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function UpdateNickname(nicknameModel){
-		// This will return the user in the user pool (not updated )
+		//
+		// 			This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser();
 		await Auth.updateUserAttributes(newuser, {'nickname': nicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
@@ -311,19 +317,23 @@ async function getNicknameEmail(){
 	const getUserCommand = new GetUserCommand(getUserRequestInput);	
 	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
 	//				Update the Model based on the GetUserCommandOutput
-	nicknameModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
-	emailModel.value = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
+	let nickname = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
+	if(nickname) nicknameModel.value = nickname
+
+	let email = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
+	if (email) emailModel.value = email
 	return {nicknameModel, emailModel}
 };
 
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
 const emailModel = ref("")
-
-getNicknameEmail().then(result => { 
-	nicknameModel.value = result.nicknameModel.value
-	workingNicknameModel.value = result.nicknameModel.value
-	emailModel.value = result.emailModel.value
+// 			ORIGINAL
+// getNicknameEmail().then((result:any) => { 
+getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 
+	nicknameModel.value = nicknameModel.value
+	workingNicknameModel.value = nicknameModel.value
+	emailModel.value = emailModel.value
 	return result
 })
 
@@ -355,7 +365,6 @@ const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 			background-color: rgb(var(--v-theme-error));
 	} */
 	.v-input { margin-top: 2px;}
-	
 	.signup-nickname input {text-align: center;}
 	
 </style>

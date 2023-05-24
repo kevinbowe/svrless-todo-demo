@@ -70,7 +70,7 @@ export const whitebar = (msg: string = "", value: any = "") => { console.log(`%c
 
 export const whitebar_SAFE = ((msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) })
 
-export const start =    (msg: string, value: any = "") => { console.log(`%c${msg}`, "color: yellow;", value) }
+export const start =    (msg: string, value: any = "") => { console.log(`%c--> START - ${msg}`, "color: yellow;", value) }
 
-export const fini =    	(msg: string, value: any = "") => { console.log(`%c${msg}`, "color: magenta;", value) }
+export const fini =    	(msg: string, value: any = "") => { console.log(`%c<-- FINI - ${msg}`, "color: magenta;", value) }
 

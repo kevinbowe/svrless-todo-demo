@@ -63,12 +63,15 @@
 
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
+							<p style="margin-bottom:-.75em;">Nickname</p>
 							<v-text-field 
+									ZZZid="signup-nickname-id"
+									class="signup-nickname"
 									:rules="[	value => checkReservedNickname(value), 
 															value => checkShortNickname(value),
 															value => checkFirstChar(value),
 															value => checkSpecialChars(value)]"
-									label="Nickname (optional)"
+									placeholder="( optional )"
 									name="myNickname"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 								</v-text-field>
@@ -213,6 +216,8 @@ function checkValidationResults(resultsArray) {
 		}
 		return true
 	}
+
+
 	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 	async function submitNickname(event) {
 		const results = await event
@@ -350,16 +355,7 @@ const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 			background-color: rgb(var(--v-theme-error));
 	} */
 	.v-input { margin-top: 2px;}
-
-	.v-text-field .v-label {
-		left: 50% !important;
-		transform: translateX(-50%);
-		transform-origin: top 50%;
-	}
-
-	.v-text-field .v-label .v-label--active { 
-		transform: translateY(-18px) scale(.75) translateX(-50%);
-	}
-
-
+	
+	.signup-nickname input {text-align: center;}
+	
 </style>

@@ -61,16 +61,6 @@
 
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']">
 
-						<!-- <template v-slot:sign-up-header>
-							<h3
-							class="amplify-heading"
-							style="padding: var(--amplify-space-xl) 0 0 var(--amplify-space-xl)"
-							>
-							Sign In
-							</h3>
-						</template> -->
-
-
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
 							<v-text-field 

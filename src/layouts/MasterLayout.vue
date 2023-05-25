@@ -115,6 +115,9 @@
 
 					<!-- Menu [ Dev | Devs | Blogs | Account ] -->
 
+						<!-- Profile -->
+						<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
+
 						<!-- Dev -->
 						<v-btn to="/dev" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev</v-btn>
 

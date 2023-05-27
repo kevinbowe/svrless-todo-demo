@@ -52,8 +52,8 @@ const props = defineProps({
 	p2: { type: String }
 })
 
-const emailModel = ref(props.p1)
-const nicknameModel = ref(props.p2)
+const nicknameModel = ref(props.p1)
+const emailModel = ref(props.p2)
 
 
 </script>

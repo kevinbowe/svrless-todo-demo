@@ -230,6 +230,11 @@ function checkValidationResults(resultsArray) {
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
 		}) // END_THEN
+
+		//				Redirect to Profile page.
+		//				Pass the new nickname and the email-address
+		router.push({name:`profile`, params: {
+						p1:nicknameModel.value, p2:emailModel.value }  }) 
 	}	
 	async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {

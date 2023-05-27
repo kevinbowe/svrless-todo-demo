@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/dev',
 		name: 'Dev',
-		component: () => import(/* webpackChunkName: "home" */ '../views/DevView.vue'),
+		component: () => import('../views/DevView.vue'),
 		meta: {
 		  layout: 'default',
 		},
@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/dev4',
 		name: 'Dev 4',
-		component: () => import(/* webpackChunkName: "home" */ '../views/DevView4.vue'),
+		component: () => import('../views/DevView4.vue'),
 		meta: {
 		  layout: 'default',
 		},
@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/dev3',
 		name: 'Dev 3',
-		component: () => import(/* webpackChunkName: "home" */ '../views/DevView3.vue'),
+		component: () => import('../views/DevView3.vue'),
 		meta: {
 		  layout: 'default',
 		},
@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/dev2',
 		name: 'Dev 2',
-		component: () => import(/* webpackChunkName: "home" */ '../views/DevView2.vue'),
+		component: () => import('../views/DevView2.vue'),
 		meta: {
 		  layout: 'default',
 		},
@@ -38,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
     path: '/dev1',
     name: 'Dev 1',
-    component: () => import(/* webpackChunkName: "home" */ '../views/DevView1.vue'),
+    component: () => import( '../views/DevView1.vue'),
     meta: {
       layout: 'default',
     },
@@ -46,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
+    component: () => import('../views/HomeView.vue'),
     meta: {
       layout: 'master',
     },
@@ -55,7 +55,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/about',
     name: 'About',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+      import('../views/AboutView.vue'),
     meta: {
 			layout: 'default',
     },
@@ -64,7 +64,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/profile',
     name: 'Profile',
     component: () =>
-      import(/* webpackChunkName: "profile" */ '../views/ProfileView.vue'),
+      import('../views/ProfileView.vue'),
 		meta: {
       layout: 'master',
     },
@@ -72,7 +72,7 @@ const routes: Array<RouteRecordRaw> = [
   {
 	path: '/signin',
 	name: 'Sign In',
-	component: () => import(/* webpackChunkName: "home" */ '../views/SigninView.vue'),
+	component: () => import('../views/SigninView.vue'),
 	meta: {
 	  layout: 'default',
 	},
@@ -81,7 +81,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/blog1',
     name: 'Blog1',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Blog1View.vue'),
+      import('../views/Blog1View.vue'),
     meta: {
 			layout: 'blogDashboard',
     },
@@ -90,7 +90,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/blog2',
     name: 'Blog2',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Blog2View.vue'),
+      import('../views/Blog2View.vue'),
     meta: {
 			layout: 'blogDashboard',
     },
@@ -100,7 +100,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/article1',
     name: 'Article1',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Article1View.vue'),
+      import('../views/Article1View.vue'),
     meta: {
 			layout: 'dashboard',
     },
@@ -109,7 +109,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/article2',
     name: 'Article2',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Article2View.vue'),
+      import('../views/Article2View.vue'),
     meta: {
 			layout: 'dashboard',
     },
@@ -118,7 +118,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/tandc',
     name: 'Terms-and-Conditions',
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/TermsConditionsView.vue'),
+      import('../views/TermsConditionsView.vue'),
     meta: {
 			layout: 'dashboard',
     },

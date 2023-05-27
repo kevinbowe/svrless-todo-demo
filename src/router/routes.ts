@@ -60,9 +60,11 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: "/profile",
-		name: "Profile",
-		component: () => import("../views/ProfileView.vue"),
+		path: "/profile/:pOne?/:pTwo?", 
+		name: "profile",
+		props: true,
+		component: () =>
+			import("../views/ProfileView.vue"),
 		meta: {
 			layout: "master",
 		},

@@ -1,6 +1,6 @@
 {
   "auth": {
-    "vueawsauthrawv3681b5932": {
+    "vueawsauthrawv385a43bdf": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -9,35 +9,35 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_vueawsauthrawv3681b5932_nativeClientId": {
+    "AMPLIFY_auth_vueawsauthrawv385a43bdf_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3681b5932"
+          "resourceName": "vueawsauthrawv385a43bdf"
         }
       ]
     },
-    "AMPLIFY_auth_vueawsauthrawv3681b5932_userPoolId": {
+    "AMPLIFY_auth_vueawsauthrawv385a43bdf_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3681b5932"
+          "resourceName": "vueawsauthrawv385a43bdf"
         }
       ]
     },
-    "AMPLIFY_auth_vueawsauthrawv3681b5932_userPoolName": {
+    "AMPLIFY_auth_vueawsauthrawv385a43bdf_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3681b5932"
+          "resourceName": "vueawsauthrawv385a43bdf"
         }
       ]
     },
-    "AMPLIFY_auth_vueawsauthrawv3681b5932_webClientId": {
+    "AMPLIFY_auth_vueawsauthrawv385a43bdf_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3681b5932"
+          "resourceName": "vueawsauthrawv385a43bdf"
         }
       ]
     }

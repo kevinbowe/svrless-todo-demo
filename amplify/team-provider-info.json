@@ -13,11 +13,11 @@
     },
     "categories": {
       "auth": {
-        "vueawsauthrawv3681b5932": {
+        "vueawsauthrawv385a43bdf": {
           "userPoolId": "us-east-1_2xX7euWu5",
           "userPoolName": "v3-auth-form-update",
-          "webClientId": "4lgabacs4d0njg3isu71ktc1tt",
-          "nativeClientId": "4lgabacs4d0njg3isu71ktc1tt"
+          "webClientId": "94ab34lbt9vb1m9d25cvdu7vr",
+          "nativeClientId": "94ab34lbt9vb1m9d25cvdu7vr"
         }
       }
     }

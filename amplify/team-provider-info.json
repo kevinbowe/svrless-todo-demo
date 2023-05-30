@@ -10,16 +10,6 @@
       "StackName": "amplify-vueawsauthrawv3-dev-130905",
       "StackId": "arn:aws:cloudformation:us-east-1:716677688107:stack/amplify-vueawsauthrawv3-dev-130905/63f258a0-e130-11ed-ba5e-129b30686da3",
       "AmplifyAppId": "deu4mwbfd03r3"
-    },
-    "categories": {
-      "auth": {
-        "vueawsauthrawv385a43bdf": {
-          "userPoolId": "us-east-1_2xX7euWu5",
-          "userPoolName": "v3-auth-form-update",
-          "webClientId": "94ab34lbt9vb1m9d25cvdu7vr",
-          "nativeClientId": "94ab34lbt9vb1m9d25cvdu7vr"
-        }
-      }
     }
   }
 }

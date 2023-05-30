@@ -59,10 +59,25 @@
 						</v-row>
 					</v-container>
 
-					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']">
+					<!-- <authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
+					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email, preferred_username']">
 
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
+
+
+							<p style="margin-bottom:-.75em;">Preferred Username</p>
+							<v-text-field 
+									class="signup-nickname"
+									placeholder="required"
+									name="my Preferred Username"
+									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPreferredUsernameModel" >
+								</v-text-field>
+
+
+
+
+
 							<p style="margin-bottom:-.75em;">Nickname</p>
 							<v-text-field 
 									ZZZid="signup-nickname-id"
@@ -75,6 +90,8 @@
 									name="myNickname"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 								</v-text-field>
+
+
 							<v-row>
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
 								<v-col><a href="/tandc">Read Here</a></v-col>
@@ -177,12 +194,18 @@ const formFields = {
 		email: { order: 1 },
 		password: { order: 2 }, 
 		confirm_password: { order: 3 },
+		// preferred_username: { order: 4}
 		// nickname: { order:4 }
 	},
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
+
+		start("Enter validateCustomSignUp()")
+		info("formData", formData)
+
+		
 
 		if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
 		if (formData.myNickname) {
@@ -219,7 +242,7 @@ function checkValidationResults(resultsArray) {
 	}
 
 
-	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 	async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
@@ -329,6 +352,9 @@ async function getNicknameEmail(){
 	if (email) emailModel.value = email
 	return {nicknameModel, emailModel}
 };
+
+const workingPreferredUsernameModel = ref("")
+const preferredUsernameModel = ref("")
 
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")

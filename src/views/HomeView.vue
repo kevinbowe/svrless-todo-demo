@@ -59,10 +59,9 @@
 						</v-row>
 					</v-container>
 
-					<authenticator>
-										
-					</authenticator>
+
 					<!-- <authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
+					<authenticator initialState="signUp" :formFields="formFields" >
 
 						<!-- <template v-slot:sign-up-fields> -->
 							<!-- <authenticator-sign-up-form-fields /> -->
@@ -93,7 +92,7 @@
 							</v-row> -->
 						<!-- </template> -->
 
-					<!-- </authenticator> -->
+					</authenticator>
 
 					<div v-if="route === 'authenticated'">
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
@@ -185,10 +184,10 @@ Amplify.configure(awsconfig);
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
 	signUp: {
-		email: { order: 1 },
+		username: { order: 1},
 		password: { order: 2 }, 
 		confirm_password: { order: 3 },
-		// preferred_username: { order: 4}
+		email: { order: 4 },
 		// nickname: { order:4 }
 	},
 }

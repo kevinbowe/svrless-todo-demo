@@ -59,8 +59,7 @@
 						</v-row>
 					</v-container>
 
-					<!-- <authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
-					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email, preferred_username']">
+					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']">
 
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
@@ -74,13 +73,8 @@
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPreferredUsernameModel" >
 								</v-text-field>
 
-
-
-
-
 							<p style="margin-bottom:-.75em;">Nickname</p>
 							<v-text-field 
-									ZZZid="signup-nickname-id"
 									class="signup-nickname"
 									:rules="[	value => checkReservedNickname(value), 
 															value => checkShortNickname(value),
@@ -91,7 +85,6 @@
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 								</v-text-field>
 
-
 							<v-row>
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
 								<v-col><a href="/tandc">Read Here</a></v-col>
@@ -99,8 +92,6 @@
 						</template>
 
 					</authenticator>
-
-
 
 					<div v-if="route === 'authenticated'">
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
@@ -187,6 +178,7 @@ const awsCredentialIdentity = {
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Amplify.configure(awsconfig);
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
@@ -198,14 +190,12 @@ const formFields = {
 		// nickname: { order:4 }
 	},
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
-
 		start("Enter validateCustomSignUp()")
 		info("formData", formData)
-
-		
 
 		if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
 		if (formData.myNickname) {
@@ -231,6 +221,7 @@ const services = {
 	},
 };
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function checkValidationResults(resultsArray) {
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
@@ -239,11 +230,10 @@ function checkValidationResults(resultsArray) {
 			}
 		}
 		return true
-	}
-
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-	async function submitNickname(event) {
+async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
 		
@@ -258,26 +248,26 @@ function checkValidationResults(resultsArray) {
 		//				Pass the new nickname and the email-address
 		router.push({name:`profile`, params: {
 						p1:nicknameModel.value, p2:emailModel.value }  }) 
-	}	
-	async function checkReservedNickname (workingNickname) {
+}	
+async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
 		}
 		return true
-	}
-	async function checkShortNickname (workingNickname) {
+}
+async function checkShortNickname (workingNickname) {
 		if (workingNickname.length > 0 && workingNickname.length <= 3) {
 			return 'User nickname is too short. Please try another one.'
 		}
 		return true
-	}
-	async function checkFirstChar (workingNickname) {
+}
+async function checkFirstChar (workingNickname) {
 		if (!isNaN(workingNickname[0])) {
 			return 'User nickname can not begin with a Number. Please try another one.'
 		}
 		return true
-	}
-	async function checkSpecialChars (workingNickname) {
+}
+async function checkSpecialChars (workingNickname) {
 		const re = /[!@#$%\^&*(){}[\]<>?/|]/
 		const match = workingNickname.match(re)
 		// Check the format
@@ -285,8 +275,10 @@ function checkValidationResults(resultsArray) {
 			return 'User nickname can not contain special characters. Please try another one.'
 		}
 		return true
-	}
-	Hub.listen('auth', (data) => {
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 			// case "signUp" :
 			// case "confirmSignUp" :
@@ -315,7 +307,7 @@ function checkValidationResults(resultsArray) {
 				workingNicknameModel.value = nicknameModel.value = ""
 				return
 			} // END_SWITCH
-		})
+})
 						
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function UpdateNickname(nicknameModel){
@@ -329,11 +321,14 @@ async function UpdateNickname(nicknameModel){
 		}) // END_THEN
 
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 	region: awsconfig.aws_cognito_region,
 	credentials: awsCredentialIdentity
 });
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getNicknameEmail(){
 	const cognitoAccessToken = await Auth.currentSession()
 			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
@@ -359,17 +354,16 @@ const preferredUsernameModel = ref("")
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
 const emailModel = ref("")
-// 			ORIGINAL
-// getNicknameEmail().then((result:any) => { 
+
+const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 
 	nicknameModel.value = nicknameModel.value
 	workingNicknameModel.value = nicknameModel.value
 	emailModel.value = emailModel.value
 	return result
 })
-
-const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
-
 </script>
 
 <style>

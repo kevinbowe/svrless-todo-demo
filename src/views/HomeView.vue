@@ -7,27 +7,27 @@
 			<v-row justify="center">
 
 				<!-- START Column ONE -->
-				<v-col cols="6">
+				<!-- <v-col cols="6"> -->
 					
 					<!-- START Status -->
-					nickNameModel [ {{ nicknameModel }} ]
+					<!-- nickNameModel [ {{ nicknameModel }} ]
 					<br>
-					workingNicknameModel [ {{ workingNicknameModel }} ]
+					workingNicknameModel [ {{ workingNicknameModel }} ] -->
 
-					<v-divider :thickness="20"  class="ma-5"></v-divider>
+					<!-- <v-divider :thickness="20"  class="ma-5"></v-divider> -->
 					
-					<v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
+					<!-- <v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
 						user.attribute [ name | value ]
-					</v-row>
+					</v-row> -->
 
-					<v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
+					<!-- <v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
 						<v-col cols="3" class="text-right my-0 py-0"> Nick Name </v-col>
 						<v-col cols="5" class="text-left my-0 py-0"> [ {{ user.attributes.nickname }} ]</v-col>
-					</v-row>
+					</v-row> -->
 					<!-- END Status -->
 
 					<!-- START Forms -->
-					<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
+					<!-- <v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
 						<v-row>
 							<v-text-field :rules="[	value => checkReservedNickname(value), 
 															value => checkShortNickname(value),
@@ -39,14 +39,14 @@
 							<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetNickname"> Cancel </v-btn>
 							<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 						</v-row>
-					</v-form>
+					</v-form> -->
 					<!-- END Forms -->
 
 					<!-- Experiment -->
 					<!-- <v-row class="justify-end"><v-col cols="7" class="mr-3 mt-5"><v-btn color=secondary 
 						@click="getNickName"> TEST </v-btn></v-col></v-row> -->
 
-				</v-col> 
+				<!-- </v-col>  -->
 				<!-- END Column ONE -->	
 				<!-- START Column TWO -->
 				<v-col cols="6"> 
@@ -59,22 +59,24 @@
 						</v-row>
 					</v-container>
 
-					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']">
+					<authenticator>
+										
+					</authenticator>
+					<!-- <authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
 
-						<template v-slot:sign-up-fields>
-							<authenticator-sign-up-form-fields />
+						<!-- <template v-slot:sign-up-fields> -->
+							<!-- <authenticator-sign-up-form-fields /> -->
 
-
-							<p style="margin-bottom:-.75em;">Preferred Username</p>
+							<!-- <p style="margin-bottom:-.75em;">Preferred Username</p>
 							<v-text-field 
 									class="signup-nickname"
 									placeholder="required"
 									name="my Preferred Username"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPreferredUsernameModel" >
-								</v-text-field>
+								</v-text-field> -->
 
-							<p style="margin-bottom:-.75em;">Nickname</p>
-							<v-text-field 
+							<!-- <p style="margin-bottom:-.75em;">Nickname</p> -->
+							<!-- <v-text-field 
 									class="signup-nickname"
 									:rules="[	value => checkReservedNickname(value), 
 															value => checkShortNickname(value),
@@ -83,15 +85,15 @@
 									placeholder="( optional )"
 									name="myNickname"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
-								</v-text-field>
+								</v-text-field> -->
 
-							<v-row>
+							<!-- <v-row>
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
 								<v-col><a href="/tandc">Read Here</a></v-col>
-							</v-row>
-						</template>
+							</v-row> -->
+						<!-- </template> -->
 
-					</authenticator>
+					<!-- </authenticator> -->
 
 					<div v-if="route === 'authenticated'">
 						<v-divider :thickness="20"  class="ma-2"></v-divider>
@@ -246,8 +248,8 @@ async function submitNickname(event) {
 
 		//				Redirect to Profile page.
 		//				Pass the new nickname and the email-address
-		router.push({name:`profile`, params: {
-						p1:nicknameModel.value, p2:emailModel.value }  }) 
+		// router.push({name:`profile`, params: {
+		// 				p1:nicknameModel.value, p2:emailModel.value }  }) 
 }	
 async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {
@@ -300,7 +302,7 @@ Hub.listen('auth', (data) => {
 					nicknameModel.value =  data.payload.data.attributes.nickname
 					//				
 					// 			Redirect to the Profile page.
-					router.push({path: '/profile'})
+					//router.push({path: '/profile'})
 				})
 				return
 			case "signOut" :

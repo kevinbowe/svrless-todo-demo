@@ -59,12 +59,15 @@
 						</v-row>
 					</v-container>
 
+					<!-- ORIGINAL
+					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
+					<!-- Dev 1 -->
+					<!-- <authenticator initialState="signUp" :formFields="formFields" > -->
+					<!-- Dev 2 -->
+					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 
-					<!-- <authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
-					<authenticator initialState="signUp" :formFields="formFields" >
-
-						<!-- <template v-slot:sign-up-fields> -->
-							<!-- <authenticator-sign-up-form-fields /> -->
+						<template v-slot:sign-up-fields>
+							<authenticator-sign-up-form-fields />
 
 							<!-- <p style="margin-bottom:-.75em;">Preferred Username</p>
 							<v-text-field 
@@ -74,8 +77,8 @@
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPreferredUsernameModel" >
 								</v-text-field> -->
 
-							<!-- <p style="margin-bottom:-.75em;">Nickname</p> -->
-							<!-- <v-text-field 
+							<p style="margin-bottom:-.75em;">Nickname</p>
+							<v-text-field 
 									class="signup-nickname"
 									:rules="[	value => checkReservedNickname(value), 
 															value => checkShortNickname(value),
@@ -84,13 +87,13 @@
 									placeholder="( optional )"
 									name="myNickname"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
-								</v-text-field> -->
+								</v-text-field>
 
 							<!-- <v-row>
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
 								<v-col><a href="/tandc">Read Here</a></v-col>
 							</v-row> -->
-						<!-- </template> -->
+						</template>
 
 					</authenticator>
 
@@ -198,7 +201,8 @@ const services = {
 		start("Enter validateCustomSignUp()")
 		info("formData", formData)
 
-		if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
+		//				Disabled Temporary
+		// ... if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
 		if (formData.myNickname) {
 			//				This is going to return an ValidationError string 
 			//				--OR-- a "passed validation" boolean true.

@@ -61,21 +61,29 @@
 
 					<!-- ORIGINAL
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
-					<!-- Dev 1 -->
-					<!-- <authenticator initialState="signUp" :formFields="formFields" > -->
 					<!-- Dev 2 -->
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
 
+							
 							<!-- <p style="margin-bottom:-.75em;">Preferred Username</p>
 							<v-text-field 
 									class="signup-nickname"
-									placeholder="required"
-									name="my Preferred Username"
+									:rules="[	value => checkReservedNickname(value), 
+													value => checkShortNickname(value),
+													value => checkFirstChar(value),
+													value => checkSpecialChars(value)]"
+									placeholder="Enter you Preferred Username"
+									name="preferred_username"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPreferredUsernameModel" >
 								</v-text-field> -->
+
+
+
+
+
 
 							<p style="margin-bottom:-.75em;">Nickname</p>
 							<v-text-field 
@@ -85,7 +93,8 @@
 															value => checkFirstChar(value),
 															value => checkSpecialChars(value)]"
 									placeholder="( optional )"
-									name="myNickname"
+									__name="myNickname"
+									name="nickname"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 								</v-text-field>
 
@@ -104,11 +113,15 @@
 							<v-col cols="4" style="text-align:end;">
 								<div>attribute.email</div>
 								<div>attribute.nickname</div>
+								<div>attribute.username</div>
+								<div>attribute.preferred_username</div>
 							</v-col>
 						
 							<v-col cols="6" style="text-align:start;">
 								<div>{{ user.attributes.email }}</div>
 								<div>{{ user.attributes.nickname }}</div>
+								<div>{{ user.attributes.username }}</div>
+								<div>{{ user.attributes.preferred_username }}</div>
 							</v-col>
 						</v-row>
 						
@@ -118,11 +131,15 @@
 							<v-col cols="4" style="text-align:end;">
 								<div>emailModel</div>
 								<div>nicknameModel</div>
+								<div>usernameModel</div>
+								<div>preferredUsernameModel</div>
 							</v-col>
 
 							<v-col cols="6" style="text-align:start;">
 								<div>{{ emailModel }}</div>
 								<div>{{ nicknameModel }}</div>
+								<div>{{ usernameModel }}</div>
+								<div>{{ preferredUsernameModel }}</div>
 							</v-col>
 						</v-row>
 
@@ -187,7 +204,7 @@ Amplify.configure(awsconfig);
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
 	signUp: {
-		username: { order: 1},
+		// username: { order: 1},
 		password: { order: 2 }, 
 		confirm_password: { order: 3 },
 		email: { order: 4 },
@@ -198,18 +215,19 @@ const formFields = {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
-		start("Enter validateCustomSignUp()")
-		info("formData", formData)
+						enter("validateCustimerSignUp")
+						// start("Enter validateCustomSignUp()")
+						// info("formData", formData)
 
 		//				Disabled Temporary
 		// ... if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
-		if (formData.myNickname) {
+		if (formData.nickname) {
 			//				This is going to return an ValidationError string 
 			//				--OR-- a "passed validation" boolean true.
 			let nicknameValidationRtn = await Promise.all( [
-						checkReservedNickname(formData.myNickname),
-						checkShortNickname(formData.myNickname),
-						checkSpecialChars (formData.myNickname),
+						checkReservedNickname(formData.nickname),
+						checkShortNickname(formData.nickname),
+						checkSpecialChars (formData.nickname),
 					]).then (resultArray => {
 						// This return exists to await Promise.all()
 						return checkValidationResults(resultArray)
@@ -218,7 +236,8 @@ const services = {
 			//			--OR-- a validation passed "boolean".
 			if(typeof nicknameValidationRtn == 'boolean') {
 				//			Update the nicknameModel
-				nicknameModel.value = formData.myNickname
+				// nicknameModel.value = formData.myNickname
+				nicknameModel.value = formData.nickname
 			} else {
 				return nicknameValidationRtn
 			}
@@ -228,6 +247,8 @@ const services = {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function checkValidationResults(resultsArray) {
+						enter("checkValidationResults")
+
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
 				// This return exits the '.then'
@@ -238,22 +259,23 @@ function checkValidationResults(resultsArray) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function submitNickname(event) {
-		const results = await event
-		if(!results.valid) return
-		
-		// This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser();
-		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-		await Auth.currentUserInfo().then(result => {
-			nicknameModel.value = result.attributes.nickname
-		}) // END_THEN
+// async function submitNickname(event) {
 
-		//				Redirect to Profile page.
-		//				Pass the new nickname and the email-address
-		// router.push({name:`profile`, params: {
-		// 				p1:nicknameModel.value, p2:emailModel.value }  }) 
-}	
+// 		const results = await event
+// 		if(!results.valid) return
+		
+// 		// This will return the user in the user pool (not updated )
+// 		const newuser = await Auth.currentAuthenticatedUser();
+// 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
+// 		await Auth.currentUserInfo().then(result => {
+// 			nicknameModel.value = result.attributes.nickname
+// 		}) // END_THEN
+
+// 		//				Redirect to Profile page.
+// 		//				Pass the new nickname and the email-address
+// 		// router.push({name:`profile`, params: {
+// 		// 				p1:nicknameModel.value, p2:emailModel.value }  }) 
+// }	
 async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
@@ -289,14 +311,15 @@ Hub.listen('auth', (data) => {
 			// case "confirmSignUp" :
 			// case "autoSignIn" :
 			case "signIn" :
+							enter("Hub.listen: signIn")
 				// Does the nicknameModel exist?
 				if (!!nicknameModel.value.length) { 
 					//
 					// 			If we get here, the nicknameModel exists.
 					//				This only happens during the SignUp work flow.
-					start("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
+												start("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
 					UpdateNickname(nicknameModel) 
-					fini("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
+												fini("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
 				}
 
 				Auth.currentAuthenticatedUser().then(results => { 
@@ -316,6 +339,7 @@ Hub.listen('auth', (data) => {
 						
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function UpdateNickname(nicknameModel){
+					enter("UpdateNickname")
 		//
 		// 			This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser();
@@ -335,6 +359,9 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getNicknameEmail(){
+			enter("getNicknameEmail")
+		
+
 	const cognitoAccessToken = await Auth.currentSession()
 			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
 	if (cognitoAccessToken === "No current user") { 
@@ -353,14 +380,19 @@ async function getNicknameEmail(){
 	return {nicknameModel, emailModel}
 };
 
+const workingUsernameModel = ref("")
+const usernameModel = ref("")
+
 const workingPreferredUsernameModel = ref("")
 const preferredUsernameModel = ref("")
 
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
+
 const emailModel = ref("")
 
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
+const resetPreferredUsername = () => { workingPreferredUsernameModel.value = preferredUsernameModel.value }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 

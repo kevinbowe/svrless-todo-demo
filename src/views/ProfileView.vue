@@ -13,6 +13,7 @@
 							<v-col cols="6" style="text-align:end;">
 								<h2>nicknameModel</h2>
 								<h2>emailModel</h2>
+								<h2>phone_numberModel</h2>
 							</v-col>
 
 							<v-divider vertical :thickness="6" class="my-2" />
@@ -20,6 +21,8 @@
 							<v-col cols="4" style="text-align:start;">
 								<h2>{{ nicknameModel }}</h2>
 								<h2>{{ emailModel }}</h2>
+								<h2>{{ phone_numberModel }}</h2>
+
 							</v-col>
 						</v-row>
 
@@ -49,11 +52,14 @@ import {
 
 const props = defineProps({
 	p1: { type: String },
-	p2: { type: String }
+	p2: { type: String },
+	p3: { type: String }
 })
 
 const nicknameModel = ref(props.p1)
 const emailModel = ref(props.p2)
+const phone_numberModel = ref(props.p3)
+
 
 
 </script>

@@ -67,19 +67,19 @@
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
 
-							
-							<!-- <p style="margin-bottom:-.75em;">Preferred Username</p>
+							<p style="margin-bottom:-.75em;">Phone number</p>
 							<v-text-field 
 									class="signup-nickname"
-									:rules="[	value => checkReservedNickname(value), 
-													value => checkShortNickname(value),
-													value => checkFirstChar(value),
-													value => checkSpecialChars(value)]"
-									placeholder="Enter you Preferred Username"
-									name="preferred_username"
-									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPreferredUsernameModel" >
-								</v-text-field> -->
-
+									:rules="[	
+										// value => checkReservedNickname(value), 
+										// value => checkShortNickname(value),
+										// value => checkFirstChar(value),
+										// value => checkSpecialChars(value)
+									]"
+									placeholder="( optional )"
+									name="phone_number"
+									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPhone_numberModel" >
+								</v-text-field>
 
 
 
@@ -93,7 +93,6 @@
 															value => checkFirstChar(value),
 															value => checkSpecialChars(value)]"
 									placeholder="( optional )"
-									__name="myNickname"
 									name="nickname"
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 								</v-text-field>
@@ -102,6 +101,7 @@
 								<v-col cols="9"><AmplifyCheckBox/></v-col>
 								<v-col><a href="/tandc">Read Here</a></v-col>
 							</v-row> -->
+
 						</template>
 
 					</authenticator>
@@ -113,15 +113,15 @@
 							<v-col cols="4" style="text-align:end;">
 								<div>attribute.email</div>
 								<div>attribute.nickname</div>
-								<div>attribute.username</div>
-								<div>attribute.preferred_username</div>
+								<div>attribute.phone_number</div>
+
 							</v-col>
 						
 							<v-col cols="6" style="text-align:start;">
 								<div>{{ user.attributes.email }}</div>
 								<div>{{ user.attributes.nickname }}</div>
-								<div>{{ user.attributes.username }}</div>
-								<div>{{ user.attributes.preferred_username }}</div>
+								<div>{{ user.attributes.phone_number }}</div>
+
 							</v-col>
 						</v-row>
 						
@@ -131,15 +131,15 @@
 							<v-col cols="4" style="text-align:end;">
 								<div>emailModel</div>
 								<div>nicknameModel</div>
-								<div>usernameModel</div>
-								<div>preferredUsernameModel</div>
+								<div>phone_numberModel</div>
+
 							</v-col>
 
 							<v-col cols="6" style="text-align:start;">
 								<div>{{ emailModel }}</div>
 								<div>{{ nicknameModel }}</div>
-								<div>{{ usernameModel }}</div>
-								<div>{{ preferredUsernameModel }}</div>
+								<div>{{ phone_numberModel }}</div>
+
 							</v-col>
 						</v-row>
 
@@ -208,6 +208,7 @@ const formFields = {
 		password: { order: 2 }, 
 		confirm_password: { order: 3 },
 		email: { order: 4 },
+		//phone_number: { order: 5 }
 		// nickname: { order:4 }
 	},
 }
@@ -215,9 +216,8 @@ const formFields = {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
-						enter("validateCustimerSignUp")
 						// start("Enter validateCustomSignUp()")
-						// info("formData", formData)
+						info("formData", formData)
 
 		//				Disabled Temporary
 		// ... if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
@@ -273,8 +273,8 @@ function checkValidationResults(resultsArray) {
 
 // 		//				Redirect to Profile page.
 // 		//				Pass the new nickname and the email-address
-// 		// router.push({name:`profile`, params: {
-// 		// 				p1:nicknameModel.value, p2:emailModel.value }  }) 
+// 		router.push({name:`profile`, params: {
+// 		 				p1:nicknameModel.value, p2:emailModel.value }  }) 
 // }	
 async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {
@@ -317,18 +317,24 @@ Hub.listen('auth', (data) => {
 					//
 					// 			If we get here, the nicknameModel exists.
 					//				This only happens during the SignUp work flow.
-												start("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
 					UpdateNickname(nicknameModel) 
-												fini("Executing UpdateNicname() -- nicknameModel == ", nicknameModel.value)
+					Auth.currentAuthenticatedUser().then(results => { 
+						emailModel.value = results.attributes.email
+						nicknameModel.value =  data.payload.data.attributes.nickname
+						phone_numberModel.value = data.payload.data.attributes.phone_number
+					})
+					router.push({name:`profile`, params: {
+									p1:nicknameModel.value, 
+									p2:emailModel.value,
+									p3:phone_numberModel.value
+								}  }) 
 				}
 
 				Auth.currentAuthenticatedUser().then(results => { 
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
 					nicknameModel.value =  data.payload.data.attributes.nickname
-					//				
-					// 			Redirect to the Profile page.
-					//router.push({path: '/profile'})
+					phone_numberModel.value = data.payload.data.attributes.phone_number
 				})
 				return
 			case "signOut" :
@@ -358,8 +364,8 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 });
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function getNicknameEmail(){
-			enter("getNicknameEmail")
+async function getNickEmailPhone(){
+			enter("getNickEmailPhone")
 		
 
 	const cognitoAccessToken = await Auth.currentSession()
@@ -377,14 +383,17 @@ async function getNicknameEmail(){
 
 	let email = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
 	if (email) emailModel.value = email
-	return {nicknameModel, emailModel}
+
+	let phone = getUserCommandOutput.UserAttributes?.find(e => e.Name === "phone_number")?.Value
+	if (phone) phone_numberModel.value = phone
+
+	return {nicknameModel, emailModel, phone_numberModel}
 };
 
-const workingUsernameModel = ref("")
-const usernameModel = ref("")
 
-const workingPreferredUsernameModel = ref("")
-const preferredUsernameModel = ref("")
+const phone_numberModel = ref("")
+const workingPhone_numberModel = ref("")
+
 
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
@@ -392,13 +401,18 @@ const nicknameModel = ref("")
 const emailModel = ref("")
 
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
-const resetPreferredUsername = () => { workingPreferredUsernameModel.value = preferredUsernameModel.value }
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 
+// getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 
+getNickEmailPhone().then( (result: ""| {
+			nicknameModel:Ref<string>,
+			emailModel:Ref<string>,
+			phone_numberModel:Ref<string>, }) => { 
 	nicknameModel.value = nicknameModel.value
 	workingNicknameModel.value = nicknameModel.value
 	emailModel.value = emailModel.value
+	phone_numberModel.value = phone_numberModel.value
 	return result
 })
 </script>

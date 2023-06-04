@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: "/",
-		name: "Home",
+		name: "home",
 		component: () => import("../views/HomeView.vue"),
 		meta: {
 			layout: "master",

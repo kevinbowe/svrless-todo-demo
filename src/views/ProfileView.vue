@@ -1,3 +1,4 @@
+
 <template>
 	<v-app>
 		<MasterLayout>
@@ -38,18 +39,37 @@
 	</v-app>
 </template>
 
+
 <script lang="ts" setup>
 start("Enter ProfileView.vue <script setup>")
 import MasterLayout from "../layouts/MasterLayout.vue";
+import { Auth } from 'aws-amplify';
+import { GetUserCommand, GetUserRequest, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
+import awsconfig from '../aws-exports';
 /*  */
 import {
 	info, infor, infog, infob, infoy, infoo, infop, infom,
 	info1, info2, info3, info4, info5, info6, info7,
 	log, warn, err, progress, joy, enter, exit,
 	success, bar, whitebar, fini, start, pass, fail
+} from "../my-util-code/MyConsoleUtil"
+
+import { toRefs, ref, Ref, computed } from 'vue'
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const awsCredentialIdentity = {
+	//				Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
+	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
+	//				Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
+	//				also here -- ~/Documents/aws-dev access keys.txt
+	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
 }
-	from "../my-util-code/MyConsoleUtil"
-	import { toRefs, ref, Ref, computed } from 'vue'
+
+const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
+	region: awsconfig.aws_cognito_region,
+	credentials: awsCredentialIdentity
+});
 
 const props = defineProps({
 	p1: { type: String },
@@ -61,31 +81,88 @@ const nicknameModel = ref(props.p1)
 const emailModel = ref(props.p2)
 const phone_numberModel = ref(props.p3)
 
-//				Fetch the user attributes if one or more of the 
-//					Parmas/Props/Models are not hydrated.
-let match:any = Object.values(props).find(e => e.length === 0)
-if (match === undefined) {
-	//				If we get here, fetch the users attributes from Cognito
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+//				This DEFINES getNickEmailPhone function
+//				This is duplicated in HomeView.vue
+//				This code must be made global, 
+//				or at least importable from a SINGLE source,
+async function getNickEmailPhone(){
+				// enter("getNickEmailPhone")
 
+	const cognitoAccessToken = await Auth.currentSession()
+		.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
+	if (cognitoAccessToken === "No current user") { 
+		// info("No current user -- Please sign in")
+		return ""
+	}
+
+	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
+	getUserRequestInput.AccessToken = cognitoAccessToken	
+	const getUserCommand = new GetUserCommand(getUserRequestInput);	
+	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
+	//				Update the Model based on the GetUserCommandOutput
+	let nickname = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
+	if(nickname) nicknameModel.value = nickname
+
+	let email = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
+	if (email) emailModel.value = email
+
+	let phone = getUserCommandOutput.UserAttributes?.find(e => e.Name === "phone_number")?.Value
+	if (phone) phone_numberModel.value = phone
+
+	return {nicknameModel, emailModel, phone_numberModel}
+};
+
+
+
+bar()
+
+let areParamsEmpty = function() {
+	let v = Object.values(props)
+	let o = v.find(e => e.length === 0)
+	// IF no match: return undefined ELSE return string
+	// info("typeof Find Results", typeof o)
+	return typeof o !== undefined
 }
 
+//				Check to see if the models have been hydrated
+let areModelsEmpty = function(){
+	return nicknameModel.value?.length === 0 ||
+	emailModel.value?.length === 0 ||
+	phone_numberModel.value?.length === 0
+}
 
-// //				Report the Params/Properties
-// info(`props.p1 (nickname) == [ ${props.p1} ]`)
-// info2(`props.p2 (email) == [ ${props.p2} ]`)
-// info1(`props.p3 (phone_number) == [ ${props.p3} ]`)
-// //				Report the Models
-// info3(`nicknameModel.value == [ ${nicknameModel.value} ]`/* , nicknameModel */)
-// info5(`emailModel.value == [ ${emailModel.value} ]`/* , emailModel */)
-// info4(`phone_numberModel.value == [ ${phone_numberModel.value} ]`/* , phone_numberModel */)
+if(areParamsEmpty() || areModelsEmpty()) {
 
-// //				Check the Params/Props
-// if (props.p1) info("p1 (nicknameModel exist)")
-// 	else info("p1 (nicknameModel does NOT exist)")
-// if (props.p2) info("p2 (emailModel exist)")
-// 	else info("p2 (emailModel does NOT exist)")
-// if (props.p3) info("p3 (phone_numberModel exist)")
-// 	else info("p3 (phone_numberModel does NOT exist)")
+	//				I need to check for not being signed in and reporting it to the UI
+	getNickEmailPhone().then( (result: ""| { 
+			nicknameModel:Ref<string|undefined>, 
+			emailModel:Ref<string|undefined>,
+			phone_numberModel:Ref<string|undefined> 
+		}) => {
+			nicknameModel.value = nicknameModel.value
+			emailModel.value = emailModel.value
+			phone_numberModel.value = phone_numberModel.value
+			return result
+		}
+	) // END_THEN()
 
-fini("Exit ProfileView.vue <script setup>")
+
+	// let rtn = getNickEmailPhone().then( (result: "" | string | { 
+	// 		nicknameModel:Ref<string|undefined>, 
+	// 		emailModel:Ref<string|undefined>,
+	// 		phone_numberModel:Ref<string|undefined > 
+	// 	} ) => {
+	// 		nicknameModel.value = nicknameModel.value
+	// 		emailModel.value = emailModel.value
+	// 		phone_numberModel.value = phone_numberModel.value
+	// 		return result
+	// 	}
+	// )
+
+// info2("rtn --> ", rtn)
+
+} // END_IF
+
+// fini("Exit ProfileView.vue <script setup>")
 </script>

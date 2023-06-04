@@ -41,9 +41,8 @@
 
 
 <script lang="ts" setup>
-start("Enter ProfileView.vue <script setup>")
 import MasterLayout from "../layouts/MasterLayout.vue";
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 import { GetUserCommand, GetUserRequest, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import awsconfig from '../aws-exports';
 /*  */
@@ -51,11 +50,11 @@ import {
 	info, infor, infog, infob, infoy, infoo, infop, infom,
 	info1, info2, info3, info4, info5, info6, info7,
 	log, warn, err, progress, joy, enter, exit,
-	success, bar, whitebar, fini, start, pass, fail
+	success, bar, whitebar, fini, start, pass, fail, err2
 } from "../my-util-code/MyConsoleUtil"
 
 import { toRefs, ref, Ref, computed } from 'vue'
-
+import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const awsCredentialIdentity = {
@@ -80,6 +79,42 @@ const props = defineProps({
 const nicknameModel = ref(props.p1)
 const emailModel = ref(props.p2)
 const phone_numberModel = ref(props.p3)
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+Hub.listen('auth', (data) => {
+	// enter("PROFILE -- Hub.listen")
+		switch(data.payload.event) {
+			case "signUp" :
+				enter("Hub.listen: auto Sign In")
+				exit("Hub.listen: auto Sign In")
+				return
+
+			case "confirmSignUp" :
+				enter("Hub.listen: confirm Sign Up")
+				exit("Hub.listen: confirm Sign Up")
+				return
+
+			case "autoSignIn" :
+				enter("Hub.listen: auto Sign In")
+				exit("Hub.listen: auto Sign In")
+				return
+
+			case "signIn" :
+				enter("Hub.listen: signIn")
+				exit("Hub.listen: sign In")
+
+				return
+			case "signOut" :
+				enter("Hub.listen: sign Out")
+				exit("Hub.listen: sign Out")
+
+				return
+			} // END_SWITCH
+		// exit("PROFILE -- Hub.listen")
+
+})
+
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 //				This DEFINES getNickEmailPhone function
@@ -160,9 +195,8 @@ if(areParamsEmpty() || areModelsEmpty()) {
 	// 	}
 	// )
 
-// info2("rtn --> ", rtn)
+}
 
-} // END_IF
 
-// fini("Exit ProfileView.vue <script setup>")
+fini("Exit ProfileView.vue <script setup>")
 </script>

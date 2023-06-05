@@ -11,9 +11,10 @@
 						<v-divider :thickness="10" __class="ma-2"></v-divider>
 
 						<!-- START Forms -->
+						<!-- Nickname -->
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
 							<v-row>
-								<v-text-field __:rules="[
+								<v-text-field :rules="[
 									value => checkReservedNickname(value),
 									value => checkShortNickname(value),
 									value => checkFirstChar(value),
@@ -25,6 +26,19 @@
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 							</v-row>
 						</v-form>
+
+						<!-- Phone Number -->
+						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitPhone_number" >
+							<v-row>
+								<v-text-field :rules="[]" 
+									label="Phone number (optional)" hint="Example: 1 (919) 333-4444" variant="outlined" density="compact" v-model="workingPhone_numberModel"   />
+							</v-row>
+							<v-row class="justify-end">
+								<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetPhone_number"> Cancel </v-btn>
+								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
+							</v-row>
+						</v-form>
+
 						<!-- END Forms -->
 
 					</v-col>
@@ -112,25 +126,76 @@ const props = defineProps({
 
 const nicknameModel = ref(props.p1)
 const workingNicknameModel = ref("")
+
 const emailModel = ref(props.p2)
+
 const phone_numberModel = ref(props.p3)
+const workingPhone_numberModel = ref("")
 
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
+const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberModel.value }
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
-
+	
 	const results = await event
 	if(!results.valid) return
-
+	
 	// This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser();
 	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 	await Auth.currentUserInfo().then(result => {
 		nicknameModel.value = result.attributes.nickname
 	}) // END_THEN
-
+	
 }	
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitPhone_number(event) {
+	
+	const results = await event
+	if(!results.valid) return
+	
+	// This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(newuser, {'phone_number': workingPhone_numberModel.value })
+	await Auth.currentUserInfo().then(result => {
+		phone_numberModel.value = result.attributes.phone_number
+	}) // END_THEN
+	
+}
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function checkReservedNickname (workingNickname) {
+		if (workingNickname === 'kevin') {
+			return 'User nickname reserved. Please try another one.'
+		}
+		return true
+}
+async function checkShortNickname (workingNickname) {
+		if (workingNickname.length > 0 && workingNickname.length <= 3) {
+			return 'User nickname is too short. Please try another one.'
+		}
+		return true
+}
+async function checkFirstChar (workingNickname) {
+		if (!isNaN(workingNickname[0])) {
+			return 'User nickname can not begin with a Number. Please try another one.'
+		}
+		return true
+}
+async function checkSpecialChars (workingNickname) {
+		const re = /[!@#$%\^&*(){}[\]<>?/|]/
+		const match = workingNickname.match(re)
+		// Check the format
+		if(match) {
+			return 'User nickname can not contain special characters. Please try another one.'
+		}
+		return true
+}
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {

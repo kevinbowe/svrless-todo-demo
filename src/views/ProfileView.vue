@@ -198,5 +198,6 @@ fini("ProfileView.vue <script setup>")
 	} */
 	.v-input { margin-top: 2px;}
 	.signup-nickname input {text-align: center;}
+	.amplify-tabs { display: none; }
 	
 </style>

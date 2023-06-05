@@ -107,6 +107,7 @@ Hub.listen('auth', (data) => {
 					
 		case "signIn" :
 			enter("Hub.listen: signIn")
+			getSession()
 			exit("Hub.listen: sign In")
 			return
 
@@ -174,6 +175,7 @@ fini("ProfileView.vue <script setup>")
 </script>
 
 <style>
+	/* Apply styling to Authenticator so that is is consistent with the rest of the site. */
 	.amplify-button--link { color: rgb(var(--v-theme-primary)); }
 	.amplify-button[data-variation='primary'] { background-color: rgb(var(--v-theme-primary)); }
 	.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
@@ -185,6 +187,8 @@ fini("ProfileView.vue <script setup>")
 		background-color: #E0E0E0;
 		/* border-bottom-width: 5px; */
 	}
+
+	/* Apply styling to Authenticator so that is is consistent with the rest of the site. */
 	.amplify-tabs-item[data-state=active] { 
 		color: rgb(var(--v-theme-primary)); 
 		border-color: rgb(var(--v-theme-primary));
@@ -196,8 +200,12 @@ fini("ProfileView.vue <script setup>")
 			color: black;
 			background-color: rgb(var(--v-theme-error));
 	} */
+
+	/* Style the Nickname field, in the Authenticator to match the style of the rest of the site. */
 	.v-input { margin-top: 2px;}
 	.signup-nickname input {text-align: center;}
+
+	/* Prevent the SignUp tab from displaying */
 	.amplify-tabs { display: none; }
 	
 </style>

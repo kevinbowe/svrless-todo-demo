@@ -33,15 +33,23 @@
 					</v-col>
 					<v-spacer></v-spacer>
 				</v-row>
-				
-				<div v-if="route !== 'authenticated'">
-					<Authenticator>
-						<!-- 
-							I need to suppress the Su tab
-							Only display the Si tab 
-						-->
-					</Authenticator>
-				</div>					
+
+				<!-- Mobile -->
+				<v-row class="d-sm-none" v-if="route !== 'authenticated'" >
+					<v-col>
+						<Authenticator>
+						</Authenticator>
+					</v-col>
+				</v-row>
+
+				<!-- Desktop -->
+				<v-row align="center" class="d-none d-sm-flex" style="height: 50em;"  
+						v-if="route !== 'authenticated'" >
+					<v-col>
+						<Authenticator>
+						</Authenticator>
+					</v-col>
+				</v-row>
 
 			</v-container>
 		</MasterLayout>

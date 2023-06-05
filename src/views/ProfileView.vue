@@ -3,35 +3,63 @@
 		<MasterLayout>
 			<v-container class="text-center">
 				<h1 class="text-primary">Profile Page Content.</h1>
-				<v-row v-if="route === 'authenticated'">
-					<v-spacer></v-spacer>
-					<v-col cols="6">
-						<v-divider :thickness="20" class="ma-2"></v-divider>
 
-						<h1>Passed Properties</h1>
+				<v-row v-if="route === 'authenticated'">
+					
+					<v-spacer/>
+					<v-col cols="8">
+						<v-divider :thickness="10" __class="ma-2"></v-divider>
+
+						<!-- START Forms -->
+						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
+							<v-row>
+								<v-text-field __:rules="[
+									value => checkReservedNickname(value),
+									value => checkShortNickname(value),
+									value => checkFirstChar(value),
+									value => checkSpecialChars(value)]" 
+									label="Nickname (optional)" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel"   />
+							</v-row>
+							<v-row class="justify-end">
+								<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetNickname"> Cancel </v-btn>
+								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
+							</v-row>
+						</v-form>
+						<!-- END Forms -->
+
+					</v-col>
+					<v-spacer/>
+				</v-row>
+
+				<v-row v-if="route === 'authenticated'">
+					<v-spacer/>
+					<v-col cols="8">
+						<v-divider :thickness="10" class="ma-2"></v-divider>
+
+						<p>Passed Properties</p>
 						<v-row>
 							<v-col cols="6" style="text-align:end;">
-								<h2>nicknameModel</h2>
-								<h2>emailModel</h2>
-								<h2>phone_numberModel</h2>
+								<p>nicknameModel</p>
+								<p>emailModel</p>
+								<p>phone_numberModel</p>
 							</v-col>
 
-							<v-divider vertical :thickness="6" class="my-2" />
+							<v-divider vertical :thickness="3" class="my-2" />
 							
 							<v-col cols="4" style="text-align:start;">
-								<h2>{{ nicknameModel }}</h2>
-								<h2>{{ emailModel }}</h2>
-								<h2>{{ phone_numberModel }}</h2>
+								<p>{{ nicknameModel }}</p>
+								<p>{{ emailModel }}</p>
+								<p>{{ phone_numberModel }}</p>
 
 							</v-col>
 						</v-row>
 
-						<v-divider :thickness="20" class="ma-2"></v-divider>
+						<v-divider :thickness="10" class="ma-2"></v-divider>
 
-						<h1>Hello {{ nicknameModel }} !</h1>
+						<h4>Hello {{ nicknameModel }} !</h4>
 						
 					</v-col>
-					<v-spacer></v-spacer>
+					<v-spacer/>
 				</v-row>
 
 				<!-- Mobile -->
@@ -83,8 +111,26 @@ const props = defineProps({
 })
 
 const nicknameModel = ref(props.p1)
+const workingNicknameModel = ref("")
 const emailModel = ref(props.p2)
 const phone_numberModel = ref(props.p3)
+
+const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitNickname(event) {
+
+	const results = await event
+	if(!results.valid) return
+
+	// This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
+	await Auth.currentUserInfo().then(result => {
+		nicknameModel.value = result.attributes.nickname
+	}) // END_THEN
+
+}	
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {

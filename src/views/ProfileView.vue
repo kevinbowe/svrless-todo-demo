@@ -51,8 +51,6 @@
 <script lang="ts" setup>
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth, Hub } from 'aws-amplify';
-import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
-import awsconfig from '../aws-exports';
 import { useAuthenticator } from '@aws-amplify/ui-vue';
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
@@ -63,26 +61,13 @@ import {
 	success, bar, whitebar, fini, start, pass, fail, err2
 } from "../my-util-code/MyConsoleUtil"
 
-import { toRefs, ref, Ref, computed } from 'vue'
-import router from "../router";
+import { toRefs, ref, } from 'vue'
 import { Authenticator } from "@aws-amplify/ui-vue";
+import "@aws-amplify/ui-vue/styles.css";
 
 const { route, } = toRefs(useAuthenticator());
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const awsCredentialIdentity = {
-	//				Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
-	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
-	//				Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
-	//				also here -- ~/Documents/aws-dev access keys.txt
-	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
-}
-
-const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-	region: awsconfig.aws_cognito_region,
-	credentials: awsCredentialIdentity
-});
-
 const props = defineProps({
 	p1: { type: String },
 	p2: { type: String },
@@ -137,11 +122,14 @@ let areParamsEmpty = function() {
 	// info("typeof Find Results", typeof o)
 	return typeof o !== undefined
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 let areModelsEmpty = function(){
 	return nicknameModel.value?.length === 0 ||
 	emailModel.value?.length === 0 ||
 	phone_numberModel.value?.length === 0
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getSession(){
 
@@ -176,3 +164,31 @@ getSession()
 
 fini("ProfileView.vue <script setup>")
 </script>
+
+<style>
+	.amplify-button--link { color: rgb(var(--v-theme-primary)); }
+	.amplify-button[data-variation='primary'] { background-color: rgb(var(--v-theme-primary)); }
+	.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
+	.amplify-tabs-item:focus { color: rgb(var(--v-theme-primary)); }
+	.amplify-tabs-item:hover { color: rgb(var(--v-theme-primary)); }
+	.amplify-tabs-item[data-state=inactive] { 
+		color: rgb(var(--v-theme-primary)); 
+		border-color: rgb(var(--v-theme-primary));
+		background-color: #E0E0E0;
+		/* border-bottom-width: 5px; */
+	}
+	.amplify-tabs-item[data-state=active] { 
+		color: rgb(var(--v-theme-primary)); 
+		border-color: rgb(var(--v-theme-primary));
+		border-top-width: 5px;
+		/* border-right-width: 5px; ; */
+	}
+	/* 
+	.amplify-alert--error {
+			color: black;
+			background-color: rgb(var(--v-theme-error));
+	} */
+	.v-input { margin-top: 2px;}
+	.signup-nickname input {text-align: center;}
+	
+</style>

@@ -217,7 +217,7 @@ const formFields = {
 const services = {
 	async validateCustomSignUp(formData) {
 						// start("Enter validateCustomSignUp()")
-						info("formData", formData)
+						// info("formData", formData)
 
 		//				Disabled Temporary
 		// ... if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
@@ -365,7 +365,7 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getNickEmailPhone(){
-			enter("getNickEmailPhone")
+			// enter("getNickEmailPhone")
 		
 
 	const cognitoAccessToken = await Auth.currentSession()

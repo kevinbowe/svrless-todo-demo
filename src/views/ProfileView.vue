@@ -51,7 +51,7 @@
 <script lang="ts" setup>
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth, Hub } from 'aws-amplify';
-import { GetUserCommand, GetUserRequest, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import awsconfig from '../aws-exports';
 import { useAuthenticator } from '@aws-amplify/ui-vue';
 

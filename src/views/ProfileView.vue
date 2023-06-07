@@ -137,34 +137,34 @@ const props = defineProps({
 
 const nicknameModel = ref(props.p1)
 const workingNicknameModel = ref("")
+const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 
 const emailModel = ref(props.p2)
 
 const phone_numberModel = ref(props.p3)
 const workingPhone_numberModel = ref("")
-
-const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberModel.value }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function submitNickname(event) {
-	const results = await event
-	if(!results.valid) return
-	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser();
-	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-	await Auth.currentUserInfo().then(result => {
-		nicknameModel.value = result.attributes.nickname
-	})
-}
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPhone_number(event) {
-	start("submitPhone_number()")
+	bar()
 	const results = await event
-	if(!results.valid) return
+	if(!results.valid)
+		return /* Cancel Submission if validation FAILED */
+	
+	//				If we get here, Validation succeded
+
+	//				Strips these characters -- 'sp', '+', '-', '(', ')'
+	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
+	let strippedPhone_number = workingPhone_numberModel.value.replace(expStrip, '')
+	//				If a Country code is missing, add '1' (North America)
+	if (strippedPhone_number.length == 10)
+		strippedPhone_number = `1${strippedPhone_number}`
+	//				Add the '+' prefix
+	strippedPhone_number = `+${strippedPhone_number}`
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser();
-	await Auth.updateUserAttributes(newuser, {'phone_number': workingPhone_numberModel.value })
+	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number })
 	await Auth.currentUserInfo().then(result => {
 		phone_numberModel.value = result.attributes.phone_number
 	})
@@ -179,32 +179,32 @@ async function checkPhone_number (workingPhone_number) {
 	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
 	//				If a Country code is missing, add '1' (North America)
 	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}`
+	strippedPhone_number = `1${strippedPhone_number}`
 	//				Check length
 	if (strippedPhone_number.length < 11)
-		return `Incomplete phone number == char count == ${strippedPhone_number.length} == ${strippedPhone_number}`
+	return `Incomplete phone number == char count == ${strippedPhone_number.length} == ${strippedPhone_number}`
 	//				Check for alpha characters
 	let expAtoZ = /[A-Za-z]/
 	let match = strippedPhone_number.match(expAtoZ)
 	if (match !== null)
-		return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number}`
+	return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number}`
 	//				Check for special characters
 	let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
 	let match2 = strippedPhone_number.match(expSpecChar)
 	if (match2 !== null)
 		return `Special characters are invalid == [${match2}] == ${strippedPhone_number}`
-	//				If we get here, the phone number passed all validation tests
-	return true
-}
-
+		//				If we get here, the phone number passed all validation tests
+		return true
+	}
+	
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const InvalidCounteryCodes = {
-	 7 : "Russia ",
-	 53 : "Cuba" ,
-	 591 : "Bolivia" ,
+	7 : "Russia ",
+	53 : "Cuba" ,
+	591 : "Bolivia" ,
 }
 const countryCodeMap = new Map(Object.entries(InvalidCounteryCodes))
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	//				Strips these characters
 	//				'sp', '+', '-', '(', ')'
@@ -212,7 +212,7 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
 	//				If a Country code is missing, add '1' (North America)
 	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}`
+	strippedPhone_number = `1${strippedPhone_number}`
 	// 			Compare each value in the InvalidCounteryCodes array to the strippedPhone_number
 	let validationMessage:any = true
 	//				The copuntryCodeMap is based on a KVP object InvalidCountryCodes
@@ -227,7 +227,22 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	}
 	return validationMessage
 }
+	
 
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitNickname(event) {
+		const results = await event
+		if(!results.valid) return
+		//				This will return the user in the user pool (not updated )
+		const newuser = await Auth.currentAuthenticatedUser();
+		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
+		await Auth.currentUserInfo().then(result => {
+			nicknameModel.value = result.attributes.nickname
+		})
+}
+	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkReservedNickname (workingNickname) {
 	if (workingNickname === 'kevin') {
@@ -295,15 +310,11 @@ let areParamsEmpty = function() {
 	// 			IF no match: return undefined ELSE return string
 	return typeof o !== undefined
 }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 let areModelsEmpty = function(){
 	return nicknameModel.value?.length === 0 ||
 	emailModel.value?.length === 0 ||
 	phone_numberModel.value?.length === 0
 }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getSession(){
 	if(areParamsEmpty() || areModelsEmpty()) {
 		//				Check to see if there is an active session.

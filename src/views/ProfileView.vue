@@ -119,7 +119,7 @@ import {
 	info, infor, infog, infob, infoy, infoo, infop, infom,
 	info1, info2, info3, info4, info5, info6, info7,
 	log, warn, err, progress, joy, enter, exit,
-	success, bar, whitebar, fini, start, pass, fail, err2
+	success, bar, whitebar, greybar, fini, start, pass, fail, err2, pause, resume
 } from "../my-util-code/MyConsoleUtil"
 
 import { toRefs, ref, } from 'vue'
@@ -146,54 +146,64 @@ const workingPhone_numberModel = ref("")
 const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberModel.value }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const stripPhone_numberFmt = (phone_numberArg) => {
+	//				Cast the input Arg to the proper type.
+	let phone_numberStr:String = typeof phone_numberArg === "object" ? phone_numberArg.value : phone_numberArg
+	if (typeof phone_numberStr !== "string" )	throw new Error('Parameter is unexpected type!')
+
+	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
+	let strippedPhone_numberStr = phone_numberStr.replace(expStrip, '')
+	//				If a Country code is missing, add '1' (North America)
+	if (strippedPhone_numberStr.length == 10)
+		strippedPhone_numberStr = `1${strippedPhone_numberStr}`
+	//				Return a reference
+	return ref(strippedPhone_numberStr)
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPhone_number(event) {
-	bar()
 	const results = await event
-	if(!results.valid)
-		return /* Cancel Submission if validation FAILED */
-	
+	if(!results.valid) 
+		// 		Cancel Submission if validation FAILED
+		return
+
+	////
 	//				If we get here, Validation succeded
 
 	//				Strips these characters -- 'sp', '+', '-', '(', ')'
-	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
-	let strippedPhone_number = workingPhone_numberModel.value.replace(expStrip, '')
 	//				If a Country code is missing, add '1' (North America)
-	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}`
+	const strippedPhone_number = stripPhone_numberFmt(workingPhone_numberModel)
 	//				Add the '+' prefix
-	strippedPhone_number = `+${strippedPhone_number}`
+	strippedPhone_number.value = `+${strippedPhone_number.value}`
+
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser();
-	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number })
+	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number.value })
 	await Auth.currentUserInfo().then(result => {
 		phone_numberModel.value = result.attributes.phone_number
 	})
-	fini("submitPhone_number()")
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkPhone_number (workingPhone_number) {
-	//				Strips these characters
-	//				'sp', '+', '-', '(', ')'
-	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
-	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
+	//				Strips these characters -- 'sp', '+', '-', '(', ')'
 	//				If a Country code is missing, add '1' (North America)
-	if (strippedPhone_number.length == 10)
-	strippedPhone_number = `1${strippedPhone_number}`
+	let strippedPhone_number = stripPhone_numberFmt(workingPhone_number)
 	//				Check length
-	if (strippedPhone_number.length < 11)
-	return `Incomplete phone number == char count == ${strippedPhone_number.length} == ${strippedPhone_number}`
+	if (strippedPhone_number.value.length < 11)
+	return `Incomplete phone number == char count == ${strippedPhone_number.value.length} == ${strippedPhone_number.value}`
 	//				Check for alpha characters
 	let expAtoZ = /[A-Za-z]/
-	let match = strippedPhone_number.match(expAtoZ)
-	if (match !== null)
-	return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number}`
+	let match = strippedPhone_number.value.match(expAtoZ)
+	if (match !== null )
+	return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number.value}`
+		
 	//				Check for special characters
 	let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
-	let match2 = strippedPhone_number.match(expSpecChar)
+	let match2 = strippedPhone_number.value.match(expSpecChar)
 	if (match2 !== null)
-		return `Special characters are invalid == [${match2}] == ${strippedPhone_number}`
-		//				If we get here, the phone number passed all validation tests
+		return `Special characters are invalid == [${match2}] == ${strippedPhone_number.value}`
+		//			If we get here, the phone number passed all validation tests
 		return true
 	}
 	
@@ -202,24 +212,21 @@ const InvalidCounteryCodes = {
 	7 : "Russia ",
 	53 : "Cuba" ,
 	591 : "Bolivia" ,
+	999 : "Unknown",
+	0 : "Unknown"
 }
 const countryCodeMap = new Map(Object.entries(InvalidCounteryCodes))
-
-async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
-	//				Strips these characters
-	//				'sp', '+', '-', '(', ')'
-	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
-	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
+async function checkPhone_numberInvalidCountryCode (workingPhone_number) {							
+	//				Strips these characters -- 'sp', '+', '-', '(', ')'
 	//				If a Country code is missing, add '1' (North America)
-	if (strippedPhone_number.length == 10)
-	strippedPhone_number = `1${strippedPhone_number}`
+	const strippedPhone_number = stripPhone_numberFmt(workingPhone_number)
 	// 			Compare each value in the InvalidCounteryCodes array to the strippedPhone_number
 	let validationMessage:any = true
 	//				The copuntryCodeMap is based on a KVP object InvalidCountryCodes
 	for (const [key,value] of countryCodeMap)
 	{
 		const rx = new RegExp(`^${key}`, "g")
-		const match = strippedPhone_number.match(rx)
+		const match = strippedPhone_number.value.match(rx)
 		if (match !== null) {
 			validationMessage = `Invalid Country Code: ${key} [ ${value} ]`
 			break
@@ -228,9 +235,6 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	return validationMessage
 }
 	
-
-
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
 		const results = await event

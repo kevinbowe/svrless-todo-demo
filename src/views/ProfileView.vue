@@ -5,7 +5,7 @@
 				<h1 class="text-primary">Profile Page Content.</h1>
 
 				<v-row v-if="route === 'authenticated'">
-					
+
 					<v-spacer/>
 					<v-col cols="8">
 						<v-divider :thickness="10" __class="ma-2"></v-divider>
@@ -18,7 +18,7 @@
 									value => checkReservedNickname(value),
 									value => checkShortNickname(value),
 									value => checkFirstChar(value),
-									value => checkSpecialChars(value)]" 
+									value => checkSpecialChars(value)]"
 									label="Nickname (optional)" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel"   />
 							</v-row>
 							<v-row class="justify-end">
@@ -37,12 +37,10 @@
 							<v-row>
 								<v-text-field :rules="[
 										value => checkPhone_number(value),
-										value => checkPhone_numberInvalidCountryCode(value), /* Winner */
-										// value => checkPhone_numberInvalidCountryCode__WORKS(value),
-										// value => checkPhone_numberInvalidCountryCode__WORKS2(value),
-									]" 
-									label="Phone number (optional)" hint="Example: 1 (919) 333-4444" 
-									variant="outlined" density="compact" 
+										value => checkPhone_numberInvalidCountryCode(value),
+									]"
+									label="Phone number (optional)" hint="Example: 1 (919) 333-4444"
+									variant="outlined" density="compact"
 									v-model="workingPhone_numberModel"
 								></v-text-field>
 							</v-row>
@@ -72,7 +70,7 @@
 							</v-col>
 
 							<v-divider vertical :thickness="3" class="my-2" />
-							
+
 							<v-col cols="4" style="text-align:start;">
 								<p>{{ nicknameModel }}</p>
 								<p>{{ emailModel }}</p>
@@ -84,7 +82,7 @@
 						<v-divider :thickness="10" class="ma-2"></v-divider>
 
 						<h4>Hello {{ nicknameModel }} !</h4>
-						
+
 					</v-col>
 					<v-spacer/>
 				</v-row>
@@ -98,7 +96,7 @@
 				</v-row>
 
 				<!-- Desktop -->
-				<v-row align="center" class="d-none d-sm-flex" style="height: 50em;"  
+				<v-row align="center" class="d-none d-sm-flex" style="height: 50em;"
 						v-if="route !== 'authenticated'" >
 					<v-col>
 						<Authenticator>
@@ -150,194 +148,55 @@ const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberM
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
-	
 	const results = await event
 	if(!results.valid) return
-	
-	// This will return the user in the user pool (not updated )
+	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser();
 	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 	await Auth.currentUserInfo().then(result => {
 		nicknameModel.value = result.attributes.nickname
-	}) // END_THEN
-	
-}	
+	})
+}
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPhone_number(event) {
 	start("submitPhone_number()")
-		
 	const results = await event
 	if(!results.valid) return
-	
-	// This will return the user in the user pool (not updated )
+	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser();
 	await Auth.updateUserAttributes(newuser, {'phone_number': workingPhone_numberModel.value })
 	await Auth.currentUserInfo().then(result => {
 		phone_numberModel.value = result.attributes.phone_number
-	}) // END_THEN
-
+	})
 	fini("submitPhone_number()")
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function phoneTester () {
-// Define regexp that strips ALL special characters.
-
-	let phoneArrayStrip = [
-	"+1 (000) 100-4444",
-	"+1 000 100-4444",
-	"+1 (000) 100 4444",
-	"+1 000 100 4444",
-	" 1 (000) 100-4444",
-	" 1 000 100-4444",
-	" 1 (000) 100 4444",
-	"1 000 100 4444",
-
-	"+7 (000) 100-4444",
-	"+7 000 100-4444",
-	"+7 (000) 100 4444",
-	"+7 000 100 4444",
-	" 7 (000) 100-4444",
-	" 7 000 100-4444",
-	" 7 (000) 100 4444",
-	" 7 000 100 4444",
-
-	"+52 (000) 100-4444",
-	"+52 000 100-4444",
-	"+52 (000) 100 4444",
-	"+52 000 100 4444",
-	" 52 (000) 100-4444",
-	" 52 000 100-4444",
-	" 52 (000) 100 4444",
-	" 52 000 100 4444",
-
-	"+502 (000) 100-4444",
-	"+502 000 100-4444",
-	"+502 (000) 100 4444",
-	"+502 000 100 4444",
-	" 502 (000) 100-4444",
-	" 502 000 100-4444",
-	" 502 (000) 100 4444",
-	" 502 000 100 4444",
-	]
-	//				Strips these characters
-	//				'sp', '+', '-', '(', ')'
-	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
-	// phoneArrayStrip.forEach(e => {
-	// 	bar()
-	// 	info("Input ------------> ",e)
-	// 	info("Replace Results --> ", e.replace(expStrip, ''))
-	// });
-
-	let phoneArrayAlpha = [
-		"10001004444",
-		"1AAA1004444",
-		"1zzz1004444",
-
-		"520001004444",
-		"52AAA1004444",
-		"52zzz1004444",
-		
-		"5020001004444",
-		"502AAA1004444",
-		"502zzz1004444",
-	]
-	//				Trap all Alpha chars
-	let expAtoZ = /[A-Za-z]/
-	// phoneArrayAlpha.forEach(e => {
-	// 	bar()
-	// 	info("Input ------------> ",e)
-	// 	let match = e.match(expAtoZ)
-	// 	if(match === null)
-	// 		info("Match Results --> ", match)
-	// 	else info("Match Results --> ", match[0])
-	// });
-
-	let phoneArraySpecChar = [
-		"10001004444",
-		"520001004444",
-		"5020001004444",
-
-		"1!001004444",
-		"52@001004444",
-		"502#001004444",
-
-		"1000$004444",
-		"52000%004444",
-		"502000\\004444",
-
-		"1000100^4444",
-		"52000100&444",
-		"502000100*444",
-
-		"1000100444(",
-		"52000100444)",
-		"502000100444{",
-
-		"1}001004444",
-		"52[001004444",
-		"502]001004444",
-
-		"1000<004444",
-		"52000>104444",
-		"502000?004444",
-
-		"1000100/444",
-		"52000100|444",
-	]
-	// //				Trap all Alpha chars
-	// let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
-	// phoneArraySpecChar.forEach(e => {
-	// 	bar()
-	// 	info("Input ------------> ",e)
-	// 	let match = e.match(expSpecChar)
-	// 	if(match === null)
-	// 		info("Match Results --> ", match)
-	// 	else info("Match Results --> ", match[0])
-	// });
-
-	return 'Temporary -- Phone number validation FAILED'
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkPhone_number (workingPhone_number) {
-
 	//				Strips these characters
 	//				'sp', '+', '-', '(', ')'
 	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
 	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
-
 	//				If a Country code is missing, add '1' (North America)
 	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}` 
-
+		strippedPhone_number = `1${strippedPhone_number}`
 	//				Check length
 	if (strippedPhone_number.length < 11)
 		return `Incomplete phone number == char count == ${strippedPhone_number.length} == ${strippedPhone_number}`
-
 	//				Check for alpha characters
 	let expAtoZ = /[A-Za-z]/
 	let match = strippedPhone_number.match(expAtoZ)
 	if (match !== null)
 		return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number}`
-	
 	//				Check for special characters
 	let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
 	let match2 = strippedPhone_number.match(expSpecChar)
 	if (match2 !== null)
 		return `Special characters are invalid == [${match2}] == ${strippedPhone_number}`
-
-	// if (true) {
-	// 	return `Validation passed -- strippedPhone_number == ${strippedPhone_number}`
-	// }
+	//				If we get here, the phone number passed all validation tests
 	return true
 }
 
-// const InvalidCounteryCodes2__OBS = [
-// 	{ "code" : "7",   "name" : "Russia "},
-// 	{ "code" : "53",  "name" : "Cuba" },
-// 	{ "code" : "591", "name" : "Bolivia" },
-// ]
 const InvalidCounteryCodes = {
 	 7 : "Russia ",
 	 53 : "Cuba" ,
@@ -351,16 +210,15 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	//				'sp', '+', '-', '(', ')'
 	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
 	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
-
 	//				If a Country code is missing, add '1' (North America)
 	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}` 
+		strippedPhone_number = `1${strippedPhone_number}`
 	// 			Compare each value in the InvalidCounteryCodes array to the strippedPhone_number
 	let validationMessage:any = true
 	//				The copuntryCodeMap is based on a KVP object InvalidCountryCodes
 	for (const [key,value] of countryCodeMap)
 	{
-		const rx = new RegExp(`^${key}`, "g")	
+		const rx = new RegExp(`^${key}`, "g")
 		const match = strippedPhone_number.match(rx)
 		if (match !== null) {
 			validationMessage = `Invalid Country Code: ${key} [ ${value} ]`
@@ -371,114 +229,52 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function checkPhone_numberInvalidCountryCode__OBS (workingPhone_number) {
-	//				Strips these characters
-	//				'sp', '+', '-', '(', ')'
-	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
-	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
-
-	//				If a Country code is missing, add '1' (North America)
-	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}` 
-
-	// 			Compare each value in the InvalidCounteryCodes array to the strippedPhone_number
-	//				InvalidCountryCodes are key/value pairs
-	let map =  new Map(Object.entries(InvalidCounteryCodes))
-	let results:any = true
-	map.forEach((value, key) => {
-		
-					// This is going to iterate through EVERY key/value.
-					//	The message can be constructed imeadiatly
-					info(`KEY: ${key} VAL:${value}`)
-
-		let rx = new RegExp(`^${key}`, "g")	
-		let match = strippedPhone_number.match(rx)
-		if (match !== null) {
-			results = `Invalid Country Code: ${key} [ ${value} ]`
-		}
-	})
-	return results
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function checkPhone_numberInvalidCountryCode__OBS2 (workingPhone_number) {
-	
-	//				Strips these characters
-	//				'sp', '+', '-', '(', ')'
-	let rxStrip = /\+|\s+|\-|\(|\)|\+1/g
-	let strippedPhone_number = workingPhone_number.replace(rxStrip, '')
-
-	//				If a Country code is missing, add '1' (North America)
-	if (strippedPhone_number.length == 10)
-		strippedPhone_number = `1${strippedPhone_number}` 
-	//				InvalidCountryCodes2 are named key/named value pairs
-	//				This isn't as good. -- Kind of clunky
-	let result = InvalidCounteryCodes2.find(e => {
-
-					// This will stop iterating when there is a match. <verified>
-					// The message is generated from the returned results.
-					info(`CODE: ${e.code} NAME:${e.name}`)
-
-		let rx = new RegExp(`^${e.code}`, "g")
-		return strippedPhone_number.match(rx)
-	})
-					whitebar()
-					info2("typeof result", typeof result)
-					info(`result == code: ${result?.code} - name: ${result?.name}`)
-
-	if(result === undefined) return true
-	return `Invalid Country Code [${result?.code}] : ${result?.name} `
-
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkReservedNickname (workingNickname) {
-		if (workingNickname === 'kevin') {
-			return 'User nickname reserved. Please try another one.'
-		}
-		return true
+	if (workingNickname === 'kevin') {
+		return 'User nickname reserved. Please try another one.'
+	}
+	return true
 }
 async function checkShortNickname (workingNickname) {
-		if (workingNickname.length > 0 && workingNickname.length <= 3) {
-			return 'User nickname is too short. Please try another one.'
-		}
-		return true
+	if (workingNickname.length > 0 && workingNickname.length <= 3) {
+		return 'User nickname is too short. Please try another one.'
+	}
+	return true
 }
 async function checkFirstChar (workingNickname) {
-		if (!isNaN(workingNickname[0])) {
-			return 'User nickname can not begin with a Number. Please try another one.'
-		}
-		return true
+	if (!isNaN(workingNickname[0])) {
+		return 'User nickname can not begin with a Number. Please try another one.'
+	}
+	return true
 }
 async function checkSpecialChars (workingNickname) {
-		const re = /[!@#$%\^&*(){}[\]<>?/|]/
-		const match = workingNickname.match(re)
-		// Check the format
-		if(match) {
-			return 'User nickname can not contain special characters. Please try another one.'
-		}
-		return true
+	const re = /[!@#$%\^&*(){}[\]<>?/|]/
+	const match = workingNickname.match(re)
+	// 			Check the format
+	if(match) {
+		return 'User nickname can not contain special characters. Please try another one.'
+	}
+	return true
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
-	// enter("PROFILE -- Hub.listen")
 	switch(data.payload.event) {
 		case "signUp" :
 			enter("Hub.listen: auto Sign In")
 			exit("Hub.listen: auto Sign In")
 			return
-			
+
 		case "confirmSignUp" :
 			enter("Hub.listen: confirm Sign Up")
 			exit("Hub.listen: confirm Sign Up")
 			return
-				
+
 		case "autoSignIn" :
 			enter("Hub.listen: auto Sign In")
 			exit("Hub.listen: auto Sign In")
 			return
-					
+
 		case "signIn" :
 			enter("Hub.listen: signIn")
 			getSession()
@@ -489,20 +285,14 @@ Hub.listen('auth', (data) => {
 			enter("Hub.listen: sign Out")
 			exit("Hub.listen: sign Out")
 			return
-	} // END_SWITCH
-	// exit("PROFILE -- Hub.listen")					
+	} // 			END_SWITCH
 })
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-bar()
-// start("ProfileView.vue <script setup>")
-					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 let areParamsEmpty = function() {
 	let v = Object.values(props)
 	let o = v.find(e => e.length === 0)
-	// IF no match: return undefined ELSE return string
-	// info("typeof Find Results", typeof o)
+	// 			IF no match: return undefined ELSE return string
 	return typeof o !== undefined
 }
 
@@ -515,13 +305,7 @@ let areModelsEmpty = function(){
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getSession(){
-
-	// info3("areParamsEmpty ()", areParamsEmpty())
-	// info3("areModelsEmpty ()", areModelsEmpty())
-
 	if(areParamsEmpty() || areModelsEmpty()) {
-		// info("Params or Models are empty")
-
 		//				Check to see if there is an active session.
 		let session = await Auth.currentAuthenticatedUser({bypassCache: false})
 		.then((user) => {
@@ -529,23 +313,20 @@ async function getSession(){
 			phone_numberModel.value =  user.attributes?.phone_number
 			nicknameModel.value = user.attributes?.nickname
 		})
-		.catch((error) => { 
-			// info("No Session User -->",error)
+		.catch((error) => {
 			//				If I get here, there is no session or params
 			//				I need to signIn.
 		})
 	}
 	else {
-		// info2("Params and Models exist")
 		//				If we get here, the params and models exist.
 		//				We don't need to sign in.
 	}
-} // END_getSession()_DECL
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-getSession()	
+getSession()
 
-// fini("ProfileView.vue <script setup>")
 </script>
 
 <style>
@@ -555,21 +336,21 @@ getSession()
 	.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
 	.amplify-tabs-item:focus { color: rgb(var(--v-theme-primary)); }
 	.amplify-tabs-item:hover { color: rgb(var(--v-theme-primary)); }
-	.amplify-tabs-item[data-state=inactive] { 
-		color: rgb(var(--v-theme-primary)); 
+	.amplify-tabs-item[data-state=inactive] {
+		color: rgb(var(--v-theme-primary));
 		border-color: rgb(var(--v-theme-primary));
 		background-color: #E0E0E0;
 		/* border-bottom-width: 5px; */
 	}
 
 	/* Apply styling to Authenticator so that is is consistent with the rest of the site. */
-	.amplify-tabs-item[data-state=active] { 
-		color: rgb(var(--v-theme-primary)); 
+	.amplify-tabs-item[data-state=active] {
+		color: rgb(var(--v-theme-primary));
 		border-color: rgb(var(--v-theme-primary));
 		border-top-width: 5px;
 		/* border-right-width: 5px; ; */
 	}
-	/* 
+	/*
 	.amplify-alert--error {
 			color: black;
 			background-color: rgb(var(--v-theme-error));
@@ -581,5 +362,5 @@ getSession()
 
 	/* Prevent the SignUp tab from displaying */
 	.amplify-tabs { display: none; }
-	
+
 </style>

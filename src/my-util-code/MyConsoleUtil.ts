@@ -64,13 +64,15 @@ export const exit =    	(msg: string, value: any = "") => { console.log(`%c<--<<
 export const success = 	(msg: string, value: any = "") => { console.log(`%c${msg}`, "color: green; background-color:black;", value) }
 
 export const bar =		(msg: string = "", value: any = "") => { console.log(`%c                                 ${msg}`, "color: white; background-color:black;", value) }
-
+export const greybar = (msg: string = "", value: any = "") => { console.log(`      %c                                 %c ${msg}`, "color: black; background-color:dimgrey;", value) }
 export const whitebar = (msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) }
 
 
 export const whitebar_SAFE = ((msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) })
 
 export const start =    (msg: string, value: any = "") => { console.log(`%c--> START - ${msg}`, "color: yellow;", value) }
-
 export const fini =    	(msg: string, value: any = "") => { console.log(`%c<-- FINI - ${msg}`, "color: magenta;", value) }
 
+
+export const pause =    (msg: string, value: any = "") =>    { console.log(`%c      --> PAUSE -- ${msg}`, "color: yellow;", value) }
+export const resume =    	(msg: string, value: any = "") => { console.log(`%c      <-- RESUME - ${msg}`, "color: magenta;", value) }

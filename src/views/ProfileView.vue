@@ -28,10 +28,23 @@
 						</v-form>
 
 						<!-- Phone Number -->
+						<p class="mt-5">+1 (919) 272-7866</p>
+						1 000 111 0000<br>
+						7 000 111 0000<br>
+						53 000 111 0000<br>
+						591 000 111 0000<br>
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitPhone_number" >
 							<v-row>
-								<v-text-field :rules="[]" 
-									label="Phone number (optional)" hint="Example: 1 (919) 333-4444" variant="outlined" density="compact" v-model="workingPhone_numberModel"   />
+								<v-text-field :rules="[
+										value => checkPhone_number(value),
+										value => checkPhone_numberInvalidCountryCode(value), /* Winner */
+										// value => checkPhone_numberInvalidCountryCode__WORKS(value),
+										// value => checkPhone_numberInvalidCountryCode__WORKS2(value),
+									]" 
+									label="Phone number (optional)" hint="Example: 1 (919) 333-4444" 
+									variant="outlined" density="compact" 
+									v-model="workingPhone_numberModel"
+								></v-text-field>
 							</v-row>
 							<v-row class="justify-end">
 								<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetPhone_number"> Cancel </v-btn>
@@ -135,7 +148,6 @@ const workingPhone_numberModel = ref("")
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberModel.value }
 
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
 	
@@ -150,10 +162,10 @@ async function submitNickname(event) {
 	}) // END_THEN
 	
 }	
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPhone_number(event) {
-	
+	start("submitPhone_number()")
+		
 	const results = await event
 	if(!results.valid) return
 	
@@ -163,9 +175,261 @@ async function submitPhone_number(event) {
 	await Auth.currentUserInfo().then(result => {
 		phone_numberModel.value = result.attributes.phone_number
 	}) // END_THEN
-	
+
+	fini("submitPhone_number()")
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function phoneTester () {
+// Define regexp that strips ALL special characters.
+
+	let phoneArrayStrip = [
+	"+1 (000) 100-4444",
+	"+1 000 100-4444",
+	"+1 (000) 100 4444",
+	"+1 000 100 4444",
+	" 1 (000) 100-4444",
+	" 1 000 100-4444",
+	" 1 (000) 100 4444",
+	"1 000 100 4444",
+
+	"+7 (000) 100-4444",
+	"+7 000 100-4444",
+	"+7 (000) 100 4444",
+	"+7 000 100 4444",
+	" 7 (000) 100-4444",
+	" 7 000 100-4444",
+	" 7 (000) 100 4444",
+	" 7 000 100 4444",
+
+	"+52 (000) 100-4444",
+	"+52 000 100-4444",
+	"+52 (000) 100 4444",
+	"+52 000 100 4444",
+	" 52 (000) 100-4444",
+	" 52 000 100-4444",
+	" 52 (000) 100 4444",
+	" 52 000 100 4444",
+
+	"+502 (000) 100-4444",
+	"+502 000 100-4444",
+	"+502 (000) 100 4444",
+	"+502 000 100 4444",
+	" 502 (000) 100-4444",
+	" 502 000 100-4444",
+	" 502 (000) 100 4444",
+	" 502 000 100 4444",
+	]
+	//				Strips these characters
+	//				'sp', '+', '-', '(', ')'
+	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
+	// phoneArrayStrip.forEach(e => {
+	// 	bar()
+	// 	info("Input ------------> ",e)
+	// 	info("Replace Results --> ", e.replace(expStrip, ''))
+	// });
+
+	let phoneArrayAlpha = [
+		"10001004444",
+		"1AAA1004444",
+		"1zzz1004444",
+
+		"520001004444",
+		"52AAA1004444",
+		"52zzz1004444",
+		
+		"5020001004444",
+		"502AAA1004444",
+		"502zzz1004444",
+	]
+	//				Trap all Alpha chars
+	let expAtoZ = /[A-Za-z]/
+	// phoneArrayAlpha.forEach(e => {
+	// 	bar()
+	// 	info("Input ------------> ",e)
+	// 	let match = e.match(expAtoZ)
+	// 	if(match === null)
+	// 		info("Match Results --> ", match)
+	// 	else info("Match Results --> ", match[0])
+	// });
+
+	let phoneArraySpecChar = [
+		"10001004444",
+		"520001004444",
+		"5020001004444",
+
+		"1!001004444",
+		"52@001004444",
+		"502#001004444",
+
+		"1000$004444",
+		"52000%004444",
+		"502000\\004444",
+
+		"1000100^4444",
+		"52000100&444",
+		"502000100*444",
+
+		"1000100444(",
+		"52000100444)",
+		"502000100444{",
+
+		"1}001004444",
+		"52[001004444",
+		"502]001004444",
+
+		"1000<004444",
+		"52000>104444",
+		"502000?004444",
+
+		"1000100/444",
+		"52000100|444",
+	]
+	// //				Trap all Alpha chars
+	// let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
+	// phoneArraySpecChar.forEach(e => {
+	// 	bar()
+	// 	info("Input ------------> ",e)
+	// 	let match = e.match(expSpecChar)
+	// 	if(match === null)
+	// 		info("Match Results --> ", match)
+	// 	else info("Match Results --> ", match[0])
+	// });
+
+	return 'Temporary -- Phone number validation FAILED'
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function checkPhone_number (workingPhone_number) {
+
+	//				Strips these characters
+	//				'sp', '+', '-', '(', ')'
+	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
+	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
+
+	//				If a Country code is missing, add '1' (North America)
+	if (strippedPhone_number.length == 10)
+		strippedPhone_number = `1${strippedPhone_number}` 
+
+	//				Check length
+	if (strippedPhone_number.length < 11)
+		return `Incomplete phone number == char count == ${strippedPhone_number.length} == ${strippedPhone_number}`
+
+	//				Check for alpha characters
+	let expAtoZ = /[A-Za-z]/
+	let match = strippedPhone_number.match(expAtoZ)
+	if (match !== null)
+		return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number}`
+	
+	//				Check for special characters
+	let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
+	let match2 = strippedPhone_number.match(expSpecChar)
+	if (match2 !== null)
+		return `Special characters are invalid == [${match2}] == ${strippedPhone_number}`
+
+	// if (true) {
+	// 	return `Validation passed -- strippedPhone_number == ${strippedPhone_number}`
+	// }
+	return true
+}
+
+// const InvalidCounteryCodes2__OBS = [
+// 	{ "code" : "7",   "name" : "Russia "},
+// 	{ "code" : "53",  "name" : "Cuba" },
+// 	{ "code" : "591", "name" : "Bolivia" },
+// ]
+const InvalidCounteryCodes = {
+	 7 : "Russia ",
+	 53 : "Cuba" ,
+	 591 : "Bolivia" ,
+}
+const countryCodeMap = new Map(Object.entries(InvalidCounteryCodes))
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
+	//				Strips these characters
+	//				'sp', '+', '-', '(', ')'
+	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
+	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
+
+	//				If a Country code is missing, add '1' (North America)
+	if (strippedPhone_number.length == 10)
+		strippedPhone_number = `1${strippedPhone_number}` 
+	// 			Compare each value in the InvalidCounteryCodes array to the strippedPhone_number
+	let validationMessage:any = true
+	//				The copuntryCodeMap is based on a KVP object InvalidCountryCodes
+	for (const [key,value] of countryCodeMap)
+	{
+		const rx = new RegExp(`^${key}`, "g")	
+		const match = strippedPhone_number.match(rx)
+		if (match !== null) {
+			validationMessage = `Invalid Country Code: ${key} [ ${value} ]`
+			break
+		}
+	}
+	return validationMessage
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function checkPhone_numberInvalidCountryCode__OBS (workingPhone_number) {
+	//				Strips these characters
+	//				'sp', '+', '-', '(', ')'
+	let expStrip = /\+|\s+|\-|\(|\)|\+1/g
+	let strippedPhone_number = workingPhone_number.replace(expStrip, '')
+
+	//				If a Country code is missing, add '1' (North America)
+	if (strippedPhone_number.length == 10)
+		strippedPhone_number = `1${strippedPhone_number}` 
+
+	// 			Compare each value in the InvalidCounteryCodes array to the strippedPhone_number
+	//				InvalidCountryCodes are key/value pairs
+	let map =  new Map(Object.entries(InvalidCounteryCodes))
+	let results:any = true
+	map.forEach((value, key) => {
+		
+					// This is going to iterate through EVERY key/value.
+					//	The message can be constructed imeadiatly
+					info(`KEY: ${key} VAL:${value}`)
+
+		let rx = new RegExp(`^${key}`, "g")	
+		let match = strippedPhone_number.match(rx)
+		if (match !== null) {
+			results = `Invalid Country Code: ${key} [ ${value} ]`
+		}
+	})
+	return results
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function checkPhone_numberInvalidCountryCode__OBS2 (workingPhone_number) {
+	
+	//				Strips these characters
+	//				'sp', '+', '-', '(', ')'
+	let rxStrip = /\+|\s+|\-|\(|\)|\+1/g
+	let strippedPhone_number = workingPhone_number.replace(rxStrip, '')
+
+	//				If a Country code is missing, add '1' (North America)
+	if (strippedPhone_number.length == 10)
+		strippedPhone_number = `1${strippedPhone_number}` 
+	//				InvalidCountryCodes2 are named key/named value pairs
+	//				This isn't as good. -- Kind of clunky
+	let result = InvalidCounteryCodes2.find(e => {
+
+					// This will stop iterating when there is a match. <verified>
+					// The message is generated from the returned results.
+					info(`CODE: ${e.code} NAME:${e.name}`)
+
+		let rx = new RegExp(`^${e.code}`, "g")
+		return strippedPhone_number.match(rx)
+	})
+					whitebar()
+					info2("typeof result", typeof result)
+					info(`result == code: ${result?.code} - name: ${result?.name}`)
+
+	if(result === undefined) return true
+	return `Invalid Country Code [${result?.code}] : ${result?.name} `
+
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkReservedNickname (workingNickname) {
@@ -195,7 +459,6 @@ async function checkSpecialChars (workingNickname) {
 		}
 		return true
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
@@ -232,7 +495,7 @@ Hub.listen('auth', (data) => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 bar()
-start("ProfileView.vue <script setup>")
+// start("ProfileView.vue <script setup>")
 					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 let areParamsEmpty = function() {
@@ -253,11 +516,11 @@ let areModelsEmpty = function(){
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getSession(){
 
-	info3("areParamsEmpty ()", areParamsEmpty())
-	info3("areModelsEmpty ()", areModelsEmpty())
+	// info3("areParamsEmpty ()", areParamsEmpty())
+	// info3("areModelsEmpty ()", areModelsEmpty())
 
 	if(areParamsEmpty() || areModelsEmpty()) {
-		info("Params or Models are empty")
+		// info("Params or Models are empty")
 
 		//				Check to see if there is an active session.
 		let session = await Auth.currentAuthenticatedUser({bypassCache: false})
@@ -267,13 +530,13 @@ async function getSession(){
 			nicknameModel.value = user.attributes?.nickname
 		})
 		.catch((error) => { 
-			info("No Session User -->",error)
+			// info("No Session User -->",error)
 			//				If I get here, there is no session or params
 			//				I need to signIn.
 		})
 	}
 	else {
-		info2("Params and Models exist")
+		// info2("Params and Models exist")
 		//				If we get here, the params and models exist.
 		//				We don't need to sign in.
 	}
@@ -282,7 +545,7 @@ async function getSession(){
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 getSession()	
 
-fini("ProfileView.vue <script setup>")
+// fini("ProfileView.vue <script setup>")
 </script>
 
 <style>

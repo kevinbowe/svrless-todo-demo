@@ -2,6 +2,7 @@
 	<v-app>
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
+			{{ route }}
 			<hr class="mb-10">
 
 			<v-row justify="center">

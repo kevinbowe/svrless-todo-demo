@@ -4,6 +4,8 @@
 			<v-container class="text-center">
 				<h1 class="text-primary">Profile Page Content.</h1>
 
+				{{ route }}
+
 				<v-row v-if="route === 'authenticated'">
 
 					<v-spacer/>
@@ -12,7 +14,7 @@
 
 						<!-- START Forms -->
 						<!-- Nickname -->
-						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
+						<!-- <v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
 							<v-row>
 								<v-text-field :rules="[
 									value => checkReservedNickname(value),
@@ -25,15 +27,26 @@
 								<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetNickname"> Cancel </v-btn>
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 							</v-row>
-						</v-form>
+						</v-form> -->
 
 						<!-- Phone Number -->
-						<p class="mt-5">+1 (919) 272-7866</p>
-						1 000 111 0000<br>
-						7 000 111 0000<br>
-						53 000 111 0000<br>
-						591 000 111 0000<br>
-						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitPhone_number" >
+						<!-- <v-row class="mt-5">
+							<v-spacer></v-spacer>
+							<v-col > +1 000 111 0000 </v-col>
+							<v-spacer></v-spacer>
+						</v-row>
+						<v-row style="margin-top:-1.5em;">
+							<v-spacer></v-spacer>
+							<v-col> 1 000 111 0000 </v-col>
+							<v-spacer></v-spacer>
+						</v-row>
+						<v-row style="margin-top:-1.5em;">
+							<v-spacer></v-spacer>
+							<v-col> 000 111 0000 </v-col>
+							<v-spacer></v-spacer>
+						</v-row>
+
+						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitPhone_number" >
 							<v-row>
 								<v-text-field :rules="[
 										value => checkPhone_number(value),
@@ -48,10 +61,40 @@
 								<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetPhone_number"> Cancel </v-btn>
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 							</v-row>
+						</v-form> -->
+						<!-- Email Address -->
+						<v-row class="mt-5">
+							<v-spacer></v-spacer>
+							<v-col cols="5"> kevinbowe1957+__10__@gmail.com </v-col>
+							<v-spacer></v-spacer>
+						</v-row>
+						<v-row style="margin-top:-1.5em;">
+							<v-spacer></v-spacer>
+							<v-col cols="5"> kevinbowe1957+__20__@gmail.com </v-col>
+							<v-spacer></v-spacer>
+						</v-row>
+						<v-row style="margin-top:-1.5em;">
+							<v-spacer></v-spacer>
+							<v-col cols="5"> kevinbowe1957+__30__@gmail.com </v-col>
+							<v-spacer></v-spacer>
+						</v-row>
+						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
+							<v-row>
+								<v-text-field :rules="[
+										value => checkEmail_1(value),
+										value => checkEmail_2(value),
+									]"
+									label="Email (required)" hint="Example: dabowe@gmail.com"
+									variant="outlined" density="compact"
+									v-model="workingEmailModel"
+								></v-text-field>
+							</v-row>
+							<v-row class="justify-end">
+								<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetEmail"> Cancel </v-btn>
+								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
+							</v-row>
 						</v-form>
-
 						<!-- END Forms -->
-
 					</v-col>
 					<v-spacer/>
 				</v-row>
@@ -75,7 +118,6 @@
 								<p>{{ nicknameModel }}</p>
 								<p>{{ emailModel }}</p>
 								<p>{{ phone_numberModel }}</p>
-
 							</v-col>
 						</v-row>
 
@@ -87,22 +129,33 @@
 					<v-spacer/>
 				</v-row>
 
-				<!-- Mobile -->
-				<v-row class="d-sm-none" v-if="route !== 'authenticated'" >
+
+
+				<v-row >
 					<v-col>
-						<Authenticator>
-						</Authenticator>
+						<authenticator>
+							<v-btn v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
+						</authenticator>
 					</v-col>
 				</v-row>
 
-				<!-- Desktop -->
-				<v-row align="center" class="d-none d-sm-flex" style="height: 50em;"
-						v-if="route !== 'authenticated'" >
+
+
+				<!-- Mobile -->
+				<!-- <v-row class="d-sm-none" v-if="route !== 'authenticated'" >
 					<v-col>
 						<Authenticator>
 						</Authenticator>
 					</v-col>
-				</v-row>
+				</v-row> -->
+
+				<!-- Desktop -->
+				<!-- <v-row align="center" class="d-none d-sm-flex" style="height: 50em;">
+					<v-col>
+						<Authenticator>					
+						</Authenticator>
+					</v-col>
+				</v-row> -->
 
 			</v-container>
 		</MasterLayout>
@@ -116,17 +169,21 @@ import { useAuthenticator } from '@aws-amplify/ui-vue';
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 import {
-	info, infor, infog, infob, infoy, infoo, infop, infom,
-	info1, info2, info3, info4, info5, info6, info7,
-	log, warn, err, progress, joy, enter, exit,
-	success, bar, whitebar, greybar, fini, start, pass, fail, err2, pause, resume
+	info, info1, info2, info3, info4, info5, info6, info7,
+	bar, whitebar, greybar,
+	enter, start,
+	progress, pause, resume,
+	fini, exit, joy, pass, success, 
+	warn, 
+	fail, err,  err2, 
+	log, 
 } from "../my-util-code/MyConsoleUtil"
 
 import { toRefs, ref, } from 'vue'
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
 
-const { route, } = toRefs(useAuthenticator());
+const { route, signOut} = toRefs(useAuthenticator());
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const props = defineProps({
@@ -139,13 +196,57 @@ const nicknameModel = ref(props.p1)
 const workingNicknameModel = ref("")
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 
-const emailModel = ref(props.p2)
-
 const phone_numberModel = ref(props.p3)
 const workingPhone_numberModel = ref("")
 const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberModel.value }
 
+const emailModel = ref(props.p2)
+const workingEmailModel = ref("")
+const resetEmail = () => { workingEmailModel.value = emailModel.value }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Email */
+const checkEmail_1 = (emailArg) => {
+	enter("checkEmail_1 ")
+	exit("checkEmail_1 --> pass")
+	// return "Fail Email 1"
+	return true
+}
+const checkEmail_2 = (emailArg) => {
+	enter("checkEmail_2 ")
+	exit("checkEmail_2 --> pass")
+	// return "Fail Email 2"
+	return true
+}
+async function submitEmail(event) {	
+							enter("submitEmail(event)")
+							pause("submitEmail(event)")
+	const results = await event
+							resume("submitEmail(event)")
+
+	if(!results.valid) {
+							fail("Validation -- submitEmail(event)")
+		return /* Cancel Submission if validation FAILED */
+	}
+
+	//
+	//				If we get here, validation was sucessful
+
+	//				This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(newuser, {'email': workingEmailModel.value })
+	await Auth.currentUserInfo().then(result => {
+		emailModel.value = result.attributes.email
+	})
+							exit("submitEmail(event)")
+}
+
+
+
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Phone_number */
 const stripPhone_numberFmt = (phone_numberArg) => {
 	//				Cast the input Arg to the proper type.
 	let phone_numberStr:String = typeof phone_numberArg === "object" ? phone_numberArg.value : phone_numberArg
@@ -163,7 +264,7 @@ const stripPhone_numberFmt = (phone_numberArg) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPhone_number(event) {
 	const results = await event
-	if(!results.valid) 
+	if(!results.valid)
 		// 		Cancel Submission if validation FAILED
 		return
 
@@ -197,7 +298,7 @@ async function checkPhone_number (workingPhone_number) {
 	let match = strippedPhone_number.value.match(expAtoZ)
 	if (match !== null )
 	return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number.value}`
-		
+
 	//				Check for special characters
 	let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
 	let match2 = strippedPhone_number.value.match(expSpecChar)
@@ -206,17 +307,19 @@ async function checkPhone_number (workingPhone_number) {
 		//			If we get here, the phone number passed all validation tests
 		return true
 	}
-	
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const InvalidCounteryCodes = {
 	7 : "Russia ",
 	53 : "Cuba" ,
 	591 : "Bolivia" ,
 	999 : "Unknown",
+	99 : "Unknown",
+	9 : "Unknown",
 	0 : "Unknown"
 }
 const countryCodeMap = new Map(Object.entries(InvalidCounteryCodes))
-async function checkPhone_numberInvalidCountryCode (workingPhone_number) {							
+async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	//				Strips these characters -- 'sp', '+', '-', '(', ')'
 	//				If a Country code is missing, add '1' (North America)
 	const strippedPhone_number = stripPhone_numberFmt(workingPhone_number)
@@ -234,8 +337,9 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	}
 	return validationMessage
 }
-	
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Nickname */
 async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
@@ -246,7 +350,7 @@ async function submitNickname(event) {
 			nicknameModel.value = result.attributes.nickname
 		})
 }
-	
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkReservedNickname (workingNickname) {
 	if (workingNickname === 'kevin') {
@@ -280,34 +384,35 @@ async function checkSpecialChars (workingNickname) {
 Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
 		case "signUp" :
-			enter("Hub.listen: auto Sign In")
-			exit("Hub.listen: auto Sign In")
+			// enter("Hub.listen: auto Sign In")
+			// exit("Hub.listen: auto Sign In")
 			return
 
 		case "confirmSignUp" :
-			enter("Hub.listen: confirm Sign Up")
-			exit("Hub.listen: confirm Sign Up")
+			// enter("Hub.listen: confirm Sign Up")
+			// exit("Hub.listen: confirm Sign Up")
 			return
 
 		case "autoSignIn" :
-			enter("Hub.listen: auto Sign In")
-			exit("Hub.listen: auto Sign In")
+			// enter("Hub.listen: auto Sign In")
+			// exit("Hub.listen: auto Sign In")
 			return
 
 		case "signIn" :
-			enter("Hub.listen: signIn")
+			// enter("Hub.listen: signIn")
 			getSession()
-			exit("Hub.listen: sign In")
+			// exit("Hub.listen: sign In")
 			return
 
 		case "signOut" :
-			enter("Hub.listen: sign Out")
-			exit("Hub.listen: sign Out")
+			// enter("Hub.listen: sign Out")
+			// exit("Hub.listen: sign Out")
 			return
 	} // 			END_SWITCH
 })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* GetSession */
 let areParamsEmpty = function() {
 	let v = Object.values(props)
 	let o = v.find(e => e.length === 0)
@@ -343,7 +448,6 @@ async function getSession(){
 getSession()
 
 </script>
-
 <style>
 	/* Apply styling to Authenticator so that is is consistent with the rest of the site. */
 	.amplify-button--link { color: rgb(var(--v-theme-primary)); }

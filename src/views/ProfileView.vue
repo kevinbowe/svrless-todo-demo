@@ -88,38 +88,30 @@
 								<v-btn :disabled="route !== 'authenticated'" class="" color="surface" size="large" @click="resetEmail"> Cancel </v-btn>
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 							</v-row>
-								
+							
+							<!-- Confirmation -->
 							<v-row justify="center">
-												<v-btn color="success" class="mt-2" @click="overlay = !overlay"> Show Overlay </v-btn>
-
-												<v-overlay class="align-center justify-center" v-model="overlay" >
-													<v-card height="25em" width="30em">
-
-														<!-- Confirmation UI -->
-														<v-col _cols="6">
-															<v-row class="ma-5">
-																<h1>We Emailed You</h1>
-																<p> Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive. </p> 
-															</v-row>
-															<v-row class="justify-center">Confirmation Code</v-row>
-
-															<v-row __style="height:50px;">
-																<v-spacer></v-spacer>
-																<v-col cols="11">
-																	<v-text-field class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">Enter your code</v-text-field></v-col>
-																<v-spacer></v-spacer>
-															</v-row>
-
-															<v-row class="mx-5"> <v-btn block color="primary" class="mb-2"> Confirm </v-btn> </v-row>
-															<v-row class="mx-5" ><v-btn block color="secondary" class="mb-2" _style="margin-top:1.5em;">Resend Code</v-btn></v-row>
-															<v-row class="mx-5"><v-btn block color="success" @click="overlay = false" > Hide Overlay </v-btn></v-row>
-
-														</v-col>
-													</v-card>
-												</v-overlay> 
-
-
-
+								<v-btn color="success" class="mt-2" @click="overlay_DELETE_ME = !overlay_DELETE_ME"> Show Overlay </v-btn>
+								<v-overlay class="align-center justify-center" v-model="overlay_DELETE_ME" >
+									<v-sheet height="25em" width="30em" color="background" elevation="24" >
+										<!-- Confirmation UI -->
+										<v-col _cols="6">
+											<v-row class="ma-5">
+												<h1 class="ma-auto">We Emailed You</h1>
+												<p> Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive. </p> 
+											</v-row>
+											<v-row class="justify-center">Confirmation Code</v-row>
+											<v-row > 
+												<v-spacer></v-spacer>
+												<v-col cols="11"> <v-text-field id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact"> </v-text-field> </v-col>
+												<v-spacer></v-spacer>
+											</v-row>
+											<v-row class="mx-5"> <v-btn block color="primary" class="mb-2"> Confirm </v-btn> </v-row>
+											<v-row class="mx-5" ><v-btn block color="background" class="mb-2" _style="margin-top:1.5em;">Resend Code</v-btn></v-row>
+											<v-row class="mx-5"><v-btn block color="success" @click="overlay_DELETE_ME = false" > Hide Overlay </v-btn></v-row>
+										</v-col>
+									</v-sheet>
+								</v-overlay> 
 							</v-row> 
 						</v-form>
 						<!-- END Forms -->
@@ -212,7 +204,7 @@ import "@aws-amplify/ui-vue/styles.css";
 const { route, signOut} = toRefs(useAuthenticator());
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-let overlay:boolean = ref(false)
+let overlay_DELETE_ME:boolean = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const props = defineProps({
@@ -510,5 +502,10 @@ getSession()
 
 	/* Prevent the SignUp tab from displaying */
 	.amplify-tabs { display: none; }
+
+	/* input#input-140::placeholder{ color:red;text-align:center} */
+	input#ConfCode::placeholder{ text-align:center}
+	input#ConfCode{ text-align:center}
+	
 
 </style>

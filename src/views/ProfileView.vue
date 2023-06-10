@@ -90,38 +90,31 @@
 							</v-row>
 								
 							<v-row justify="center">
-
-								
 												<v-btn color="success" class="mt-2" @click="overlay = !overlay"> Show Overlay </v-btn>
 
 												<v-overlay class="align-center justify-center" v-model="overlay" >
-													<v-card height="400" width="400">
+													<v-card height="25em" width="30em">
 
 														<!-- Confirmation UI -->
-														<v-row class="ma-5" _class="mt-5">
-															<h1>We Emailed You</h1>
-															Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive.
-														</v-row>
-														<v-row style="margin-top:-1.5em;">
-															<v-col>Confirmation Code</v-col>
-														</v-row>
-														<v-row style="margin-top:-1.5em;">
-															<v-col>
-																<v-text-field>Input code</v-text-field>
-															</v-col>
-														</v-row>
-														<v-row style="margin-top:-1.5em;">
-															<v-col>
-																<v-btn>Confirm</v-btn>
-															</v-col>
-														</v-row>
-														<v-row style="margin-top:-1.5em;">
-															<v-col>
-																<v-btn>Resend Code</v-btn>
-															</v-col>
-														</v-row>
-											
-														<v-btn color="success" @click="overlay = false" > Hide Overlay </v-btn> 
+														<v-col _cols="6">
+															<v-row class="ma-5">
+																<h1>We Emailed You</h1>
+																<p> Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive. </p> 
+															</v-row>
+															<v-row class="justify-center">Confirmation Code</v-row>
+
+															<v-row __style="height:50px;">
+																<v-spacer></v-spacer>
+																<v-col cols="11">
+																	<v-text-field class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">Enter your code</v-text-field></v-col>
+																<v-spacer></v-spacer>
+															</v-row>
+
+															<v-row class="mx-5"> <v-btn block color="primary" class="mb-2"> Confirm </v-btn> </v-row>
+															<v-row class="mx-5" ><v-btn block color="secondary" class="mb-2" _style="margin-top:1.5em;">Resend Code</v-btn></v-row>
+															<v-row class="mx-5"><v-btn block color="success" @click="overlay = false" > Hide Overlay </v-btn></v-row>
+
+														</v-col>
 													</v-card>
 												</v-overlay> 
 

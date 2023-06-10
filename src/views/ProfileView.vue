@@ -76,71 +76,68 @@
 							<v-spacer></v-spacer>
 						</v-row>
 						
-						
-						
-						
-						
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
-							
-							
-							
-							
-							
 							<v-row>
-								<v-text-field :rules="[
-									value => checkEmail_1(value),
-									value => checkEmail_2(value),
-								]"
-									label="Email (required)" hint="Example: dabowe@gmail.com"
-									variant="outlined" density="compact"
-									v-model="workingEmailModel"
-									></v-text-field>
-								</v-row>
+								<v-text-field :rules="[value => checkEmail_1(value),value => checkEmail_2(value),]" 
+									label="Email (required)" hint="Example: dabowe@gmail.com" variant="outlined" density="compact"
+									v-model="workingEmailModel">
+								</v-text-field>
+							</v-row>
 								
+							<v-row class="justify-end">
+								<v-btn :disabled="route !== 'authenticated'" class="" color="surface" size="large" @click="resetEmail"> Cancel </v-btn>
+								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
+							</v-row>
 								
+							<v-row justify="center">
+
 								
-								
-								<v-row class="justify-end">
-									<v-btn :disabled="route !== 'authenticated'" class="" color="surface" size="large" @click="resetEmail"> Cancel </v-btn>
-									<!-- <v-btn :disabled="route !== 'authenticated'" class="ml-2 findme" color="primary" size="large" __type="submit"> Save </v-btn> -->
-									<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
-								</v-row>
-								
-								<v-row justify="center">
-									
-									<v-btn color="success" class="mt-2" @click="overlay = !overlay"> Show Overlay </v-btn>
-									<v-overlay class="align-center justify-center" v-model="overlay" >
-										<v-card height="400" width="600">
+												<v-btn color="success" class="mt-2" @click="overlay = !overlay"> Show Overlay </v-btn>
+
+												<v-overlay class="align-center justify-center" v-model="overlay" >
+													<v-card height="400" width="400">
+
+														<!-- Confirmation UI -->
+														<v-row class="ma-5" _class="mt-5">
+															<h1>We Emailed You</h1>
+															Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive.
+														</v-row>
+														<v-row style="margin-top:-1.5em;">
+															<v-col>Confirmation Code</v-col>
+														</v-row>
+														<v-row style="margin-top:-1.5em;">
+															<v-col>
+																<v-text-field>Input code</v-text-field>
+															</v-col>
+														</v-row>
+														<v-row style="margin-top:-1.5em;">
+															<v-col>
+																<v-btn>Confirm</v-btn>
+															</v-col>
+														</v-row>
+														<v-row style="margin-top:-1.5em;">
+															<v-col>
+																<v-btn>Resend Code</v-btn>
+															</v-col>
+														</v-row>
 											
-											
-											<!-- Confirmation UI -->
-											<v-row class="mt-5">
-												<!-- <v-spacer></v-spacer> -->
-												<!-- <v-col cols="8"> 						 -->
-													<!-- <v-divider :thickness="10" class="ma-2"></v-divider> -->
-													<h1 color="primary">We Emailed You</h1>
-													<!-- Your code is on the way. To login enter the code we email to k***@g***. Th may take a minuet to arrive. -->
-													<!-- </v-col> -->
-													<!-- <v-spacer></v-spacer> -->
-												</v-row>
-												
-												<v-btn color="success" @click="overlay = false" > Hide Overlay </v-btn> 
-											</v-card>
-											</v-overlay> 
-									</v-row> 
-								</v-form>
-								<!-- END Forms -->
+														<v-btn color="success" @click="overlay = false" > Hide Overlay </v-btn> 
+													</v-card>
+												</v-overlay> 
+
+
+
+							</v-row> 
+						</v-form>
+						<!-- END Forms -->
 								
-								
-								
-								
-							</v-col>
-							<v-spacer/>
-						</v-row>
+						</v-col>
+						<v-spacer/>
+					</v-row>
 						
 					<v-row v-if="route === 'authenticated'">
-					<v-spacer/>
-					<v-col cols="8">
+						<v-spacer/>
+						<v-col cols="8">
 						<v-divider :thickness="10" class="ma-2"></v-divider>
 
 						<p>Passed Properties</p>
@@ -164,114 +161,34 @@
 
 						<h4>Hello {{ nicknameModel }} !</h4>
 
-					</v-col>
-					<v-spacer/>
-				</v-row>
+						</v-col>
+						<v-spacer/>
+					</v-row>
 
-
-				
-				<v-row ><v-spacer/>
-					<v-col cols="8">
-						<v-divider :thickness="10" class="ma-2"></v-divider>
-						<authenticator>
-							<v-btn v-if="route === 'authenticated'" color="secondary" @click="signOut">Sign Out</v-btn>
-						</authenticator>
-					</v-col><v-spacer/>
-				</v-row>
-
-
-
-
-  <!-- <v-row
-    align="center"
-    class="ma-4"
-    justify="center"
-  >
-    <v-card
-      height="300"
-      width="250"
-    >
-      <v-row justify="center">
-        <v-btn
-          color="success"
-          class="mt-12"
-          @click="overlay = !overlay"
-        >
-          Show Overlay
-        </v-btn>
-
-        <v-overlay
-          v-model="overlay"
-          contained
-          class="align-center justify-center"
-        >
-          <v-btn
-            color="success"
-            @click="overlay = false"
-          >
-            Hide Overlay
-          </v-btn>
-        </v-overlay>
-      </v-row>
-    </v-card>
-  </v-row> -->
-
-
-
-
-
-
-				<!-- Confirmation UI -->
-				<v-row class="mt-5">
-
-					<v-spacer></v-spacer>
-					<v-col cols="8"> 						
-						<v-divider :thickness="10" class="ma-2"></v-divider>
-						<h1>We Emailed You</h1>
-						Your code is on the way. To login enter the code we email to k***@g***. Th may take a minuet to arrive.
-					</v-col>
-					<v-spacer></v-spacer>
-				</v-row>
-				<v-row style="margin-top:-1.5em;">
-					<v-spacer></v-spacer>
-					<v-col>Confirmation Code</v-col>
-					<v-spacer></v-spacer>
-				</v-row>
-				<v-row style="margin-top:-1.5em;">
-					<v-spacer></v-spacer>
-					<v-col>[input: Enter your code]</v-col>
-					<v-spacer></v-spacer>
-				</v-row>
-				<v-row style="margin-top:-1.5em;">
-					<v-spacer></v-spacer>
-					<v-col>[btn: Confirm]</v-col>
-					<v-spacer></v-spacer>
-				</v-row>
-				<v-row style="margin-top:-1.5em;">
-					<v-spacer></v-spacer>
-					<v-col>[btn:Resend Code]</v-col>
-					<v-spacer></v-spacer>
-				</v-row>
-
-
-
-
+					<v-row ><v-spacer/>
+						<v-col cols="8">
+							<v-divider :thickness="10" class="ma-2"></v-divider>
+							<authenticator>
+								<v-btn v-if="route === 'authenticated'" color="secondary" @click="signOut">Sign Out</v-btn>
+							</authenticator>
+						</v-col><v-spacer/>
+					</v-row>
 
 				<!-- Mobile -->
-				<!-- <v-row class="d-sm-none" v-if="route !== 'authenticated'" >
+				<v-row class="d-sm-none" v-if="route !== 'authenticated'" >
 					<v-col>
 						<Authenticator>
 						</Authenticator>
 					</v-col>
-				</v-row> -->
+				</v-row>
 
 				<!-- Desktop -->
-				<!-- <v-row align="center" class="d-none d-sm-flex" style="height: 50em;">
+				<v-row align="center" class="d-none d-sm-flex" style="height: 50em;">
 					<v-col>
 						<Authenticator>					
 						</Authenticator>
 					</v-col>
-				</v-row> -->
+				</v-row>
 
 			</v-container>
 		</MasterLayout>

@@ -250,7 +250,7 @@ async function submitEmail (event) {
 	//				If we get here, validation was sucessful
 
 	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser();
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	await Auth.updateUserAttributes(newuser, {'email': workingEmailModel.value })
 	await Auth.currentUserInfo().then(result => {
 		emailModel.value = result.attributes.email
@@ -313,7 +313,7 @@ async function submitPhone_number(event) {
 	strippedPhone_number.value = `+${strippedPhone_number.value}`
 
 	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser();
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number.value })
 	await Auth.currentUserInfo().then(result => {
 		phone_numberModel.value = result.attributes.phone_number
@@ -379,7 +379,7 @@ async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
 		//				This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser();
+		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
@@ -460,7 +460,7 @@ let areModelsEmpty = function(){
 async function getSession(){
 	if(areParamsEmpty() || areModelsEmpty()) {
 		//				Check to see if there is an active session.
-		let session = await Auth.currentAuthenticatedUser({bypassCache: false})
+		let session = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
 			emailModel.value = user.attributes?.email
 			phone_numberModel.value =  user.attributes?.phone_number

@@ -266,7 +266,7 @@ async function submitNickname(event) {
 		if(!results.valid) return
 		
 		// This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser();
+		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
@@ -322,7 +322,7 @@ Hub.listen('auth', (data) => {
 					// 			If we get here, the nicknameModel exists.
 					//				This only happens during the SignUp work flow.
 					UpdateNickname(nicknameModel) 
-					Auth.currentAuthenticatedUser().then(results => { 
+					Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => { 
 						emailModel.value = results.attributes.email
 						nicknameModel.value =  data.payload.data.attributes.nickname
 						phone_numberModel.value = data.payload.data.attributes.phone_number
@@ -334,7 +334,7 @@ Hub.listen('auth', (data) => {
 								}  }) 
 				}
 
-				Auth.currentAuthenticatedUser().then(results => { 
+				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => { 
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
 					nicknameModel.value =  data.payload.data.attributes.nickname
@@ -352,7 +352,7 @@ async function UpdateNickname(nicknameModel){
 					enter("UpdateNickname")
 		//
 		// 			This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser();
+		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 		await Auth.updateUserAttributes(newuser, {'nickname': nicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname

@@ -264,7 +264,7 @@ async function submitNickname() {
 		return }
 	
 	progress("Executing 'update User Attributes' == ", myNickname.value)
-	const user = await Auth.currentAuthenticatedUser();
+	const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	await Auth.updateUserAttributes(user, { 'nickname': myNickname.value });
 }
 					

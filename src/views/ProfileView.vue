@@ -91,8 +91,8 @@
 							
 							<!-- Confirmation -->
 							<v-row justify="center">
-								<v-btn color="success" class="mt-2" @click="overlay_DELETE_ME = !overlay_DELETE_ME"> Show Overlay </v-btn>
-								<v-overlay class="align-center justify-center" v-model="overlay_DELETE_ME" >
+								<v-btn color="success" class="mt-2" @click="toggleConfirm = !toggleConfirm"> Show Overlay </v-btn>
+								<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 									<v-sheet height="25em" width="30em" color="background" elevation="24" >
 										<!-- Confirmation UI -->
 										<v-col _cols="6">
@@ -103,12 +103,25 @@
 											<v-row class="justify-center">Confirmation Code</v-row>
 											<v-row > 
 												<v-spacer></v-spacer>
-												<v-col cols="11"> <v-text-field id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact"> </v-text-field> </v-col>
-												<v-spacer></v-spacer>
+													<v-col cols="11"> 
+														<v-text-field v-model="confirmCodeModel"
+																id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact"> 
+														</v-text-field> 
+													</v-col>
+													<v-spacer></v-spacer>
 											</v-row>
-											<v-row class="mx-5"> <v-btn block color="primary" class="mb-2"> Confirm </v-btn> </v-row>
+											
+											
+											<v-row class="mx-5"> 
+												<v-btn
+														@click="setConfirmed" 
+														block color="primary" class="mb-2"> 
+													Confirm 
+												</v-btn> 
+											</v-row>
+
 											<v-row class="mx-5" ><v-btn block color="background" class="mb-2" _style="margin-top:1.5em;">Resend Code</v-btn></v-row>
-											<v-row class="mx-5"><v-btn block color="success" @click="overlay_DELETE_ME = false" > Hide Overlay </v-btn></v-row>
+											<v-row class="mx-5"><v-btn block color="success" @click="toggleConfirm = false" > Hide Overlay </v-btn></v-row>
 										</v-col>
 									</v-sheet>
 								</v-overlay> 
@@ -159,22 +172,6 @@
 						</v-col><v-spacer/>
 					</v-row>
 
-				<!-- Mobile -->
-				<v-row class="d-sm-none" v-if="route !== 'authenticated'" >
-					<v-col>
-						<Authenticator>
-						</Authenticator>
-					</v-col>
-				</v-row>
-
-				<!-- Desktop -->
-				<v-row align="center" class="d-none d-sm-flex" style="height: 50em;">
-					<v-col>
-						<Authenticator>					
-						</Authenticator>
-					</v-col>
-				</v-row>
-
 			</v-container>
 		</MasterLayout>
 	</v-app>
@@ -204,7 +201,7 @@ import "@aws-amplify/ui-vue/styles.css";
 const { route, signOut} = toRefs(useAuthenticator());
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-let overlay_DELETE_ME:boolean = ref(false)
+let toggleConfirm:boolean = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const props = defineProps({
@@ -224,29 +221,28 @@ const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberM
 const emailModel = ref(props.p2)
 const workingEmailModel = ref("")
 const resetEmail = () => { workingEmailModel.value = emailModel.value }
+const confirmCodeModel:Number = ref()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
 const checkEmail_1 = (emailArg) => {
-	enter("checkEmail_1 ")
-	exit("checkEmail_1 --> pass")
+	// enter("checkEmail_1 ")
+	// exit("checkEmail_1 --> pass")
 	// return "Fail Email 1"
 	return true
 }
 const checkEmail_2 = (emailArg) => {
-	enter("checkEmail_2 ")
-	exit("checkEmail_2 --> pass")
+	// enter("checkEmail_2 ")
+	// exit("checkEmail_2 --> pass")
 	// return "Fail Email 2"
-	return true
-}
-async function submitEmail(event) {	
+	return true}
+async function submitEmail (event) {	
 							enter("submitEmail(event)")
 							pause("submitEmail(event)")
 	const results = await event
 							resume("submitEmail(event)")
-
 	if(!results.valid) {
-							fail("Validation -- submitEmail(event)")
+							// fail("Validation -- submitEmail(event)")
 		return /* Cancel Submission if validation FAILED */
 	}
 
@@ -258,12 +254,30 @@ async function submitEmail(event) {
 	await Auth.updateUserAttributes(newuser, {'email': workingEmailModel.value })
 	await Auth.currentUserInfo().then(result => {
 		emailModel.value = result.attributes.email
+			//				Display the Confirmation UI
+			toggleConfirm.value = true
 	})
 							exit("submitEmail(event)")
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setConfirmed = async function () {
+	info("setConfirmed", confirmCodeModel.valueOf )
 
+	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
+		.then((response) => {
+			console.log('email verified');
+			toggleConfirm.value = false
+			confirmCodeModel.value = null
+			emailModel.value = workingEmailModel.value
 
+		})
+		.catch((e) => {
+			console.log('failed with error', e);
+			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
+		});
+	return 
+}
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -400,7 +414,6 @@ async function checkSpecialChars (workingNickname) {
 	}
 	return true
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
@@ -431,7 +444,6 @@ Hub.listen('auth', (data) => {
 			return
 	} // 			END_SWITCH
 })
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* GetSession */
 let areParamsEmpty = function() {
@@ -464,10 +476,8 @@ async function getSession(){
 		//				We don't need to sign in.
 	}
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 getSession()
-
 </script>
 <style>
 	/* Apply styling to Authenticator so that is is consistent with the rest of the site. */

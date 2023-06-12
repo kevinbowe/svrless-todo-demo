@@ -98,7 +98,16 @@
 										<v-col _cols="6">
 											<v-row class="ma-5">
 												<h1 class="ma-auto">We Emailed You</h1>
-												<p> Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive. </p> 
+
+
+
+												<p> 
+													<!-- Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive.  -->
+													{{ EmailConfirmationMessage }}
+												</p> 
+											
+											
+											
 											</v-row>
 											<v-row class="justify-center">Confirmation Code</v-row>
 											<v-row > 
@@ -114,7 +123,7 @@
 											
 											<v-row class="mx-5"> 
 												<v-btn
-														@click="setConfirmed" 
+														@click="setEmailConfirmed" 
 														block color="primary" class="mb-2"> 
 													Confirm 
 												</v-btn> 
@@ -222,6 +231,7 @@ const emailModel = ref(props.p2)
 const workingEmailModel = ref("")
 const resetEmail = () => { workingEmailModel.value = emailModel.value }
 const confirmCodeModel:Number = ref()
+const EmailConfirmationMessage:String = ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
@@ -231,11 +241,13 @@ const checkEmail_1 = (emailArg) => {
 	// return "Fail Email 1"
 	return true
 }
+
 const checkEmail_2 = (emailArg) => {
 	// enter("checkEmail_2 ")
 	// exit("checkEmail_2 --> pass")
 	// return "Fail Email 2"
 	return true}
+
 async function submitEmail (event) {	
 							enter("submitEmail(event)")
 							pause("submitEmail(event)")
@@ -245,8 +257,6 @@ async function submitEmail (event) {
 							// fail("Validation -- submitEmail(event)")
 		return /* Cancel Submission if validation FAILED */
 	}
-
-	//
 	//				If we get here, validation was sucessful
 
 	//				This will return the user in the user pool (not updated )
@@ -254,14 +264,59 @@ async function submitEmail (event) {
 	await Auth.updateUserAttributes(newuser, {'email': workingEmailModel.value })
 	await Auth.currentUserInfo().then(result => {
 		emailModel.value = result.attributes.email
-			//				Display the Confirmation UI
-			toggleConfirm.value = true
+
+		//				Prepare the Confirm UI message
+						start("Prep Confirm Message")
+		//				Call the function here.
+		//				This function will set a messageModel that contains the WHOLE message string.
+		EmailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
+						fini("Prep Confirm Message")
+
+
+		//				Display the Confirmation UI
+		toggleConfirm.value = true
 	})
-							exit("submitEmail(event)")
+							// exit("submitEmail(event)")
+}
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildEmailConfirmationMessage = (email:string) => {
+
+	
+	/**
+	 * Split on '@' into 2x groups
+	 * fetch the first char of the first group
+	 * fetch the first char of the second group.
+	 * re-assemble the email
+	 */
+	
+	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
+		let match = regex.exec(email)
+		// info("Match groups.name",match.groups.name)
+		// info("Match groups.name[0] -- First Char --> Match [1]",match.groups.name[0])
+		
+		// info("Match groups.domain",match.groups.domain)
+		// info("Match groups.domain[0] -- First Char --> ",match.groups.domain[0])
+		
+		// let match;
+		// while ((match = regex.exec(email)) !== null) {
+		// 	// This is necessary to avoid infinite loops with zero-width matches
+		// 	if (match.index === regex.lastIndex) regex.lastIndex++;
+		// 	// The result can be accessed through the `m`-variable.
+		// 	match.forEach((match, groupIndex) => console.log(`Found match, group ${groupIndex}: ${match}`) );
+		// }	
+			
+		let obscureEmail = `${match.groups.name[0]}***@${match.groups.domain[0]}***}`
+		// info("obscureEmail", obscureEmail)
+	
+	return EmailConfirmationMessage.value = `Your code is on the way. To confirm your email address change, enter the code we emailed to \n${obscureEmail} \nThis may take a minuet to arrive.`
+	// return rtn
+
 }
 
+
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setConfirmed = async function () {
+const setEmailConfirmed = async function () {
 	info("setConfirmed", confirmCodeModel.valueOf )
 
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
@@ -297,6 +352,7 @@ const stripPhone_numberFmt = (phone_numberArg) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Submit Phone Number Decl */
 async function submitPhone_number(event) {
 	const results = await event
 	if(!results.valid)
@@ -319,8 +375,8 @@ async function submitPhone_number(event) {
 		phone_numberModel.value = result.attributes.phone_number
 	})
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Phone number validation Decls */
 async function checkPhone_number (workingPhone_number) {
 	//				Strips these characters -- 'sp', '+', '-', '(', ')'
 	//				If a Country code is missing, add '1' (North America)
@@ -372,9 +428,8 @@ async function checkPhone_numberInvalidCountryCode (workingPhone_number) {
 	}
 	return validationMessage
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Nickname */
+/* Nickname Decl */
 async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
@@ -385,8 +440,8 @@ async function submitNickname(event) {
 			nicknameModel.value = result.attributes.nickname
 		})
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Nickname Validation Decls */
 async function checkReservedNickname (workingNickname) {
 	if (workingNickname === 'kevin') {
 		return 'User nickname reserved. Please try another one.'
@@ -445,7 +500,7 @@ Hub.listen('auth', (data) => {
 	} // 			END_SWITCH
 })
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* GetSession */
+/* GetSession Decl */
 let areParamsEmpty = function() {
 	let v = Object.values(props)
 	let o = v.find(e => e.length === 0)
@@ -460,7 +515,7 @@ let areModelsEmpty = function(){
 async function getSession(){
 	if(areParamsEmpty() || areModelsEmpty()) {
 		//				Check to see if there is an active session.
-		let session = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
+		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
 			emailModel.value = user.attributes?.email
 			phone_numberModel.value =  user.attributes?.phone_number

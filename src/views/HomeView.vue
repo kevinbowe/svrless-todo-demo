@@ -248,7 +248,7 @@ const services = {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function checkValidationResults(resultsArray) {
-						enter("checkValidationResults")
+						// enter("checkValidationResults")
 
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
@@ -315,7 +315,7 @@ Hub.listen('auth', (data) => {
 			// case "confirmSignUp" :
 			// case "autoSignIn" :
 			case "signIn" :
-							enter("Hub.listen: signIn")
+							// enter("Hub.listen: signIn")
 				// Does the nicknameModel exist?
 				if (!!nicknameModel.value.length) { 
 					//
@@ -349,7 +349,7 @@ Hub.listen('auth', (data) => {
 						
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function UpdateNickname(nicknameModel){
-					enter("UpdateNickname")
+					// enter("UpdateNickname")
 		//
 		// 			This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});

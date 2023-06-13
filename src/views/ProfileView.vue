@@ -78,7 +78,12 @@
 						
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
 							<v-row>
-								<v-text-field :rules="[value => checkEmail_1(value),value => checkEmail_2(value),]" 
+								<!-- <v-text-field :rules="[value => checkEmail_1(value),value => checkEmail_2(value),]"  -->
+								<v-text-field :rules="[
+											value => checkEmailSpecialChar(value),
+											value => checkEmailName(value),
+											value => checkEmailDomain(value),
+										]" 
 									label="Email (required)" hint="Example: dabowe@gmail.com" variant="outlined" density="compact"
 									v-model="workingEmailModel">
 								</v-text-field>
@@ -235,24 +240,126 @@ const EmailConfirmationMessage:String = ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
-const checkEmail_1 = (emailArg) => {
-	// enter("checkEmail_1 ")
-	// exit("checkEmail_1 --> pass")
-	// return "Fail Email 1"
+const checkEmailSpecialChar = (emailArg) => {
+	enter("checkEmailSpecialChar()")
+	//				Perform general special char check
+	const regexSpecialChar = new RegExp('^.*[!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
+
+	const specialCharMatch = regexSpecialChar.exec(emailArg)
+	if ( specialCharMatch !== null) {
+		//			If we get here, there was a match
+		fail("specialCharMatch", specialCharMatch)
+		return "FAIL checkEmailSpecialChar() > specialCharMatch"
+	}
+	//				Perform multiple @ check
+	const regexMultipleAtChar = new RegExp('^.*@.*@', 'gm')
+	const multipleAtCharMatch = regexMultipleAtChar.exec(emailArg)
+	if ( multipleAtCharMatch !== null) {
+		//			If we get here, there was a match
+		fail("multipleAtCharMatch", multipleAtCharMatch)
+		return "FAIL checkEmailSpecialChar() > multipleAtCharMatch"
+	}
+	//				Perform consecutive special char check
+	const regexConsecutiveSpecialChar = new RegExp('\\.\\.|--|\\+\\+', 'gm')
+	const consecutiveSpecialCharMatch = regexConsecutiveSpecialChar.exec(emailArg)
+	if ( consecutiveSpecialCharMatch !== null) {
+		//			If we get here, there was a match
+		fail("consecutiveSpecialCharMatch", consecutiveSpecialCharMatch)
+		return "FAIL checkEmailSpecialChar() > ConsecutiveSpecialChar"
+	}
+	exit("PASS checkEmailSpecialChar")
 	return true
 }
 
-const checkEmail_2 = (emailArg) => {
-	// enter("checkEmail_2 ")
-	// exit("checkEmail_2 --> pass")
-	// return "Fail Email 2"
-	return true}
+const checkEmailName = (emailArg) => {
+					// enter("checkEmailName()")
+	const emailName = parseEmail(emailArg).name
+					// info("CheckEmailName > parseEmail.emailName -->", emailName)
+	//				Length check ( long & short )
+	//				--	64 char
+	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
+
+	let len = emailName.length;
+	if(len > 64){
+		// fail("checkEmailName > Length Check: Max char allowed = 64 char")
+		return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
+	}
+	if(len <= 0){
+		// fail("checkEmailName > Length Check: Min char allowed = 1 char")
+		return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
+	}
+	//				Leading and trailing special char check
+	//				Note: The trailing '_' has been removed from the check.
+	//					Gmail accepts this trailing character.
+	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
+	let match = regex.exec(emailName)
+	if(match != null){
+		// fail("checkEmailName > Leading and trailing special char check")
+		return "FAIL checkEmailName() > Leading and trailing special char check"
+	}
+
+	//				If we get here, the email name checks passed
+	// exit("PASS checkEmailName --> pass")
+	return true
+}
+
+const checkEmailDomain = (emailArg) => {
+	enter("checkEmailDomain()")
+	const emailDomain = parseEmail(emailArg).domain
+					info("checkEmailDomain > parseEmail.emailSomin -->", emailDomain)
+	//				Length check ( long & short )
+	//				--	253 char
+	/*
+					_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_12345678.com
+	*/
+	let len = emailDomain.length;
+	if(len > 253){
+		fail("checkEmailDomain > Length Check: Max char allowed = 253 char")
+		return "FAIL checkEmailDomain() > Length Check: Max char allowed = 253 char"
+	}
+					// pass("checkEmailDomain > Length Check: Max char allowed = 253 char")
+
+		if(len <= 2){
+					//	fail("checkEmailDomain > Length Check: Min char allowed = 3 char")
+		return "FAIL checkEmailDomain() > Length Check: Min char allowed = 3 char"
+	}
+	pass("checkEmailDomain > Length Check: Min char allowed = 3 char")
+	
+	//				Domain and TopLevelDomain check
+	//				Split the domain and tld and check from both pieces.
+	const regex = new RegExp('^(?<domain>.*)[\\.|\\s](?<tld>.*)', 'gm')
+	let match = regex.exec(emailDomain)
+					// info("Domain --> ", typeof match?.groups.domain)
+					// info("Domain --> ", match?.groups.domain.length)
+					// info("TLD --> ",typeof match?.groups.tld)
+					// info("TLD --> ",match?.groups.tld.length)
+	if(match?.groups.domain.length === 0 || match?.groups.domain === undefined){
+		//			Missing the Domain
+					// fail("checkEmailDomain > Domain Check: Domain is missing")
+		return "FAIL checkEmailDomain() > Domain Check: Domain is missing"
+	}
+	if(match?.groups.tld.length === 0 || match?.groups.tld === undefined){
+		//			Missing TopLevelDomain
+					//	fail("checkEmailDomain > Domain Check: TopLevelDomain is missing")
+		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
+	}
+	exit("PASS checkEmailDomain --> pass")
+	return true
+}
+
+const parseEmail = (email) => {
+	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
+	let match = regex.exec(email)
+	return { name: match.groups.name, domain: match.groups.domain }
+}
+
+
 
 async function submitEmail (event) {	
-							enter("submitEmail(event)")
-							pause("submitEmail(event)")
+							// enter("submitEmail(event)")
+							// pause("submitEmail(event)")
 	const results = await event
-							resume("submitEmail(event)")
+							// resume("submitEmail(event)")
 	if(!results.valid) {
 							// fail("Validation -- submitEmail(event)")
 		return /* Cancel Submission if validation FAILED */
@@ -266,11 +373,11 @@ async function submitEmail (event) {
 		emailModel.value = result.attributes.email
 
 		//				Prepare the Confirm UI message
-						start("Prep Confirm Message")
+						// start("Prep Confirm Message")
 		//				Call the function here.
 		//				This function will set a messageModel that contains the WHOLE message string.
 		EmailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
-						fini("Prep Confirm Message")
+						// fini("Prep Confirm Message")
 
 
 		//				Display the Confirmation UI
@@ -280,40 +387,10 @@ async function submitEmail (event) {
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {
-
-	
-	/**
-	 * Split on '@' into 2x groups
-	 * fetch the first char of the first group
-	 * fetch the first char of the second group.
-	 * re-assemble the email
-	 */
-	
-	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-		let match = regex.exec(email)
-		// info("Match groups.name",match.groups.name)
-		// info("Match groups.name[0] -- First Char --> Match [1]",match.groups.name[0])
-		
-		// info("Match groups.domain",match.groups.domain)
-		// info("Match groups.domain[0] -- First Char --> ",match.groups.domain[0])
-		
-		// let match;
-		// while ((match = regex.exec(email)) !== null) {
-		// 	// This is necessary to avoid infinite loops with zero-width matches
-		// 	if (match.index === regex.lastIndex) regex.lastIndex++;
-		// 	// The result can be accessed through the `m`-variable.
-		// 	match.forEach((match, groupIndex) => console.log(`Found match, group ${groupIndex}: ${match}`) );
-		// }	
-			
-		let obscureEmail = `${match.groups.name[0]}***@${match.groups.domain[0]}***}`
-		// info("obscureEmail", obscureEmail)
-	
+	let {name , domain} = parseEmail(email)
+	let obscureEmail = `${name[0]}***@${domain[0]}***}`
 	return EmailConfirmationMessage.value = `Your code is on the way. To confirm your email address change, enter the code we emailed to \n${obscureEmail} \nThis may take a minuet to arrive.`
-	// return rtn
-
 }
-
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmailConfirmed = async function () {
@@ -333,7 +410,6 @@ const setEmailConfirmed = async function () {
 		});
 	return 
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Phone_number */
@@ -400,6 +476,7 @@ async function checkPhone_number (workingPhone_number) {
 	}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Phone Number Filters */
 const InvalidCounteryCodes = {
 	7 : "Russia ",
 	53 : "Cuba" ,

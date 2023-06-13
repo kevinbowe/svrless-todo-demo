@@ -3,12 +3,16 @@
 		<MasterLayout>
 			<v-container class="text-center">
 				<h1 class="text-primary">Profile Page Content.</h1>
-				{{ route }}
+				{{ workingEmailModel }}
 				<v-row v-if="route === 'authenticated'">
 					<v-spacer/>
 					<v-col cols="8">
 						<v-divider :thickness="10" __class="ma-2"></v-divider>
-
+						<v-row>
+							<p class="ma-auto mt-5">
+								Working Email Model [ {{ workingEmailModel }} ]
+							</p>
+						</v-row>
 						<!-- START Forms -->
 						<!-- Nickname -->
 						<!-- <v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
@@ -101,6 +105,11 @@
 									<v-sheet height="25em" width="30em" color="background" elevation="24" >
 										<!-- Confirmation UI -->
 										<v-col _cols="6">
+											<v-row>
+												<p class="ma-auto">
+													Working Email Model [ {{ workingEmailModel }} ]
+												</p>
+											</v-row>
 											<v-row class="ma-5">
 												<h1 class="ma-auto">We Emailed You</h1>
 
@@ -133,8 +142,12 @@
 													Confirm 
 												</v-btn> 
 											</v-row>
-
-											<v-row class="mx-5" ><v-btn block color="background" class="mb-2" _style="margin-top:1.5em;">Resend Code</v-btn></v-row>
+											<v-row class="mx-5" >
+												<v-btn @click="resendEmailConfirmatioCode"
+														block color="background" class="mb-2" _style="margin-top:1.5em;">
+													Resend Code
+												</v-btn>
+											</v-row>
 											<v-row class="mx-5"><v-btn block color="success" @click="toggleConfirm = false" > Hide Overlay </v-btn></v-row>
 										</v-col>
 									</v-sheet>
@@ -240,6 +253,11 @@ const EmailConfirmationMessage:String = ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
+const resendEmailConfirmatioCode = () => {
+	enter("resendEmailConfirmatioCode")
+	info2(`resendEmailConfirmatioCode > workingEmailModel \n      [ ${workingEmailModel} ]`)
+	exit("resendEmailConfirmatioCode")
+}
 const checkEmailSpecialChar = (emailArg) => {
 	// enter("checkEmailSpecialChar()")
 	//				Perform general special char check

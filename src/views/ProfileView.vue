@@ -241,7 +241,7 @@ const EmailConfirmationMessage:String = ref("")
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
 const checkEmailSpecialChar = (emailArg) => {
-	enter("checkEmailSpecialChar()")
+	// enter("checkEmailSpecialChar()")
 	//				Perform general special char check
 	const regexSpecialChar = new RegExp('^.*[!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
 
@@ -267,7 +267,7 @@ const checkEmailSpecialChar = (emailArg) => {
 		fail("consecutiveSpecialCharMatch", consecutiveSpecialCharMatch)
 		return "FAIL checkEmailSpecialChar() > ConsecutiveSpecialChar"
 	}
-	exit("PASS checkEmailSpecialChar")
+	// exit("PASS checkEmailSpecialChar")
 	return true
 }
 
@@ -304,26 +304,25 @@ const checkEmailName = (emailArg) => {
 }
 
 const checkEmailDomain = (emailArg) => {
-	enter("checkEmailDomain()")
+	// enter("checkEmailDomain()")
 	const emailDomain = parseEmail(emailArg).domain
-					info("checkEmailDomain > parseEmail.emailSomin -->", emailDomain)
+					// info("checkEmailDomain > parseEmail.emailDomain -->", emailDomain)
 	//				Length check ( long & short )
 	//				--	253 char
 	/*
-					_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_12345678.com
+					This is valid 253 char domain
+					asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com
 	*/
 	let len = emailDomain.length;
 	if(len > 253){
-		fail("checkEmailDomain > Length Check: Max char allowed = 253 char")
-		return "FAIL checkEmailDomain() > Length Check: Max char allowed = 253 char"
+		fail("Max Valid Domain Length: 253 -- Actual Length: ", emailDomain.length)
+		return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain.length}`
 	}
-					// pass("checkEmailDomain > Length Check: Max char allowed = 253 char")
-
-		if(len <= 2){
-					//	fail("checkEmailDomain > Length Check: Min char allowed = 3 char")
-		return "FAIL checkEmailDomain() > Length Check: Min char allowed = 3 char"
+	if(len <= 2){
+		fail("Min Valid Domain Length: 3 -- Actual Length: ", emailDomain.length)
+		return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain.length}`
 	}
-	pass("checkEmailDomain > Length Check: Min char allowed = 3 char")
+	pass("Domain Length:",emailDomain.length )
 	
 	//				Domain and TopLevelDomain check
 	//				Split the domain and tld and check from both pieces.
@@ -343,7 +342,7 @@ const checkEmailDomain = (emailArg) => {
 					//	fail("checkEmailDomain > Domain Check: TopLevelDomain is missing")
 		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
 	}
-	exit("PASS checkEmailDomain --> pass")
+	// exit("PASS checkEmailDomain --> pass")
 	return true
 }
 

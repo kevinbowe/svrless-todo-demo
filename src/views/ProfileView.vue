@@ -248,7 +248,7 @@ const checkEmailSpecialChar = (emailArg) => {
 	const specialCharMatch = regexSpecialChar.exec(emailArg)
 	if ( specialCharMatch !== null) {
 		//			If we get here, there was a match
-		fail("specialCharMatch", specialCharMatch)
+		// fail("specialCharMatch", specialCharMatch)
 		return "FAIL checkEmailSpecialChar() > specialCharMatch"
 	}
 	//				Perform multiple @ check
@@ -256,7 +256,7 @@ const checkEmailSpecialChar = (emailArg) => {
 	const multipleAtCharMatch = regexMultipleAtChar.exec(emailArg)
 	if ( multipleAtCharMatch !== null) {
 		//			If we get here, there was a match
-		fail("multipleAtCharMatch", multipleAtCharMatch)
+		// fail("multipleAtCharMatch", multipleAtCharMatch)
 		return "FAIL checkEmailSpecialChar() > multipleAtCharMatch"
 	}
 	//				Perform consecutive special char check
@@ -264,7 +264,7 @@ const checkEmailSpecialChar = (emailArg) => {
 	const consecutiveSpecialCharMatch = regexConsecutiveSpecialChar.exec(emailArg)
 	if ( consecutiveSpecialCharMatch !== null) {
 		//			If we get here, there was a match
-		fail("consecutiveSpecialCharMatch", consecutiveSpecialCharMatch)
+		// fail("consecutiveSpecialCharMatch", consecutiveSpecialCharMatch)
 		return "FAIL checkEmailSpecialChar() > ConsecutiveSpecialChar"
 	}
 	// exit("PASS checkEmailSpecialChar")
@@ -288,61 +288,73 @@ const checkEmailName = (emailArg) => {
 		// fail("checkEmailName > Length Check: Min char allowed = 1 char")
 		return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
 	}
+	// pass("Name > Length Check")
+
 	//				Leading and trailing special char check
 	//				Note: The trailing '_' has been removed from the check.
 	//					Gmail accepts this trailing character.
+	/*			 	TEST DATA -- This patterns must fail.
+						asd_@gmail.com // This is valid
+						-asd@gmail.com		asd-@gmail.com		_asd@gmail.com		+asd@gmail.com		
+						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com		*/
+
 	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
 	let match = regex.exec(emailName)
 	if(match != null){
-		// fail("checkEmailName > Leading and trailing special char check")
-		return "FAIL checkEmailName() > Leading and trailing special char check"
+		// fail(`Invalid character [-_+.] used at begining or end of email name [ ${match} ]`)
+		return `Invalid character [-_+.] used at begining or end of email name [ ${match} ]`
 	}
 
-	//				If we get here, the email name checks passed
-	// exit("PASS checkEmailName --> pass")
-	return true
+return true
 }
 
 const checkEmailDomain = (emailArg) => {
 	// enter("checkEmailDomain()")
 	const emailDomain = parseEmail(emailArg).domain
-					// info("checkEmailDomain > parseEmail.emailDomain -->", emailDomain)
 	//				Length check ( long & short )
-	//				--	253 char
-	/*
-					This is valid 253 char domain
-					asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com
-	*/
+	/*				TEST DATA -- 253 char domain
+					asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com   */
+	
 	let len = emailDomain.length;
 	if(len > 253){
-		fail("Max Valid Domain Length: 253 -- Actual Length: ", emailDomain.length)
 		return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain.length}`
 	}
 	if(len <= 2){
-		fail("Min Valid Domain Length: 3 -- Actual Length: ", emailDomain.length)
 		return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain.length}`
 	}
-	pass("Domain Length:",emailDomain.length )
 	
 	//				Domain and TopLevelDomain check
 	//				Split the domain and tld and check from both pieces.
 	const regex = new RegExp('^(?<domain>.*)[\\.|\\s](?<tld>.*)', 'gm')
 	let match = regex.exec(emailDomain)
-					// info("Domain --> ", typeof match?.groups.domain)
-					// info("Domain --> ", match?.groups.domain.length)
-					// info("TLD --> ",typeof match?.groups.tld)
-					// info("TLD --> ",match?.groups.tld.length)
+	//				Domain Check Section
+	//				Exists Check
 	if(match?.groups.domain.length === 0 || match?.groups.domain === undefined){
 		//			Missing the Domain
-					// fail("checkEmailDomain > Domain Check: Domain is missing")
 		return "FAIL checkEmailDomain() > Domain Check: Domain is missing"
 	}
+
+	//		TEST DATA
+	// asd@-asd.com		asd@asd-.com		asd@.asd.com		asd@asd..com
+	// asd@_asd.com		asd@asd_.com		asd@+asd.com		asd@asd+.com
+
+	//				Leading/Trailing Special Char Check
+	const regexSpecialChar = new RegExp('^[-_+\\.]|[-_+\\.]$', 'gm')
+	let matchSpecialChar = regexSpecialChar.exec(match?.groups.domain)
+	if(matchSpecialChar != null){
+		return `Invalid character [-_+.] used at begining or end of domain name [ ${matchSpecialChar} ]`
+	}
+
+	//				TLD (Top-Level-Domain) Checks
+	//				Exists Check
 	if(match?.groups.tld.length === 0 || match?.groups.tld === undefined){
-		//			Missing TopLevelDomain
-					//	fail("checkEmailDomain > Domain Check: TopLevelDomain is missing")
 		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
 	}
-	// exit("PASS checkEmailDomain --> pass")
+	//				Leading/Trailing Special Char Check
+	let matchTldSpecialChar = regexSpecialChar.exec(match?.groups.tld)
+	if(matchTldSpecialChar != null){
+		return `Invalid character [-_+.] used at begining or end of TLD name [ ${matchTldSpecialChar} ]`
+	}
 	return true
 }
 
@@ -351,8 +363,6 @@ const parseEmail = (email) => {
 	let match = regex.exec(email)
 	return { name: match.groups.name, domain: match.groups.domain }
 }
-
-
 
 async function submitEmail (event) {	
 							// enter("submitEmail(event)")
@@ -384,6 +394,7 @@ async function submitEmail (event) {
 	})
 							// exit("submitEmail(event)")
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {
 	let {name , domain} = parseEmail(email)
@@ -393,7 +404,7 @@ const buildEmailConfirmationMessage = (email:string) => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmailConfirmed = async function () {
-	info("setConfirmed", confirmCodeModel.valueOf )
+	// info("setConfirmed", confirmCodeModel.valueOf )
 
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
 		.then((response) => {
@@ -549,29 +560,12 @@ async function checkSpecialChars (workingNickname) {
 Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
 		case "signUp" :
-			// enter("Hub.listen: auto Sign In")
-			// exit("Hub.listen: auto Sign In")
-			return
-
 		case "confirmSignUp" :
-			// enter("Hub.listen: confirm Sign Up")
-			// exit("Hub.listen: confirm Sign Up")
-			return
-
 		case "autoSignIn" :
-			// enter("Hub.listen: auto Sign In")
-			// exit("Hub.listen: auto Sign In")
-			return
-
-		case "signIn" :
-			// enter("Hub.listen: signIn")
-			getSession()
-			// exit("Hub.listen: sign In")
-			return
-
 		case "signOut" :
-			// enter("Hub.listen: sign Out")
-			// exit("Hub.listen: sign Out")
+			return
+		case "signIn" :
+			getSession()
 			return
 	} // 			END_SWITCH
 })

@@ -92,7 +92,7 @@
 									v-model="workingEmailModel">
 								</v-text-field>
 							</v-row>
-								
+							
 							<v-row class="justify-end">
 								<v-btn :disabled="route !== 'authenticated'" class="" color="surface" size="large" @click="resetEmail"> Cancel </v-btn>
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
@@ -112,16 +112,10 @@
 											</v-row>
 											<v-row class="ma-5">
 												<h1 class="ma-auto">We Emailed You</h1>
-
-
-
 												<p> 
 													<!-- Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive.  -->
 													{{ EmailConfirmationMessage }}
 												</p> 
-											
-											
-											
 											</v-row>
 											<v-row class="justify-center">Confirmation Code</v-row>
 											<v-row > 
@@ -133,8 +127,6 @@
 													</v-col>
 													<v-spacer></v-spacer>
 											</v-row>
-											
-											
 											<v-row class="mx-5"> 
 												<v-btn
 														@click="setEmailConfirmed" 
@@ -143,7 +135,7 @@
 												</v-btn> 
 											</v-row>
 											<v-row class="mx-5" >
-												<v-btn @click="resendEmailConfirmatioCode"
+												<v-btn @click="resendEmailConfirmationCode"
 														block color="background" class="mb-2" _style="margin-top:1.5em;">
 													Resend Code
 												</v-btn>
@@ -253,46 +245,17 @@ const EmailConfirmationMessage:String = ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
-const resendEmailConfirmatioCode = async () => {
-					// enter("resendEmailConfirmatioCode")
-					info2(`resendEmailConfirmatioCode > workingEmailModel \n      [ ${workingEmailModel.value} ]`)
-
-	//				Add code to resubmit the the workingEmailModel
-	//				NOTE: This was copied from [ async function submitPhone_number()]
-	//						Verify that I need everything.
-	//						This is a factoring candidate.
-
-	//				Discard old validation code references.
-
-	//				Close the Confirmation Ui
-	toggleConfirm.value = false
-
-	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
-	await Auth.updateUserAttributes(newuser, {'email': workingEmailModel.value })
-	await Auth.currentUserInfo().then(result => {
-		emailModel.value = result.attributes.email
-
-		//				Prepare the Confirm UI message
-						// start("Prep Confirm Message")
-		//				Call the function here.
-		//				This function will set a messageModel that contains the WHOLE message string.
-		EmailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
-						// fini("Prep Confirm Message")
-		//				Display the Confirmation UI
-		toggleConfirm.value = true
-	})
-	// exit("resendEmailConfirmatioCode")
+const resendEmailConfirmationCode = async () => {
+	const user = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
 }
 const checkEmailSpecialChar = (emailArg) => {
-	// enter("checkEmailSpecialChar()")
 	//				Perform general special char check
 	const regexSpecialChar = new RegExp('^.*[!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
 
 	const specialCharMatch = regexSpecialChar.exec(emailArg)
 	if ( specialCharMatch !== null) {
 		//			If we get here, there was a match
-		// fail("specialCharMatch", specialCharMatch)
 		return "FAIL checkEmailSpecialChar() > specialCharMatch"
 	}
 	//				Perform multiple @ check
@@ -300,7 +263,6 @@ const checkEmailSpecialChar = (emailArg) => {
 	const multipleAtCharMatch = regexMultipleAtChar.exec(emailArg)
 	if ( multipleAtCharMatch !== null) {
 		//			If we get here, there was a match
-		// fail("multipleAtCharMatch", multipleAtCharMatch)
 		return "FAIL checkEmailSpecialChar() > multipleAtCharMatch"
 	}
 	//				Perform consecutive special char check
@@ -308,10 +270,8 @@ const checkEmailSpecialChar = (emailArg) => {
 	const consecutiveSpecialCharMatch = regexConsecutiveSpecialChar.exec(emailArg)
 	if ( consecutiveSpecialCharMatch !== null) {
 		//			If we get here, there was a match
-		// fail("consecutiveSpecialCharMatch", consecutiveSpecialCharMatch)
 		return "FAIL checkEmailSpecialChar() > ConsecutiveSpecialChar"
 	}
-	// exit("PASS checkEmailSpecialChar")
 	return true
 }
 

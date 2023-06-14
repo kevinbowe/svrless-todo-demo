@@ -82,10 +82,6 @@
 									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPhone_numberModel" >
 								</v-text-field>
 
-
-
-
-
 							<p style="margin-bottom:-.75em;">Nickname</p>
 							<v-text-field 
 									class="signup-nickname"
@@ -394,18 +390,12 @@ async function getNickEmailPhone(){
 	return {nicknameModel, emailModel, phone_numberModel}
 };
 
-
 const phone_numberModel = ref("")
 const workingPhone_numberModel = ref("")
-
-
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
-
 const emailModel = ref("")
-
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 // getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 

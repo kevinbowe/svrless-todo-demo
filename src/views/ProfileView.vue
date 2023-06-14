@@ -253,10 +253,36 @@ const EmailConfirmationMessage:String = ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
-const resendEmailConfirmatioCode = () => {
-	enter("resendEmailConfirmatioCode")
-	info2(`resendEmailConfirmatioCode > workingEmailModel \n      [ ${workingEmailModel} ]`)
-	exit("resendEmailConfirmatioCode")
+const resendEmailConfirmatioCode = async () => {
+					// enter("resendEmailConfirmatioCode")
+					info2(`resendEmailConfirmatioCode > workingEmailModel \n      [ ${workingEmailModel.value} ]`)
+
+	//				Add code to resubmit the the workingEmailModel
+	//				NOTE: This was copied from [ async function submitPhone_number()]
+	//						Verify that I need everything.
+	//						This is a factoring candidate.
+
+	//				Discard old validation code references.
+
+	//				Close the Confirmation Ui
+	toggleConfirm.value = false
+
+	//				This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	await Auth.updateUserAttributes(newuser, {'email': workingEmailModel.value })
+	await Auth.currentUserInfo().then(result => {
+		emailModel.value = result.attributes.email
+
+		//				Prepare the Confirm UI message
+						// start("Prep Confirm Message")
+		//				Call the function here.
+		//				This function will set a messageModel that contains the WHOLE message string.
+		EmailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
+						// fini("Prep Confirm Message")
+		//				Display the Confirmation UI
+		toggleConfirm.value = true
+	})
+	// exit("resendEmailConfirmatioCode")
 }
 const checkEmailSpecialChar = (emailArg) => {
 	// enter("checkEmailSpecialChar()")

@@ -2,17 +2,11 @@
 	<v-app>
 		<MasterLayout>
 			<v-container class="text-center">
-				<h1 class="text-primary">Profile Page Content.</h1>
-				{{ workingEmailModel }}
+				<h1 class="text-primary">Profile Page Content</h1>
 				<v-row v-if="route === 'authenticated'">
 					<v-spacer/>
 					<v-col cols="8">
-						<v-divider :thickness="10" __class="ma-2"></v-divider>
-						<v-row>
-							<p class="ma-auto mt-5">
-								Working Email Model [ {{ workingEmailModel }} ]
-							</p>
-						</v-row>
+						<v-divider :thickness="10" class="mb-10"></v-divider>
 						<!-- START Forms -->
 						<!-- Nickname -->
 						<!-- <v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
@@ -64,7 +58,7 @@
 							</v-row>
 						</v-form> -->
 						<!-- Email Address -->
-						<v-row class="mt-5">
+						<!-- <v-row class="mt-5">
 							<v-spacer></v-spacer>
 							<v-col cols="5"> kevinbowe1957+__10__@gmail.com </v-col>
 							<v-spacer></v-spacer>
@@ -78,11 +72,18 @@
 							<v-spacer></v-spacer>
 							<v-col cols="5"> kevinbowe1957+__30__@gmail.com </v-col>
 							<v-spacer></v-spacer>
-						</v-row>
+						</v-row> -->
 
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
+
+							<v-row class="justify-end">
+								<v-btn __v-if="!emailVerified" color="surface" size="small" variant="plain" class="text-none" @click="isEmailConfirmed"> Not Verified </v-btn>
+								<v-btn __v-else disabled color="surface" size="small" variant="plain" class="text-none"> Verified </v-btn>
+							</v-row>
+
+							
+
 							<v-row>
-								<!-- <v-text-field :rules="[value => checkEmail_1(value),value => checkEmail_2(value),]"  -->
 								<v-text-field :rules="[
 											value => checkEmailSpecialChar(value),
 											value => checkEmailName(value),
@@ -245,10 +246,31 @@ const EmailConfirmationMessage:String = ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
+
+
+
+
+
+const emailVerified = ref()
+const emailVerifiedMessage = ref()
+
+async function isEmailConfirmed() {
+	const currentUser = await Auth.currentAuthenticatedUser({ bypassCache: true })
+	info2("CurrentUser > Email Verified -->", currentUser.attributes.email_verified);
+	info4("CurrentUser > Attributes -->", currentUser.attributes);
+}
+
+
+
+
+
+
 const resendEmailConfirmationCode = async () => {
 	const user = await Auth.currentAuthenticatedUser();
 	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
 }
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Email -- Validation */
 const checkEmailSpecialChar = (emailArg) => {
 	//				Perform general special char check
 	const regexSpecialChar = new RegExp('^.*[!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
@@ -353,7 +375,7 @@ const checkEmailDomain = (emailArg) => {
 	return true
 }
 
-const parseEmail = (email) => {∫
+const parseEmail = (email) => {
 	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
 	let match = regex.exec(email)
 	return { name: match.groups.name, domain: match.groups.domain }
@@ -568,6 +590,8 @@ async function getSession(){
 		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
 			emailModel.value = user.attributes?.email
+			emailVerified.value = user.attributes?.email_verified
+			emailVerifiedMessage.value = user.attributes?.email_verified ? "Confirmed" : "Unconfirmed"
 			phone_numberModel.value =  user.attributes?.phone_number
 			nicknameModel.value = user.attributes?.nickname
 		})

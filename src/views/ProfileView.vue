@@ -61,17 +61,14 @@
 						<!-- Email Address -->
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
 							<v-row class="justify-end">
-								<v-btn color="surface" size="small" variant="plain" class="text-none" @click="toggleConfirm = true">
-									<v-row class="justify-end">
-										<div v-if="!emailVerified">
-											<span class="mr-2" style="text-decoration:none;"> Not Verified</span> 
-											<span style="text-decoration:line-through;"> Verified </span>
-										</div>
-										<div v-else>
-											<span class="mr-2" style="text-decoration:line-through ;"> Not Verified</span> 
-											<span style="text-decoration:none ;"> Verified </span>
-										</div>
-										<v-spacer></v-spacer>
+								<v-btn color="surface" size="large" variant="text" class="text-none" @click="toggleConfirm = true">
+									<v-tooltip activator="parent" location="start">
+										Confirm Email Popup
+									</v-tooltip>
+									<v-row class="justify-end mt-1" style="text-decoration: underline;">
+											<p v-if="emailVerified"> Verified </p>
+											<p v-else> Not Verified</p> 
+											<v-spacer></v-spacer>
 									</v-row>
 								</v-btn>
 							</v-row>

@@ -114,7 +114,7 @@
 												</v-btn> 
 											</v-row>
 											<v-row class="mx-5" >
-												<v-btn @click="resendEmailConfirmationCode" block color="background" class="mb-2" _style="margin-top:1.5em;">
+ 												<v-btn :disabled="!workingEmailModel" @click="resendEmailConfirmationCode" block color="background" class="mb-2" > 
 													Resend Code
 												</v-btn>
 											</v-row>

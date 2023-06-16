@@ -77,12 +77,20 @@
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
 
 							<v-row class="justify-end">
-								<v-btn __v-if="!emailVerified" color="surface" size="small" variant="plain" class="text-none" @click="isEmailConfirmed"> Not Verified </v-btn>
-								<v-btn __v-else disabled color="surface" size="small" variant="plain" class="text-none"> Verified </v-btn>
+								<v-btn color="surface" size="small" variant="plain" class="text-none" @click="toggleConfirm = true">
+									<v-row class="justify-end">
+										<div v-if="!emailVerified">
+											<span class="mr-2" style="text-decoration:none;"> Not Verified</span> 
+											<span style="text-decoration:line-through;"> Verified </span>
+										</div>
+										<div v-else>
+											<span class="mr-2" style="text-decoration:line-through ;"> Not Verified</span> 
+											<span style="text-decoration:none ;"> Verified </span>
+										</div>
+										<v-spacer></v-spacer>
+									</v-row>
+								</v-btn>
 							</v-row>
-
-							
-
 							<v-row>
 								<v-text-field :rules="[
 											value => checkEmailSpecialChar(value),
@@ -93,7 +101,6 @@
 									v-model="workingEmailModel">
 								</v-text-field>
 							</v-row>
-
 							<v-row class="justify-end">
 								<v-btn :disabled="route !== 'authenticated'" class="" color="surface" size="large" @click="resetEmail"> Cancel </v-btn>
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
@@ -101,47 +108,50 @@
 
 							<!-- Confirmation -->
 							<v-row justify="center">
-								<v-btn color="success" class="mt-2" @click="toggleConfirm = !toggleConfirm"> Show Overlay </v-btn>
 								<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 									<v-sheet height="25em" width="30em" color="background" elevation="24" >
-										<!-- Confirmation UI -->
+										<v-row>
+											<v-spacer></v-spacer>
+												<v-btn class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
+										</v-row>
 										<v-col _cols="6">
-											<v-row>
-												<p class="ma-auto">
-													Working Email Model [ {{ workingEmailModel }} ]
-												</p>
-											</v-row>
 											<v-row class="ma-5">
 												<h1 class="ma-auto">We Emailed You</h1>
 												<p>
-													<!-- Your code is on the way. To login enter the code we email to k***@g***. This may take a minuet to arrive.  -->
 													{{ EmailConfirmationMessage }}
 												</p>
 											</v-row>
 											<v-row class="justify-center">Confirmation Code</v-row>
-											<v-row >
-												<v-spacer></v-spacer>
-													<v-col cols="11">
+											<v-row ><v-spacer></v-spacer><v-col cols="11">
+
+												<p>confirmCodeModel == {{ confirmCodeModel }} </p>
+												<p>typeof confirmCodeModel == {{ typeof confirmCodeModel }} </p>
+												<p>type check undefined == {{ typeof confirmCodeModel === undefined}} </p>
+												
+
 														<v-text-field v-model="confirmCodeModel"
 																id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
 														</v-text-field>
-													</v-col>
-													<v-spacer></v-spacer>
+
+
+
+											</v-col><v-spacer></v-spacer></v-row>
+											<v-row class="mx-5"> 
+												<v-btn :disabled="toggleConfirmBtn"
+															___:disabled="typeof confirmCodeModel === undefined"
+													@click="setEmailConfirmed" block color="primary" class="mb-2"> {{ confirmCodeModel }}
+												</v-btn> 
 											</v-row>
-											<v-row class="mx-5">
-												<v-btn
-														@click="setEmailConfirmed"
-														block color="primary" class="mb-2">
-													Confirm
-												</v-btn>
-											</v-row>
+
+
+											
 											<v-row class="mx-5" >
 												<v-btn @click="resendEmailConfirmationCode"
 														block color="background" class="mb-2" _style="margin-top:1.5em;">
 													Resend Code
 												</v-btn>
 											</v-row>
-											<v-row class="mx-5"><v-btn block color="success" @click="toggleConfirm = false" > Hide Overlay </v-btn></v-row>
+											<!-- <v-row class="mx-5"><v-btn block color="success" @click="toggleConfirm = false" > Hide Overlay </v-btn></v-row> -->
 										</v-col>
 									</v-sheet>
 								</v-overlay>
@@ -214,7 +224,7 @@ import {
 	log,
 } from "../my-util-code/MyConsoleUtil"
 
-import { toRefs, ref, } from 'vue'
+import { toRefs, ref, computed, ComputedRef} from 'vue'
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
 
@@ -241,34 +251,28 @@ const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberM
 const emailModel = ref(props.p2)
 const workingEmailModel = ref("")
 const resetEmail = () => { workingEmailModel.value = emailModel.value }
-const confirmCodeModel:Number = ref()
 const EmailConfirmationMessage:String = ref("")
+
+
+const confirmCodeModel:Number = ref()
+
+const toggleConfirmBtn = computed(()=> { 
+	info("confirmCodeModel",confirmCodeModel)
+	false /* typeof this === undefined ? true : false */ 
+
+} )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
 
-
-
-
-
 const emailVerified = ref()
 const emailVerifiedMessage = ref()
-
-async function isEmailConfirmed() {
-	const currentUser = await Auth.currentAuthenticatedUser({ bypassCache: true })
-	info2("CurrentUser > Email Verified -->", currentUser.attributes.email_verified);
-	info4("CurrentUser > Attributes -->", currentUser.attributes);
-}
-
-
-
-
-
 
 const resendEmailConfirmationCode = async () => {
 	const user = await Auth.currentAuthenticatedUser();
 	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email -- Validation */
 const checkEmailSpecialChar = (emailArg) => {

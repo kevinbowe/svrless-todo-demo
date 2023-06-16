@@ -122,7 +122,7 @@
 						<v-btn to="/dev" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev</v-btn>
 
 						<!-- Devs -->
-						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Develop
+						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Develope
 							<v-menu activator="parent">
 								<v-list>
 									<v-list-item :to="link.url" v-for="link in devLinks" :key="link.label" :value="link.label">
@@ -224,6 +224,7 @@ const mainTitle: string = "v3-Auth-Pool-v15"
 
 const menu = ref(false);
 const devLinks = ref([
+	{ label: "Dev 5", url: "/dev5" },
 	{ label: "Dev 4", url: "/dev4" },
 	{ label: "Dev 3", url: "/dev3" },
 	{ label: "Dev 2", url: "/dev2" },

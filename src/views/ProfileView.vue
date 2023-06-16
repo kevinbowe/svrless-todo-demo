@@ -8,6 +8,7 @@
 					<v-col cols="8">
 						<v-divider :thickness="10" class="mb-10"></v-divider>
 						<!-- START Forms -->
+
 						<!-- Nickname -->
 						<!-- <v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
 							<v-row>
@@ -40,7 +41,6 @@
 							<v-col> 000 111 0000 </v-col>
 							<v-spacer></v-spacer>
 						</v-row>
-
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitPhone_number" >
 							<v-row>
 								<v-text-field :rules="[
@@ -57,25 +57,9 @@
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 							</v-row>
 						</v-form> -->
+						
 						<!-- Email Address -->
-						<!-- <v-row class="mt-5">
-							<v-spacer></v-spacer>
-							<v-col cols="5"> kevinbowe1957+__10__@gmail.com </v-col>
-							<v-spacer></v-spacer>
-						</v-row>
-						<v-row style="margin-top:-1.5em;">
-							<v-spacer></v-spacer>
-							<v-col cols="5"> kevinbowe1957+__20__@gmail.com </v-col>
-							<v-spacer></v-spacer>
-						</v-row>
-						<v-row style="margin-top:-1.5em;">
-							<v-spacer></v-spacer>
-							<v-col cols="5"> kevinbowe1957+__30__@gmail.com </v-col>
-							<v-spacer></v-spacer>
-						</v-row> -->
-
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
-
 							<v-row class="justify-end">
 								<v-btn color="surface" size="small" variant="plain" class="text-none" @click="toggleConfirm = true">
 									<v-row class="justify-end">
@@ -93,10 +77,10 @@
 							</v-row>
 							<v-row>
 								<v-text-field :rules="[
-											value => checkEmailSpecialChar(value),
-											value => checkEmailName(value),
-											value => checkEmailDomain(value),
-										]"
+										value => checkEmailSpecialChar(value),
+										value => checkEmailName(value),
+										value => checkEmailDomain(value),
+									]"
 									label="Email (required)" hint="Example: dabowe@gmail.com" variant="outlined" density="compact"
 									v-model="workingEmailModel">
 								</v-text-field>
@@ -112,7 +96,7 @@
 									<v-sheet height="25em" width="30em" color="background" elevation="24" >
 										<v-row>
 											<v-spacer></v-spacer>
-												<v-btn class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
+											<v-btn class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 										</v-row>
 										<v-col _cols="6">
 											<v-row class="ma-5">
@@ -123,35 +107,20 @@
 											</v-row>
 											<v-row class="justify-center">Confirmation Code</v-row>
 											<v-row ><v-spacer></v-spacer><v-col cols="11">
-
-												<p>confirmCodeModel == {{ confirmCodeModel }} </p>
-												<p>typeof confirmCodeModel == {{ typeof confirmCodeModel }} </p>
-												<p>type check undefined == {{ typeof confirmCodeModel === undefined}} </p>
-												
-
-														<v-text-field v-model="confirmCodeModel"
-																id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
-														</v-text-field>
-
-
-
+												<v-text-field v-model="confirmCodeModel"
+													id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
+												</v-text-field>
 											</v-col><v-spacer></v-spacer></v-row>
 											<v-row class="mx-5"> 
-												<v-btn :disabled="toggleConfirmBtn"
-															___:disabled="typeof confirmCodeModel === undefined"
-													@click="setEmailConfirmed" block color="primary" class="mb-2"> {{ confirmCodeModel }}
+												<v-btn :disabled="!confirmCodeModel" @click="setEmailConfirmed" block color="primary" class="mb-2" > 
+													Confirm 
 												</v-btn> 
 											</v-row>
-
-
-											
 											<v-row class="mx-5" >
-												<v-btn @click="resendEmailConfirmationCode"
-														block color="background" class="mb-2" _style="margin-top:1.5em;">
+												<v-btn @click="resendEmailConfirmationCode" block color="background" class="mb-2" _style="margin-top:1.5em;">
 													Resend Code
 												</v-btn>
 											</v-row>
-											<!-- <v-row class="mx-5"><v-btn block color="success" @click="toggleConfirm = false" > Hide Overlay </v-btn></v-row> -->
 										</v-col>
 									</v-sheet>
 								</v-overlay>
@@ -223,8 +192,7 @@ import {
 	fail, err,  err2,
 	log,
 } from "../my-util-code/MyConsoleUtil"
-
-import { toRefs, ref, computed, ComputedRef} from 'vue'
+import { toRefs, ref, computed, } from 'vue'
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
 
@@ -253,14 +221,7 @@ const workingEmailModel = ref("")
 const resetEmail = () => { workingEmailModel.value = emailModel.value }
 const EmailConfirmationMessage:String = ref("")
 
-
 const confirmCodeModel:Number = ref()
-
-const toggleConfirmBtn = computed(()=> { 
-	info("confirmCodeModel",confirmCodeModel)
-	false /* typeof this === undefined ? true : false */ 
-
-} )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
@@ -414,11 +375,10 @@ const buildEmailConfirmationMessage = (email:string) => {
 const setEmailConfirmed = async function () {
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
 		.then((response) => {
-			console.log('email verified');
+			info(`Email verified ${confirmCodeModel.value}`);
 			toggleConfirm.value = false
 			confirmCodeModel.value = null
 			emailModel.value = workingEmailModel.value
-
 		})
 		.catch((e) => {
 			console.log('failed with error', e);

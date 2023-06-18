@@ -79,7 +79,7 @@
 										value => checkEmailName(value),
 										value => checkEmailDomain(value),
 									]"
-									label="Email (required)" hint="Example: dabowe@gmail.com" variant="outlined" density="compact"
+									clearable label="Email (required)" hint="Example: dabowe@gmail.com" variant="outlined" density="compact"
 									v-model="workingEmailModel">
 								</v-text-field>
 							</v-row>

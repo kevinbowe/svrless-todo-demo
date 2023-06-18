@@ -113,80 +113,82 @@
 					<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 					<!-- //////	START Desktop Menu -->
 
-					<!-- Menu [ Dev | Devs | Blogs | Account ] -->
+					<!-- Menu [ Profile | Dev | Devs | Blogs | Account ] -->
+					<!-- Theme switch -->
+					<v-switch class="mt-6" density="compact" :flat="true" inset @change="onChangeSwitch" ></v-switch>
 
-						<!-- Profile -->
-						<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
+					<!-- Profile -->
+					<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
 
-						<!-- Dev -->
-						<v-btn to="/dev" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev</v-btn>
+					<!-- Dev -->
+					<v-btn to="/dev" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev</v-btn>
 
-						<!-- Devs -->
-						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Develope
-							<v-menu activator="parent">
-								<v-list>
-									<v-list-item :to="link.url" v-for="link in devLinks" :key="link.label" :value="link.label">
-										<v-list-item-title>
-											{{ link.label }}
-										</v-list-item-title>
-									</v-list-item>
-								</v-list>
-							</v-menu>
-						</v-btn>
+					<!-- Devs -->
+					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Develope
+						<v-menu activator="parent">
+							<v-list>
+								<v-list-item :to="link.url" v-for="link in devLinks" :key="link.label" :value="link.label">
+									<v-list-item-title>
+										{{ link.label }}
+									</v-list-item-title>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+					</v-btn>
 
-						<!-- Blogs -->
-						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Blogs
-							<v-menu activator="parent">
-								<v-list>
-									<v-list-item :to="link.url" 
-										v-for="link in blogLinks" :key="link.label" :value="link.label"
+					<!-- Blogs -->
+					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Blogs
+						<v-menu activator="parent">
+							<v-list>
+								<v-list-item :to="link.url" 
+									v-for="link in blogLinks" :key="link.label" :value="link.label"
+								>
+									<v-list-item-title>
+										{{ link.label }}
+									</v-list-item-title>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+					</v-btn>
+
+					<!-- Account : [ Profile | Sign In | Palette ] -->
+					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Account
+						<v-menu activator="parent">
+							<v-list>
+								<v-list-item :to="link.url" 
+									v-for="link in accountLinks" :key="link.label" :value="link.label" 
+								>
+									<v-list-item-title>
+										{{ link.label }}
+									</v-list-item-title>
+								</v-list-item>
+								<v-btn variant="plain">
+									<v-tooltip activator="parent" location="bottom">
+										Toggle Theme
+									</v-tooltip>
+									<v-icon color="secondary" icon="mdi-palette" size="30"
+									></v-icon>
+									<v-menu v-model="menu" activator="parent" location="end" 
+										:close-on-content-click="false"
 									>
-										<v-list-item-title>
-											{{ link.label }}
-										</v-list-item-title>
-									</v-list-item>
-								</v-list>
-							</v-menu>
-						</v-btn>
-
-						<!-- Account : [ Profile | Sign In | Palette ] -->
-						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Account
-							<v-menu activator="parent">
-								<v-list>
-									<v-list-item :to="link.url" 
-										v-for="link in accountLinks" :key="link.label" :value="link.label" 
-									>
-										<v-list-item-title>
-											{{ link.label }}
-										</v-list-item-title>
-									</v-list-item>
-									<v-btn variant="plain">
-										<v-tooltip activator="parent" location="bottom">
-											Toggle Theme
-										</v-tooltip>
-										<v-icon color="secondary" icon="mdi-palette" size="30"
-										></v-icon>
-										<v-menu v-model="menu" activator="parent" location="end" 
-											:close-on-content-click="false"
-										>
-											<v-card>
-												<v-card-actions>
-													<v-spacer />
-													<v-btn variant="text" @click="menu = false"> 
-														Cancel
-													</v-btn>
-													<v-btn color="primary" variant="text" @click="menu = false"> 
-														Save
-													</v-btn>
-												</v-card-actions>
-												<ThemeChanger />
-												<ThemePreview />
-											</v-card>
-										</v-menu>
-									</v-btn>
-								</v-list>
-							</v-menu>
-						</v-btn>
+										<v-card>
+											<v-card-actions>
+												<v-spacer />
+												<v-btn variant="text" @click="menu = false"> 
+													Cancel
+												</v-btn>
+												<v-btn color="primary" variant="text" @click="menu = false"> 
+													Save
+												</v-btn>
+											</v-card-actions>
+											<ThemeChanger />
+											<ThemePreview />
+										</v-card>
+									</v-menu>
+								</v-btn>
+							</v-list>
+						</v-menu>
+					</v-btn>
 
 
 					<!-- //////	END Desktop Menu -->
@@ -216,6 +218,7 @@
 	</v-layout>
 </template>
 <script setup lang="ts" >
+import { useTheme } from "vuetify";
 import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
@@ -247,6 +250,18 @@ const footerLinks = ref([
 	{ label: "Profile", url: "/profile" },
 	{ label: "Terms & Conditions", url: "/tandc" },
 ]);
+
+const theme = useTheme();
+//const themeVals = Object.keys(theme.computedThemes.value);
+const onChangeSwitch = () => {
+	switch(theme.global.name.value){
+		case "light" : theme.global.name.value = "light_custom"; break
+		case "light_custom" : theme.global.name.value = "dark"; break
+		case "dark" : theme.global.name.value = "dark_custom"; break
+		case "dark_custom" : theme.global.name.value = "light"; break
+	}
+};
+
 </script>
 <style>
 .v-toolbar-title__placeholder {

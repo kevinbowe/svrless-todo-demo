@@ -263,13 +263,9 @@ const checkEmailName = (emailArg) => {
 	//				Length check ( long & short )
 	//				--	64 char
 	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
-	let len = emailName.length;
-	if(len > 64){
-		return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
-	}
-	if(len <= 0){
-		return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
-	}
+	let len = parsedEmail.name.length;
+	if(len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
+	if(len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
 	//				Leading and trailing special char check
 	//				Note: The trailing '_' has been removed from the check.
 	//					Gmail accepts this trailing character.
@@ -277,7 +273,6 @@ const checkEmailName = (emailArg) => {
 						asd_@gmail.com // This is valid
 						-asd@gmail.com		asd-@gmail.com		_asd@gmail.com		+asd@gmail.com
 						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com		*/
-
 	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
 	let match = regex.exec(parsedEmail.name)
 	if(match != null){
@@ -339,7 +334,8 @@ const checkEmailDomain = (emailArg) => {
 const parseEmail = (email) => {
 	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
 	let match = regex.exec(email)
-	return { name: match.groups.name, domain: match.groups.domain }
+	if (match) return { name: match.groups.name, domain: match.groups.domain }
+	return null
 }
 
 async function submitEmail (event) {

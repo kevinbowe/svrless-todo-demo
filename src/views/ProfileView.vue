@@ -61,7 +61,7 @@
 						<!-- Email Address -->
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
 							<v-row class="justify-end">
-								<v-btn color="surface" size="large" variant="text" class="text-none" 
+								<v-btn color="link" size="large" variant="text" class="text-none" 
 										@click="() => { buildEmailConfirmationMessage(workingEmailModel); toggleConfirm = true;}"
 								><v-tooltip activator="parent" location="start">
 										Confirm Email Popup

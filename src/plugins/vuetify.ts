@@ -21,6 +21,9 @@ const light: ThemeDefinition = {
 		success: '#006304',
 		warning: '#FF9800',
 		important: '#795548',
+		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
+		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
+		link:   '#0D47A1' // // ............... // blue-darken-4 // #0D47A1
 		// background: 'white',
 		// surface: "grey-darken-3",
 		// primary:'deep-purple',
@@ -31,8 +34,6 @@ const light: ThemeDefinition = {
 		// warning: 'amber-darken-2',
 		// important: 'brown',
 		// error: 'red',
-		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
-		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
 	},
 }
 const dark: ThemeDefinition = {
@@ -47,6 +48,7 @@ const dark: ThemeDefinition = {
 		success: '#00E676',
 		warning: '#EEFF41',
 		important: '#795548',
+		link: '#2196F3', // ............... // blue // #2196F3
 		// error: 'red',
 		// info: 'indigo-darken-4',
 		// success: 'green-darken-4',
@@ -67,6 +69,8 @@ const light_custom: ThemeDefinition = {
 		warning: '#FF9800',
 		important: '#795548',
 		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
+		link:  '#0D47A1' // ............... // blue-darken-4 // #0D47A1
+
 		// error: 'red',
 		// info: 'indigo-darken-4',
 		// success: 'green-darken-4',
@@ -88,6 +92,7 @@ const dark_custom: ThemeDefinition = {
 		warning: '#FB8C00',
 		important: '#795548',
 		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
+		link: '#2196F3', // ............... // blue // #2196F3
 
 		// error: 'red',
 		// info: 'indigo-darken-4',

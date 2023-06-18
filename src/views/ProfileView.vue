@@ -131,33 +131,26 @@
 					<v-row v-if="route === 'authenticated'">
 						<v-spacer/>
 						<v-col cols="8">
-						<v-divider :thickness="10" class="ma-2"></v-divider>
+						
+							<v-divider :thickness="10" class="ma-2"></v-divider>
+							<v-row no-gutters>
+								<v-col style="background-color: lightgrey;"><p>nicknameModel:</p></v-col>
+								<v-col><p>{{ nicknameModel }}</p></v-col>
+							</v-row>
+							
+							<v-divider :thickness="3" />
+							<v-row no-gutters style="background-color: lightgrey;"><p class="ma-auto">emailModel:</p></v-row>
+							<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
+							
+							<v-divider :thickness="3" />
+							<v-row no-gutters style="background-color: lightgrey;"><p class="ma-auto">phone_numberModel:</p></v-row>
+							<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
 
-						<p>Passed Properties</p>
-						<v-row>
-							<v-col cols="6" style="text-align:end;">
-								<p>nicknameModel</p>
-								<p>emailModel</p>
-								<p>phone_numberModel</p>
-							</v-col>
-
-							<v-divider vertical :thickness="3" class="my-2" />
-
-							<v-col cols="4" style="text-align:start;">
-								<p>{{ nicknameModel }}</p>
-								<p>{{ emailModel }}</p>
-								<p>{{ phone_numberModel }}</p>
-							</v-col>
-						</v-row>
-
-						<v-divider :thickness="10" class="ma-2"></v-divider>
-
-						<h4>Hello {{ nicknameModel }} !</h4>
-
+							<v-divider :thickness="10" class="ma-2"></v-divider>
+							<h4>Hello {{ nicknameModel }} !</h4>
 						</v-col>
 						<v-spacer/>
 					</v-row>
-
 					<v-row ><v-spacer/>
 						<v-col cols="8">
 							<v-divider :thickness="10" class="ma-2"></v-divider>

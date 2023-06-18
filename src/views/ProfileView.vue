@@ -61,8 +61,9 @@
 						<!-- Email Address -->
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
 							<v-row class="justify-end">
-								<v-btn color="surface" size="large" variant="text" class="text-none" @click="toggleConfirm = true">
-									<v-tooltip activator="parent" location="start">
+								<v-btn color="surface" size="large" variant="text" class="text-none" 
+										@click="() => { buildEmailConfirmationMessage(workingEmailModel); toggleConfirm = true;}"
+								><v-tooltip activator="parent" location="start">
 										Confirm Email Popup
 									</v-tooltip>
 									<v-row class="justify-end mt-1" style="text-decoration: underline;">
@@ -90,17 +91,15 @@
 							<!-- Confirmation -->
 							<v-row justify="center">
 								<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
-									<v-sheet height="25em" width="30em" color="background" elevation="24" >
+									<v-sheet width="30em" :style="{height:!EmailConfirmationMessage.Title.value?'28em':'23em'}" color="background" elevation="24" >
 										<v-row>
 											<v-spacer></v-spacer>
 											<v-btn class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 										</v-row>
-										<v-col _cols="6">
-											<v-row class="ma-5">
-												<h1 class="ma-auto">We Emailed You</h1>
-												<p>
-													{{ EmailConfirmationMessage }}
-												</p>
+										<v-col _cols="6" style="margin-top:-2.5em;">
+											<v-row class="mx-5 mb-5">
+												<h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
+												<p v-html="EmailConfirmationMessage.Message.value"></p> 
 											</v-row>
 											<v-row class="justify-center">Confirmation Code</v-row>
 											<v-row ><v-spacer></v-spacer><v-col cols="11">
@@ -176,7 +175,7 @@
 <script lang="ts" setup>
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth, Hub } from 'aws-amplify';
-import { useAuthenticator } from '@aws-amplify/ui-vue';
+import { ConfirmSignIn, useAuthenticator } from '@aws-amplify/ui-vue';
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 import {
@@ -196,6 +195,7 @@ import "@aws-amplify/ui-vue/styles.css";
 const { route, signOut} = toRefs(useAuthenticator());
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
+const confirmCodeModel:Number = ref()
 let toggleConfirm:boolean = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -216,9 +216,7 @@ const resetPhone_number = () => { workingPhone_numberModel.value = phone_numberM
 const emailModel = ref(props.p2)
 const workingEmailModel = ref("")
 const resetEmail = () => { workingEmailModel.value = emailModel.value }
-const EmailConfirmationMessage:String = ref("")
-
-const confirmCodeModel:Number = ref()
+const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
@@ -363,22 +361,40 @@ async function submitEmail (event) {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {
-	let {name , domain} = parseEmail(email)
-	let obscureEmail = `${name[0]}***@${domain[0]}***}`
-	return EmailConfirmationMessage.value = `Your code is on the way. To confirm your email address change, enter the code we emailed to \n${obscureEmail} \nThis may take a minuet to arrive.`
+	if(email) {
+		//			If we get here, the email arg contains data.
+		let {name , domain} = parseEmail(email)
+		let obscureEmail = `${name[0]}***@${domain[0]}***`
+		EmailConfirmationMessage.Title.value = "We Emailed You"
+		EmailConfirmationMessage.Message.value = 
+			`Your code is on the way. To confirm your email address change, `+
+			`enter the code we emailed to <b>${obscureEmail}</b>.`+
+			`<br>This may take a minuet to arrive.`
+		return EmailConfirmationMessage
+	}
+	//				No Title should be included with this message.
+	let message = 
+		`To confirm your email address change, you <b>MUST</b> enter the `+
+		`code we emailed to the new email address you provided.<br><br>` + 
+
+		`<h2>Resend Code: Not available.</h2>`+
+		
+		`Your new email is not accessable to the application. To generate `+
+		`a confirmation code, close this popup and update the email again. `+
+		`You can use the same email.`
+	EmailConfirmationMessage.Message.value = message
+	return EmailConfirmationMessage
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmailConfirmed = async function () {
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
 		.then((response) => {
-			info(`Email verified ${confirmCodeModel.value}`);
 			toggleConfirm.value = false
 			confirmCodeModel.value = null
 			emailModel.value = workingEmailModel.value
 		})
 		.catch((e) => {
-			console.log('failed with error', e);
 			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
 		});
 	return
@@ -404,19 +420,12 @@ const stripPhone_numberFmt = (phone_numberArg) => {
 /* Submit Phone Number Decl */
 async function submitPhone_number(event) {
 	const results = await event
-	if(!results.valid)
-		// 		Cancel Submission if validation FAILED
-		return
-
-	////
-	//				If we get here, Validation succeded
-
+	if(!results.valid) return // Cancel Submission if validation FAILED
 	//				Strips these characters -- 'sp', '+', '-', '(', ')'
 	//				If a Country code is missing, add '1' (North America)
 	const strippedPhone_number = stripPhone_numberFmt(workingPhone_numberModel)
 	//				Add the '+' prefix
 	strippedPhone_number.value = `+${strippedPhone_number.value}`
-
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number.value })
@@ -438,7 +447,6 @@ async function checkPhone_number (workingPhone_number) {
 	let match = strippedPhone_number.value.match(expAtoZ)
 	if (match !== null )
 	return `Alphabetical characters are invalid == [${match}] == ${strippedPhone_number.value}`
-
 	//				Check for special characters
 	let expSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
 	let match2 = strippedPhone_number.value.match(expSpecChar)

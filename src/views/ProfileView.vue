@@ -258,7 +258,8 @@ const checkEmailSpecialChar = (emailArg) => {
 }
 
 const checkEmailName = (emailArg) => {
-	const emailName = parseEmail(emailArg).name
+	const parsedEmail = parseEmail(emailArg)
+	if (!parsedEmail) return "FAIL checkEmailName() > Invalid Email"
 	//				Length check ( long & short )
 	//				--	64 char
 	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
@@ -278,7 +279,7 @@ const checkEmailName = (emailArg) => {
 						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com		*/
 
 	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
-	let match = regex.exec(emailName)
+	let match = regex.exec(parsedEmail.name)
 	if(match != null){
 		return `Invalid character [-_+.] used at begining or end of email name [ ${match} ]`
 	}

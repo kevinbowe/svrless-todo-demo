@@ -393,10 +393,12 @@ const setEmailConfirmed = async function () {
 			toggleConfirm.value = false
 			confirmCodeModel.value = null
 			emailModel.value = workingEmailModel.value
+			if (!emailModel.value)
+				Auth.currentUserInfo().then((response) => emailModel.value = response.attributes.email)
 		})
 		.catch((e) => {
 			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
-		});
+		})
 	return
 }
 

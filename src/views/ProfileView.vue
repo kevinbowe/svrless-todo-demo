@@ -181,9 +181,20 @@ import {
 	fail, err,  err2,
 	log,
 } from "../my-util-code/MyConsoleUtil"
-import { toRefs, ref, computed, } from 'vue'
+import { toRefs, ref, computed, onMounted} from 'vue'
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Verify workingEmailModel - Reload/Leave  */
+onMounted( () => {
+	window.addEventListener('beforeunload',(e) => {
+		if (workingEmailModel.value.length > 0 ) {
+			e.preventDefault();
+			e.returnValue = '' /* Deprecated */	
+		}
+	})
+})
 
 const { route, signOut} = toRefs(useAuthenticator());
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

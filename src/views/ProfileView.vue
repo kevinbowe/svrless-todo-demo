@@ -134,16 +134,16 @@
 						
 							<v-divider :thickness="10" class="ma-2"></v-divider>
 							<v-row no-gutters>
-								<v-col style="background-color: lightgrey;"><p>nicknameModel:</p></v-col>
+								<v-col style="background-color: rgb(var(--v-theme-surface));"><p>nicknameModel:</p></v-col>
 								<v-col><p>{{ nicknameModel }}</p></v-col>
 							</v-row>
 							
 							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color: lightgrey;"><p class="ma-auto">emailModel:</p></v-row>
+							<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">emailModel:</p></v-row>
 							<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
 							
 							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color: lightgrey;"><p class="ma-auto">phone_numberModel:</p></v-row>
+							<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">phone_numberModel:</p></v-row>
 							<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
 
 							<v-divider :thickness="10" class="ma-2"></v-divider>

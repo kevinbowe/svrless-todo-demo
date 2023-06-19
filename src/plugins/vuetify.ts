@@ -13,7 +13,8 @@ const light: ThemeDefinition = {
 	dark: false,
 	colors: {
 		background: '#ffffff',
-		surface: '#424242',
+		// surface: '#424242', // .......... // grey-darken-3
+		surface: '#bdbdbd', // .......... // grey-lighten-1
 		primary:'#6F3AB0',
 		secondary: '#00838F',
 		error: '#FF1744',
@@ -60,7 +61,8 @@ const light_custom: ThemeDefinition = {
 	dark: false,
 	colors: {
 		background: '#E0E0E0', 
-		surface: '#424242',
+		// surface: '#424242', // .......... // grey-darken-3
+		surface: '#bdbdbd', // .......... // grey-lighten-1
 		primary:'#FF9800',
 		secondary: '#40F576',
 		error: '#B00020',

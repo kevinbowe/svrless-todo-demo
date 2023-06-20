@@ -57,11 +57,11 @@
 								<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
 							</v-row>
 						</v-form> -->
-						
+
 						<!-- Email Address -->
 						<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-1" validate-on="submit" @submit.prevent="submitEmail" >
 							<v-row class="justify-end">
-								<v-btn color="link" size="large" variant="text" class="text-none" 
+								<v-btn color="link" size="large" variant="text" class="text-none"
 										@click="() => { buildEmailConfirmationMessage(workingEmailModel); toggleConfirm = true;}"
 								><v-tooltip activator="parent" location="start">
 										Confirm Email Popup
@@ -98,7 +98,7 @@
 										<v-col _cols="6" style="margin-top:-2.5em;">
 											<v-row class="mx-5 mb-5">
 												<h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
-												<p v-html="EmailConfirmationMessage.Message.value"></p> 
+												<p v-html="EmailConfirmationMessage.Message.value"></p>
 											</v-row>
 											<v-row class="justify-center">Confirmation Code</v-row>
 											<v-row ><v-spacer></v-spacer><v-col cols="11">
@@ -106,13 +106,13 @@
 													id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
 												</v-text-field>
 											</v-col><v-spacer></v-spacer></v-row>
-											<v-row class="mx-5"> 
-												<v-btn :disabled="!confirmCodeModel" @click="setEmailConfirmed" block color="primary" class="mb-2" > 
-													Confirm 
-												</v-btn> 
+											<v-row class="mx-5">
+												<v-btn :disabled="!confirmCodeModel" @click="setEmailConfirmed" block color="primary" class="mb-2" >
+													Confirm
+												</v-btn>
 											</v-row>
 											<v-row class="mx-5" >
- 												<v-btn :disabled="!workingEmailModel" @click="resendEmailConfirmationCode" block color="background" class="mb-2" > 
+ 												<v-btn :disabled="!workingEmailModel" @click="resendEmailConfirmationCode" block color="background" class="mb-2" >
 													Resend Code
 												</v-btn>
 											</v-row>
@@ -130,33 +130,35 @@
 					<v-row v-if="route === 'authenticated'">
 						<v-spacer/>
 						<v-col cols="8">
-						
 							<v-divider :thickness="10" class="ma-2"></v-divider>
 							<v-row no-gutters>
-								<v-col style="background-color: rgb(var(--v-theme-surface));"><p>nicknameModel:</p></v-col>
+								<v-col style="background-color: rgb(var(--v-theme-surface));"><p>Nick Name:</p></v-col>
 								<v-col><p>{{ nicknameModel }}</p></v-col>
 							</v-row>
 							
 							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">emailModel:</p></v-row>
+							<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">Email:</p></v-row>
 							<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
 							
 							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">phone_numberModel:</p></v-row>
+							<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">Phone Number:</p></v-row>
 							<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
-
-							<v-divider :thickness="10" class="ma-2"></v-divider>
-							<h4>Hello {{ nicknameModel }} !</h4>
+							
+							<v-divider :thickness="3" />
+							<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
+							<v-row no-gutters ><p class="ma-auto">{{ user_nameModel }}</p></v-row>
 						</v-col>
 						<v-spacer/>
 					</v-row>
-					<v-row ><v-spacer/>
+					<v-row no-gutters>
+						<v-spacer/>
 						<v-col cols="8">
-							<v-divider :thickness="10" class="ma-2"></v-divider>
+							<v-divider :thickness="10" __class="ma-2"></v-divider>
 							<authenticator>
-								<v-btn v-if="route === 'authenticated'" color="secondary" @click="signOut">Sign Out</v-btn>
+								<v-btn class="mt-3" v-if="route === 'authenticated'" color="secondary" @click="signOut">Sign Out</v-btn>
 							</authenticator>
-						</v-col><v-spacer/>
+						</v-col>
+						<v-spacer/>
 					</v-row>
 
 			</v-container>
@@ -190,7 +192,7 @@ onMounted( () => {
 	window.addEventListener('beforeunload',(e) => {
 		if (workingEmailModel.value.length > 0 ) {
 			e.preventDefault();
-			e.returnValue = '' /* Deprecated */	
+			e.returnValue = '' /* Deprecated */
 		}
 	})
 })
@@ -220,6 +222,8 @@ const emailModel = ref(props.p2)
 const workingEmailModel = ref("")
 const resetEmail = () => { workingEmailModel.value = emailModel.value }
 const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
+
+const user_nameModel = ref("--> placeholder <--")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
@@ -273,7 +277,7 @@ const checkEmailName = (emailArg) => {
 	/*			 	TEST DATA -- This patterns must fail.
 						asd_@gmail.com // This is valid
 						-asd@gmail.com		asd-@gmail.com		_asd@gmail.com		+asd@gmail.com
-						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com		
+						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com
 	*/
 	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
 	let match = regex.exec(parsedEmail.name)
@@ -365,19 +369,19 @@ const buildEmailConfirmationMessage = (email:string) => {
 		let {name , domain} = parseEmail(email)
 		let obscureEmail = `${name[0]}***@${domain[0]}***`
 		EmailConfirmationMessage.Title.value = "We Emailed You"
-		EmailConfirmationMessage.Message.value = 
+		EmailConfirmationMessage.Message.value =
 			`Your code is on the way. To confirm your email address change, `+
 			`enter the code we emailed to <b>${obscureEmail}</b>.`+
 			`<br>This may take a minuet to arrive.`
 		return EmailConfirmationMessage
 	}
 	//				No Title should be included with this message.
-	let message = 
+	let message =
 		`To confirm your email address change, you <b>MUST</b> enter the `+
-		`code we emailed to the new email address you provided.<br><br>` + 
+		`code we emailed to the new email address you provided.<br><br>` +
 
 		`<h2>Resend Code: Not available.</h2>`+
-		
+
 		`Your new email is not accessable to the application. To generate `+
 		`a confirmation code, close this popup and update the email again. `+
 		`You can use the same email.`

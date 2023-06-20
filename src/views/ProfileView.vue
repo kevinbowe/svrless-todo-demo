@@ -70,12 +70,6 @@
 											<p> {{ emailVerifiedLink }}</p>
 											<v-spacer></v-spacer>
 									</v-row>
-									<!-- ORIGINAL
-									<v-row class="justify-end mt-1" style="text-decoration: underline;">
-										<p v-if="emailVerified"> Verified </p>
-										<p v-else> Not Verified</p> 
-										<v-spacer></v-spacer>
-									</v-row> -->
 								</v-btn>
 							</v-row>
 							<v-row>
@@ -229,10 +223,7 @@ const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
-
-// const emailVerified = ref()
 const emailVerifiedLink = ref()
-// const emailVerifiedMessage = ref()
 
 const resendEmailConfirmationCode = async () => {
 	const user = await Auth.currentAuthenticatedUser();
@@ -282,7 +273,8 @@ const checkEmailName = (emailArg) => {
 	/*			 	TEST DATA -- This patterns must fail.
 						asd_@gmail.com // This is valid
 						-asd@gmail.com		asd-@gmail.com		_asd@gmail.com		+asd@gmail.com
-						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com		*/
+						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com		
+	*/
 	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
 	let match = regex.exec(parsedEmail.name)
 	if(match != null){
@@ -568,47 +560,19 @@ async function getSession(){
 		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
 			emailModel.value = user.attributes?.email
-
-			//				What is the current value, befor it is set?
-// 							bar()
-// 							info7("Pre setting the value...")
-// 							// info("emailVerified --> ", emailVerified)
-// 							info2("typeof emailVerified --> ", typeof emailVerified)
-// 
-// 							info4("emailVerified.value --> ", emailVerified.value)
-// 							info6("typeof emailVerified.value --> ", typeof emailVerified.value)
-// 							whitebar()
-			// emailVerified.value = user.attributes?.email_verified
 			emailVerifiedLink.value = user.attributes?.email_verified ? "Verified" : "Not Verified"
-
 			phone_numberModel.value =  user.attributes?.phone_number
 			nicknameModel.value = user.attributes?.nickname
 		})
 		.catch((error) => {
 			//				If I get here, there is no session or params
 			//				I need to signIn.
-// 								// bar()
-// 								info7("Post setting the value...")
-// 								// info("emailVerified --> ", emailVerified)
-// 								info2("typeof emailVerified --> ", typeof emailVerified)
-// 
-// 								info4("emailVerified.value --> ", emailVerified.value)
-// 								info6("typeof emailVerified.value --> ", typeof emailVerified.value)
-// 								bar()
 		})
 	}
 	else {
 		//				If we get here, the params and models exist.
 		//				We don't need to sign in.
 	}
-// 							// bar()
-// 							info7("Post setting the value...")
-// 							// info("emailVerified --> ", emailVerified)
-// 							info2("typeof emailVerified --> ", typeof emailVerified)
-// 
-// 							info4("emailVerified.value --> ", emailVerified.value)
-// 							info6("typeof emailVerified.value --> ", typeof emailVerified.value)
-// 							bar()
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 getSession()

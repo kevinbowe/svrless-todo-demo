@@ -4,7 +4,7 @@
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
 
-			<v-row justify="center">
+			<v-row v-if="route === 'authenticated'" justify="center">
 				<v-spacer/>
 				<v-col cols="8">
 					<v-divider :thickness="10" class="ma-2"></v-divider>
@@ -24,13 +24,14 @@
 					<v-divider :thickness="3" />
 					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
 					<v-row no-gutters ><p class="ma-auto">{{ user_nameModel }}</p></v-row>
+					<v-divider :thickness="10"></v-divider>
 				</v-col>
 				<v-spacer/>
 			</v-row>
 			<v-row no-gutters >
 				<v-spacer></v-spacer>
 				<v-col cols="8">
-					<v-divider :thickness="10"></v-divider>
+					<!-- <v-divider :thickness="10"></v-divider> -->
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />

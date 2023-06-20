@@ -3,10 +3,10 @@
 		<MasterLayout>
 			<v-container class="text-center">
 				<h1 class="text-primary">Profile Page Content</h1>
+				<hr class="mb-10">
 				<v-row v-if="route === 'authenticated'">
 					<v-spacer/>
 					<v-col cols="8">
-						<v-divider :thickness="10" class="mb-10"></v-divider>
 						<!-- START Forms -->
 
 						<!-- Nickname -->

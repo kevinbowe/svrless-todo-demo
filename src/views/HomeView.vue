@@ -2,156 +2,73 @@
 	<v-app>
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
-			{{ route }}
 			<hr class="mb-10">
 
 			<v-row justify="center">
-
-				<!-- START Column ONE -->
-				<v-col cols="6">
-					
-					<!-- START Status -->
-					nickNameModel [ {{ nicknameModel }} ]
-					<br>
-					workingNicknameModel [ {{ workingNicknameModel }} ]
-
-					<v-divider :thickness="20"  class="ma-5"></v-divider>
-					
-					<v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
-						user.attribute [ name | value ]
+				<v-spacer/>
+				<v-col cols="8">
+					<v-divider :thickness="10" class="ma-2"></v-divider>
+					<v-row no-gutters>
+						<v-col style="background-color: rgb(var(--v-theme-surface));"><p>Nick Name:</p></v-col>
+						<v-col><p>{{ nicknameModel }}</p></v-col>
 					</v-row>
-
-					<v-row class="my-0 py-0" justify="center" v-if="route === 'authenticated'">
-						<v-col cols="3" class="text-right my-0 py-0"> Nick Name </v-col>
-						<v-col cols="5" class="text-left my-0 py-0"> [ {{ user.attributes.nickname }} ]</v-col>
-					</v-row>
-					<!-- END Status -->
-
-					<!-- START Forms -->
-					<v-form :disabled="route !== 'authenticated'" class="w-50 mx-auto mt-10" validate-on="submit" @submit.prevent="submitNickname" >
-						<v-row>
-							<v-text-field :rules="[	value => checkReservedNickname(value), 
-															value => checkShortNickname(value),
-															value => checkFirstChar(value),
-															value => checkSpecialChars(value)]" 
-									label="Nickname (optional)" hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel"   />
-						</v-row>
-						<v-row class="justify-end">
-							<v-btn :disabled="route !== 'authenticated'" color="surface" size="large" @click="resetNickname"> Cancel </v-btn>
-							<v-btn :disabled="route !== 'authenticated'" class="ml-2" color="primary" size="large" type="submit"> Save </v-btn>
-						</v-row>
-					</v-form>
-					<!-- END Forms -->
-
-					<!-- Experiment -->
-					<!-- <v-row class="justify-end"><v-col cols="7" class="mr-3 mt-5"><v-btn color=secondary 
-						@click="getNickName"> TEST </v-btn></v-col></v-row> -->
-
-				</v-col> 
-				<!-- END Column ONE -->	
-				<!-- START Column TWO -->
-				<v-col cols="6"> 
-					<v-container style="text-align:start;">
-						<v-row>
-							<v-col cols="6">
-							</v-col>
-							<v-col cols="6">
-							</v-col>
-						</v-row>
-					</v-container>
-
-					<!-- ORIGINAL
-					<authenticator :services="services" initialState="signUp" :formFields="formFields" :signUpAttributes="['email']"> -->
-					<!-- Dev 2 -->
+							
+					<v-divider :thickness="3" />
+					<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">Email:</p></v-row>
+					<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
+					
+					<v-divider :thickness="3" />
+					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">Phone Number:</p></v-row>
+					<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
+					
+					<v-divider :thickness="3" />
+					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
+					<v-row no-gutters ><p class="ma-auto">{{ user_nameModel }}</p></v-row>
+				</v-col>
+				<v-spacer/>
+			</v-row>
+			<v-row no-gutters >
+				<v-spacer></v-spacer>
+				<v-col cols="8">
+					<v-divider :thickness="10"></v-divider>
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
-
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
-
 							<p style="margin-bottom:-.75em;">Phone number</p>
 							<v-text-field 
-									class="signup-nickname"
-									:rules="[	
-										// value => checkReservedNickname(value), 
-										// value => checkShortNickname(value),
-										// value => checkFirstChar(value),
-										// value => checkSpecialChars(value)
-									]"
-									placeholder="( optional )"
-									name="phone_number"
-									hint="Short & Simple" variant="outlined" density="compact" v-model="workingPhone_numberModel" >
-								</v-text-field>
-
+								class="signup-nickname"
+								:rules="[ /* Phone Number Validation */ ]"
+								placeholder="( optional )"
+								name="phone_number"
+								hint="Short & Simple" variant="outlined" density="compact" v-model="workingPhone_numberModel" >
+							</v-text-field>
 							<p style="margin-bottom:-.75em;">Nickname</p>
 							<v-text-field 
-									class="signup-nickname"
-									:rules="[	value => checkReservedNickname(value), 
-															value => checkShortNickname(value),
-															value => checkFirstChar(value),
-															value => checkSpecialChars(value)]"
-									placeholder="( optional )"
-									name="nickname"
-									hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
-								</v-text-field>
-
-							<!-- <v-row>
-								<v-col cols="9"><AmplifyCheckBox/></v-col>
-								<v-col><a href="/tandc">Read Here</a></v-col>
-							</v-row> -->
-
+								class="signup-nickname"
+								:rules="[	value => checkReservedNickname(value), 
+													value => checkShortNickname(value),
+													value => checkFirstChar(value),
+													value => checkSpecialChars(value)]"
+								placeholder="( optional )"
+								name="nickname"
+								hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
+							</v-text-field>
 						</template>
-
 					</authenticator>
-
-					<div v-if="route === 'authenticated'">
-						<v-divider :thickness="20"  class="ma-2"></v-divider>
-						
-						<v-row>
-							<v-col cols="4" style="text-align:end;">
-								<div>attribute.email</div>
-								<div>attribute.nickname</div>
-								<div>attribute.phone_number</div>
-
-							</v-col>
-						
-							<v-col cols="6" style="text-align:start;">
-								<div>{{ user.attributes.email }}</div>
-								<div>{{ user.attributes.nickname }}</div>
-								<div>{{ user.attributes.phone_number }}</div>
-
-							</v-col>
-						</v-row>
-						
-						<v-divider :thickness="20"  class="ma-2"></v-divider>
-
-						<v-row>
-							<v-col cols="4" style="text-align:end;">
-								<div>emailModel</div>
-								<div>nicknameModel</div>
-								<div>phone_numberModel</div>
-
-							</v-col>
-
-							<v-col cols="6" style="text-align:start;">
-								<div>{{ emailModel }}</div>
-								<div>{{ nicknameModel }}</div>
-								<div>{{ phone_numberModel }}</div>
-
-							</v-col>
-						</v-row>
-
-						<v-divider :thickness="20"  class="ma-2"></v-divider>
-
-						<h1>Hello {{ nicknameModel }} !</h1>
-
-						<v-btn v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
-					</div>
-
-					<ThemeChanger />
-
-				</v-col> 
-				<!-- END Column TWO -->
+				</v-col>
+				<v-spacer></v-spacer>
 			</v-row>
+			<v-row no-gutters >
+				<v-spacer></v-spacer>
+				<v-col cols="8">
+					<div v-if="route === 'authenticated'">
+						<v-btn class="mt-3" v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
+					</div>
+					<!-- <ThemeChanger /> -->
+				</v-col>
+				<v-spacer></v-spacer>
+			</v-row>
+		
 		</MasterLayout>
 	</v-app>
 </template>
@@ -390,6 +307,7 @@ async function getNickEmailPhone(){
 	return {nicknameModel, emailModel, phone_numberModel}
 };
 
+const user_nameModel = ref("--> placeholder <--")
 const phone_numberModel = ref("")
 const workingPhone_numberModel = ref("")
 const workingNicknameModel = ref("")

@@ -121,45 +121,48 @@
 								</v-overlay>
 							</v-row>
 						</v-form>
+						
 						<!-- END Forms -->
+					</v-col>
+					<v-spacer/>
+				</v-row>
 
-						</v-col>
-						<v-spacer/>
-					</v-row>
+				<!-- Debug Info -->
+				<v-row v-if="route === 'authenticated'">
+					<v-spacer/>
+					<v-col cols="8">
+						<v-divider :thickness="10" class="ma-2"></v-divider>
+						<v-row no-gutters>
+							<v-col style="background-color: rgb(var(--v-theme-surface));"><p>Nick Name:</p></v-col>
+							<v-col><p>{{ nicknameModel }}</p></v-col>
+						</v-row>
+						
+						<v-divider :thickness="3" />
+						<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">Email:</p></v-row>
+						<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
+						
+						<v-divider :thickness="3" />
+						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">Phone Number:</p></v-row>
+						<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
+						
+						<v-divider :thickness="3" />
+						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
+						<v-row no-gutters ><p class="ma-auto">{{ user_nameModel }}</p></v-row>
+					</v-col>
+					<v-spacer/>
+				</v-row>
 
-					<v-row v-if="route === 'authenticated'">
-						<v-spacer/>
-						<v-col cols="8">
-							<v-divider :thickness="10" class="ma-2"></v-divider>
-							<v-row no-gutters>
-								<v-col style="background-color: rgb(var(--v-theme-surface));"><p>Nick Name:</p></v-col>
-								<v-col><p>{{ nicknameModel }}</p></v-col>
-							</v-row>
-							
-							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">Email:</p></v-row>
-							<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
-							
-							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">Phone Number:</p></v-row>
-							<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
-							
-							<v-divider :thickness="3" />
-							<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
-							<v-row no-gutters ><p class="ma-auto">{{ user_nameModel }}</p></v-row>
-						</v-col>
-						<v-spacer/>
-					</v-row>
-					<v-row no-gutters>
-						<v-spacer/>
-						<v-col cols="8">
-							<v-divider :thickness="10" __class="ma-2"></v-divider>
-							<authenticator>
-								<v-btn class="mt-3" v-if="route === 'authenticated'" color="secondary" @click="signOut">Sign Out</v-btn>
-							</authenticator>
-						</v-col>
-						<v-spacer/>
-					</v-row>
+				<!-- Authenticator Sign Out -->
+				<v-row no-gutters>
+					<v-spacer/>
+					<v-col cols="8">
+						<v-divider :thickness="10" __class="ma-2"></v-divider>
+						<authenticator>
+							<v-btn class="mt-3" v-if="route === 'authenticated'" color="secondary" @click="signOut">Sign Out</v-btn>
+						</authenticator>
+					</v-col>
+					<v-spacer/>
+				</v-row>
 
 			</v-container>
 		</MasterLayout>

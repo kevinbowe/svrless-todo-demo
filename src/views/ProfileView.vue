@@ -260,70 +260,54 @@ const workingPreferred_usernameModel = ref()
 const resetPreferred_username = () => { workingPreferred_usernameModel.value = preferred_usernameModel.value }
 
 async function submitPreferred_username (event) {
-	enter("submitPreferred_username")
-
+	enter("SUBMIT -- submitPreferred_username")
 	const results = await event
 	if(!results.valid) {
 		return /* Cancel Submission if validation FAILED */
 	}
+	info("VALIDATION Success...\n   Start Update...")
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	
 	await Auth.updateUserAttributes(newuser, {
-			'preferred_username': workingPreferred_usernameModel.value 
-		})
-		.catch((error) => {
-			//				If I get here, there was a problem updating the preferred_username
-			err("error.message", error.message )
-			alert(error.message)
-		})
-
+			'preferred_username': workingPreferred_usernameModel.value
+	})
+	.catch((error) => {
+		//			If I get here, there was a problem updating the preferred_username
+		alert(error.message)
+	})
 	await Auth.currentUserInfo().then(result => {
+		//			If we get here, The update worked.
 		preferred_usernameModel.value = result.attributes.preferred_username
 	})
-
+	exit("SUBMIT -- submitPreferred_username")
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Preferred_username -- Verify */
 
 const checkPreferred_usernameExists = async (preferred_UsernameArg) => {
-
-	enter("checkPreferred_usernameExists")
-
-				// info("import.meta.VITE_AWS_ACCESS_KEY_ID", import.meta.env.VITE_AWS_ACCESS_KEY_ID)
-				// info2("import.meta.VITE_AWS_SECRET_ACCESS_KEY", import.meta.env.VITE_AWS_SECRET_ACCESS_KEY)
-
-	const awsCredentialIdentity = {
-		//				Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
-		//				"AKIA..." is the permanent key -- "'ASIA..." is a Temporary key
-		accessKeyId : import.meta.env.VITE_AWS_ACCESS_KEY_ID, // "AKIA2NXKRVMVZ5GXPS5R", 
-		//				Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
-		//				also here -- ~/Documents/aws-dev access keys.txt
-		secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY // "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
-	}
-				// info("awsCredentialIdentity", awsCredentialIdentity)
-				// info4("awsconfig",awsconfig)
-
+					bar()
+					enter("VALIDATION -- checkPreferred_usernameExists")
 	const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
 		region: awsconfig.aws_cognito_region,
-		credentials: awsCredentialIdentity
+		credentials: {
+			accessKeyId : import.meta.env.VITE_AWS_ACCESS_KEY_ID, 
+			secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY} 
 	});
-
-				// info6("AWS USER POOL ID", awsconfig.aws_user_pools_id)
-				// info7("cognitoIdentityProviderClient",cognitoIdentityProviderClient)
-	
-				info("preferred_UsernameArg",preferred_UsernameArg)
-
+				info2(`VALIDATION -- Execute send( ${preferred_UsernameArg} )`)
 	const input = { UserPoolId: awsconfig.aws_user_pools_id, Username: preferred_UsernameArg /* "kb1" */ };
 	const command = new AWS.AdminGetUserCommand(input);
-	const response = await cognitoIdentityProviderClient.send(command);
-
- 	info("Response", response)
-
-	// return "FAIL This user name has been taken. Choose another user name."
-	return true
+	const response =  await cognitoIdentityProviderClient.send(command)
+	.catch((response) => {
+					info("Return TRUE")
+		return true
+	}) // END_CATCH
+	if (typeof response === "boolean") 
+		return response
+					info("Return Validation Error")
+	return `The user name [ ${preferred_UsernameArg} ] is not available. Please try again`
 }
 
 

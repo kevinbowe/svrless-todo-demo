@@ -22,8 +22,14 @@
 					<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
 					
 					<v-divider :thickness="3" />
+					
+					
+					
 					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
-					<v-row no-gutters ><p class="ma-auto">{{ user_nameModel }}</p></v-row>
+					<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
+
+
+
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 				<v-spacer/>
@@ -105,6 +111,8 @@ I18n.putVocabulariesForLanguage('en', {
 });
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/* TODO -- Replace this  awsCredentialIdentity property */
 const awsCredentialIdentity = {
 	//				Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
 	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
@@ -191,7 +199,8 @@ async function submitNickname(event) {
 		router.push({name:`profile`, params: {
 		 				p1:nicknameModel.value, 
 						p2:emailModel.value, 
-						p3:phone_numberModel.value 
+						p3:phone_numberModel.value,
+						p4:usernameModel.value
 		}  }) 
 }	
 async function checkReservedNickname (workingNickname) {
@@ -228,31 +237,72 @@ Hub.listen('auth', (data) => {
 			// case "signUp" :
 			// case "confirmSignUp" :
 			// case "autoSignIn" :
+			/* First Sign In (Sign Up workflow) */
 			case "signIn" :
-							// enter("Hub.listen: signIn")
 				// Does the nicknameModel exist?
 				if (!!nicknameModel.value.length) { 
 					//
 					// 			If we get here, the nicknameModel exists.
 					//				This only happens during the SignUp work flow.
 					UpdateNickname(nicknameModel) 
-					Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => { 
-						emailModel.value = results.attributes.email
-						nicknameModel.value =  data.payload.data.attributes.nickname
-						phone_numberModel.value = data.payload.data.attributes.phone_number
-					})
+					/* const results = */ Auth.currentAuthenticatedUser({bypassCache: true /* false */})
+					// .then(results => { 
+						// emailModel.value = results.attributes.email
+						// nicknameModel.value =  data.payload.data.attributes.nickname
+						// phone_numberModel.value = data.payload.data.attributes.phone_number
+						// usernameModel.value = data.payload.data.username
+
+						// return {
+						// 	// emailModel, 
+						// 	"email": data.payload.data.attributes.email,
+						// 	// nicknameModel, 
+						// 	"nickname": data.payload.data.attributes.nickname,
+						// 	// phone_numberModel, 
+						// 	"phone_number": data.payload.data.attributes.phone_number,
+						// 	// usernameModel
+						// 	"username" : data.payload.data.username,
+						// }
+					// })
+					
+					// info("results",results)
+
+					info("data.payload.data", data.payload.data)
+
+					emailModel.value = data.payload.data.attributes.email
+					nicknameModel.value = data.payload.data.attributes.nickname
+					phone_numberModel.value = data.payload.data.attributes.phone_number
+					usernameModel.value = data.payload.data.username
+					
+					info2("emailModel.value",emailModel.value)
+					info3("nicknameModel.value",nicknameModel.value)
+					info4("phone_numberModel.value",phone_numberModel.value)
+					info5("usernameModel.value",usernameModel.value)
+
+					info("router.push to Profile")
 					router.push({name:`profile`, params: {
 									p1:nicknameModel.value, 
 									p2:emailModel.value,
-									p3:phone_numberModel.value
+									p3:phone_numberModel.value,
+									p4:usernameModel.value
 								}  }) 
 				}
 
-				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => { 
+				/* Normal SignIn */
+				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => {
+									info7("Enter Normal Sign In")
+									info("results", data.payload.data) 
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
 					nicknameModel.value =  data.payload.data.attributes.nickname
 					phone_numberModel.value = data.payload.data.attributes.phone_number
+
+									info(data.payload.data.attributes.preferred_username )
+									info(data.payload.data.username )
+
+
+					usernameModel.value = data.payload.data.attributes.preferred_username 
+							? data.payload.data.attributes.preferred_username 
+							: data.payload.data.username
 				})
 				return
 			case "signOut" :
@@ -305,10 +355,25 @@ async function getNickEmailPhone(){
 	let phone = getUserCommandOutput.UserAttributes?.find(e => e.Name === "phone_number")?.Value
 	if (phone) phone_numberModel.value = phone
 
-	return {nicknameModel, emailModel, phone_numberModel}
+
+					info("getNicknameEmailPhone(~)")
+					info("getNicknameEmailPhone(~)",  getUserCommandOutput.Username)
+					info("getNicknameEmailPhone(~).UserAttributes",  getUserCommandOutput.UserAttributes)
+	
+
+		let user = getUserCommandOutput.Username
+		if (user) usernameModel.value = getUserCommandOutput.Username
+
+		let preferred_username = getUserCommandOutput.UserAttributes?.find(e => e.Name === "preferred_username")?.Value
+		if (preferred_username) usernameModel.value = preferred_username
+
+
+
+				info(`${nicknameModel.value}, ${emailModel.value}, ${phone_numberModel.value}, ${user}`)
+	return {nicknameModel, emailModel, phone_numberModel, user}
 };
 
-const user_nameModel = ref("--> placeholder <--")
+const usernameModel = ref("")
 const phone_numberModel = ref("")
 const workingPhone_numberModel = ref("")
 const workingNicknameModel = ref("")
@@ -326,6 +391,7 @@ getNickEmailPhone().then( (result: ""| {
 	workingNicknameModel.value = nicknameModel.value
 	emailModel.value = emailModel.value
 	phone_numberModel.value = phone_numberModel.value
+	//... usernameModel.value =  usernameModel.value
 	return result
 })
 </script>

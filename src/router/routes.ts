@@ -68,7 +68,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: "/profile/:p1?/:p2?/:p3?", 
+		path: "/profile/:p1?/:p2?/:p3?/:p4?", 
 		name: "profile",
 		props: true,
 		component: () =>

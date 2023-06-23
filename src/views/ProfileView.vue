@@ -167,7 +167,12 @@
 						
 						<v-divider :thickness="3" />
 						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
-						<v-row no-gutters ><p class="ma-auto">{{ preferred_usernameModel }}</p></v-row>
+						
+						<v-row no-gutters >
+							<p class="ma-auto">
+								{{ usernameModel }}
+							</p>
+						</v-row>
 					</v-col>
 					<v-spacer/>
 				</v-row>
@@ -234,7 +239,8 @@ let toggleConfirm:boolean = ref(false)
 const props = defineProps({
 	p1: { type: String },
 	p2: { type: String },
-	p3: { type: String }
+	p3: { type: String },
+	p4: { type: String }
 })
 
 const nicknameModel = ref(props.p1)
@@ -252,10 +258,11 @@ const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Preferred_username -- Submit */
+/* Preferred_username / username -- Submit */
 
-//				Add support for props --> ref(props.p4)
 const preferred_usernameModel = ref()
+// const preferred_usernameModel = ref(props.p4)
+const usernameModel = ref(props.p4)
 const workingPreferred_usernameModel = ref()
 const resetPreferred_username = () => { workingPreferred_usernameModel.value = preferred_usernameModel.value }
 
@@ -279,7 +286,8 @@ async function submitPreferred_username (event) {
 	})
 	await Auth.currentUserInfo().then(result => {
 		//			If we get here, The update worked.
-		preferred_usernameModel.value = result.attributes.preferred_username
+		usernameModel.value = result.attributes.preferred_username
+		// preferred_usernameModel.value = result.attributes.preferred_username
 	})
 	exit("SUBMIT -- submitPreferred_username")
 }
@@ -644,17 +652,26 @@ let areParamsEmpty = function() {
 let areModelsEmpty = function(){
 	return nicknameModel.value?.length === 0 ||
 	emailModel.value?.length === 0 ||
-	phone_numberModel.value?.length === 0
+	phone_numberModel.value?.length === 0 ||
+	usernameModel.value?.length === 0
 }
+
+info("usernameModel",usernameModel)
+info("preferred_usernameModel", preferred_usernameModel)
+
 async function getSession(){
 	if(areParamsEmpty() || areModelsEmpty()) {
 		//				Check to see if there is an active session.
 		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
+			// info(Object.getOwnPropertyNames(user))
+			// info(user.username)
 			emailModel.value = user.attributes?.email
 			emailVerifiedLink.value = user.attributes?.email_verified ? "Verified" : "Not Verified"
 			phone_numberModel.value =  user.attributes?.phone_number
 			nicknameModel.value = user.attributes?.nickname
+			// usernameModel.value = user.username
+			usernameModel.value = user.attributes?.preferred_username ? user.attributes?.preferred_username : user.username
 		})
 		.catch((error) => {
 			//				If I get here, there is no session or params

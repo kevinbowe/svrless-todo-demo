@@ -334,7 +334,7 @@ async function getNickEmailPhone(){
 	}
 	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
 	getUserRequestInput.AccessToken = cognitoAccessToken	
-	const getUserCommand = new GetUserCommand(getUserRequestInput);	
+	const getUserCommand = new AWS.GetUserCommand(getUserRequestInput);	
 	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
 	//				Update the Model based on the GetUserCommandOutput
 	let nickname = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value

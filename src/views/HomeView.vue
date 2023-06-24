@@ -22,13 +22,8 @@
 					<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
 					
 					<v-divider :thickness="3" />
-					
-					
-					
 					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
 					<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
-
-
 
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
@@ -37,7 +32,6 @@
 			<v-row no-gutters >
 				<v-spacer></v-spacer>
 				<v-col cols="8">
-					<!-- <v-divider :thickness="10"></v-divider> -->
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
@@ -128,11 +122,6 @@ const formFields = {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
 	async validateCustomSignUp(formData) {
-						// start("Enter validateCustomSignUp()")
-						// info("formData", formData)
-
-		//				Disabled Temporary
-		// ... if (!formData.acknowledgement) { return { acknowledgement: "You must agree: Resistence is Futile" } }
 		if (formData.nickname) {
 			//				This is going to return an ValidationError string 
 			//				--OR-- a "passed validation" boolean true.
@@ -159,8 +148,6 @@ const services = {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function checkValidationResults(resultsArray) {
-						// enter("checkValidationResults")
-
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
 				// This return exits the '.then'
@@ -234,40 +221,13 @@ Hub.listen('auth', (data) => {
 					// 			If we get here, the nicknameModel exists.
 					//				This only happens during the SignUp work flow.
 					UpdateNickname(nicknameModel) 
-					/* const results = */ Auth.currentAuthenticatedUser({bypassCache: true /* false */})
-					// .then(results => { 
-						// emailModel.value = results.attributes.email
-						// nicknameModel.value =  data.payload.data.attributes.nickname
-						// phone_numberModel.value = data.payload.data.attributes.phone_number
-						// usernameModel.value = data.payload.data.username
-
-						// return {
-						// 	// emailModel, 
-						// 	"email": data.payload.data.attributes.email,
-						// 	// nicknameModel, 
-						// 	"nickname": data.payload.data.attributes.nickname,
-						// 	// phone_numberModel, 
-						// 	"phone_number": data.payload.data.attributes.phone_number,
-						// 	// usernameModel
-						// 	"username" : data.payload.data.username,
-						// }
-					// })
-					
-					// info("results",results)
-
-					info("data.payload.data", data.payload.data)
+					Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 
 					emailModel.value = data.payload.data.attributes.email
 					nicknameModel.value = data.payload.data.attributes.nickname
 					phone_numberModel.value = data.payload.data.attributes.phone_number
 					usernameModel.value = data.payload.data.username
 					
-					info2("emailModel.value",emailModel.value)
-					info3("nicknameModel.value",nicknameModel.value)
-					info4("phone_numberModel.value",phone_numberModel.value)
-					info5("usernameModel.value",usernameModel.value)
-
-					info("router.push to Profile")
 					router.push({name:`profile`, params: {
 									p1:nicknameModel.value, 
 									p2:emailModel.value,
@@ -278,17 +238,10 @@ Hub.listen('auth', (data) => {
 
 				/* Normal SignIn */
 				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => {
-									info7("Enter Normal Sign In")
-									info("results", data.payload.data) 
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
 					nicknameModel.value =  data.payload.data.attributes.nickname
 					phone_numberModel.value = data.payload.data.attributes.phone_number
-
-									info(data.payload.data.attributes.preferred_username )
-									info(data.payload.data.username )
-
-
 					usernameModel.value = data.payload.data.attributes.preferred_username 
 							? data.payload.data.attributes.preferred_username 
 							: data.payload.data.username
@@ -302,8 +255,6 @@ Hub.listen('auth', (data) => {
 						
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function UpdateNickname(nicknameModel){
-					// enter("UpdateNickname")
-		//
 		// 			This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 		await Auth.updateUserAttributes(newuser, {'nickname': nicknameModel.value })
@@ -311,7 +262,6 @@ async function UpdateNickname(nicknameModel){
 			nicknameModel.value = result.attributes.nickname
 			workingNicknameModel.value = result.attributes.nickname
 		}) // END_THEN
-
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -324,9 +274,6 @@ const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getNickEmailPhone(){
-			// enter("getNickEmailPhone")
-		
-
 	const cognitoAccessToken = await Auth.currentSession()
 			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
 	if (cognitoAccessToken === "No current user") { 
@@ -346,21 +293,12 @@ async function getNickEmailPhone(){
 	let phone = getUserCommandOutput.UserAttributes?.find(e => e.Name === "phone_number")?.Value
 	if (phone) phone_numberModel.value = phone
 
+	let user = getUserCommandOutput.Username
+	if (user) usernameModel.value = getUserCommandOutput.Username
 
-					info("getNicknameEmailPhone(~)")
-					info("getNicknameEmailPhone(~)",  getUserCommandOutput.Username)
-					info("getNicknameEmailPhone(~).UserAttributes",  getUserCommandOutput.UserAttributes)
-	
+	let preferred_username = getUserCommandOutput.UserAttributes?.find(e => e.Name === "preferred_username")?.Value
+	if (preferred_username) usernameModel.value = preferred_username
 
-		let user = getUserCommandOutput.Username
-		if (user) usernameModel.value = getUserCommandOutput.Username
-
-		let preferred_username = getUserCommandOutput.UserAttributes?.find(e => e.Name === "preferred_username")?.Value
-		if (preferred_username) usernameModel.value = preferred_username
-
-
-
-				info(`${nicknameModel.value}, ${emailModel.value}, ${phone_numberModel.value}, ${user}`)
 	return {nicknameModel, emailModel, phone_numberModel, user}
 };
 
@@ -373,7 +311,6 @@ const emailModel = ref("")
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// getNicknameEmail().then((result:""|{nicknameModel:Ref<string>,emailModel:Ref<string>}) => { 
 getNickEmailPhone().then( (result: ""| {
 			nicknameModel:Ref<string>,
 			emailModel:Ref<string>,
@@ -382,7 +319,6 @@ getNickEmailPhone().then( (result: ""| {
 	workingNicknameModel.value = nicknameModel.value
 	emailModel.value = emailModel.value
 	phone_numberModel.value = phone_numberModel.value
-	//... usernameModel.value =  usernameModel.value
 	return result
 })
 </script>

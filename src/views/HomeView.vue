@@ -98,8 +98,7 @@ import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import { AdminGetUserCommand, CognitoIdentityProviderClient, GetUserCommand, GetUserRequest } 
-	from "@aws-sdk/client-cognito-identity-provider";
+import * as AWS from "@aws-sdk/client-cognito-identity-provider";
 import { registerLayouts } from "../layouts/register";
 import router from "../router";
 
@@ -110,16 +109,6 @@ I18n.putVocabulariesForLanguage('en', {
   'Create Account': 'Sign Up', // Tab header
 });
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-/* TODO -- Replace this  awsCredentialIdentity property */
-const awsCredentialIdentity = {
-	//				Found this in IAM > Users > Amplify-dev-4-28 > Summary > Access key 1 || Also in Tags
-	accessKeyId : "AKIA2NXKRVMVZ5GXPS5R", 
-	//				Created in AIM > Amplify-dev-4-28 > Security credentials > Access keys > Create access key 
-	//				also here -- ~/Documents/aws-dev access keys.txt
-	secretAccessKey: "5LtAOgl+WggUJUef90KLy1wqWYaXzAsDevPOmA7u"  
-}
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Amplify.configure(awsconfig);
 
@@ -326,10 +315,12 @@ async function UpdateNickname(nicknameModel){
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-	region: awsconfig.aws_cognito_region,
-	credentials: awsCredentialIdentity
-});
+const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
+		region: awsconfig.aws_cognito_region,
+		credentials: {
+			accessKeyId : import.meta.env.VITE_AWS_ACCESS_KEY_ID, 
+			secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY} 
+	});
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getNickEmailPhone(){

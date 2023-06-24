@@ -213,7 +213,6 @@ import { toRefs, ref, computed, onMounted} from 'vue'
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
 
-// import { CognitoIdentityProviderClient, AdminGetUserCommand, CognitoIdentityCredentials } from "@aws-sdk/client-cognito-identity-provider";
 import * as AWS from "@aws-sdk/client-cognito-identity-provider";
 import awsconfig from '../aws-exports';
 

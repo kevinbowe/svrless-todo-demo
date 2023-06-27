@@ -201,7 +201,7 @@ import { ConfirmSignIn, useAuthenticator } from '@aws-amplify/ui-vue';
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 import {
 	info, info1, info2, info3, info4, info5, info6, info7,
-	bar, whitebar, greybar,
+	bar, whitebar, greybar, bluebar,
 	enter, start,
 	progress, pause, resume,
 	fini, exit, joy, pass, success,
@@ -304,13 +304,30 @@ const checkPreferred_usernameExists = async (preferred_UsernameArg) => {
 	const input = { UserPoolId: awsconfig.aws_user_pools_id, Username: preferred_UsernameArg /* "kb1" */ };
 	const command = new AWS.AdminGetUserCommand(input);
 	const response =  await cognitoIdentityProviderClient.send(command)
+
+	.then((response) => { 
+		info3("Then -- response -- Found")
+		info3("Then -- response -- Do Not Add")
+		return })
+		
 	.catch((response) => {
-					info("Return TRUE")
+			info3("Catch -- response -- Not Found")
+			info3("Catch -- response -- OK to Add")
 		return true
 	}) // END_CATCH
-	if (typeof response === "boolean") 
+		
+					bluebar()
+		if (typeof response === "boolean") {
+			info2("response 1 -->", response)
+					info2("typeof response 1 -->", typeof response)
+					info2("response 1 -- OK to ADD -->")
+					bar()
 		return response
-					info("Return Validation Error")
+	}
+					info1("response 2", response)
+					info1("typeof response 2", typeof response)
+					info1("response 2 -- Do Not Add", typeof response)
+					bar()
 	return `The user name [ ${preferred_UsernameArg} ] is not available. Please try again`
 }
 

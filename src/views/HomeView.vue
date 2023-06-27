@@ -265,6 +265,8 @@ async function UpdateNickname(nicknameModel){
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/* This function must be removed */
 const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
 		region: awsconfig.aws_cognito_region,
 		credentials: {
@@ -275,10 +277,11 @@ const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function getNickEmailPhone(){
 	const cognitoAccessToken = await Auth.currentSession()
-			.then(currenSession => {return currenSession.getAccessToken().getJwtToken()}).catch(err => { return err})
-	if (cognitoAccessToken === "No current user") { 
-		return ""
-	}
+	.then(currenSession => {
+		return currenSession .getAccessToken() .getJwtToken()})
+	.catch(err => { return err})
+	if (cognitoAccessToken === "No current user") return ""
+	
 	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
 	getUserRequestInput.AccessToken = cognitoAccessToken	
 	const getUserCommand = new AWS.GetUserCommand(getUserRequestInput);	

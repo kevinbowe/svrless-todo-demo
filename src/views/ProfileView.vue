@@ -130,8 +130,10 @@
 							@submit.prevent="submitPreferred_username" 
 						>
 							<v-row>
-								<!-- <v-text-field :rules="[(value) => checkPreferred_usernameExists(value)]" -->
-								<v-text-field :__rules="[(value) => checkPreferred_usernameExists(value)]"
+								<v-text-field :rules="[
+										(value) => checkPreferred_username(value),
+										(value) => checkPreferred_usernameSpecialChar(value)
+									]"
 									clearable label="User Name" hint="Example: kb1" variant="outlined" density="compact"
 									v-model="workingPreferred_usernameModel">
 								</v-text-field>
@@ -286,17 +288,13 @@ const resetPreferred_username = () => { workingPreferred_usernameModel.value = p
 const invalidUsernameDialogFlag = ref(false)
 
 async function submitPreferred_username (event) {
-	bluebar()
-	enter("SUBMIT -- submitPreferred_username")
 	const results = await event
 	if(!results.valid) {
 		return /* Cancel Submission if validation FAILED */
 	}
-	info("VALIDATION Success...\n   Start Update...")
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
-	
 	await Auth.updateUserAttributes(newuser, {
 			'preferred_username': workingPreferred_usernameModel.value
 	})	.catch((error) => {
@@ -307,21 +305,39 @@ async function submitPreferred_username (event) {
 		//			If we get here, The update worked.
 		usernameModel.value = result.attributes.preferred_username
 	})
-	exit("SUBMIT -- submitPreferred_username")
-	bluebar()
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Preferred_username -- Verify */
+const checkPreferred_username = (nameArg) => {
+	//				Length check ( long & short )
+	//				--	64 char
+	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
+	let len = nameArg.length;
+	if(len > 64) return "FAIL checkPreferred_username() > Length Check: Max char allowed = 64 char"
+	if(len <= 0) return "FAIL checkPreferred_username() > Length Check: Min char allowed = 1 char"
+	//				Leading and trailing special char check
+					/*	TEST DATA -- These patterns must fail.
+							-name		name-		_name		name_		
+							+name		name+		.name		name.		*/
+	const regex = new RegExp('^[-_+\\.]|[-_+\\.]$', 'gm')
+	let match = regex.exec(nameArg)
+	if(match != null)	return `Invalid character [-_+.] used at begining or end of name [ ${match} ]`
+return true
+}
 
-const checkPreferred_usernameExists = async (preferred_UsernameArg) => {
-					bar()
-					enter("VALIDATION -- checkPreferred_usernameExists")
-		
-					exit("VALIDATION -- checkPreferred_usernameExists")
-					bar()
+const checkPreferred_usernameSpecialChar = (nameArg) => {
+	//				Perform general special char check
+	const regexSpecialChar = new RegExp('^.*[@!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
+
+	const specialCharMatch = regexSpecialChar.exec(nameArg)
+	if ( specialCharMatch !== null) {
+		//			If we get here, there was a match
+		return "FAIL checkPreferred_usernameSpecialChar() > specialCharMatch"
+	}
 	return true
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
 const emailVerifiedLink = ref()

@@ -130,7 +130,8 @@
 							@submit.prevent="submitPreferred_username" 
 						>
 							<v-row>
-								<v-text-field :rules="[(value) => checkPreferred_usernameExists(value)]"
+								<!-- <v-text-field :rules="[(value) => checkPreferred_usernameExists(value)]" -->
+								<v-text-field :__rules="[(value) => checkPreferred_usernameExists(value)]"
 									clearable label="User Name" hint="Example: kb1" variant="outlined" density="compact"
 									v-model="workingPreferred_usernameModel">
 								</v-text-field>
@@ -285,6 +286,7 @@ const resetPreferred_username = () => { workingPreferred_usernameModel.value = p
 const invalidUsernameDialogFlag = ref(false)
 
 async function submitPreferred_username (event) {
+	bluebar()
 	enter("SUBMIT -- submitPreferred_username")
 	const results = await event
 	if(!results.valid) {
@@ -297,75 +299,29 @@ async function submitPreferred_username (event) {
 	
 	await Auth.updateUserAttributes(newuser, {
 			'preferred_username': workingPreferred_usernameModel.value
-	})
-
-
-
-
-	.catch((error) => {
+	})	.catch((error) => {
 		//			If I get here, there was a problem updating the preferred_username
-		// alert(error.message)
 		invalidUsernameDialogFlag.value = true
 	})
-
-
-
-
 	await Auth.currentUserInfo().then(result => {
 		//			If we get here, The update worked.
 		usernameModel.value = result.attributes.preferred_username
 	})
 	exit("SUBMIT -- submitPreferred_username")
+	bluebar()
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Preferred_username -- Verify */
 
 const checkPreferred_usernameExists = async (preferred_UsernameArg) => {
-
-	return true
 					bar()
 					enter("VALIDATION -- checkPreferred_usernameExists")
-	const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
-		region: awsconfig.aws_cognito_region,
-		credentials: {
-			accessKeyId : import.meta.env.VITE_AWS_ACCESS_KEY_ID, 
-			secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY} 
-	});
-				info2(`VALIDATION -- Execute send( ${preferred_UsernameArg} )`)
-	const input = { UserPoolId: awsconfig.aws_user_pools_id, Username: preferred_UsernameArg /* "kb1" */ };
-	const command = new AWS.AdminGetUserCommand(input);
-	const response =  await cognitoIdentityProviderClient.send(command)
-
-	.then((response) => { 
-		info3("Then -- response -- Found")
-		info3("Then -- response -- Do Not Add")
-		return })
 		
-	.catch((response) => {
-			info3("Catch -- response -- Not Found")
-			info3("Catch -- response -- OK to Add")
-		return true
-	}) // END_CATCH
-		
-					bluebar()
-		if (typeof response === "boolean") {
-			info2("response 1 -->", response)
-					info2("typeof response 1 -->", typeof response)
-					info2("response 1 -- OK to ADD -->")
+					exit("VALIDATION -- checkPreferred_usernameExists")
 					bar()
-		return response
-	}
-					info1("response 2", response)
-					info1("typeof response 2", typeof response)
-					info1("response 2 -- Do Not Add", typeof response)
-					bar()
-	return `The user name [ ${preferred_UsernameArg} ] is not available. Please try again`
+	return true
 }
-
-
-
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email */
 const emailVerifiedLink = ref()

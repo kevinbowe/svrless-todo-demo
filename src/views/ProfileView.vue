@@ -142,6 +142,26 @@
 							</v-row>
 						</v-form>
 
+						<!-- Username Invalid - Dialog -->
+						<v-row>
+							<v-col cols="auto">
+								<v-dialog v-model="invalidUsernameDialogFlag" width="auto">
+									<v-card>
+										<v-card-text>
+											Sorry. The username requested is not available. Try again.
+										</v-card-text>
+										<v-card-actions>
+											<v-btn class="ma-auto" color="primary" variant="elevated" 
+												@click="invalidUsernameDialogFlag = false"
+											>
+												OK
+											</v-btn>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+							</v-col>
+						</v-row>
+
 						<!-- END Forms -->
 					</v-col>
 					<v-spacer/>
@@ -262,6 +282,7 @@ const preferred_usernameModel = ref()
 const usernameModel = ref()
 const workingPreferred_usernameModel = ref()
 const resetPreferred_username = () => { workingPreferred_usernameModel.value = preferred_usernameModel.value }
+const invalidUsernameDialogFlag = ref(false)
 
 async function submitPreferred_username (event) {
 	enter("SUBMIT -- submitPreferred_username")
@@ -277,10 +298,19 @@ async function submitPreferred_username (event) {
 	await Auth.updateUserAttributes(newuser, {
 			'preferred_username': workingPreferred_usernameModel.value
 	})
+
+
+
+
 	.catch((error) => {
 		//			If I get here, there was a problem updating the preferred_username
-		alert(error.message)
+		// alert(error.message)
+		invalidUsernameDialogFlag.value = true
 	})
+
+
+
+
 	await Auth.currentUserInfo().then(result => {
 		//			If we get here, The update worked.
 		usernameModel.value = result.attributes.preferred_username
@@ -292,6 +322,8 @@ async function submitPreferred_username (event) {
 /* Preferred_username -- Verify */
 
 const checkPreferred_usernameExists = async (preferred_UsernameArg) => {
+
+	return true
 					bar()
 					enter("VALIDATION -- checkPreferred_usernameExists")
 	const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({

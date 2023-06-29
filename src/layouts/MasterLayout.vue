@@ -121,7 +121,7 @@
 					<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
 
 					<!-- Dev -->
-					<v-btn to="/dev" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev</v-btn>
+					<v-btn to="/dev6" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev 6</v-btn>
 
 					<!-- Devs -->
 					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Develope
@@ -227,6 +227,7 @@ const mainTitle: string = "v3-Auth-Vtfy3-v1"
 
 const menu = ref(false);
 const devLinks = ref([
+	{ label: "Dev 65", url: "/dev6" },
 	{ label: "Dev 5", url: "/dev5" },
 	{ label: "Dev 4", url: "/dev4" },
 	{ label: "Dev 3", url: "/dev3" },

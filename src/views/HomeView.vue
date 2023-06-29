@@ -35,15 +35,25 @@
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
-							<p style="margin-bottom:-.75em;">Phone number</p>
-							<v-text-field 
-								class="signup-nickname"
-								:rules="[ /* Phone Number Validation */ ]"
-								placeholder="( optional )"
-								name="phone_number"
-								hint="Short & Simple" variant="outlined" density="compact" v-model="workingPhone_numberModel" >
-							</v-text-field>
-							<p style="margin-bottom:-.75em;">Nickname</p>
+							
+								<p style="margin-bottom:-.75em;color:grey">Phone number</p>
+
+
+								<v-text-field
+ 									style="box-shadow:none;"
+									class="signup-nickname"
+									:rules="[ /* Phone Number Validation */ ]"
+									placeholder="( optional )"
+									name="phone_number"
+									hint="Short & Simple" 
+									variant="outlined" 
+									density="compact" 
+									v-model="workingPhone_numberModel" 
+									FINDME>
+								</v-text-field>
+
+
+							<p style="margin-bottom:-.75em;color:grey;">Nickname</p>
 							<v-text-field 
 								class="signup-nickname"
 								:rules="[	value => checkReservedNickname(value), 
@@ -54,6 +64,9 @@
 								name="nickname"
 								hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 							</v-text-field>
+
+
+
 						</template>
 					</authenticator>
 				</v-col>
@@ -114,8 +127,8 @@ const formFields = {
 		password: { order: 2 }, 
 		confirm_password: { order: 3 },
 		email: { order: 4 },
-		//phone_number: { order: 5 }
-		// nickname: { order:4 }
+		// phone_number: { order: 5 },
+		// nickname: { order:6 }
 	},
 }
 
@@ -213,6 +226,11 @@ Hub.listen('auth', (data) => {
 			// case "signUp" :
 			// case "confirmSignUp" :
 			// case "autoSignIn" :
+
+
+
+
+
 			/* First Sign In (Sign Up workflow) */
 			case "signIn" :
 				// Does the nicknameModel exist?
@@ -235,6 +253,11 @@ Hub.listen('auth', (data) => {
 									p4:usernameModel.value
 								}  }) 
 				}
+
+
+
+
+
 
 				/* Normal SignIn */
 				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => {
@@ -265,46 +288,6 @@ async function UpdateNickname(nicknameModel){
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-/* This function must be removed */
-const cognitoIdentityProviderClient = new AWS.CognitoIdentityProviderClient({
-		region: awsconfig.aws_cognito_region,
-		credentials: {
-			accessKeyId : import.meta.env.VITE_AWS_ACCESS_KEY_ID, 
-			secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY} 
-	});
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function getNickEmailPhone(){
-	const cognitoAccessToken = await Auth.currentSession()
-	.then(currenSession => {
-		return currenSession .getAccessToken() .getJwtToken()})
-	.catch(err => { return err})
-	if (cognitoAccessToken === "No current user") return ""
-	
-	const getUserRequestInput = new class GetUserRequestInput implements GetUserRequest { AccessToken: string | undefined = ""}
-	getUserRequestInput.AccessToken = cognitoAccessToken	
-	const getUserCommand = new AWS.GetUserCommand(getUserRequestInput);	
-	const getUserCommandOutput = await cognitoIdentityProviderClient.send(getUserCommand);
-	//				Update the Model based on the GetUserCommandOutput
-	let nickname = getUserCommandOutput.UserAttributes?.find(e => e.Name === "nickname")?.Value
-	if(nickname) nicknameModel.value = nickname
-
-	let email = getUserCommandOutput.UserAttributes?.find(e => e.Name === "email")?.Value
-	if (email) emailModel.value = email
-
-	let phone = getUserCommandOutput.UserAttributes?.find(e => e.Name === "phone_number")?.Value
-	if (phone) phone_numberModel.value = phone
-
-	let user = getUserCommandOutput.Username
-	if (user) usernameModel.value = getUserCommandOutput.Username
-
-	let preferred_username = getUserCommandOutput.UserAttributes?.find(e => e.Name === "preferred_username")?.Value
-	if (preferred_username) usernameModel.value = preferred_username
-
-	return {nicknameModel, emailModel, phone_numberModel, user}
-};
-
 const usernameModel = ref("")
 const phone_numberModel = ref("")
 const workingPhone_numberModel = ref("")
@@ -314,14 +297,37 @@ const emailModel = ref("")
 const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-getNickEmailPhone().then( (result: ""| {
-			nicknameModel:Ref<string>,
-			emailModel:Ref<string>,
-			phone_numberModel:Ref<string>, }) => { 
-	nicknameModel.value = nicknameModel.value
-	workingNicknameModel.value = nicknameModel.value
-	emailModel.value = emailModel.value
-	phone_numberModel.value = phone_numberModel.value
+/* Decl getSession */
+async function getSession(){
+	const cognitoAccessToken = await Auth.currentSession()
+	.then(currenSession => {
+		return currenSession .getAccessToken() .getJwtToken()})
+		.catch(err => { return err})
+		if (cognitoAccessToken === "No current user"){
+			info("There is no session available")
+			return "" 
+		}
+		
+		//					If we get here, we are signed in. There is a session available.
+		
+	return await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
+		.then((user) => {
+			return {
+				"nickname": user.attributes?.nickname,
+				"email": user.attributes?.email,
+				"phone_number": user.attributes?.phone_number,
+				"username": user.preferred_username ? user.preferred_username : user.username	
+			}
+		})
+	};
+	
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Execute getSession() */
+getSession().then( (result) => { 
+	nicknameModel.value = result.nickname
+	workingNicknameModel.value = result.nickname
+	emailModel.value = result.email
+	phone_numberModel.value = result.phone_number
 	return result
 })
 </script>
@@ -349,7 +355,47 @@ getNickEmailPhone().then( (result: ""| {
 			color: black;
 			background-color: rgb(var(--v-theme-error));
 	} */
+	/* .v-input { margin-top: 2px;}
+	.signup-nickname input {text-align: center;} */
+
+
 	.v-input { margin-top: 2px;}
-	.signup-nickname input {text-align: center;}
+	.signup-nickname input {
+		/* box-sizing: border-box; */
+		color: var(--amplify-components-fieldcontrol-color);
+		/* font-size: var(--amplify-components-fieldcontrol-font-size); */
+		/* line-height: var(--amplify-components-fieldcontrol-line-height); */
+		/* padding-block-start: var(--amplify-components-fieldcontrol-padding-block-start); */
+		/* padding-block-end: var(--amplify-components-fieldcontrol-padding-block-end); */
+		/* padding-inline-start: var(--amplify-components-fieldcontrol-padding-inline-start); */
+		/* padding-inline-end: var(--amplify-components-fieldcontrol-padding-inline-end); */
+
+		border-color: var(--amplify-components-fieldcontrol-border-color);
+		border-style: var(--amplify-components-fieldcontrol-border-style);
+		border-width: var(--amplify-components-fieldcontrol-border-width);
+
+	}
+	
+
+	/* .signup-nickname input {
+		border-color:  var(--amplify-components-fieldcontrol-border-color);
+		
+		background-color: lightgoldenrodyellow;
+		text-align: center;
+		border-style:solid;
+		border-width:thick;
+		border-color:red;
+		color:black;
+
+		color: var(--amplify-components-fieldcontrol-color);
+		border-width: var(--amplify-components-fieldcontrol-border-width);
+		border-style: var(--amplify-components-fieldcontrol-border-style);
+		outline-offset: var(--amplify-components-fieldcontrol-outline-offset);
+	} */
+
+
+	/* .amplify-input {
+		border-color:green;
+	} */
 	
 </style>

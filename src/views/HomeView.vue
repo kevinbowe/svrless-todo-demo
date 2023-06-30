@@ -4,7 +4,7 @@
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
 
-			<v-row v-if="route === 'authenticated'" justify="center">
+			<!-- <v-row v-if="route === 'authenticated'" justify="center">
 				<v-spacer/>
 				<v-col cols="8">
 					<v-divider :thickness="10" class="ma-2"></v-divider>
@@ -28,31 +28,66 @@
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 				<v-spacer/>
-			</v-row>
+			</v-row> -->
+			
 			<v-row no-gutters >
-				<v-spacer></v-spacer>
-				<v-col cols="8">
+				<v-col cols="3" >
+					<v-dialog v-model="DEBUGdialog" persistent width="1024" >
+						<template v-slot:activator="{ props }"> 
+							<v-btn color="primary" v-bind="props" > Open Dialog </v-btn> 
+						</template>
+						<v-card>
+							<v-card-title> <span class="text-h5">User Profile</span></v-card-title>
+							<v-card-text>
+								<v-container>
+									<v-row>
+										<v-col cols="12" sm="6" md="4">
+											<v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+										</v-col>
+										<v-col cols="12">
+											<v-text-field label="Email*" required ></v-text-field>
+										</v-col>
+										<v-col cols="12">
+											<v-text-field label="Password*" type="password" required ></v-text-field>
+										</v-col>
+									</v-row>
+								</v-container>
+								<small>*indicates required field</small>
+							</v-card-text>
+							<v-card-actions>
+								<v-btn color="blue-darken-1" variant="text" @click="DEBUGdialog = false" > Save </v-btn>
+							</v-card-actions>
+						</v-card>
+
+					</v-dialog>
+				</v-col>
+
+				<!-- 
+
+
+
+				 -->
+				
+				
+				<v-col cols="3">
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
 							
-								<p style="margin-bottom:-.75em;color:grey">Phone number</p>
-
-
-								<v-text-field
- 									style="box-shadow:none;"
-									class="signup-nickname"
-									:rules="[ /* Phone Number Validation */ ]"
-									placeholder="( optional )"
-									name="phone_number"
-									hint="Short & Simple" 
-									variant="outlined" 
-									density="compact" 
-									v-model="workingPhone_numberModel" 
-									FINDME>
-								</v-text-field>
-
-
+							<p style="margin-bottom:-.75em;color:grey">Phone number</p>
+							<v-text-field
+								style="box-shadow:none;"
+								class="signup-nickname"
+								:rules="[ /* Phone Number Validation */ ]"
+								placeholder="( optional )"
+								name="phone_number"
+								hint="Short & Simple" 
+								variant="outlined" 
+								density="compact" 
+								v-model="workingPhone_numberModel" 
+								FINDME
+							></v-text-field>
+							<!--  -->
 							<p style="margin-bottom:-.75em;color:grey;">Nickname</p>
 							<v-text-field 
 								class="signup-nickname"
@@ -64,14 +99,14 @@
 								name="nickname"
 								hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
 							</v-text-field>
-
-
-
 						</template>
 					</authenticator>
 				</v-col>
-				<v-spacer></v-spacer>
+				<!-- <v-spacer></v-spacer> -->
 			</v-row>
+
+
+
 			<v-row no-gutters >
 				<v-spacer></v-spacer>
 				<v-col cols="8">
@@ -120,6 +155,9 @@ I18n.putVocabulariesForLanguage('en', {
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+const DEBUGdialog = ref(false)
+
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
 	signUp: {

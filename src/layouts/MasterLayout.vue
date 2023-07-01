@@ -256,6 +256,11 @@ const theme = useTheme();
 //const themeVals = Object.keys(theme.computedThemes.value);
 const onChangeSwitch = () => {
 	switch(theme.global.name.value){
+		//				DEBUG
+		case "dark" : theme.global.name.value = "light"; break
+		case "light" : theme.global.name.value = "dark"; break
+		
+		// 			These cases below will be ignored because of debug above
 		case "light" : theme.global.name.value = "light_custom"; break
 		case "light_custom" : theme.global.name.value = "dark"; break
 		case "dark" : theme.global.name.value = "dark_custom"; break

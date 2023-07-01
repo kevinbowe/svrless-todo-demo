@@ -13,8 +13,9 @@ const light: ThemeDefinition = {
 	dark: false,
 	colors: {
 		background: '#ffffff',
-		// surface: '#424242', // .......... // grey-darken-3
-		surface: '#bdbdbd', // .......... // grey-lighten-1
+		border: '#000000', // .............. // black
+		surface: '#E0E0E0',
+		surface_alt: '#ffffff',
 		primary:'#6F3AB0',
 		secondary: '#00838F',
 		error: '#FF1744',
@@ -41,7 +42,10 @@ const dark: ThemeDefinition = {
 	dark: true,
 	colors: {
 		background: '#000000',
-		surface: '#424242',
+		border: '#ffffff', 
+		border_alt: '#000000', 
+		surface: '#e0e0e0',
+		surface_alt: '#F5F5F5',
 		primary:'#311B92',
 		secondary: '#00BCD4',
 		error: '#FF1744',
@@ -49,7 +53,7 @@ const dark: ThemeDefinition = {
 		success: '#00E676',
 		warning: '#EEFF41',
 		important: '#795548',
-		link: '#2196F3', // ............... // blue // #2196F3
+		link: '#2196F3', // ............... // blue
 		// error: 'red',
 		// info: 'indigo-darken-4',
 		// success: 'green-darken-4',

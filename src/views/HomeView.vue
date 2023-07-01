@@ -29,46 +29,74 @@
 				</v-col>
 				<v-spacer/>
 			</v-row> -->
-			
 			<v-row no-gutters >
 				<v-col cols="3" >
-					<v-dialog v-model="DEBUGdialog" persistent width="1024" >
-						<template v-slot:activator="{ props }"> 
-							<v-btn color="primary" v-bind="props" > Open Dialog </v-btn> 
-						</template>
-						<v-card>
-							<v-card-title> <span class="text-h5">User Profile</span></v-card-title>
-							<v-card-text>
-								<v-container>
-									<v-row>
-										<v-col cols="12" sm="6" md="4">
-											<v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-										</v-col>
+					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
+						<v-tabs color="primary" bg-color="surface" fixed-tabs v-model="SignInSignUpTab" >
+							<v-tab value="signin">Sign In</v-tab>
+							<v-tab value="signup">Sign Up</v-tab>
+						</v-tabs>
+						<v-card-text >
+							<v-window v-model="SignInSignUpTab">
+								<v-window-item value="signin">
+									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field label="Email*" required ></v-text-field>
-										</v-col>
+											<v-text-field id="usernameId" clearable density="compact" variant="outlined" label="User name" hint="example: kevinbowe1" /></v-col>
+
 										<v-col cols="12">
-											<v-text-field label="Password*" type="password" required ></v-text-field>
-										</v-col>
+											<v-text-field 
+												v-model="DEBUG_password"
+												:append-inner-icon="DEBUG_show1 ? 'mdi-eye' : 'mdi-eye-off'"
+												prepend-inner-icon="mdi-lock-outline"
+												:type="DEBUG_show1 ? 'text' : 'password'" 
+												@click:append-inner="DEBUG_show1 = !DEBUG_show1"
+												clearable density="compact" variant="outlined" label="Password" required 
+											></v-text-field></v-col>
+
+
+
+											<v-btn size="large" color="primary" block class="mb-3" @click="DEBUG_dialog = false" > Sign In </v-btn>
+										
+
 									</v-row>
-								</v-container>
-								<small>*indicates required field</small>
-							</v-card-text>
-							<v-card-actions>
-								<v-btn color="blue-darken-1" variant="text" @click="DEBUGdialog = false" > Save </v-btn>
-							</v-card-actions>
-						</v-card>
+								</v-window-item>
+								<v-window-item value="signup">
+									<v-row no-gutters>
+										<v-col cols="12">
+											<v-text-field 
+												v-model="DEBUG_password1"
+												:append-inner-icon="DEBUG_show11 ? 'mdi-eye' : 'mdi-eye-off'"
+												prepend-inner-icon="mdi-lock-outline"
+												:type="DEBUG_show11 ? 'text' : 'password'" 
+												@click:append-inner="DEBUG_show11 = !DEBUG_show11"
+												clearable density="compact" variant="outlined" label="Password*" required >
+											</v-text-field></v-col>
 
-					</v-dialog>
+										<v-col cols="12">
+											<v-text-field 
+											v-model="DEBUG_password2"
+												:append-inner-icon="DEBUG_show12 ? 'mdi-eye' : 'mdi-eye-off'"
+												prepend-inner-icon="mdi-lock-outline"
+												:type="DEBUG_show12 ? 'text' : 'password'" 
+												@click:append-inner="DEBUG_show12 = !DEBUG_show12"
+												clearable density="compact" variant="outlined" label="Confirm Password*" required >
+											</v-text-field></v-col>
+										
+										<v-col cols="12">
+											<v-text-field clearable density="compact" variant="outlined" label="Email" required /></v-col>
+										<v-col cols="12">
+											<v-text-field clearable density="compact" variant="outlined" label="Username" required /></v-col>
+										<v-col cols="12">
+											<v-text-field clearable density="compact" variant="outlined" label="Phone number"/></v-col>
+										<v-col cols="12">
+											<v-text-field clearable density="compact" variant="outlined" label="Nickname"/></v-col>
+										<v-btn block size="large" color="primary" class="mb-3" @click="DEBUG_dialog = false" > Sign Up </v-btn>
+									</v-row>
+								</v-window-item>
+							</v-window>
+						</v-card-text>
+					</v-card>
 				</v-col>
-
-				<!-- 
-
-
-
-				 -->
-				
-				
 				<v-col cols="3">
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
@@ -85,16 +113,12 @@
 								variant="outlined" 
 								density="compact" 
 								v-model="workingPhone_numberModel" 
-								FINDME
 							></v-text-field>
-							<!--  -->
+
 							<p style="margin-bottom:-.75em;color:grey;">Nickname</p>
 							<v-text-field 
 								class="signup-nickname"
-								:rules="[	value => checkReservedNickname(value), 
-													value => checkShortNickname(value),
-													value => checkFirstChar(value),
-													value => checkSpecialChars(value)]"
+								:rules="[ value => checkReservedNickname(value), value => checkShortNickname(value), value => checkFirstChar(value), value => checkSpecialChars(value) ]"
 								placeholder="( optional )"
 								name="nickname"
 								hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
@@ -102,10 +126,7 @@
 						</template>
 					</authenticator>
 				</v-col>
-				<!-- <v-spacer></v-spacer> -->
 			</v-row>
-
-
 
 			<v-row no-gutters >
 				<v-spacer></v-spacer>
@@ -156,7 +177,17 @@ Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-const DEBUGdialog = ref(false)
+							const DEBUG_show1 = ref(false)
+							const DEBUG_password = ref("")
+							//
+							const DEBUG_show11 = ref(false)
+							const DEBUG_password1 = ref("")
+							//
+							const DEBUG_show12 = ref(false)
+							const DEBUG_password2 = ref("")
+							//
+							const DEBUG_dialog = ref(false)
+							const SignInSignUpTab = ref()
 
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
@@ -265,10 +296,6 @@ Hub.listen('auth', (data) => {
 			// case "confirmSignUp" :
 			// case "autoSignIn" :
 
-
-
-
-
 			/* First Sign In (Sign Up workflow) */
 			case "signIn" :
 				// Does the nicknameModel exist?
@@ -289,13 +316,8 @@ Hub.listen('auth', (data) => {
 									p2:emailModel.value,
 									p3:phone_numberModel.value,
 									p4:usernameModel.value
-								}  }) 
+			 					}  }) 
 				}
-
-
-
-
-
 
 				/* Normal SignIn */
 				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => {
@@ -395,8 +417,6 @@ getSession().then( (result) => {
 	} */
 	/* .v-input { margin-top: 2px;}
 	.signup-nickname input {text-align: center;} */
-
-
 	.v-input { margin-top: 2px;}
 	.signup-nickname input {
 		/* box-sizing: border-box; */
@@ -411,10 +431,7 @@ getSession().then( (result) => {
 		border-color: var(--amplify-components-fieldcontrol-border-color);
 		border-style: var(--amplify-components-fieldcontrol-border-style);
 		border-width: var(--amplify-components-fieldcontrol-border-width);
-
 	}
-	
-
 	/* .signup-nickname input {
 		border-color:  var(--amplify-components-fieldcontrol-border-color);
 		
@@ -430,10 +447,15 @@ getSession().then( (result) => {
 		border-style: var(--amplify-components-fieldcontrol-border-style);
 		outline-offset: var(--amplify-components-fieldcontrol-outline-offset);
 	} */
-
-
 	/* .amplify-input {
 		border-color:green;
 	} */
-	
+	.v-slide-group-item--active {
+		background-color: rgb(var(--v-theme-surface_alt));
+		color: rgb(var(--v-theme-background));
+	}
+	.v-tab__slider {
+		top: 0;
+		height:4px;
+	}
 </style>

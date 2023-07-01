@@ -14,7 +14,7 @@ const light: ThemeDefinition = {
 	colors: {
 		background: '#ffffff',
 		border: '#000000', // .............. // black
-		surface: '#E0E0E0',
+		surface: '#E0E0E0', // ............. // grey-lighten-2
 		surface_alt: '#ffffff',
 		primary:'#6F3AB0',
 		secondary: '#00838F',
@@ -44,7 +44,7 @@ const dark: ThemeDefinition = {
 		background: '#000000',
 		border: '#ffffff', 
 		border_alt: '#000000', 
-		surface: '#e0e0e0',
+		surface: '#e0e0e0', // .............. // grey-lighten-2
 		surface_alt: '#F5F5F5',
 		primary:'#311B92',
 		secondary: '#00BCD4',

@@ -3,7 +3,7 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
-			<v-row v-if="route === 'authenticated'" justify="center">
+			<!-- <v-row v-if="route === 'authenticated'" justify="center">
 				<v-spacer/>
 				<v-col cols="8">
 					<v-divider :thickness="10" class="ma-2"></v-divider>
@@ -32,20 +32,18 @@
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 				<v-spacer/>
-			</v-row>
+			</v-row> -->
 			
-			<v-row no-gutters  v-if="route !== 'authenticated'" >
+			<!-- <v-row no-gutters  v-if="route !== 'authenticated'" >
 				<v-col cols="4" class="ma-auto" >
-					<!-- New -- Authenticator -->
-					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
+					<v-card __NEW_AUTHENTICATOR__ style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
 						<v-tabs color="primary" bg-color="surface" fixed-tabs v-model="SignInSignUpTab" >
 							<v-tab value="signin">Sign In</v-tab>
 							<v-tab value="signup">Sign Up</v-tab>
 						</v-tabs>
 						<v-card-text >
 							<v-window v-model="SignInSignUpTab">
-								<!-- Sign In -->
-								<v-window-item value="signin">
+								<v-window-item __SIGN_IN__ value="signin">
 
 									<v-row no-gutters>
 										<v-col cols="12">
@@ -73,8 +71,7 @@
 									</v-row>
 								</v-window-item>
 								
-								<!-- Sign Up -->
-								<v-window-item value="signup">
+								<v-window-item __SIGN_UP__ value="signup">
 									<v-row no-gutters>
 										<v-col cols="12">
 											<v-text-field 
@@ -126,8 +123,7 @@
 					</v-card>
 				</v-col>
 				
-				<!-- Old -- Authenticator -->
-				<v-col _cols="7">
+				<v-col __OLD_AUTHENTICATOR__ _cols="7">
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
@@ -151,7 +147,67 @@
 						</template>
 					</authenticator>
 				</v-col>
+			</v-row> -->
+
+			<!-- Confirmation -->
+			
+			<v-row justify="center">
+				
+				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
+
+					<v-sheet width="30em" style="height:23em;" color="surface_alt" _color="background" elevation="24" >
+					<!-- <v-sheet width="30em" :style="{height:!EmailConfirmationMessage.Title.value?'28em':'23em'}" color="background" elevation="24" > -->
+
+					<v-row>
+							<v-spacer></v-spacer>
+							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
+								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
+						</v-row>
+
+						<v-col _cols="6" style="margin-top:-2.5em;">
+
+							<!-- <v-row class="mx-5 mb-5"> -->
+								<!-- <h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
+								<p v-html="EmailConfirmationMessage.Message.value"></p> -->
+								<!-- <h1 class="ma-auto">Hello</h1>
+								<p>Message</p>
+							</v-row> -->
+
+							<v-row class="justify-center">Username</v-row>
+
+							<v-row ><v-spacer></v-spacer><v-col cols="11">
+								<v-text-field v-model="workingUsernameModel"
+									placeholder="Enter your username again" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
+								</v-text-field>
+							</v-col><v-spacer></v-spacer></v-row>
+
+
+							<v-row class="justify-center">Confirmation Code</v-row>
+
+							<v-row ><v-spacer></v-spacer><v-col cols="11">
+								<v-text-field v-model="confirmCodeModel"
+									id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
+								</v-text-field>
+							</v-col><v-spacer></v-spacer></v-row>
+
+							<v-row class="mx-5">
+								<v-btn :disabled="!confirmCodeModel" @click="AccountConfirmSignUp" block color="primary" class="mb-2" >
+									Confirm
+								</v-btn>
+							</v-row>
+
+							<!-- <v-row class="mx-5" >
+								<v-btn :disabled="!workingEmailModel" @click="resendEmailConfirmationCode" block color="background" class="mb-2" >
+									Resend Code
+								</v-btn>
+							</v-row> -->
+
+						</v-col>
+					</v-sheet>
+				</v-overlay>
 			</v-row>
+
+
 
 			<!-- Sign Out -->
 			<v-row no-gutters >
@@ -233,8 +289,9 @@ const workingPasswordModel2 = ref("")
 const workingEmailModel =ref("")
 // const workingNicknameModel = ref("")
 const workingPhone_numberModel = ref("")
-
-
+const toggleConfirm:boolean = ref(true)
+const confirmCodeModel:Number = ref()
+const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
 
 
 
@@ -307,16 +364,90 @@ const AccountSignUp = async () => {
 	} catch (error) {
 		console.log('error signing up:', error);
 	}
-
-
-
-
-
-
-
-
 }
 
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const parseEmail = (email) => {
+	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
+	let match = regex.exec(email)
+	if (match) return { name: match.groups.name, domain: match.groups.domain }
+	return null
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildEmailConfirmationMessage = (email:string) => {
+	if(email) {
+		//			If we get here, the email arg contains data.
+		let {name , domain} = parseEmail(email)
+		let obscureEmail = `${name[0]}***@${domain[0]}***`
+		EmailConfirmationMessage.Title.value = "We Emailed You"
+		EmailConfirmationMessage.Message.value =
+			`Your code is on the way. To confirm your email address change, `+
+			`enter the code we emailed to <b>${obscureEmail}</b>.`+
+			`<br>This may take a minuet to arrive.`
+		return EmailConfirmationMessage
+	}
+	//				No Title should be included with this message.
+	let message =
+		`To confirm your email address change, you <b>MUST</b> enter the `+
+		`code we emailed to the new email address you provided.<br><br>` +
+
+		`<h2>Resend Code: Not available.</h2>`+
+
+		`Your new email is not accessable to the application. To generate `+
+		`a confirmation code, close this popup and update the email again. `+
+		`You can use the same email.`
+	EmailConfirmationMessage.Message.value = message
+	return EmailConfirmationMessage
+}
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const resendEmailConfirmationCode = async () => {
+	const user = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+async function AccountConfirmSignUp() {
+  try {
+
+					info("workingUsernameModel.value", workingUsernameModel.value)
+					info("confirmCodeModel.value > ",confirmCodeModel.value)
+
+    await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value);
+  } catch (error) {
+    console.log('error confirming sign up', error);
+  }
+}
+
+
+
+
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setEmailConfirmed = async function () {
+						enter("setEmailConfirmed > confirmCodeModel.value > ", confirmCodeModel.value)
+
+	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
+		.then((response) => {
+						enter("verifyCurrentUserAttributeSubmit.then()")
+
+			toggleConfirm.value = false
+			confirmCodeModel.value = null
+			emailModel.value = workingEmailModel.value
+			if (!emailModel.value)
+				Auth.currentUserInfo().then((response) => emailModel.value = response.attributes.email)
+		})
+		.catch((e) => {
+						err("verifyCurrentUserAttributeSubmit > Catch > ",e)
+			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
+		})
+	return
+}
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

@@ -3,34 +3,40 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
-
-			<!-- <v-row v-if="route === 'authenticated'" justify="center">
+			<v-row v-if="route === 'authenticated'" justify="center">
 				<v-spacer/>
 				<v-col cols="8">
 					<v-divider :thickness="10" class="ma-2"></v-divider>
 					<v-row no-gutters>
-						<v-col style="background-color: rgb(var(--v-theme-surface));"><p>Nick Name:</p></v-col>
-						<v-col><p>{{ nicknameModel }}</p></v-col>
+						<v-col style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+							<p>Nick Name:</p></v-col>
+						<v-col>
+							<p>{{ nicknameModel }}</p></v-col>
 					</v-row>
 							
 					<v-divider :thickness="3" />
-					<v-row no-gutters style="background-color:rgb(var(--v-theme-surface));"><p class="ma-auto">Email:</p></v-row>
+					<v-row no-gutters style="background-color:rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+						<p class="ma-auto">Email:</p></v-row>
 					<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
 					
 					<v-divider :thickness="3" />
-					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">Phone Number:</p></v-row>
+					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+						<p class="ma-auto">Phone Number:</p></v-row>
 					<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
 					
 					<v-divider :thickness="3" />
-					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface));"><p class="ma-auto">User Name:</p></v-row>
+					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+						<p class="ma-auto">User Name:</p></v-row>
 					<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
 
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 				<v-spacer/>
-			</v-row> -->
-			<v-row no-gutters >
-				<v-col cols="3" >
+			</v-row>
+			
+			<v-row no-gutters  v-if="route !== 'authenticated'" >
+				<v-col cols="4" class="ma-auto" >
+					<!-- New -- Authenticator -->
 					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
 						<v-tabs color="primary" bg-color="surface" fixed-tabs v-model="SignInSignUpTab" >
 							<v-tab value="signin">Sign In</v-tab>
@@ -38,33 +44,42 @@
 						</v-tabs>
 						<v-card-text >
 							<v-window v-model="SignInSignUpTab">
+								<!-- Sign In -->
 								<v-window-item value="signin">
+
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field id="usernameId" clearable density="compact" variant="outlined" label="User name" hint="example: kevinbowe1" /></v-col>
+											<v-text-field 
+												v-model="workingUsernameModel"
+												clearable 
+												density="compact" 
+												variant="outlined" 
+												label="User name" 
+												hint="example: kevinbowe1" 
+											/></v-col>
 
 										<v-col cols="12">
 											<v-text-field 
-												v-model="DEBUG_password"
+												_v-model="DEBUG_password"
+												v-model="workingPasswordModel"
 												:append-inner-icon="DEBUG_show1 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
 												:type="DEBUG_show1 ? 'text' : 'password'" 
 												@click:append-inner="DEBUG_show1 = !DEBUG_show1"
 												clearable density="compact" variant="outlined" label="Password" required 
-											></v-text-field></v-col>
-
-
-
-											<v-btn size="large" color="primary" block class="mb-3" @click="DEBUG_dialog = false" > Sign In </v-btn>
-										
+											/></v-col>
+											<v-btn size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
 
 									</v-row>
 								</v-window-item>
+								
+								<!-- Sign Up -->
 								<v-window-item value="signup">
 									<v-row no-gutters>
 										<v-col cols="12">
 											<v-text-field 
-												v-model="DEBUG_password1"
+												_v-model="DEBUG_password1"
+												v-model="workingPasswordModel"
 												:append-inner-icon="DEBUG_show11 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
 												:type="DEBUG_show11 ? 'text' : 'password'" 
@@ -74,7 +89,8 @@
 
 										<v-col cols="12">
 											<v-text-field 
-											v-model="DEBUG_password2"
+											_v-model="DEBUG_password2"
+											v-model="workingPasswordModel2"
 												:append-inner-icon="DEBUG_show12 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
 												:type="DEBUG_show12 ? 'text' : 'password'" 
@@ -83,58 +99,67 @@
 											</v-text-field></v-col>
 										
 										<v-col cols="12">
-											<v-text-field clearable density="compact" variant="outlined" label="Email" required /></v-col>
+											<v-text-field 
+												v-model="workingEmailModel"
+												clearable density="compact" variant="outlined" label="Email" required 
+											/>
+										</v-col>
 										<v-col cols="12">
-											<v-text-field clearable density="compact" variant="outlined" label="Username" required /></v-col>
+											<v-text-field 
+												v-model="workingUsernameModel"
+												clearable density="compact" variant="outlined" label="Username" required /></v-col>
 										<v-col cols="12">
-											<v-text-field clearable density="compact" variant="outlined" label="Phone number"/></v-col>
+											<v-text-field 
+												v-model="workingPhone_numberModel"
+												clearable density="compact" variant="outlined" label="Phone number"/></v-col>
 										<v-col cols="12">
-											<v-text-field clearable density="compact" variant="outlined" label="Nickname"/></v-col>
-										<v-btn block size="large" color="primary" class="mb-3" @click="DEBUG_dialog = false" > Sign Up </v-btn>
+											<v-text-field 
+												v-model="workingNicknameModel"
+												clearable density="compact" variant="outlined" label="Nickname"/></v-col>
+
+										<v-btn block size="large" color="primary" class="mb-3" @click="AccountSignUp" > Sign Up </v-btn>
+
 									</v-row>
 								</v-window-item>
 							</v-window>
 						</v-card-text>
 					</v-card>
 				</v-col>
-				<v-col cols="3">
+				
+				<!-- Old -- Authenticator -->
+				<v-col _cols="7">
 					<authenticator :services="services" initialState="signUp" :formFields="formFields" >
 						<template v-slot:sign-up-fields>
 							<authenticator-sign-up-form-fields />
 							
 							<p style="margin-bottom:-.75em;color:grey">Phone number</p>
-							<v-text-field
-								style="box-shadow:none;"
-								class="signup-nickname"
+							<v-text-field style="box-shadow:none;" class="signup-nickname"
 								:rules="[ /* Phone Number Validation */ ]"
-								placeholder="( optional )"
-								name="phone_number"
-								hint="Short & Simple" 
-								variant="outlined" 
-								density="compact" 
-								v-model="workingPhone_numberModel" 
+								placeholder="( optional )" name="phone_number" hint="Short & Simple" variant="outlined" 
+								density="compact" v-model="workingPhonenumberModel" 
 							></v-text-field>
 
 							<p style="margin-bottom:-.75em;color:grey;">Nickname</p>
-							<v-text-field 
-								class="signup-nickname"
-								:rules="[ value => checkReservedNickname(value), value => checkShortNickname(value), value => checkFirstChar(value), value => checkSpecialChars(value) ]"
-								placeholder="( optional )"
-								name="nickname"
-								hint="Short & Simple" variant="outlined" density="compact" v-model="workingNicknameModel" >
+							<v-text-field class="signup-nickname" :rules="[ 
+									value => checkReservedNickname(value), 
+									value => checkShortNickname(value), 
+									value => checkFirstChar(value), 
+									value => checkSpecialChars(value) ]"
+								placeholder="( optional )" name="nickname" hint="Short & Simple" variant="outlined" 
+								density="compact" v-model="workingNicknameModel" >
 							</v-text-field>
 						</template>
 					</authenticator>
 				</v-col>
 			</v-row>
 
+			<!-- Sign Out -->
 			<v-row no-gutters >
 				<v-spacer></v-spacer>
 				<v-col cols="8">
 					<div v-if="route === 'authenticated'">
-						<v-btn class="mt-3" v-if="route === 'authenticated'" color="primary" @click="signOut">Sign Out</v-btn>
+						<v-btn class="mt-3" v-if="route === 'authenticated'" color="primary" @click="AccountSignOut">Sign Out</v-btn>
 					</div>
-					<!-- <ThemeChanger /> -->
 				</v-col>
 				<v-spacer></v-spacer>
 			</v-row>
@@ -156,7 +181,7 @@ import { info, infor , infog, infob, infoy, infoo, infop, infom,
 import ThemeChanger from "../components/ThemeChanger.vue";
 				/*  */
 import { AuthenticatorSignUpFormFields, SignIn, useAuthenticator, AmplifyCheckBox, translations} from '@aws-amplify/ui-vue';
-import { Amplify, Auth, Hub, I18n } from 'aws-amplify';
+import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 
@@ -186,8 +211,8 @@ Amplify.configure(awsconfig);
 							const DEBUG_show12 = ref(false)
 							const DEBUG_password2 = ref("")
 							//
-							const DEBUG_dialog = ref(false)
-							const SignInSignUpTab = ref()
+
+const SignInSignUpTab = ref()
 
 const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
 const formFields = {
@@ -200,6 +225,99 @@ const formFields = {
 		// nickname: { order:6 }
 	},
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const workingUsernameModel = ref("")
+const workingPasswordModel = ref("")
+const workingPasswordModel2 = ref("")
+const workingEmailModel =ref("")
+// const workingNicknameModel = ref("")
+const workingPhone_numberModel = ref("")
+
+
+
+
+
+const AccountSignOut = async () => {
+	try { await Auth.signOut();} 
+	catch (error) { console.log('error signing out: ', error);}
+}
+
+
+const AccountSignIn = async () => {
+	try { const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value);
+					info("Username", user.username)
+					info("Preferred_username", user.attributes.preferred_username)
+					info("eMail", user.attributes.email)
+					info("Phone number", user.attributes.phone_number)
+					info("Nickname", user.attributes.nickname)
+	} catch (error) { console.log('error signing in', error); }
+}
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const AccountSignUp = async () => {
+	/**
+	 * 		usernameModel
+	 *		workingUsernameModel
+
+	 * 		preferred_usernameModel
+	 *		workingPreferred_usernameModel
+
+	 * 		emailModel
+	 *		workingEmailModel
+	 * 
+	 * 		phone_numberModel
+	 * 	workingPhone_numberModel
+	 * 				workingPhone_number ------ REFACTOR
+	 * 				workingPhonenumberModel -- REFACTOR
+	 * 
+	 * 		nicknameModel
+	 * 	workingNicknameModel
+	 * 
+	 * 		<-no passwordModel->
+	 * 	workingPasswordModel
+	 * 
+	 * 		<-no passwordModel2->
+	 * 	workingPasswordModel2 -- ADD THIS
+	 * 
+	 */
+					info1("workingPasswordModel --> ",workingPasswordModel.value)
+					info2("workingPasswordModel2 --> ",workingPasswordModel2.value)
+					info3("workingEmailModel --> ",workingEmailModel.value)
+					info4("workingUsernameModel --> ",workingUsernameModel.value)
+					info5("workingPhone_numberModel --> ",workingPhone_numberModel.value)
+					//	Deal with this later in the journey
+					info6("workingNicknameModel --> ",workingNicknameModel.value)
+	try {
+
+	
+
+		const { user } = await Auth.signUp({
+			username: workingUsernameModel.value,
+			password: workingPasswordModel.value,
+			attributes: {
+				email: workingEmailModel.value,
+				phone_number: workingPhone_numberModel.value,
+			},
+
+			autoSignIn: { // optional - enables auto sign in after user is confirmed
+				enabled: true,
+			}
+		})
+		console.log(user);
+	} catch (error) {
+		console.log('error signing up:', error);
+	}
+
+
+
+
+
+
+
+
+}
+
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
@@ -298,6 +416,7 @@ Hub.listen('auth', (data) => {
 
 			/* First Sign In (Sign Up workflow) */
 			case "signIn" :
+				enter("Hub.listen --> case: signIn")
 				// Does the nicknameModel exist?
 				if (!!nicknameModel.value.length) { 
 					//
@@ -350,7 +469,7 @@ async function UpdateNickname(nicknameModel){
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const usernameModel = ref("")
 const phone_numberModel = ref("")
-const workingPhone_numberModel = ref("")
+const workingPhonenumberModel = ref("")
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
 const emailModel = ref("")

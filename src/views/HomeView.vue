@@ -3,7 +3,7 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
-			<v-row justify="center" v-if="usernameModel">
+			<v-row justify="center" v-if="isSession">
 				<v-spacer/>
 				<v-col cols="8">
 					<v-divider :thickness="10" class="ma-2"></v-divider>
@@ -13,27 +13,23 @@
 						<v-col>
 							<p>{{ nicknameModel }}</p></v-col>
 					</v-row>
-							
 					<v-divider :thickness="3" />
 					<v-row no-gutters style="background-color:rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 						<p class="ma-auto">Email:</p></v-row>
 					<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
-					
 					<v-divider :thickness="3" />
 					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 						<p class="ma-auto">Phone Number:</p></v-row>
 					<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
-					
 					<v-divider :thickness="3" />
 					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 						<p class="ma-auto">User Name:</p></v-row>
 					<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
-
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 				<v-spacer/>
 			</v-row>
-			<v-row no-gutters v-if="!usernameModel" >
+			<v-row no-gutters v-if="!isSession">
 				<v-col cols="4" class="ma-auto" >
 					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
 						<v-tabs color="primary" bg-color="surface" fixed-tabs v-model="SignInSignUpTab" >
@@ -54,7 +50,6 @@
 												label="Username" 
 												required
 											/></v-col>
-
 										<v-col cols="12">
 											<v-text-field 
 												id="passwordSignInId"
@@ -66,15 +61,12 @@
 												clearable density="compact" variant="outlined" label="Password" required 
 											/></v-col>
 											<v-btn size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
-
 									</v-row>
 								</v-window-item>
-								
-								<v-window-item __SIGN_UP__ value="signup">
+								<v-window-item __SIGN_UP__ value="signupTab">
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field 
-												_v-model="DEBUG_password1"
+											<v-text-field
 												v-model="workingPasswordModel"
 												:append-inner-icon="DEBUG_show11 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
@@ -82,10 +74,8 @@
 												@click:append-inner="DEBUG_show11 = !DEBUG_show11"
 												clearable density="compact" variant="outlined" label="Password*" required >
 											</v-text-field></v-col>
-
 										<v-col cols="12">
 											<v-text-field 
-											_v-model="DEBUG_password2"
 											v-model="workingPasswordModel2"
 												:append-inner-icon="DEBUG_show12 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
@@ -93,9 +83,8 @@
 												@click:append-inner="DEBUG_show12 = !DEBUG_show12"
 												clearable density="compact" variant="outlined" label="Confirm Password*" required >
 											</v-text-field></v-col>
-										
 										<v-col cols="12">
-											<v-text-field 
+											<v-text-field
 												id="emailSuId"
 												v-model="workingEmailModel"
 												clearable density="compact" variant="outlined" label="Email" required 
@@ -121,9 +110,7 @@
 												id="nicknameSuId"
 												v-model="workingNicknameModel"
 												clearable density="compact" variant="outlined" label="Nickname"/></v-col>
-
 										<v-btn block size="large" color="primary" class="mb-3" @click="AccountSignUp" > Sign Up </v-btn>
-
 									</v-row>
 								</v-window-item>
 							</v-window>
@@ -132,20 +119,16 @@
 				</v-col>
 			</v-row>
 			<!-- Confirmation -->
-			<v-row justify="center" _v-if="!toggleConfirm" __v-if="!usernameModel">
+			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
-
 					<v-sheet width="30em" style="height:23em;" color="surface_alt" _color="background" elevation="24" >
 					<!-- <v-sheet width="30em" :style="{height:!EmailConfirmationMessage.Title.value?'28em':'23em'}" color="background" elevation="24" > -->
-
 					<v-row>
 							<v-spacer></v-spacer>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 						</v-row>
-
 						<v-col _cols="6" style="margin-top:-2.5em;">
-
 							<!-- <v-row class="mx-5 mb-5"> -->
 								<!-- <h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
 								<p v-html="EmailConfirmationMessage.Message.value"></p> -->
@@ -158,34 +141,27 @@
 									id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
 								</v-text-field>
 							</v-col><v-spacer></v-spacer></v-row>
-
 							<v-row class="mx-5">
 								<v-btn :disabled="!confirmCodeModel" @click="AccountConfirmSignUp" block color="primary" class="mb-2" >
 									Confirm
 								</v-btn>
 							</v-row>
-
 							<!-- <v-row class="mx-5" >
 								<v-btn :disabled="!workingEmailModel" @click="resendEmailConfirmationCode" block color="background" class="mb-2" >
 									Resend Code
 								</v-btn>
 							</v-row> -->
-
 						</v-col>
 					</v-sheet>
 				</v-overlay>
 			</v-row>
-
-
-
 			<!-- Sign Out -->
-			<v-row no-gutters v-if="usernameModel">
+			<v-row no-gutters v-if="isSession">
 				<v-spacer></v-spacer>
 				<v-col cols="8"><div> <v-btn class="mt-3" color="primary" @click="AccountSignOut">
 					Sign Out</v-btn></div></v-col>
 				<v-spacer></v-spacer>
 			</v-row>
-		
 		</MasterLayout>
 	</v-app>
 </template>
@@ -249,17 +225,17 @@ const formFields = {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const DEBUG_userModel = ref("")
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
 const workingPasswordModel2 = ref("")
 const workingEmailModel =ref("")
-// const workingNicknameModel = ref("")
 const workingPhone_numberModel = ref("")
 const toggleConfirm:boolean = ref(false)
 const confirmCodeModel:Number = ref()
 const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
 
-
+const isSession = ref(true)
 
 const AccountSignOut = async () => {
 	try { await Auth.signOut()
@@ -277,58 +253,19 @@ const AccountSignOut = async () => {
 			workingUsernameModel.value = ""
 			toggleConfirm.value = false
 		})
-	} 
+	}
 	catch (error) { console.log('error signing out: ', error);}
 }
 
 const AccountSignIn = async () => {
 					enter("AccountSignOn")
 	try { const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value);
-					info("   Username", user.username)
-					info("   Preferred_username", user.attributes.preferred_username)
-					info("   eMail", user.attributes.email)
-					info("   Phone number", user.attributes.phone_number)
-					info("   Nickname", user.attributes.nickname)
 	} catch (error) { console.log('error signing in', error); }
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignUp = async () => {
-	/**
-	 * 		usernameModel
-	 *		workingUsernameModel
-
-	 * 		preferred_usernameModel
-	 *		workingPreferred_usernameModel
-
-	 * 		emailModel
-	 *		workingEmailModel
-	 * 
-	 * 		phone_numberModel
-	 * 	workingPhone_numberModel
-	 * 				workingPhone_number ------ REFACTOR
-	 * 				workingPhonenumberModel -- REFACTOR
-	 * 
-	 * 		nicknameModel
-	 * 	workingNicknameModel
-	 * 
-	 * 		<-no passwordModel->
-	 * 	workingPasswordModel
-	 * 
-	 * 		<-no passwordModel2->
-	 * 	workingPasswordModel2 -- ADD THIS
-	 * 
-	 */
-					info1("workingPasswordModel --> ",workingPasswordModel.value)
-					info2("workingPasswordModel2 --> ",workingPasswordModel2.value)
-					info3("workingEmailModel --> ",workingEmailModel.value)
-					info4("workingUsernameModel --> ",workingUsernameModel.value)
-					info5("workingPhone_numberModel --> ",workingPhone_numberModel.value)
-					//	Deal with this later in the journey
-					info6("workingNicknameModel --> ",workingNicknameModel.value)
 	try {
-
-	
-
 		const { user } = await Auth.signUp({
 			username: workingUsernameModel.value,
 			password: workingPasswordModel.value,
@@ -336,7 +273,6 @@ const AccountSignUp = async () => {
 				email: workingEmailModel.value,
 				phone_number: workingPhone_numberModel.value,
 			},
-
 			autoSignIn: { // optional - enables auto sign in after user is confirmed
 				enabled: true,
 			}
@@ -346,7 +282,6 @@ const AccountSignUp = async () => {
 		console.log('error signing up:', error);
 	}
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const parseEmail = (email) => {
@@ -383,7 +318,6 @@ const buildEmailConfirmationMessage = (email:string) => {
 	return EmailConfirmationMessage
 }
 
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const resendEmailConfirmationCode = async () => {
 	const user = await Auth.currentAuthenticatedUser();
@@ -391,10 +325,8 @@ const resendEmailConfirmationCode = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
 async function AccountConfirmSignUp() {
   try {
-
 					info("workingUsernameModel.value", workingUsernameModel.value)
 					info("confirmCodeModel.value > ",confirmCodeModel.value)
     await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
@@ -406,26 +338,17 @@ async function AccountConfirmSignUp() {
 		workingPhone_numberModel.value = ""
 		workingUsernameModel.value = ""
 	 });
-	//				When this is done, clear ALL working data.
-
   } catch (error) {
     console.log('error confirming sign up', error);
   }
 }
 
-
-
-
-
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmailConfirmed = async function () {
 						enter("setEmailConfirmed > confirmCodeModel.value > ", confirmCodeModel.value)
-
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
 		.then((response) => {
 						enter("verifyCurrentUserAttributeSubmit.then()")
-
 			toggleConfirm.value = false
 			confirmCodeModel.value = null
 			emailModel.value = workingEmailModel.value
@@ -438,7 +361,6 @@ const setEmailConfirmed = async function () {
 		})
 	return
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {
@@ -532,25 +454,20 @@ async function checkSpecialChars (workingNickname) {
 Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 			case "signUp" :
-				enter("Hub.listen --> case: Sign Up")
 				confirmCodeModel.value = null
 				toggleConfirm.value = true
 				return
 
 			case "confirmSignUp" :
-				enter("Hub.listen --> case: confirm Sign Up")
 				toggleConfirm.value = false
 				return
 
 			case "autoSignIn" :
-				enter("Hub.listen --> case: auto Sign In")
 				return
 
 			/* First Sign In (Sign Up workflow) */
 			case "signIn" :
-				enter("Hub.listen --> case: Sign In")
 				// Does the nicknameModel exist?
-				// if (!!nicknameModel.value.length) { 
 				if (nicknameModel.value && nicknameModel.value.length > 0) { 
 					//
 					// 			If we get here, the nicknameModel exists.
@@ -572,7 +489,6 @@ Hub.listen('auth', (data) => {
 				}
 
 				/* Normal SignIn */
-								enter("Hub.listen --> case: Sign In --> Normal")
 				Auth.currentAuthenticatedUser({bypassCache: true /* false */}).then(results => {
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
@@ -582,10 +498,11 @@ Hub.listen('auth', (data) => {
 							? data.payload.data.attributes.preferred_username 
 							: data.payload.data.username
 				})
+				isSession.value = true
 				return
 			case "signOut" :
-				enter("Hub.listen --> case: Sign Out")
 				workingNicknameModel.value = nicknameModel.value = ""
+				isSession.value = false
 				return
 			} // END_SWITCH
 })
@@ -618,42 +535,36 @@ async function getSession(){
 		return currenSession .getAccessToken() .getJwtToken()})
 		.catch(err => { return err})
 		if (cognitoAccessToken === "No current user"){
-
-			/*				If we get here, hide these items: User Info, Confirm, SignOut
-			*/
-
-			info("There is no session available")
-			return "" 
+			//				If we get here, hide these items: User Info, Confirm, SignOut
+			return { "isSession": false }
 		}
-		
 		/*					If we get here, we are signed in. 
 							There is a session available.
 							Hide these items: SignIn, SignUp, Confirm
 							----
 							Show these items: SignOut, User Info
 		*/
-		
 	return await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
+			info("Auth.currentAuthenticatedUser > user.attributes --> ", user.attributes)
 			return {
 				"nickname": user.attributes?.nickname,
 				"email": user.attributes?.email,
 				"phone_number": user.attributes?.phone_number,
 				"username": user.preferred_username ? user.preferred_username : user.username,
+				"isSession": true
 			}
 		})
 	};
 	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Execute getSession() */
-info("Calling getSessioin(~)")
 getSession().then( (result) => { 
-	info("getSession > then() > Updating Models")
 	nicknameModel.value = result.nickname
 	workingNicknameModel.value = result.nickname
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number
-	return result
+	isSession.value = result.isSession;
 })
 </script>
 

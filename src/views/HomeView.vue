@@ -54,10 +54,10 @@
 											<v-text-field 
 												id="passwordSignInId"
 												v-model="workingPasswordModel"
-												:append-inner-icon="DEBUG_show1 ? 'mdi-eye' : 'mdi-eye-off'"
+												:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
-												:type="DEBUG_show1 ? 'text' : 'password'" 
-												@click:append-inner="DEBUG_show1 = !DEBUG_show1"
+												:type="passwordIcon1 ? 'text' : 'password'" 
+												@click:append-inner="passwordIcon1 = !passwordIcon1"
 												clearable density="compact" variant="outlined" label="Password" required 
 											/></v-col>
 											<v-btn size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
@@ -68,19 +68,19 @@
 										<v-col cols="12">
 											<v-text-field
 												v-model="workingPasswordModel"
-												:append-inner-icon="DEBUG_show11 ? 'mdi-eye' : 'mdi-eye-off'"
+												:append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
-												:type="DEBUG_show11 ? 'text' : 'password'" 
-												@click:append-inner="DEBUG_show11 = !DEBUG_show11"
+												:type="passwordIcon2 ? 'text' : 'password'" 
+												@click:append-inner="passwordIcon2 = !passwordIcon2"
 												clearable density="compact" variant="outlined" label="Password*" required >
 											</v-text-field></v-col>
 										<v-col cols="12">
 											<v-text-field 
 											v-model="workingPasswordModel2"
-												:append-inner-icon="DEBUG_show12 ? 'mdi-eye' : 'mdi-eye-off'"
+												:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'"
 												prepend-inner-icon="mdi-lock-outline"
-												:type="DEBUG_show12 ? 'text' : 'password'" 
-												@click:append-inner="DEBUG_show12 = !DEBUG_show12"
+												:type="passwordIcon2b ? 'text' : 'password'" 
+												@click:append-inner="passwordIcon2b = !passwordIcon2b"
 												clearable density="compact" variant="outlined" label="Confirm Password*" required >
 											</v-text-field></v-col>
 										<v-col cols="12">
@@ -170,22 +170,15 @@
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { toRefs, ref, Ref, computed } from 'vue'
 				/*  */
-import { info, infor , infog, infob, infoy, infoo, infop, infom,
-			info1, info2 , info3, info4, info5, info6, info7,
+import { info, info1, info2 , info3, info4, info5, info6, info7,
 			log, warn, err , progress, joy, enter, exit,
 			success, bar, whitebar, fini, start, pass, fail }
 	from "../my-util-code/MyConsoleUtil"
 				/*  */
-import ThemeChanger from "../components/ThemeChanger.vue";
-				/*  */
-import { AuthenticatorSignUpFormFields, SignIn, useAuthenticator, AmplifyCheckBox, translations} from '@aws-amplify/ui-vue';
+import { translations} from '@aws-amplify/ui-vue';
 import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import * as AWS from "@aws-sdk/client-cognito-identity-provider";
-import { registerLayouts } from "../layouts/register";
 import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -199,33 +192,12 @@ I18n.putVocabulariesForLanguage('en', {
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-							const DEBUG_show1 = ref(false)
-							const DEBUG_password = ref("")
-							//
-							const DEBUG_show11 = ref(false)
-							const DEBUG_password1 = ref("")
-							//
-							const DEBUG_show12 = ref(false)
-							const DEBUG_password2 = ref("")
-							//
-
+const passwordIcon1 = ref(false)
+const passwordIcon2 = ref(false)
+const passwordIcon2b = ref(false)
 const SignInSignUpTab = ref()
 
-const { route, user, signOut, validationErrors } = toRefs(useAuthenticator());
-const formFields = {
-	signUp: {
-		// username: { order: 1},
-		password: { order: 2 }, 
-		confirm_password: { order: 3 },
-		email: { order: 4 },
-		// phone_number: { order: 5 },
-		// nickname: { order:6 }
-	},
-}
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const DEBUG_userModel = ref("")
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
 const workingPasswordModel2 = ref("")
@@ -578,54 +550,19 @@ getSession().then( (result) => {
 		color: rgb(var(--v-theme-primary)); 
 		border-color: rgb(var(--v-theme-primary));
 		background-color: #E0E0E0;
-		/* border-bottom-width: 5px; */
 	}
 	.amplify-tabs-item[data-state=active] { 
 		color: rgb(var(--v-theme-primary)); 
 		border-color: rgb(var(--v-theme-primary));
 		border-top-width: 5px;
-		/* border-right-width: 5px; ; */
 	}
-	/* 
-	.amplify-alert--error {
-			color: black;
-			background-color: rgb(var(--v-theme-error));
-	} */
-	/* .v-input { margin-top: 2px;}
-	.signup-nickname input {text-align: center;} */
 	.v-input { margin-top: 2px;}
 	.signup-nickname input {
-		/* box-sizing: border-box; */
 		color: var(--amplify-components-fieldcontrol-color);
-		/* font-size: var(--amplify-components-fieldcontrol-font-size); */
-		/* line-height: var(--amplify-components-fieldcontrol-line-height); */
-		/* padding-block-start: var(--amplify-components-fieldcontrol-padding-block-start); */
-		/* padding-block-end: var(--amplify-components-fieldcontrol-padding-block-end); */
-		/* padding-inline-start: var(--amplify-components-fieldcontrol-padding-inline-start); */
-		/* padding-inline-end: var(--amplify-components-fieldcontrol-padding-inline-end); */
-
 		border-color: var(--amplify-components-fieldcontrol-border-color);
 		border-style: var(--amplify-components-fieldcontrol-border-style);
 		border-width: var(--amplify-components-fieldcontrol-border-width);
 	}
-	/* .signup-nickname input {
-		border-color:  var(--amplify-components-fieldcontrol-border-color);
-		
-		background-color: lightgoldenrodyellow;
-		text-align: center;
-		border-style:solid;
-		border-width:thick;
-		border-color:red;
-		color:black;
-
-		color: var(--amplify-components-fieldcontrol-color);
-		border-width: var(--amplify-components-fieldcontrol-border-width);
-		border-style: var(--amplify-components-fieldcontrol-border-style);
-		outline-offset: var(--amplify-components-fieldcontrol-outline-offset);
-	} */
-	/* .amplify-input {
-		border-color:green;
-	} */
 	.v-slide-group-item--active {
 		background-color: rgb(var(--v-theme-surface_alt));
 		color: rgb(var(--v-theme-background));

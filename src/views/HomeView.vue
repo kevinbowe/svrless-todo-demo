@@ -296,18 +296,20 @@ const resendEmailConfirmationCode = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function AccountConfirmSignUp() {
-  try {
-    await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
-	 .then(result => {
-		workingEmailModel.value = ""
-		workingPasswordModel.value = ""
-		workingPasswordModel2.value = ""
-		workingPhone_numberModel.value = ""
-		workingUsernameModel.value = ""
-	 });
-  } catch (error) {
-    console.log('error confirming sign up', error);
-  }
+
+	try {
+		await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
+			.then(result => {
+				workingEmailModel.value = ""
+				workingPasswordModel.value = ""
+				workingPasswordModel2.value = ""
+				workingPhone_numberModel.value = ""
+				workingUsernameModel.value = ""
+			}
+		);
+	} catch (error) {
+		console.log('error confirming sign up', error);
+	}
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

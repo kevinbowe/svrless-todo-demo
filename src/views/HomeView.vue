@@ -230,7 +230,6 @@ const AccountSignOut = async () => {
 }
 
 const AccountSignIn = async () => {
-					//enter("AccountSignOn")
 	try { const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value);
 	} catch (error) { console.log('error signing in', error); }
 }
@@ -249,7 +248,6 @@ const AccountSignUp = async () => {
 				enabled: true,
 			}
 		})
-		// info(user);
 	} catch (error) {
 		info('error signing up:', error);
 	}
@@ -299,14 +297,9 @@ const resendEmailConfirmationCode = async () => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function AccountConfirmSignUp() {
   try {
-				//	enter("AccountConfirmSignUp")
-					//info("workingNicknameModel.value", workingNickname.value)
-
     await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
 	 .then(result => {
 		workingEmailModel.value = ""
-				//	info("Clearing workingNicknameModel")
-		//... workingNicknameModel.value = ""
 		workingPasswordModel.value = ""
 		workingPasswordModel2.value = ""
 		workingPhone_numberModel.value = ""
@@ -319,10 +312,8 @@ async function AccountConfirmSignUp() {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmailConfirmed = async function () {
-					//	enter("setEmailConfirmed > confirmCodeModel.value > ", confirmCodeModel.value)
-	await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
+		await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
 		.then((response) => {
-					//	enter("verifyCurrentUserAttributeSubmit.then()")
 			toggleConfirm.value = false
 			confirmCodeModel.value = null
 			emailModel.value = workingEmailModel.value
@@ -350,14 +341,13 @@ const services = {
 						checkShortNickname(formData.nickname),
 						checkSpecialChars (formData.nickname),
 					]).then (resultArray => {
-						// This return exists to await Promise.all()
+						// 			This return exists to await Promise.all()
 						return checkValidationResults(resultArray)
 			} )
 			//			At this point we have a validation error message "string" == fail
 			//			--OR-- a validation passed "boolean".
 			if(typeof nicknameValidationRtn == 'boolean') {
 				//			Update the nicknameModel
-				// nicknameModel.value = formData.myNickname
 				nicknameModel.value = formData.nickname
 			} else {
 				return nicknameValidationRtn
@@ -370,7 +360,7 @@ const services = {
 function checkValidationResults(resultsArray) {
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
-				// This return exits the '.then'
+				// 				This return exits the '.then'
 				return resultsArray[i]
 			}
 		}
@@ -391,7 +381,7 @@ async function submitNickname(event) {
 		const results = await event
 		if(!results.valid) return
 		
-		// This will return the user in the user pool (not updated )
+		// 				This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
@@ -428,7 +418,7 @@ async function checkFirstChar (workingNickname) {
 async function checkSpecialChars (workingNickname) {
 		const re = /[!@#$%\^&*(){}[\]<>?/|]/
 		const match = workingNickname.match(re)
-		// Check the format
+		// 				Check the format
 		if(match) {
 			return 'User nickname can not contain special characters. Please try another one.'
 		}
@@ -439,64 +429,30 @@ async function checkSpecialChars (workingNickname) {
 Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 			case "signUp" :
-							// info("Hub.listen => case Sign Up")
-							//bar()
 				confirmCodeModel.value = null
 				toggleConfirm.value = true
 				return
 
 			case "confirmSignUp" :
-							// info1("Hub.listen => case Confirm Sign Up")
-				// Confirm has been completed but the Cx has not been authenticated (signed in)
+				// 			Confirm has been completed but the Cx has not been authenticated (signed in)
 				toggleConfirm.value = false
 				return
 
 			case "autoSignIn" :
-					// info2("Hub.listen => case Auto Sign In")
-					
-				// info2("   workingNicknameModel.value - UpdateNickname(~) ARG -> \n",workingNicknameModel.value)
 				//				This will set the nicknameModel and the workingNicknameModel
 				UpdateNickname(workingNicknameModel) 
-				// info3("--- nicknameModel -> ", nicknameModel.value)
 
 				Auth.currentAuthenticatedUser({bypassCache: true})
 				emailModel.value = data.payload.data.attributes.email
 				nicknameModel.value = data.payload.data.attributes.nickname
 				phone_numberModel.value = data.payload.data.attributes.phone_number
 				usernameModel.value = data.payload.data.username
-				// info2("   currentAuthenticatedUser.email -> ", data.payload.data.attributes.email)
-				// info2("   currentAuthenticatedUser.phone_number -> ", data.payload.data.attributes.phone_number)
-				// info2("   currentAuthenticatedUser.username -> ", data.payload.data.username)
-				// info2("   currentAuthenticatedUser.nickname -> ", data.payload.data.attributes.nickname)
 				return
 
 			/* First Sign In (Sign Up workflow) */
 			case "signIn" :
-
-					bar()
-					info4("Hub.listen => case Sign In")
-
-
-				// Does the nicknameModel exist?
-// 				if (workingNicknameModel.value && workingNicknameModel.value.length > 0) { 
-				// 				info3("Hub.listen => case Sign In > update nickname")
-					//
-					// 			If we get here, the nicknameModel exists.
-					//				This only happens during the SignUp work flow.
-// 					UpdateNickname(workingNicknameModel) 
-// 					Auth.currentAuthenticatedUser({bypassCache: true})
-// 
-// 					emailModel.value = data.payload.data.attributes.email
-// 					nicknameModel.value = data.payload.data.attributes.nickname
-// 					phone_numberModel.value = data.payload.data.attributes.phone_number
-// 					usernameModel.value = data.payload.data.username
-// 					isSession.value = true
-// 					return
-// 				}
-
-				/* Normal SignIn */
-								info5("Hub.listen => case Sign In > Normal Sign In")
-				Auth.currentAuthenticatedUser({bypassCache: true}).then(results => {
+				Auth.currentAuthenticatedUser({bypassCache: true})
+				.then(results => {
 					emailModel.value = results.attributes.email
 					workingNicknameModel.value =  data.payload.data.attributes.nickname
 					nicknameModel.value =  data.payload.data.attributes.nickname
@@ -504,26 +460,10 @@ Hub.listen('auth', (data) => {
 					usernameModel.value = data.payload.data.attributes.preferred_username 
 							? data.payload.data.attributes.preferred_username 
 							: data.payload.data.username
-
-							bar()
-							// info5("   SignIn > currentAuthenticatedUser.email -> ", data.payload.data.attributes.email)
-							// info5("   SignIn > currentAuthenticatedUser.phone_number -> ", data.payload.data.attributes.phone_number)
-							// info5("   SignIn > currentAuthenticatedUser.nickname -> ", data.payload.data.attributes.nickname)
-							// info5("   SignIn > currentAuthenticatedUser.username -> ", data.payload.data.username)
-
-							// info6("emailModel", emailModel.value )
-							info6("nicknameModel", nicknameModel.value )
-							info6("workingNicknameModel", workingNicknameModel.value )
-
-							// info6("phone_numberModel.value", phone_numberModel.value)
-							// info6("usernameModel.value", usernameModel.value )
-
-
 			})
 				isSession.value = true
 				return
 			case "signOut" :
-							info6("Hub.listen => case Sign Out")
 				workingNicknameModel.value = nicknameModel.value = ""
 				isSession.value = false
 				return

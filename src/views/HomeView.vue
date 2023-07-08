@@ -136,7 +136,7 @@
 								<p>Message</p>
 							</v-row> -->
 							<v-row class="justify-center">Confirmation Code</v-row>
-							<v-row ><v-spacer></v-spacer><v-col cols="11">
+								<v-row ><v-spacer></v-spacer><v-col cols="11">
 								<v-text-field v-model="confirmCodeModel"
 									id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
 								</v-text-field>
@@ -173,7 +173,7 @@ import { toRefs, ref, Ref, computed } from 'vue'
 import { info, info1, info2 , info3, info4, info5, info6, info7,
 			log, warn, err , progress, joy, exit,
 			enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7, 
-			success, bar, whitebar, fini, start, pass, fail }
+			success, bar, whitebar, fini, start, pass, fail, greybar }
 	from "../my-util-code/MyConsoleUtil"
 				/*  */
 import { translations} from '@aws-amplify/ui-vue';
@@ -237,6 +237,7 @@ const AccountSignIn = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignUp = async () => {
+					greybar("AccountSignUp(~) -> Enter")
 					enter5("AccountSignUp(~)")
 	try {
 		const { user } = await Auth.signUp({
@@ -249,11 +250,14 @@ const AccountSignUp = async () => {
 			},
 			autoSignIn: { enabled: true, }
 		})
-					info1("      Add username w/ WorkingModel -> ", workingUsernameModel.value)
-					info2("      Add password w/ WorkingModel -> ", workingPasswordModel.value)
-					info3("      Add email w/ WorkingModel -> ", workingEmailModel.value)
-					info4("      Add phone_number w/ WorkingModel -> ", workingPhone_numberModel.value)
-					info5("      Add nickname w/ WorkingModel -> ", workingNicknameModel.value)
+
+					info1("   AccountSignUp(~) > Add username attrib >", workingUsernameModel.value)
+					info2("   AccountSignUp(~) > Add password attrib >", workingPasswordModel.value)
+					info3("   AccountSignUp(~) > Add email attrib >", workingEmailModel.value)
+					info4("   AccountSignUp(~) > Add phone_number attrib >", workingPhone_numberModel.value)
+					info5("   AccountSignUp(~) > Add nickname attrib > ", workingNicknameModel.value)
+					exit("AccountSignUp(~)")
+					greybar("AccountSignUp(~) -> Exit")
 	} catch (error) {
 		info('error signing up:', error);
 	}
@@ -430,18 +434,18 @@ Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 
 			case "signUp" :
-								bar()
 								enter0("Hub.listen => Case SignUp -> DO NOTHING")
-								whitebar()
-				confirmCodeModel.value = null
-				toggleConfirm.value = true
+								info("      Hub > Case: signUp -- Clear Confirm code")
+								info("      Hub > Case: signUp -- Show Confirm Ui")
+				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+				toggleConfirm.value = true // Display Confirm Ui
 				return
 
 			case "confirmSignUp" :
 								bar()
 								enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
 
-				toggleConfirm.value = false
+				toggleConfirm.value = false // Hide Confirm Ui
 				return
 
 			case "autoSignIn" :

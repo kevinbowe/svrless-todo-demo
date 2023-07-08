@@ -245,14 +245,15 @@ const AccountSignUp = async () => {
 			attributes: {
 				email: workingEmailModel.value,
 				phone_number: workingPhone_numberModel.value,
-				//			Added
-				//			This will cause the workingNicknameModel to be applied to the nicknameModel at the end of the AUTO SignIn - FINISH !!!
 				nickname: workingNicknameModel.value
 			},
-			autoSignIn: { // optional - enables auto sign in after user is confirmed
-				enabled: true,
-			}
+			autoSignIn: { enabled: true, }
 		})
+					info1("      Add username w/ WorkingModel -> ", workingUsernameModel.value)
+					info2("      Add password w/ WorkingModel -> ", workingPasswordModel.value)
+					info3("      Add email w/ WorkingModel -> ", workingEmailModel.value)
+					info4("      Add phone_number w/ WorkingModel -> ", workingPhone_numberModel.value)
+					info5("      Add nickname w/ WorkingModel -> ", workingNicknameModel.value)
 	} catch (error) {
 		info('error signing up:', error);
 	}
@@ -301,27 +302,9 @@ const resendEmailConfirmationCode = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function AccountConfirmSignUp() {
-	enter("AccountConfirmSignUp(~)")
+	enter("AccountConfirmSignUp(~) -> \n      CONFIRM ONLY / NO SETTINGS")
 	try {
 		await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
-			// .then(result => {
-			// 	// workingNicknameModel.value = ""
-			// 	// workingEmailModel.value = ""
-			// 	// workingPasswordModel.value = ""
-			// 	// workingPasswordModel2.value = ""
-			// 	// workingPhone_numberModel.value = ""
-			// 	// workingUsernameModel.value = ""
-			// }
-		//	);
-		// 
-		// 		//		Clear everything here:
-		// 		workingNicknameModel.value = ""
-		// 		workingEmailModel.value = ""
-		// 		workingPasswordModel.value = ""
-		// 		workingPasswordModel2.value = ""
-		// 		workingPhone_numberModel.value = ""
-		// 		workingUsernameModel.value = ""
-
 	} catch (error) {
 		err('error confirming sign up', error);
 	}
@@ -399,7 +382,7 @@ async function submitNickname(event) {
 		if(!results.valid) return
 		
 		// 				This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
@@ -448,15 +431,7 @@ Hub.listen('auth', (data) => {
 
 			case "signUp" :
 								bar()
-								enter0("Hub.listen => Case SignUp")
-				//				At this point, ???
-								info( "      workingNicknameModel ->", workingNicknameModel.value)
-								info1("      Set nicknameModel")
-								
-				//				SignUp went smoothly.
-				//				Set the nicknameModel now with the workingNicknameModel.
-				nicknameModel.value = workingNicknameModel.value
-								info2("         nicknameModel.value", nicknameModel.value)
+								enter0("Hub.listen => Case SignUp -> DO NOTHING")
 								whitebar()
 				confirmCodeModel.value = null
 				toggleConfirm.value = true
@@ -464,61 +439,24 @@ Hub.listen('auth', (data) => {
 
 			case "confirmSignUp" :
 								bar()
-								enter1("Hub.listen => Case CONFIRM SignUp")
-				//				At this point, working exists and the other doesnt
-								info1("      nicknameModel ->", nicknameModel.value)
+								enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
 
-								info("      workingNicknameModel -> ", workingNicknameModel.value)
-								info2("     Clear All working models")
-
-				//				Clear all working models here
-				workingNicknameModel.value = ""
-				workingEmailModel.value = ""
-				workingPasswordModel.value = ""
-				workingPasswordModel2.value = ""
-				workingPhone_numberModel.value = ""
-				workingUsernameModel.value = ""
-								info2("        workingNicknameModel -> ", workingNicknameModel.value)
 				toggleConfirm.value = false
 				return
 
 			case "autoSignIn" :
 								bar()
-								enter2("Hub.listen => Case AUTO SignIn - START")
-				//				At this point, ???
-								info("      workingNicknameModel ->", workingNicknameModel.value)
-								info1("      nicknameModel ->", nicknameModel.value)
-
-				//				This will set the nicknameModel and the workingNicknameModel
-				//...UpdateNickname(workingNicknameModel) 
-				Auth.currentAuthenticatedUser({bypassCache: true})
-				//				>>>--> Explain whay I need this... Any of this...
-				emailModel.value = data.payload.data.attributes.email
-				nicknameModel.value = data.payload.data.attributes.nickname
-				phone_numberModel.value = data.payload.data.attributes.phone_number
-				usernameModel.value = data.payload.data.username
-								bar()
-								enter4("Hub.listen => Case AUTO SignIn - FINISH")
-				//				At this point, working exist and the other doesn't
-								info("      workingNicknameModel ->", workingNicknameModel.value)
-								info1("      nicknameModel ->", nicknameModel.value)
+								enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
 				return
 			
 			case "signIn" :
 								bar()
 								enter3("Hub.listen => Case SignIn")
-				//				At this point, working exist and the other doesn't
-								info("      workingNicknameModel ->", workingNicknameModel.value)
-								info1("      nicknameModel ->", nicknameModel.value)
+								info3("      Get Current Authenticated User > Set ALL Models")
 				Auth.currentAuthenticatedUser({bypassCache: true})
 				.then(results => {
 					emailModel.value = results.attributes.email
-					//				These TWO line are throwing an exception. Atributes 'can't be null
-					//if (data.payload.data.attributes.nickname) {
-						//				This is only valid AFTER the SignUp is complete..
-						//workingNicknameModel.value =  data.payload.data.attributes.nickname
-						nicknameModel.value =  data.payload.data.attributes.nickname
-					//}
+					nicknameModel.value =  data.payload.data.attributes.nickname
 					phone_numberModel.value = data.payload.data.attributes.phone_number
 					usernameModel.value = data.payload.data.attributes.preferred_username 
 							? data.payload.data.attributes.preferred_username 
@@ -528,7 +466,6 @@ Hub.listen('auth', (data) => {
 				return
 
 			case "signOut" :
-				workingNicknameModel.value = nicknameModel.value = ""
 				isSession.value = false
 				return
 			} // END_SWITCH
@@ -539,7 +476,7 @@ Hub.listen('auth', (data) => {
 async function UpdateNickname(workingNicknameModel){
 						info("Calling -> UpdateNickname(~)")
 		// 			This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 			nicknameModel.value = result.attributes.nickname
@@ -565,17 +502,9 @@ async function getSession(){
 	.then(currenSession => {
 		return currenSession .getAccessToken() .getJwtToken()})
 		.catch(err => { return err})
-		if (cognitoAccessToken === "No current user"){
-			//				If we get here, hide these items: User Info, Confirm, SignOut
-			return { "isSession": false }
-		}
-		/*					If we get here, we are signed in. 
-							There is a session available.
-							Hide these items: SignIn, SignUp, Confirm
-							----
-							Show these items: SignOut, User Info
-		*/
-	return await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
+		if (cognitoAccessToken === "No current user") return { "isSession": false }
+
+	return await Auth.currentAuthenticatedUser({bypassCache: true })
 		.then((user) => {
 			return {
 				"nickname": user.attributes?.nickname,

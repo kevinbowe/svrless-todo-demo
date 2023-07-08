@@ -57,7 +57,15 @@ export const info7 =    	(msg: string, value: any = "") => { console.log(`%c   $
 
 
 
-export const enter =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: yellow;font-weight:bold;", value) }
+export const enter =    (msg: string, value: any = "") =>  { console.log(`%c>>>-> ENTER -  ${msg}`, "color: yellow;font-weight:bold;", value) }
+export const enter0 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: green;font-weight:bold;", value) }
+export const enter1 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: red;font-weight:bold;", value) }
+export const enter2 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: magenta;font-weight:bold;", value) }
+export const enter3 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: chartreuse;font-weight:bold;", value) }
+export const enter4 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: darkorange;font-weight:bold;", value) }
+export const enter5 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: pink;font-weight:bold;", value) }
+export const enter6 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: mediumpurple;font-weight:bold;", value) }
+export const enter7 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: #0D47A1;font-weight:bold;", value) }
 
 export const exit =    	(msg: string, value: any = "") => { console.log(`%c<--<<< EXIT -  ${msg}`, "color: green;font-weight:bold;", value) }
 

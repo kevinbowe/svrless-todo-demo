@@ -508,9 +508,9 @@ async function getSession(){
 /* 				This is NOT called during SignUp	 */
 getSession().then( (result) => { 
 	nicknameModel.value = result.nickname
-	workingNicknameModel.value = result.nickname
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number
+	usernameModel.value = result.username
 	isSession.value = result.isSession;
 })
 </script>

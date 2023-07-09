@@ -4,8 +4,7 @@
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
 			<v-row justify="center" v-if="isSession">
-				<v-spacer/>
-				<v-col cols="8">
+				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 					<v-divider :thickness="10" class="ma-2"></v-divider>
 					<v-row no-gutters>
 						<v-col style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
@@ -27,10 +26,9 @@
 					<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
-				<v-spacer/>
 			</v-row>
 			<v-row no-gutters v-if="!isSession">
-				<v-col cols="4" class="ma-auto" >
+				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
 						<v-tabs color="primary" bg-color="surface" fixed-tabs v-model="SignInSignUpTab" >
 							<v-tab value="signinTab">Sign In</v-tab>
@@ -121,14 +119,14 @@
 			<!-- Confirmation -->
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
-					<v-sheet width="30em" style="height:23em;" color="surface_alt" _color="background" elevation="24" >
+					<v-sheet width="20em" style="height:23em;" color="surface_alt" elevation="24" >
 					<!-- <v-sheet width="30em" :style="{height:!EmailConfirmationMessage.Title.value?'28em':'23em'}" color="background" elevation="24" > -->
-					<v-row>
+						<v-row>
 							<v-spacer></v-spacer>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 						</v-row>
-						<v-col _cols="6" style="margin-top:-2.5em;">
+						<v-col style="margin-top:-2.5em;">
 							<!-- <v-row class="mx-5 mb-5"> -->
 								<!-- <h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
 								<p v-html="EmailConfirmationMessage.Message.value"></p> -->

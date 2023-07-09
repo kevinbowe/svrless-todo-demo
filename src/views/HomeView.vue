@@ -198,18 +198,70 @@ const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
 const SignInSignUpTab = ref()
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const toggleConfirm:boolean = ref(false)
+const confirmCodeModel:Number = ref()
+const isSession = ref(true)
+
+const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
+
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
 const workingPasswordModel2 = ref("")
 const workingEmailModel =ref("")
 const workingPhone_numberModel = ref("")
-const toggleConfirm:boolean = ref(false)
-const confirmCodeModel:Number = ref()
-const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
 
-const isSession = ref(true)
+const usernameModel = ref("")
+const phone_numberModel = ref("")
+const workingPhonenumberModel = ref("")
+const workingNicknameModel = ref("")
+const nicknameModel = ref("")
+const emailModel = ref("")
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+Hub.listen('auth', (data) => {
+		switch(data.payload.event) {
+			case "signUp" :
+								// enter0("Hub.listen => Case SignUp")
+								// info("      Hub > Case: signUp -- Clear Confirm code")
+								// info("      Hub > Case: signUp -- Show Confirm Ui")
+				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+				toggleConfirm.value = true // Display Confirm Ui
+				return
+
+			case "confirmSignUp" :
+								// bar()
+								// enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
+				toggleConfirm.value = false // Hide Confirm Ui
+				return
+
+			case "autoSignIn" :
+								// bar()
+								// enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
+				return
+			
+			case "signIn" :
+								// bar()
+								// enter3("Hub.listen => Case SignIn")
+								// info3("      Get Current Authenticated User > Set ALL Models")
+				Auth.currentAuthenticatedUser({bypassCache: true})
+				.then(results => {
+					emailModel.value = results.attributes.email
+					nicknameModel.value =  data.payload.data.attributes.nickname
+					phone_numberModel.value = data.payload.data.attributes.phone_number
+					usernameModel.value = data.payload.data.attributes.preferred_username 
+							? data.payload.data.attributes.preferred_username 
+							: data.payload.data.username
+			})
+				isSession.value = true
+				return
+
+			case "signOut" :
+				isSession.value = false
+				return
+			} // END_SWITCH
+})
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignOut = async () => {
 	try { await Auth.signOut()
 		.then(result => {
@@ -230,6 +282,7 @@ const AccountSignOut = async () => {
 	catch (error) { console.log('error signing out: ', error);}
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignIn = async () => {
 	try { const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value);
 	} catch (error) { console.log('error signing in', error); }
@@ -237,8 +290,9 @@ const AccountSignIn = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignUp = async () => {
-					greybar("AccountSignUp(~) -> Enter")
-					enter5("AccountSignUp(~)")
+	
+					// greybar("AccountSignUp(~) -> Enter")
+					// enter5("AccountSignUp(~)")
 	try {
 		const { user } = await Auth.signUp({
 			username: workingUsernameModel.value,
@@ -250,16 +304,25 @@ const AccountSignUp = async () => {
 			},
 			autoSignIn: { enabled: true, }
 		})
-
-					info1("   AccountSignUp(~) > Add username attrib >", workingUsernameModel.value)
-					info2("   AccountSignUp(~) > Add password attrib >", workingPasswordModel.value)
-					info3("   AccountSignUp(~) > Add email attrib >", workingEmailModel.value)
-					info4("   AccountSignUp(~) > Add phone_number attrib >", workingPhone_numberModel.value)
-					info5("   AccountSignUp(~) > Add nickname attrib > ", workingNicknameModel.value)
-					exit("AccountSignUp(~)")
-					greybar("AccountSignUp(~) -> Exit")
+					// info1("   AccountSignUp(~) > Add username attrib >", workingUsernameModel.value)
+					// info2("   AccountSignUp(~) > Add password attrib >", workingPasswordModel.value)
+					// info3("   AccountSignUp(~) > Add email attrib >", workingEmailModel.value)
+					// info4("   AccountSignUp(~) > Add phone_number attrib >", workingPhone_numberModel.value)
+					// info5("   AccountSignUp(~) > Add nickname attrib > ", workingNicknameModel.value)
+					// exit("AccountSignUp(~)")
+					// greybar("AccountSignUp(~) -> Exit")
 	} catch (error) {
 		info('error signing up:', error);
+	}
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function AccountConfirmSignUp() {
+					// enter("AccountConfirmSignUp(~) -> \n      CONFIRM ONLY / NO SETTINGS")
+	try {
+		await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
+	} catch (error) {
+		// err('error confirming sign up', error);
 	}
 }
 
@@ -305,16 +368,6 @@ const resendEmailConfirmationCode = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function AccountConfirmSignUp() {
-	enter("AccountConfirmSignUp(~) -> \n      CONFIRM ONLY / NO SETTINGS")
-	try {
-		await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
-	} catch (error) {
-		err('error confirming sign up', error);
-	}
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmailConfirmed = async function () {
 		await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
 		.then((response) => {
@@ -332,9 +385,6 @@ const setEmailConfirmed = async function () {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**
- * 				This is for validating the nickname input.
- */
 const services = {
 	async validateCustomSignUp(formData) {
 		if (formData.nickname) {
@@ -372,35 +422,25 @@ function checkValidationResults(resultsArray) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-/**				
- * 				This will update the user nickname.
- * 				This related to updating the nickname after the account has been created.
- * 				This was a separate work flow.
- * 			** Not sure this was used to add nickname during the Sign Up workflow. **
- * 				Notice the router.push / redirect to the Profile page.
- */
 async function submitNickname(event) {
-
-		const results = await event
-		if(!results.valid) return
-		
-		// 				This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
-		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-		await Auth.currentUserInfo().then(result => {
-			nicknameModel.value = result.attributes.nickname
-		}) // END_THEN
-
-		//				Redirect to Profile page.
-		//				Pass the new nickname and the email-address
-		router.push({name:`profile`, params: {
-		 				p1:nicknameModel.value, 
-						p2:emailModel.value, 
-						p3:phone_numberModel.value,
-						p4:usernameModel.value
-		}  }) 
+	const results = await event
+	if(!results.valid) return
+	// 				This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
+	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
+	await Auth.currentUserInfo().then(result => {
+		nicknameModel.value = result.attributes.nickname
+	}) // END_THEN
+	//				Redirect to Profile page.
+	//				Pass the new nickname and the email-address
+	router.push({name:`profile`, params: {
+		p1:nicknameModel.value, 
+		p2:emailModel.value, 
+		p3:phone_numberModel.value,
+		p4:usernameModel.value
+	}  }) 
 }	
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkReservedNickname (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
@@ -428,53 +468,7 @@ async function checkSpecialChars (workingNickname) {
 		}
 		return true
 }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-Hub.listen('auth', (data) => {
-		switch(data.payload.event) {
-
-			case "signUp" :
-								enter0("Hub.listen => Case SignUp -> DO NOTHING")
-								info("      Hub > Case: signUp -- Clear Confirm code")
-								info("      Hub > Case: signUp -- Show Confirm Ui")
-				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
-				toggleConfirm.value = true // Display Confirm Ui
-				return
-
-			case "confirmSignUp" :
-								bar()
-								enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
-
-				toggleConfirm.value = false // Hide Confirm Ui
-				return
-
-			case "autoSignIn" :
-								bar()
-								enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
-				return
-			
-			case "signIn" :
-								bar()
-								enter3("Hub.listen => Case SignIn")
-								info3("      Get Current Authenticated User > Set ALL Models")
-				Auth.currentAuthenticatedUser({bypassCache: true})
-				.then(results => {
-					emailModel.value = results.attributes.email
-					nicknameModel.value =  data.payload.data.attributes.nickname
-					phone_numberModel.value = data.payload.data.attributes.phone_number
-					usernameModel.value = data.payload.data.attributes.preferred_username 
-							? data.payload.data.attributes.preferred_username 
-							: data.payload.data.username
-			})
-				isSession.value = true
-				return
-
-			case "signOut" :
-				isSession.value = false
-				return
-			} // END_SWITCH
-})
-						
+					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /** Not referanced */
 async function UpdateNickname(workingNicknameModel){
@@ -489,19 +483,10 @@ async function UpdateNickname(workingNicknameModel){
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const usernameModel = ref("")
-const phone_numberModel = ref("")
-const workingPhonenumberModel = ref("")
-const workingNicknameModel = ref("")
-const nicknameModel = ref("")
-const emailModel = ref("")
-const resetNickname = () => { workingNicknameModel.value = nicknameModel.value }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Decl getSession */
 async function getSession(){
 	//				This is NOT called during SignUp
-	enter7("getSession(~)")
+					// enter7("getSession(~)")
 	const cognitoAccessToken = await Auth.currentSession()
 	.then(currenSession => {
 		return currenSession .getAccessToken() .getJwtToken()})

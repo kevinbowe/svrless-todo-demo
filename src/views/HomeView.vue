@@ -38,6 +38,13 @@
 							<v-window  v-model="SignInSignUpTab">
 								<v-window-item __SIGN_IN__ value="signinTab">
 									<v-row no-gutters>
+										<v-col cols="12" class="my-5" >
+											<v-card v-if="errorSigningInMessage" style="background-color: rgb(var(--v-theme-warning));">
+												{{ errorSigningInMessage }}
+											</v-card>
+										</v-col>
+									</v-row>
+									<v-row no-gutters>
 										<v-col cols="12">
 											<v-text-field 
 												id="userSignInId"
@@ -127,18 +134,29 @@
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 						</v-row>
 						<v-col style="margin-top:-2.5em;">
-							<!-- <v-row class="mx-5 mb-5"> -->
-								<!-- <h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
-								<p v-html="EmailConfirmationMessage.Message.value"></p> -->
-								<!-- <h1 class="ma-auto">Hello</h1>
-								<p>Message</p>
-							</v-row> -->
+							<v-row class="mx-5 mb-5">
+								<h1 class="ma-auto" v-html="AccountConfirmationMessage.Title.value"></h1>
+								<p v-html="AccountConfirmationMessage.Message.value"></p>
+							</v-row>
 							<v-row class="justify-center">Confirmation Code</v-row>
-								<v-row ><v-spacer></v-spacer><v-col cols="11">
-								<v-text-field v-model="confirmCodeModel"
-									id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined" clearable density="compact">
-								</v-text-field>
-							</v-col><v-spacer></v-spacer></v-row>
+							<v-row ><v-spacer/>
+								<v-col cols="11">
+									<v-text-field v-model="confirmCodeModel" clearable @click:clear="invalidConfirmCode = ''"
+										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
+									</v-text-field>
+									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidConfirmCode }}</p>
+								</v-col><v-spacer/>
+							</v-row>
+							<v-row >
+								<v-spacer/>
+								<v-col cols="11">
+									<!-- <v-text-field v-if="restartConfirm && !isSession *" v-model="workingEmailModel" 
+										clearable @click:clear="workingEmailModel = ''" placeholder="Enter your New email address"  
+										class="mb-2"  style="height:1.75em;"  variant="outlined" density="compact" >
+									</v-text-field> -->
+								</v-col>
+								<v-spacer/>
+							</v-row>
 							<v-row class="mx-5">
 								<v-btn :disabled="!confirmCodeModel" @click="AccountConfirmSignUp" block color="primary" class="mb-2" >
 									Confirm
@@ -169,9 +187,9 @@ import MasterLayout from "../layouts/MasterLayout.vue";
 import { toRefs, ref, Ref, computed } from 'vue'
 				/*  */
 import { info, info1, info2 , info3, info4, info5, info6, info7,
-			log, warn, err , progress, joy, exit,
+			log, warn, err, err2, progress, joy, exit,
 			enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7, 
-			success, bar, whitebar, fini, start, pass, fail, greybar }
+			success, bar, whitebar, greybar, fini, start, pass, fail  }
 	from "../my-util-code/MyConsoleUtil"
 				/*  */
 import { translations} from '@aws-amplify/ui-vue';
@@ -179,6 +197,7 @@ import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 import router from "../router";
+import { resolveTransitionHooks } from "vue";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -201,6 +220,7 @@ const confirmCodeModel:Number = ref()
 const isSession = ref(true)
 
 const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
+const AccountConfirmationMessage = { Title: ref(""), Message: ref("") }
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
@@ -215,32 +235,35 @@ const workingNicknameModel = ref("")
 const nicknameModel = ref("")
 const emailModel = ref("")
 
+const restartConfirm = ref()
+const invalidConfirmCode = ref("")
+const errorSigningInMessage = ref("")
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 			case "signUp" :
-								// enter0("Hub.listen => Case SignUp")
-								// info("      Hub > Case: signUp -- Clear Confirm code")
-								// info("      Hub > Case: signUp -- Show Confirm Ui")
+								bar()
+								enter0("Hub.listen => Case SignUp")
 				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
 				toggleConfirm.value = true // Display Confirm Ui
+				buildAccountConfirmationMessage(workingEmailModel.value)
 				return
 
 			case "confirmSignUp" :
-								// bar()
-								// enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
+								bar()
+								enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
 				toggleConfirm.value = false // Hide Confirm Ui
 				return
 
 			case "autoSignIn" :
-								// bar()
-								// enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
+								bar()
+								enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
 				return
 			
 			case "signIn" :
-								// bar()
-								// enter3("Hub.listen => Case SignIn")
-								// info3("      Get Current Authenticated User > Set ALL Models")
+								bar()
+								enter3("Hub.listen => Case SignIn")
 				Auth.currentAuthenticatedUser({bypassCache: true})
 				.then(results => {
 					emailModel.value = results.attributes.email
@@ -254,7 +277,6 @@ Hub.listen('auth', (data) => {
 				return
 
 			case "signOut" :
-				isSession.value = false
 				return
 			} // END_SWITCH
 })
@@ -267,14 +289,17 @@ const AccountSignOut = async () => {
 			nicknameModel.value = ""
 			usernameModel.value = ""
 			phone_numberModel.value = ""
-			workingEmailModel.value = ""
 
-			workingNicknameModel.value = ""
 			workingPasswordModel.value = ""
 			workingPasswordModel2.value = ""
-			workingPhone_numberModel.value = ""
+
+			workingEmailModel.value = ""
+			workingNicknameModel.value = ""
 			workingUsernameModel.value = ""
+			workingPhone_numberModel.value = ""
+
 			toggleConfirm.value = false
+			isSession.value = false
 		})
 	}
 	catch (error) { console.log('error signing out: ', error);}
@@ -282,15 +307,33 @@ const AccountSignOut = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignIn = async () => {
-	try { const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value);
-	} catch (error) { console.log('error signing in', error); }
+	try { 
+		errorSigningInMessage.value = ""
+		const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value)
+		.catch(error => {
+			if(error.name === "NotAuthorizedException") errorSigningInMessage.value = "Incorrect username or password. Please try again." 
+			
+			if(error.name !== "UserNotConfirmedException") return
+
+			//				Restart the confirmation.
+			toggleConfirm.value = true // Display Confirm Ui
+			restartConfirm.value = true
+			//				Initialize the Invalid Confirm Code model and message
+			invalidConfirmCode.value = ""
+			confirmCodeModel.value = ""
+			buildAccountConfirmationMessage()
+		}) // END_ASYNC_CATCH
+
+		if (user) isSession.value = true
+	}
+	catch (error) { 
+							err('error signing in', error)
+			errorSigningInMessage.value = "Undefined Sign In Error. Please try again." 
+	} // END_TRY_CATCH
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignUp = async () => {
-	
-					// greybar("AccountSignUp(~) -> Enter")
-					// enter5("AccountSignUp(~)")
 	try {
 		const { user } = await Auth.signUp({
 			username: workingUsernameModel.value,
@@ -302,13 +345,6 @@ const AccountSignUp = async () => {
 			},
 			autoSignIn: { enabled: true, }
 		})
-					// info1("   AccountSignUp(~) > Add username attrib >", workingUsernameModel.value)
-					// info2("   AccountSignUp(~) > Add password attrib >", workingPasswordModel.value)
-					// info3("   AccountSignUp(~) > Add email attrib >", workingEmailModel.value)
-					// info4("   AccountSignUp(~) > Add phone_number attrib >", workingPhone_numberModel.value)
-					// info5("   AccountSignUp(~) > Add nickname attrib > ", workingNicknameModel.value)
-					// exit("AccountSignUp(~)")
-					// greybar("AccountSignUp(~) -> Exit")
 	} catch (error) {
 		info('error signing up:', error);
 	}
@@ -316,11 +352,22 @@ const AccountSignUp = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function AccountConfirmSignUp() {
-					// enter("AccountConfirmSignUp(~) -> \n      CONFIRM ONLY / NO SETTINGS")
 	try {
+		//					This function ONLY sets the user state to Confirmed.
+		//					The user is NOT signed in.
 		await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
+		//					Check to see if we were trying to restart the confirmation
+		//					This will not start until the Auth.confirmSignUp(~) returns
+		if (restartConfirm.value === true) {
+			//				If we get here, try signing in again.
+			AccountSignIn()
+			toggleConfirm.value = false	// Close the Confirm Ui
+			isSession.value = true			// We are signed in
+			restartConfirm.value = false	// Lower the Confirm flag
+		}
 	} catch (error) {
-		// err('error confirming sign up', error);
+		err('error confirming sign up', error);
+		invalidConfirmCode.value = "Invalid Confirm Code... Try again."
 	}
 }
 
@@ -333,7 +380,29 @@ const parseEmail = (email) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildAccountConfirmationMessage = (email:string) => {
+	AccountConfirmationMessage.Title.value = "We Emailed You"
+	if(email) {
+		//			If we get here, the email arg contains data.
+		let {name , domain} = parseEmail(email)
+		let obscureEmail = `${name[0]}***@${domain[0]}***`
+		AccountConfirmationMessage.Message.value =
+			`Your code is on the way. To confirm your account, `+
+			`enter the code we emailed to <b>${obscureEmail}</b>.`+
+			`<br>This may take a minuet to arrive.`
+		return AccountConfirmationMessage
+	}
+	//				No Title should be included with this message.
+	let message =
+		`To confirm your new account, you must enter the ` +
+		`code we emailed to the new email address you provided.<br><br>` 
+		AccountConfirmationMessage.Message.value = message
+	return AccountConfirmationMessage
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {
+					enter0("buildEmailConfirmationMessage")
 	if(email) {
 		//			If we get here, the email arg contains data.
 		let {name , domain} = parseEmail(email)

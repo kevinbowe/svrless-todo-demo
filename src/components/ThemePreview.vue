@@ -61,7 +61,7 @@ const uTheme = useTheme();
 const computedThemesKeysValue = Object.keys(uTheme.computedThemes.value);
 const computedThemesEntriesValue = Object.entries(uTheme.computedThemes.value);
 const chipVariant: any = "outlined";
-const colorFilter = ['background','surface','primary','secondary','info','error','success','warning','important','minor', 'major','link']
+const colorFilter = ['background','surface','primary','secondary','info','error','success','warning','important','minor', 'major','link', 'surface_alt', 'border','border_alt']
 const themeLength = computedThemesKeysValue.length;
 
 // Build data for Theme Preview, Theme Switcher, and Left/Right Selector

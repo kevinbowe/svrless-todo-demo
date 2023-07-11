@@ -14,6 +14,7 @@ const light: ThemeDefinition = {
 	colors: {
 		background: '#ffffff',
 		border: '#000000', // .............. // black
+		border_alt: '#ffffff',
 		surface: '#E0E0E0', // ............. // grey-lighten-2
 		surface_alt: '#ffffff',
 		primary:'#6F3AB0',

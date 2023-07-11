@@ -46,26 +46,17 @@
 									</v-row>
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field 
-												id="userSignInId"
-												v-model="workingUsernameModel"
-												clearable 
-												density="compact" 
-												variant="outlined" 
-												label="Username" 
-												required
-											/></v-col>
+											<v-text-field label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
+											clearable @click:clear="workingUsernameModel = ''" variant="outlined" required>
+										</v-text-field>
+										</v-col>
 										<v-col cols="12">
-											<v-text-field 
-												id="passwordSignInId"
-												v-model="workingPasswordModel"
-												:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'"
-												prepend-inner-icon="mdi-lock-outline"
-												:type="passwordIcon1 ? 'text' : 'password'" 
-												@click:append-inner="passwordIcon1 = !passwordIcon1"
-												clearable density="compact" variant="outlined" label="Password" required 
-											/></v-col>
-											<v-btn size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
+											<v-text-field label="Password" id="passwordSignInId" v-model="workingPasswordModel" :append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
+											prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
+											clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
+										</v-text-field>
+										</v-col>
+										<v-btn :disabled="!isCompleteSignIn" size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
 									</v-row>
 								</v-window-item>
 								<v-window-item __SIGN_UP__ value="signupTab">
@@ -78,50 +69,31 @@
 									</v-row>
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field
-												v-model="workingPasswordModel"
-												:append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'"
-												prepend-inner-icon="mdi-lock-outline"
-												:type="passwordIcon2 ? 'text' : 'password'" 
-												@click:append-inner="passwordIcon2 = !passwordIcon2"
-												clearable density="compact" variant="outlined" label="Password*" required >
+											<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
+												prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
+												@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
+												label="Password*" required > 
 											</v-text-field></v-col>
 										<v-col cols="12">
-											<v-text-field 
-											v-model="workingPasswordModel2"
-												:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'"
-												prepend-inner-icon="mdi-lock-outline"
-												:type="passwordIcon2b ? 'text' : 'password'" 
-												@click:append-inner="passwordIcon2b = !passwordIcon2b"
+											<v-text-field v-model="workingPasswordModel2"
+												:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'" prepend-inner-icon="mdi-lock-outline" 
+												:type="passwordIcon2b ? 'text' : 'password'" @click:append-inner="passwordIcon2b = !passwordIcon2b"
 												clearable density="compact" variant="outlined" label="Confirm Password*" required >
-											</v-text-field></v-col>
-										<v-col cols="12">
-											<v-text-field
-												id="emailSuId"
-												v-model="workingEmailModel"
-												clearable density="compact" variant="outlined" label="Email" required 
-											/>
+											</v-text-field>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field 
-												id="usernameSuId"
-												v-model="workingUsernameModel"
-												clearable 
-												density="compact" 
-												variant="outlined" 
-												label="Username" 
-												required />
+											<v-text-field id="emailSuId" v-model="workingEmailModel" clearable density="compact" variant="outlined" label="Email" required />
 										</v-col>
 										<v-col cols="12">
-											<v-text-field 
-												id="phone_numberSuId"
-												v-model="workingPhone_numberModel"
-												clearable density="compact" variant="outlined" label="Phone number"/></v-col>
+											<v-text-field id="usernameSuId" v-model="workingUsernameModel" clearable  density="compact" 
+												variant="outlined" label="Username" required />
+										</v-col>
 										<v-col cols="12">
-											<v-text-field 
-												id="nicknameSuId"
-												v-model="workingNicknameModel"
-												clearable density="compact" variant="outlined" label="Nickname"/></v-col>
+											<v-text-field id="phone_numberSuId" v-model="workingPhone_numberModel" clearable density="compact" variant="outlined" label="Phone number"/>
+										</v-col>
+										<v-col cols="12">
+											<v-text-field id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
+										</v-col>
 										<v-btn block size="large" color="primary" class="mb-3" @click="AccountSignUp" > Sign Up </v-btn>
 									</v-row>
 								</v-window-item>
@@ -241,6 +213,9 @@ const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 			case "signUp" :
@@ -313,7 +288,6 @@ const AccountSignIn = async () => {
 		const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value)
 		.catch(error => {
 			if(error.name === "NotAuthorizedException") errorSigningInMessage.value = "Incorrect username or password. Please try again." 
-			
 			if(error.name !== "UserNotConfirmedException") return
 
 			//				Restart the confirmation.
@@ -385,7 +359,7 @@ async function AccountResendConfirmationCode(username) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const AccountBuildConfirmationMessage = (email:string) => {
+const AccountBuildConfirmationMessage = (email:string|null = null) => {
 	AccountConfirmationMessage.Title.value = "We Emailed You"
 	if(email) {
 		//			If we get here, the email arg contains data.

@@ -127,19 +127,20 @@
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 					<v-sheet width="20em" style="height:23em;" color="surface_alt" elevation="24" >
-					<!-- <v-sheet width="30em" :style="{height:!EmailConfirmationMessage.Title.value?'28em':'23em'}" color="background" elevation="24" > -->
 						<v-row>
 							<v-spacer></v-spacer>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 						</v-row>
 						<v-col style="margin-top:-2.5em;">
-							<v-row class="mx-5 mb-5">
+							<v-row no-gutters>
 								<h1 class="ma-auto" v-html="AccountConfirmationMessage.Title.value"></h1>
 								<p v-html="AccountConfirmationMessage.Message.value"></p>
+								<p class="ma-auto" v-html="AccountConfirmationMessage.Message2.value"></p>
+								<p class="ma-auto" v-html="AccountConfirmationMessage.Message3.value"></p>
 							</v-row>
-							<v-row class="justify-center">Confirmation Code</v-row>
-							<v-row ><v-spacer/>
+							<v-row _no-gutters class="justify-center">Confirmation Code</v-row>
+							<v-row _no-gutters><v-spacer/>
 								<v-col cols="11">
 									<v-text-field v-model="confirmCodeModel" clearable @click:clear="invalidConfirmCode = ''"
 										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
@@ -147,26 +148,10 @@
 									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidConfirmCode }}</p>
 								</v-col><v-spacer/>
 							</v-row>
-							<v-row >
-								<v-spacer/>
-								<v-col cols="11">
-									<!-- <v-text-field v-if="restartConfirm && !isSession *" v-model="workingEmailModel" 
-										clearable @click:clear="workingEmailModel = ''" placeholder="Enter your New email address"  
-										class="mb-2"  style="height:1.75em;"  variant="outlined" density="compact" >
-									</v-text-field> -->
-								</v-col>
-								<v-spacer/>
-							</v-row>
 							<v-row class="mx-5">
-								<v-btn :disabled="!confirmCodeModel" @click="AccountConfirmSignUp" block color="primary" class="mb-2" >
-									Confirm
-								</v-btn>
+								<v-btn :disabled="!confirmCodeModel" @click="AccountConfirmSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
+								<v-btn block color="background" class="mb-2" @click="AccountResendConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
 							</v-row>
-							<!-- <v-row class="mx-5" >
-								<v-btn :disabled="!workingEmailModel" @click="resendEmailConfirmationCode" block color="background" class="mb-2" >
-									Resend Code
-								</v-btn>
-							</v-row> -->
 						</v-col>
 					</v-sheet>
 				</v-overlay>
@@ -210,6 +195,9 @@ I18n.putVocabulariesForLanguage('en', {
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* All Const Decls */
+const DEBUG_Model = ref()
+
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
@@ -220,7 +208,12 @@ const confirmCodeModel:Number = ref()
 const isSession = ref(true)
 
 const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
-const AccountConfirmationMessage = { Title: ref(""), Message: ref("") }
+const AccountConfirmationMessage = { 
+	Title: ref(""), 
+	Message: ref(""),
+	Message2: ref(""),
+	Message3: ref("")
+}
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
@@ -247,7 +240,7 @@ Hub.listen('auth', (data) => {
 								enter0("Hub.listen => Case SignUp")
 				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
 				toggleConfirm.value = true // Display Confirm Ui
-				buildAccountConfirmationMessage(workingEmailModel.value)
+				AccountBuildConfirmationMessage(workingEmailModel.value)
 				return
 
 			case "confirmSignUp" :
@@ -321,7 +314,7 @@ const AccountSignIn = async () => {
 			//				Initialize the Invalid Confirm Code model and message
 			invalidConfirmCode.value = ""
 			confirmCodeModel.value = ""
-			buildAccountConfirmationMessage()
+			AccountBuildConfirmationMessage()
 		}) // END_ASYNC_CATCH
 
 		if (user) isSession.value = true
@@ -372,15 +365,15 @@ async function AccountConfirmSignUp() {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const parseEmail = (email) => {
-	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-	let match = regex.exec(email)
-	if (match) return { name: match.groups.name, domain: match.groups.domain }
-	return null
+async function AccountResendConfirmationCode(username) {
+	enter("AccountResendConfirmationCode")
+	try { await Auth.resendSignUp(username) 	} 
+	catch (error) { err('error resending code:', error) }
+	finally { openDialogFlag.value = false }
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const buildAccountConfirmationMessage = (email:string) => {
+const AccountBuildConfirmationMessage = (email:string) => {
 	AccountConfirmationMessage.Title.value = "We Emailed You"
 	if(email) {
 		//			If we get here, the email arg contains data.
@@ -388,17 +381,29 @@ const buildAccountConfirmationMessage = (email:string) => {
 		let obscureEmail = `${name[0]}***@${domain[0]}***`
 		AccountConfirmationMessage.Message.value =
 			`Your code is on the way. To confirm your account, `+
-			`enter the code we emailed to <b>${obscureEmail}</b>.`+
-			`<br>This may take a minuet to arrive.`
+			`enter the code we emailed to:`
+			AccountConfirmationMessage.Message2.value =
+			`<b>${obscureEmail}</b>.`
+			AccountConfirmationMessage.Message3.value =
+			`This may take a minuet to arrive.`
 		return AccountConfirmationMessage
 	}
 	//				No Title should be included with this message.
 	let message =
 		`To confirm your new account, you must enter the ` +
-		`code we emailed to the new email address you provided.<br><br>` 
+		`code we emailed to the new email address you provided.` 
 		AccountConfirmationMessage.Message.value = message
 	return AccountConfirmationMessage
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const parseEmail = (email) => {
+	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
+	let match = regex.exec(email)
+	if (match) return { name: match.groups.name, domain: match.groups.domain }
+	return null
+}
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {

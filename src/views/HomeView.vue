@@ -70,6 +70,13 @@
 								</v-window-item>
 								<v-window-item __SIGN_UP__ value="signupTab">
 									<v-row no-gutters>
+										<v-col cols="12" class="my-5" >
+											<v-card v-if="errorSigningUpMessage" style="background-color: rgb(var(--v-theme-warning));">
+												{{ errorSigningUpMessage }}
+											</v-card>
+										</v-col>
+									</v-row>
+									<v-row no-gutters>
 										<v-col cols="12">
 											<v-text-field
 												v-model="workingPasswordModel"
@@ -231,6 +238,7 @@ const emailModel = ref("")
 const restartConfirm = ref()
 const invalidConfirmCode = ref("")
 const errorSigningInMessage = ref("")
+const errorSigningUpMessage =ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
@@ -337,6 +345,10 @@ const AccountSignUp = async () => {
 				nickname: workingNicknameModel.value
 			},
 			autoSignIn: { enabled: true, }
+		})
+		.catch(error => {
+			if(error.name === "UsernameExistsException")
+				errorSigningUpMessage.value = "This username is not available"
 		})
 	} catch (error) {
 		info('error signing up:', error);

@@ -234,10 +234,10 @@ const errorSigningUpMessage =ref("")
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPreferred_username (event) {
 	const results = await event
-	if(!results.valid) { return /* Cancel Submission if validation FAILED */ }
+	if(!results.valid) return 
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
 	await Auth.updateUserAttributes(newuser, {
 			'preferred_username': workingPreferred_usernameModel.value
 	})	.catch((error) => {

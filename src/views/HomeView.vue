@@ -4,6 +4,20 @@
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
 			<v-row justify="center" v-if="isSession">
+				<v-col :lg="3" :md="3" :sm="4" class="ma-5" >
+				<v-form validate-on="submit" @submit.prevent="submitPreferred_username">
+					<v-row>
+						<v-text-field label="User Name" v-model="workingPreferred_usernameModel" 
+							:rules="[]" clearable  hint="Example: kb1" variant="outlined" density="compact" ></v-text-field>
+					</v-row>
+					<v-row class="justify-end">
+						<v-btn color="surface" class="mx-2" > Cancel </v-btn>
+						<v-btn color="primary" type="submit"> Save </v-btn>
+					</v-row>
+				</v-form>
+				</v-col>
+			</v-row>
+			<v-row justify="center" v-if="isSession">
 				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 					<v-divider :thickness="10" class="ma-2"></v-divider>
 					<v-row no-gutters>
@@ -23,7 +37,7 @@
 					<v-divider :thickness="3" />
 					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 						<p class="ma-auto">User Name:</p></v-row>
-					<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
+						<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 			</v-row>
@@ -105,7 +119,8 @@
 			<!-- Confirmation -->
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
-					<v-sheet width="20em" style="height:23em;" color="surface_alt" elevation="24" >
+					<v-sheet width="20em" color="surface_alt" elevation="24" 
+							:style="{height:AccountConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
 						<v-row>
 							<v-spacer></v-spacer>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
@@ -200,6 +215,9 @@ const workingPasswordModel2 = ref("")
 const workingEmailModel =ref("")
 const workingPhone_numberModel = ref("")
 
+const workingPreferred_usernameModel = ref("")
+const invalidUsernameDialogFlag = ref(false)
+
 const usernameModel = ref("")
 const phone_numberModel = ref("")
 const workingPhonenumberModel = ref("")
@@ -212,6 +230,26 @@ const invalidConfirmCode = ref("")
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitPreferred_username (event) {
+	const results = await event
+	if(!results.valid) { return /* Cancel Submission if validation FAILED */ }
+	//				If we get here, validation was sucessful
+	//				This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	await Auth.updateUserAttributes(newuser, {
+			'preferred_username': workingPreferred_usernameModel.value
+	})	.catch((error) => {
+		//			If I get here, there was a problem updating the preferred_username
+		invalidUsernameDialogFlag.value = true
+	})
+	await Auth.currentUserInfo().then(result => {
+		//			If we get here, The update worked.
+		usernameModel.value = result.attributes.preferred_username
+	})
+}
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
@@ -219,27 +257,28 @@ const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && w
 Hub.listen('auth', (data) => {
 		switch(data.payload.event) {
 			case "signUp" :
-								bar()
-								enter0("Hub.listen => Case SignUp")
+								// bar()
+								// enter0("Hub.listen => Case SignUp")
 				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
 				toggleConfirm.value = true // Display Confirm Ui
-				AccountBuildConfirmationMessage(workingEmailModel.value)
+				restartConfirm.value = false
+				AccountBuildConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 				return
 
 			case "confirmSignUp" :
-								bar()
-								enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
+								// bar()
+								// enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
 				toggleConfirm.value = false // Hide Confirm Ui
 				return
 
 			case "autoSignIn" :
-								bar()
-								enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
+								// bar()
+								// enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
 				return
 			
 			case "signIn" :
-								bar()
-								enter3("Hub.listen => Case SignIn")
+								// bar()
+								// enter3("Hub.listen => Case SignIn")
 				Auth.currentAuthenticatedUser({bypassCache: true})
 				.then(results => {
 					emailModel.value = results.attributes.email
@@ -296,7 +335,7 @@ const AccountSignIn = async () => {
 			//				Initialize the Invalid Confirm Code model and message
 			invalidConfirmCode.value = ""
 			confirmCodeModel.value = ""
-			AccountBuildConfirmationMessage()
+			AccountBuildConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 		}) // END_ASYNC_CATCH
 
 		if (user) isSession.value = true
@@ -310,7 +349,7 @@ const AccountSignIn = async () => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignUp = async () => {
 	try {
-		const { user } = await Auth.signUp({
+		await Auth.signUp({
 			username: workingUsernameModel.value,
 			password: workingPasswordModel.value,
 			attributes: {
@@ -352,34 +391,41 @@ async function AccountConfirmSignUp() {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function AccountResendConfirmationCode(username) {
-	enter("AccountResendConfirmationCode")
 	try { await Auth.resendSignUp(username) 	} 
 	catch (error) { err('error resending code:', error) }
 	finally { openDialogFlag.value = false }
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const AccountBuildConfirmationMessage = (email:string|null = null) => {
+const AccountBuildConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
 	AccountConfirmationMessage.Title.value = "We Emailed You"
-	if(email) {
-		//			If we get here, the email arg contains data.
-		let {name , domain} = parseEmail(email)
-		let obscureEmail = `${name[0]}***@${domain[0]}***`
-		AccountConfirmationMessage.Message.value =
-			`Your code is on the way. To confirm your account, `+
-			`enter the code we emailed to:`
-			AccountConfirmationMessage.Message2.value =
-			`<b>${obscureEmail}</b>.`
-			AccountConfirmationMessage.Message3.value =
-			`This may take a minuet to arrive.`
-		return AccountConfirmationMessage
-	}
-	//				No Title should be included with this message.
-	let message =
+	AccountConfirmationMessage.Message.value = 
 		`To confirm your new account, you must enter the ` +
 		`code we emailed to the new email address you provided.` 
-		AccountConfirmationMessage.Message.value = message
-	return AccountConfirmationMessage
+
+	if(restartConfirm) {
+		//			If we get here, we are restarting Confirm and there is no email.
+		if(!email) return AccountConfirmationMessage 
+				
+		//			If we get here, we are retrying to confirm and the email is still available.
+		//				We DIDN'T reload the page.
+		let {name , domain} = parseEmail(email)
+		let obscureEmail = `${name[0]}***@${domain[0]}***`
+		AccountConfirmationMessage.Message2.value = `<b>${obscureEmail}</b> -- Confirm`
+		return AccountConfirmationMessage 
+	}
+	//			If we get here, we are on the SignUp Happypath
+	AccountConfirmationMessage.Title.value = "We Emailed You"
+	//			If we get here, the email arg contains data.
+	let {name , domain} = parseEmail(email)
+			let obscureEmail = `${name[0]}***@${domain[0]}***`
+
+				AccountConfirmationMessage.Message2.value =
+				`<b>${obscureEmail}</b> -- Happy`
+				
+				AccountConfirmationMessage.Message3.value =
+				`This may take a minuet to arrive.`
+			return AccountConfirmationMessage
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -389,7 +435,6 @@ const parseEmail = (email) => {
 	if (match) return { name: match.groups.name, domain: match.groups.domain }
 	return null
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {
@@ -530,7 +575,6 @@ async function checkSpecialChars (workingNickname) {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /** Not referanced */
 async function UpdateNickname(workingNicknameModel){
-						info("Calling -> UpdateNickname(~)")
 		// 			This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
@@ -557,7 +601,7 @@ async function getSession(){
 				"nickname": user.attributes?.nickname,
 				"email": user.attributes?.email,
 				"phone_number": user.attributes?.phone_number,
-				"username": user.preferred_username ? user.preferred_username : user.username,
+				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
 				"isSession": true
 			}
 		})
@@ -573,6 +617,7 @@ getSession().then( (result) => {
 	usernameModel.value = result.username
 	isSession.value = result.isSession;
 })
+
 </script>
 
 <style>

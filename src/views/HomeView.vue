@@ -3,6 +3,58 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
+			<!-- Update Email-->
+			<v-row justify="center" v-if="isSession">
+				<v-col :lg="3" :md="3" :sm="4" class="ma-5" >
+				<v-form validate-on="submit" @submit.prevent="submitEmail" >
+					<v-row>
+						<v-text-field 
+							label="Email"  v-model="workingEmailModel" 
+							clearable @click:clear="workingUsernameModel = ''"
+							:rules="[]" variant="outlined" density="compact" 
+						></v-text-field>
+					</v-row>
+					<v-row class="justify-end">
+						<v-btn color="primary" type="submit"> Save </v-btn>
+					</v-row>
+				</v-form>
+				</v-col>
+			</v-row>
+			<!-- Email Confirmation -->
+			<v-row justify="center" v-if="isSession">
+				<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
+					<v-sheet width="20em" color="surface_alt" elevation="24" 
+							:style="{height:emailConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
+						<v-row>
+							<v-spacer></v-spacer>
+							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
+								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirmEmail=false"></v-btn>
+						</v-row>
+						<v-col style="margin-top:-2.5em;">
+							<v-row no-gutters>
+								<h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
+								<p v-html="EmailConfirmationMessage.Message.value"></p>
+								<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
+								<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
+							</v-row>
+							<v-row _no-gutters class="justify-center">Confirmation Code</v-row>
+							<v-row _no-gutters><v-spacer/>
+								<v-col cols="11">
+									<v-text-field v-model="confirmEmailCodeModel" clearable @click:clear="invalidEmailConfirmCode = ''"
+										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
+									</v-text-field>
+									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidEmailConfirmCode }}</p>
+								</v-col><v-spacer/>
+							</v-row>
+							<v-row class="mx-5">
+								<v-btn :disabled="!confirmEmailCodeModel" @click="setEmailConfirmed" block color="primary" class="mb-2" > Confirm </v-btn>
+								<v-btn block color="background" class="mb-2" @click="resendEmailConfirmationCode"> Resend Code </v-btn>
+							</v-row>
+						</v-col>
+					</v-sheet>
+				</v-overlay>
+			</v-row>
+			<!-- Update Preferred Username -->
 			<v-row justify="center" v-if="isSession">
 				<v-col :lg="3" :md="3" :sm="4" class="ma-5" >
 				<v-form validate-on="submit" @submit.prevent="submitPreferred_username">
@@ -17,6 +69,7 @@
 				</v-form>
 				</v-col>
 			</v-row>
+			<!-- User Info -->
 			<v-row justify="center" v-if="isSession">
 				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 					<v-divider :thickness="10" class="ma-2"></v-divider>
@@ -41,6 +94,7 @@
 					<v-divider :thickness="10"></v-divider>
 				</v-col>
 			</v-row>
+			<!-- SignIn & SignUp Forms -->
 			<v-row no-gutters v-if="!isSession">
 				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
@@ -50,6 +104,7 @@
 						</v-tabs>
 						<v-card-text >
 							<v-window  v-model="SignInSignUpTab">
+								<!-- SignIn Form -->
 								<v-window-item __SIGN_IN__ value="signinTab">
 									<v-row no-gutters>
 										<v-col cols="12" class="my-5" >
@@ -73,6 +128,7 @@
 										<v-btn :disabled="!isCompleteSignIn" size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
 									</v-row>
 								</v-window-item>
+								<!-- SignUp Form -->
 								<v-window-item __SIGN_UP__ value="signupTab">
 									<v-row no-gutters>
 										<v-col cols="12" class="my-5" >
@@ -116,7 +172,7 @@
 					</v-card>
 				</v-col>
 			</v-row>
-			<!-- Confirmation -->
+			<!-- Preferred Username Confirmation -->
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 					<v-sheet width="20em" color="surface_alt" elevation="24" 
@@ -192,6 +248,11 @@ Amplify.configure(awsconfig);
 /* All Const Decls */
 const DEBUG_Model = ref()
 
+const invalidEmailConfirmCode = ref("")
+const confirmEmailCodeModel = ref("")
+const toggleConfirmEmail:boolean = ref(false)
+const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
@@ -202,12 +263,7 @@ const confirmCodeModel:Number = ref()
 const isSession = ref(true)
 
 const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
-const AccountConfirmationMessage = { 
-	Title: ref(""), 
-	Message: ref(""),
-	Message2: ref(""),
-	Message3: ref("")
-}
+const AccountConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
@@ -230,28 +286,75 @@ const invalidConfirmCode = ref("")
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function submitPreferred_username (event) {
+async function submitEmail (event) {
 	const results = await event
-	if(!results.valid) return 
+	if(!results.valid) {
+		return /* Cancel Submission if validation FAILED */
+	}
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
-	await Auth.updateUserAttributes(newuser, {
-			'preferred_username': workingPreferred_usernameModel.value
-	})	.catch((error) => {
-		//			If I get here, there was a problem updating the preferred_username
-		invalidUsernameDialogFlag.value = true
-	})
+	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
+	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value })
 	await Auth.currentUserInfo().then(result => {
-		//			If we get here, The update worked.
-		usernameModel.value = result.attributes.preferred_username
+		emailModel.value = result.attributes.email
+		//				Prepare the Confirm UI message
+		EmailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
+		//				Display the Confirmation UI
+		toggleConfirmEmail.value = true
 	})
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
+const resendEmailConfirmationCode = async () => {
+	const user = await Auth.currentAuthenticatedUser();
+	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setEmailConfirmed = async function () {
+						enter("setEmailConfirmed")
+		await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
+		.then((response) => {
+			toggleConfirmEmail.value = false
+			confirmCodeModel.value = null
+			emailModel.value = workingEmailModel.value
+			if (!emailModel.value)
+				Auth.currentUserInfo().then((response) => emailModel.value = response.attributes.email)
+		})
+		.catch((e) => {
+						err("verifyCurrentUserAttributeSubmit > Catch > ",e)
+			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
+		})
+	return
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildEmailConfirmationMessage = (email:string) => {
+	if(email) {
+		//			If we get here, the email arg contains data.
+		let {name , domain} = parseEmail(email)
+		let obscureEmail = `${name[0]}***@${domain[0]}***`
+		EmailConfirmationMessage.Title.value = "We Emailed You"
+		EmailConfirmationMessage.Message.value =
+			`Your code is on the way. To confirm your email address change, `+
+			`enter the code we emailed to <b>${obscureEmail}</b>.`+
+			`<br>This may take a minuet to arrive.`
+		return EmailConfirmationMessage
+	}
+	//				No Title should be included with this message.
+	let message =
+		`To confirm your email address change, you <b>MUST</b> enter the `+
+		`code we emailed to the new email address you provided.<br><br>` +
+
+		`<h2>Resend Code: Not available.</h2>`+
+
+		`Your new email is not accessable to the application. To generate `+
+		`a confirmation code, close this popup and update the email again. `+
+		`You can use the same email.`
+	EmailConfirmationMessage.Message.value = message
+	return EmailConfirmationMessage
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
@@ -295,6 +398,28 @@ Hub.listen('auth', (data) => {
 				return
 			} // END_SWITCH
 })
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitPreferred_username (event) {
+	const results = await event
+	if(!results.valid) return 
+	//				If we get here, validation was sucessful
+	//				This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
+	await Auth.updateUserAttributes(newuser, {
+			'preferred_username': workingPreferred_usernameModel.value
+	})	.catch((error) => {
+		//			If I get here, there was a problem updating the preferred_username
+		invalidUsernameDialogFlag.value = true
+	})
+	await Auth.currentUserInfo().then(result => {
+		//			If we get here, The update worked.
+		usernameModel.value = result.attributes.preferred_username
+	})
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignOut = async () => {
@@ -393,7 +518,6 @@ async function AccountConfirmSignUp() {
 async function AccountResendConfirmationCode(username) {
 	try { await Auth.resendSignUp(username) 	} 
 	catch (error) { err('error resending code:', error) }
-	finally { openDialogFlag.value = false }
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -434,57 +558,6 @@ const parseEmail = (email) => {
 	let match = regex.exec(email)
 	if (match) return { name: match.groups.name, domain: match.groups.domain }
 	return null
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const buildEmailConfirmationMessage = (email:string) => {
-					enter0("buildEmailConfirmationMessage")
-	if(email) {
-		//			If we get here, the email arg contains data.
-		let {name , domain} = parseEmail(email)
-		let obscureEmail = `${name[0]}***@${domain[0]}***`
-		EmailConfirmationMessage.Title.value = "We Emailed You"
-		EmailConfirmationMessage.Message.value =
-			`Your code is on the way. To confirm your email address change, `+
-			`enter the code we emailed to <b>${obscureEmail}</b>.`+
-			`<br>This may take a minuet to arrive.`
-		return EmailConfirmationMessage
-	}
-	//				No Title should be included with this message.
-	let message =
-		`To confirm your email address change, you <b>MUST</b> enter the `+
-		`code we emailed to the new email address you provided.<br><br>` +
-
-		`<h2>Resend Code: Not available.</h2>`+
-
-		`Your new email is not accessable to the application. To generate `+
-		`a confirmation code, close this popup and update the email again. `+
-		`You can use the same email.`
-	EmailConfirmationMessage.Message.value = message
-	return EmailConfirmationMessage
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const resendEmailConfirmationCode = async () => {
-	const user = await Auth.currentAuthenticatedUser();
-	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setEmailConfirmed = async function () {
-		await Auth.verifyCurrentUserAttributeSubmit('email', `${confirmCodeModel.value}`)
-		.then((response) => {
-			toggleConfirm.value = false
-			confirmCodeModel.value = null
-			emailModel.value = workingEmailModel.value
-			if (!emailModel.value)
-				Auth.currentUserInfo().then((response) => emailModel.value = response.attributes.email)
-		})
-		.catch((e) => {
-						err("verifyCurrentUserAttributeSubmit > Catch > ",e)
-			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
-		})
-	return
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

@@ -303,12 +303,29 @@ const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+/* ******* */  const BLOCKAPIFLAG = ref(true)  /* ******* */
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const parseEmail = (email) => {
+	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
+	let match = regex.exec(email)
+	if (match) return { name: match.groups.name, domain: match.groups.domain }
+	return null
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {
 
-	info("submitEmail -> DEBUG > Cancel")
-	return // DEBUG 
-
-
+	if(BLOCKAPI("submitEmail function "))return
+	
 	const results = await event
 	if(!results.valid) {
 		return /* Cancel Submission if validation FAILED */
@@ -469,8 +486,6 @@ const checkEmailDomain = (emailArg) => {
 	return true
 }
 
-
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
@@ -513,11 +528,10 @@ Hub.listen('auth', (data) => {
 			return
 	} // END_SWITCH
 })
-		
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPreferred_username (event) {
-	info("submitPreferred_username -> DEBUG > Cancel")
-	return // DEBUG 
+	if(BLOCKAPI("submitPreferred_username function "))return
 
 	const results = await event
 	if(!results.valid) return 
@@ -536,7 +550,6 @@ async function submitPreferred_username (event) {
 		usernameModel.value = result.attributes.preferred_username
 	})
 }
-
 
 const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetValidation()
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -570,11 +583,6 @@ async function checkSpecialCharExceptionsPreferred_username (workingPreferred_us
 		}
 		return true
 }
-
-
-
-
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
@@ -631,6 +639,8 @@ const AccountSignIn = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountSignUp = async () => {
+	// if(BLOCKAPI("AccountSignUp function "))return
+
 	try {
 		await Auth.signUp({
 			username: workingUsernameModel.value,
@@ -709,13 +719,6 @@ const AccountBuildConfirmationMessage = (email:string|null = null, restartConfir
 	return accountConfirmationMessage
 }
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const parseEmail = (email) => {
-	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-	let match = regex.exec(email)
-	if (match) return { name: match.groups.name, domain: match.groups.domain }
-	return null
-}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const services = {

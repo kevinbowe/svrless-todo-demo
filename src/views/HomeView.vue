@@ -3,21 +3,27 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
+			<!-- PopUp Message Dialog -- Model -->
+			<v-row justify="center" v-if="isSession" >
+				<v-dialog activator="parent" v-model="openDialogFlag" persistent >
+					<v-card class="ma-auto" height="10em" width="20em">
+						<v-card-text> 
+							<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
+						</v-card-text>
+						<v-card-actions>
+							<v-btn @click="openDialogFlag = false" block color="surface" style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-dialog>
+			</v-row>
 			<!-- Update Email-->
 			<v-row justify="center" v-if="isSession">
 				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 				<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 					<v-row>
-						<v-text-field 
-							label="Email"  v-model= "workingEmailModel" 
-							
+						<v-text-field label="Email"  v-model= "workingEmailModel" 
 							clearable @click:clear="clearWorkingEmailModelValidationError"
-
-							:rules="[
-										value => checkEmailSpecialChar(value),
-										value => checkEmailName(value),
-										value => checkEmailDomain(value),
-									]"
+							:rules="[ value => checkEmailSpecialChar(value), value => checkEmailName(value), value => checkEmailDomain(value),]"
 							variant="outlined" density="compact" 
 						></v-text-field>
 					</v-row>
@@ -245,8 +251,6 @@ import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 import router from "../router";
-import { resolveTransitionHooks } from "vue";
-import { vModelCheckbox } from "vue";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -261,6 +265,8 @@ Amplify.configure(awsconfig);
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* All Const Decls */
 const DEBUG_Model = ref()
+
+const openDialogFlag = ref()
 
 const preferred_usernameFormRef = ref()
 const emailFormRef = ref()
@@ -303,9 +309,11 @@ const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-/* ******* */  const BLOCKAPIFLAG = ref(true)  /* ******* */
-
+/*																											*/
+/**/					const BLOCKAPIFLAG = ref(true)										 /**/
+/*																											*/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/*																											*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value) 
@@ -316,10 +324,10 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const parseEmail = (email) => {
 	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-	let match = regex.exec(email)
-	if (match) return { name: match.groups.name, domain: match.groups.domain }
-	return null
-}
+		let match = regex.exec(email)
+		if (match) return { name: match.groups.name, domain: match.groups.domain }
+		return null
+	}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {
@@ -362,7 +370,7 @@ const applyEmailConfirmationCode = async function () {
 		})
 		.catch((e) => {
 			err("verifyCurrentUserAttributeSubmit > Catch > ",e)
-			// alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
+			openDialogFlag.value = true
 		})
 		return
 	}

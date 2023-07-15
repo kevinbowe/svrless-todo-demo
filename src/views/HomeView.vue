@@ -5,17 +5,24 @@
 			<hr class="mb-10">
 			<!-- Update Email-->
 			<v-row justify="center" v-if="isSession">
-				<v-col :lg="3" :md="3" :sm="4" class="ma-5" >
-				<v-form validate-on="submit" @submit.prevent="submitEmail" >
+				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+				<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 					<v-row>
 						<v-text-field 
-							label="Email"  v-model="workingEmailModel" 
-							clearable @click:clear="workingUsernameModel = ''"
-							:rules="[]" variant="outlined" density="compact" 
+							label="Email"  v-model= "workingEmailModel" 
+							
+							clearable @click:clear="clearWorkingEmailModelValidationError"
+
+							:rules="[
+										value => checkEmailSpecialChar(value),
+										value => checkEmailName(value),
+										value => checkEmailDomain(value),
+									]"
+							variant="outlined" density="compact" 
 						></v-text-field>
 					</v-row>
 					<v-row class="justify-end">
-						<v-btn color="primary" type="submit"> Save </v-btn>
+						<v-btn :disabled="!workingEmailModel" color="primary" type="submit"> Save Email </v-btn>
 					</v-row>
 				</v-form>
 				</v-col>
@@ -32,8 +39,8 @@
 						</v-row>
 						<v-col style="margin-top:-2.5em;">
 							<v-row no-gutters>
-								<h1 class="ma-auto" v-html="EmailConfirmationMessage.Title.value"></h1>
-								<p v-html="EmailConfirmationMessage.Message.value"></p>
+								<h1 class="ma-auto" v-html="emailConfirmationMessage.Title.value"></h1>
+								<p v-html="emailConfirmationMessage.Message.value"></p>
 								<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
 								<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
 							</v-row>
@@ -47,7 +54,7 @@
 								</v-col><v-spacer/>
 							</v-row>
 							<v-row class="mx-5">
-								<v-btn :disabled="!confirmEmailCodeModel" @click="setEmailConfirmed" block color="primary" class="mb-2" > Confirm </v-btn>
+								<v-btn :disabled="!confirmEmailCodeModel" @click="applyEmailConfirmationCode" block color="primary" class="mb-2" > Confirm </v-btn>
 								<v-btn block color="background" class="mb-2" @click="resendEmailConfirmationCode"> Resend Code </v-btn>
 							</v-row>
 						</v-col>
@@ -56,15 +63,21 @@
 			</v-row>
 			<!-- Update Preferred Username -->
 			<v-row justify="center" v-if="isSession">
-				<v-col :lg="3" :md="3" :sm="4" class="ma-5" >
-				<v-form validate-on="submit" @submit.prevent="submitPreferred_username">
+				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+
+				<v-form ref="preferred_usernameFormRef" validate-on="submit" @submit.prevent="submitPreferred_username">
 					<v-row>
-						<v-text-field label="User Name" v-model="workingPreferred_usernameModel" 
-							:rules="[]" clearable  hint="Example: kb1" variant="outlined" density="compact" ></v-text-field>
+						<v-text-field label="User Name" :rules="[
+								checkShortPreferred_username,
+								checkFirstCharPreferred_username,
+								checkSpecialCharExceptionsPreferred_username
+							]" 
+							clearable @click:clear="clearPreferred_usernameModelValidationError"
+							v-model="workingPreferred_usernameModel" hint="Example: kb1" variant="outlined" density="compact" >
+						</v-text-field>
 					</v-row>
 					<v-row class="justify-end">
-						<v-btn color="surface" class="mx-2" > Cancel </v-btn>
-						<v-btn color="primary" type="submit"> Save </v-btn>
+						<v-btn :disabled="!workingPreferred_usernameModel" color="primary" type="submit"> Save Preferred Username</v-btn>
 					</v-row>
 				</v-form>
 				</v-col>
@@ -176,7 +189,7 @@
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 					<v-sheet width="20em" color="surface_alt" elevation="24" 
-							:style="{height:AccountConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
+							:style="{height:accountConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
 						<v-row>
 							<v-spacer></v-spacer>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
@@ -184,10 +197,10 @@
 						</v-row>
 						<v-col style="margin-top:-2.5em;">
 							<v-row no-gutters>
-								<h1 class="ma-auto" v-html="AccountConfirmationMessage.Title.value"></h1>
-								<p v-html="AccountConfirmationMessage.Message.value"></p>
-								<p class="ma-auto" v-html="AccountConfirmationMessage.Message2.value"></p>
-								<p class="ma-auto" v-html="AccountConfirmationMessage.Message3.value"></p>
+								<h1 class="ma-auto" v-html="accountConfirmationMessage.Title.value"></h1>
+								<p v-html="accountConfirmationMessage.Message.value"></p>
+								<p class="ma-auto" v-html="accountConfirmationMessage.Message2.value"></p>
+								<p class="ma-auto" v-html="accountConfirmationMessage.Message3.value"></p>
 							</v-row>
 							<v-row _no-gutters class="justify-center">Confirmation Code</v-row>
 							<v-row _no-gutters><v-spacer/>
@@ -233,6 +246,7 @@ import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 import router from "../router";
 import { resolveTransitionHooks } from "vue";
+import { vModelCheckbox } from "vue";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -248,6 +262,9 @@ Amplify.configure(awsconfig);
 /* All Const Decls */
 const DEBUG_Model = ref()
 
+const preferred_usernameFormRef = ref()
+const emailFormRef = ref()
+
 const invalidEmailConfirmCode = ref("")
 const confirmEmailCodeModel = ref("")
 const toggleConfirmEmail:boolean = ref(false)
@@ -262,8 +279,7 @@ const toggleConfirm:boolean = ref(false)
 const confirmCodeModel:Number = ref()
 const isSession = ref(true)
 
-const EmailConfirmationMessage = { Title: ref(""), Message: ref("") }
-const AccountConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+const accountConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
@@ -288,6 +304,11 @@ const errorSigningUpMessage =ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {
+
+	info("submitEmail -> DEBUG > Cancel")
+	return // DEBUG 
+
+
 	const results = await event
 	if(!results.valid) {
 		return /* Cancel Submission if validation FAILED */
@@ -299,7 +320,7 @@ async function submitEmail (event) {
 	await Auth.currentUserInfo().then(result => {
 		emailModel.value = result.attributes.email
 		//				Prepare the Confirm UI message
-		EmailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
+		emailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
 		//				Display the Confirmation UI
 		toggleConfirmEmail.value = true
 	})
@@ -312,102 +333,200 @@ const resendEmailConfirmationCode = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setEmailConfirmed = async function () {
-						enter("setEmailConfirmed")
-		await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
+const applyEmailConfirmationCode = async function () {
+	await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
 		.then((response) => {
-			toggleConfirmEmail.value = false
-			confirmCodeModel.value = null
+			// 		If we get here, the email is CONFIRMED.
 			emailModel.value = workingEmailModel.value
-			if (!emailModel.value)
-				Auth.currentUserInfo().then((response) => emailModel.value = response.attributes.email)
+			workingEmailModel.value = null
+			confirmEmailCodeModel.value = null
+			
+			toggleConfirmEmail.value = false
 		})
 		.catch((e) => {
-						err("verifyCurrentUserAttributeSubmit > Catch > ",e)
-			alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
+			err("verifyCurrentUserAttributeSubmit > Catch > ",e)
+			// alert(`ERROR -- Invalid Confirmation Code [ ${confirmCodeModel.value} ] -- ${e}` )
 		})
-	return
+		return
+	}
+	
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildEmailConfirmationMessage = (email:string) => {
+	emailConfirmationMessage.Title.value = "We Emailed You"
+	
+	emailConfirmationMessage.Message.value = 
+	`To confirm your new account, you must enter the ` +
+	`code we emailed to the new email address you provided.` 
+	
+	let {name , domain} = parseEmail(email)
+	emailConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+	
+	emailConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+	
+	return emailConfirmationMessage
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const buildEmailConfirmationMessage = (email:string) => {
-	if(email) {
-		//			If we get here, the email arg contains data.
-		let {name , domain} = parseEmail(email)
-		let obscureEmail = `${name[0]}***@${domain[0]}***`
-		EmailConfirmationMessage.Title.value = "We Emailed You"
-		EmailConfirmationMessage.Message.value =
-			`Your code is on the way. To confirm your email address change, `+
-			`enter the code we emailed to <b>${obscureEmail}</b>.`+
-			`<br>This may take a minuet to arrive.`
-		return EmailConfirmationMessage
+/* Email -- Validation */
+const checkEmailSpecialChar = (emailArg) => {
+	//				Perform general special char check
+	const regexSpecialChar = new RegExp('^.*[!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
+
+	const specialCharMatch = regexSpecialChar.exec(emailArg)
+	if ( specialCharMatch !== null) {
+		//			If we get here, there was a match
+		return "FAIL checkEmailSpecialChar() > specialCharMatch"
 	}
-	//				No Title should be included with this message.
-	let message =
-		`To confirm your email address change, you <b>MUST</b> enter the `+
-		`code we emailed to the new email address you provided.<br><br>` +
-
-		`<h2>Resend Code: Not available.</h2>`+
-
-		`Your new email is not accessable to the application. To generate `+
-		`a confirmation code, close this popup and update the email again. `+
-		`You can use the same email.`
-	EmailConfirmationMessage.Message.value = message
-	return EmailConfirmationMessage
+	//				Perform multiple @ check
+	const regexMultipleAtChar = new RegExp('^.*@.*@', 'gm')
+	const multipleAtCharMatch = regexMultipleAtChar.exec(emailArg)
+	if ( multipleAtCharMatch !== null) {
+		//			If we get here, there was a match
+		return "FAIL checkEmailSpecialChar() > multipleAtCharMatch"
+	}
+	//				Perform consecutive special char check
+	const regexConsecutiveSpecialChar = new RegExp('\\.\\.|--|\\+\\+', 'gm')
+	const consecutiveSpecialCharMatch = regexConsecutiveSpecialChar.exec(emailArg)
+	if ( consecutiveSpecialCharMatch !== null) {
+		//			If we get here, there was a match
+		return "FAIL checkEmailSpecialChar() > ConsecutiveSpecialChar"
+	}
+	return true
 }
+
+const checkEmailName = (emailArg) => {
+	const parsedEmail = parseEmail(emailArg)
+	if (!parsedEmail) return "FAIL checkEmailName() > Invalid Email"
+	//				Length check ( long & short )
+	//				--	64 char
+	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
+	let len = parsedEmail.name.length;
+	if(len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
+	if(len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
+	//				Leading and trailing special char check
+	//				Note: The trailing '_' has been removed from the check.
+	//					Gmail accepts this trailing character.
+	/*			 	TEST DATA -- This patterns must fail.
+						asd_@gmail.com // This is valid
+						-asd@gmail.com		asd-@gmail.com		_asd@gmail.com		+asd@gmail.com
+						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com
+	*/
+	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
+	let match = regex.exec(parsedEmail.name)
+	if(match != null){
+		return `Invalid character [-_+.] used at begining or end of email name [ ${match} ]`
+	}
+
+return true
+}
+
+const checkEmailDomain = (emailArg) => {
+	const emailDomain = parseEmail(emailArg).domain
+	//				Length check ( long & short )
+	/*				TEST DATA -- 253 char domain
+					asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com   */
+
+	let len = emailDomain.length;
+	if(len > 253){
+		return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain.length}`
+	}
+	if(len <= 2){
+		return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain.length}`
+	}
+
+	//				Domain and TopLevelDomain check
+	//				Split the domain and tld and check from both pieces.
+	const regex = new RegExp('^(?<domain>.*)[\\.|\\s](?<tld>.*)', 'gm')
+	let match = regex.exec(emailDomain)
+	//				Domain Check Section
+	//				Exists Check
+	if(match?.groups.domain.length === 0 || match?.groups.domain === undefined){
+		//			Missing the Domain
+		return "FAIL checkEmailDomain() > Domain Check: Domain is missing"
+	}
+
+	//		TEST DATA
+	// asd@-asd.com		asd@asd-.com		asd@.asd.com		asd@asd..com
+	// asd@_asd.com		asd@asd_.com		asd@+asd.com		asd@asd+.com
+
+	//				Leading/Trailing Special Char Check
+	const regexSpecialChar = new RegExp('^[-_+\\.]|[-_+\\.]$', 'gm')
+	let matchSpecialChar = regexSpecialChar.exec(match?.groups.domain)
+	if(matchSpecialChar != null){
+		return `Invalid character [-_+.] used at begining or end of domain name [ ${matchSpecialChar} ]`
+	}
+
+	//				TLD (Top-Level-Domain) Checks
+	//				Exists Check
+	if(match?.groups.tld.length === 0 || match?.groups.tld === undefined){
+		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
+	}
+	//				Leading/Trailing Special Char Check
+	let matchTldSpecialChar = regexSpecialChar.exec(match?.groups.tld)
+	if(matchTldSpecialChar != null){
+		return `Invalid character [-_+.] used at begining or end of TLD name [ ${matchTldSpecialChar} ]`
+	}
+	return true
+}
+
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
-		switch(data.payload.event) {
-			case "signUp" :
-								// bar()
-								// enter0("Hub.listen => Case SignUp")
-				confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
-				toggleConfirm.value = true // Display Confirm Ui
-				restartConfirm.value = false
-				AccountBuildConfirmationMessage(workingEmailModel.value, restartConfirm.value)
-				return
-
-			case "confirmSignUp" :
-								// bar()
-								// enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
-				toggleConfirm.value = false // Hide Confirm Ui
-				return
-
-			case "autoSignIn" :
-								// bar()
-								// enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
-				return
+	switch(data.payload.event) {
+		case "signUp" :
+			// bar()
+			// enter0("Hub.listen => Case SignUp")
+			confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+			toggleConfirm.value = true // Display Confirm Ui
+			restartConfirm.value = false
+			AccountBuildConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+			return
+		
+		case "confirmSignUp" :
+			// bar()
+			// enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
+			toggleConfirm.value = false // Hide Confirm Ui
+			return
 			
-			case "signIn" :
-								// bar()
-								// enter3("Hub.listen => Case SignIn")
-				Auth.currentAuthenticatedUser({bypassCache: true})
-				.then(results => {
-					emailModel.value = results.attributes.email
-					nicknameModel.value =  data.payload.data.attributes.nickname
-					phone_numberModel.value = data.payload.data.attributes.phone_number
-					usernameModel.value = data.payload.data.attributes.preferred_username 
-							? data.payload.data.attributes.preferred_username 
-							: data.payload.data.username
+		case "autoSignIn" :
+			// bar()
+			// enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
+			return
+			
+		case "signIn" :
+			// bar()
+			// enter3("Hub.listen => Case SignIn")
+			Auth.currentAuthenticatedUser({bypassCache: true})
+			.then(results => {
+				emailModel.value = results.attributes.email
+				nicknameModel.value =  data.payload.data.attributes.nickname
+				phone_numberModel.value = data.payload.data.attributes.phone_number
+				usernameModel.value = data.payload.data.attributes.preferred_username 
+				? data.payload.data.attributes.preferred_username 
+				: data.payload.data.username
 			})
-				isSession.value = true
-				return
-
-			case "signOut" :
-				return
-			} // END_SWITCH
+			isSession.value = true
+			return
+			
+		case "signOut" :
+			return
+	} // END_SWITCH
 })
-
+		
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPreferred_username (event) {
+	info("submitPreferred_username -> DEBUG > Cancel")
+	return // DEBUG 
+
 	const results = await event
 	if(!results.valid) return 
+
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
 	await Auth.updateUserAttributes(newuser, {
-			'preferred_username': workingPreferred_usernameModel.value
+		'preferred_username': workingPreferred_usernameModel.value
 	})	.catch((error) => {
 		//			If I get here, there was a problem updating the preferred_username
 		invalidUsernameDialogFlag.value = true
@@ -417,6 +536,45 @@ async function submitPreferred_username (event) {
 		usernameModel.value = result.attributes.preferred_username
 	})
 }
+
+
+const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetValidation()
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const clearPreferred_usernameModelValidationError = () => preferred_usernameFormRef.value.resetValidation()
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function checkShortPreferred_username (workingPreferred_usernameModel) {
+	if (workingPreferred_usernameModel.length > 0 && workingPreferred_usernameModel.length <= 2) {
+		return 'User name is too short. Please try another one.'
+	}
+	return true
+}
+
+async function checkFirstCharPreferred_username (workingPreferred_usernameModel) {
+		if (!isNaN(workingPreferred_usernameModel[0])) {
+			return 'User name can not begin with a Number. Please try another one.'
+		}
+		return true
+}
+
+async function checkSpecialCharExceptionsPreferred_username (workingPreferred_usernameModel) {
+		//				REF -- ALL Special Chars: /[-_.*\[\]@!#$%^\'"*,:;|/ {}<>()\\]/
+		//				Special Char with exceptions: <hyphen> <under_bar> and <period>
+		// let regexSpecialChar = /[*\[\]@!#$%^\'"*,:;|{}<>()\\\/]/
+		//				Add <space>
+		let regexSpecialChar = /[\s*\[\]@!#$%^\'"*,:;|{}<>()\\\/]/
+		const match = workingPreferred_usernameModel.match(regexSpecialChar)
+		// 				Check the format
+		if(match) {
+			return 'Only period, hyphen and underbar are allowed special characters. Try again.'
+		}
+		return true
+}
+
+
+
+
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
@@ -522,34 +680,33 @@ async function AccountResendConfirmationCode(username) {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const AccountBuildConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
-	AccountConfirmationMessage.Title.value = "We Emailed You"
-	AccountConfirmationMessage.Message.value = 
+	accountConfirmationMessage.Title.value = "We Emailed You"
+	accountConfirmationMessage.Message.value = 
 		`To confirm your new account, you must enter the ` +
 		`code we emailed to the new email address you provided.` 
 
 	if(restartConfirm) {
-		//			If we get here, we are restarting Confirm and there is no email.
-		if(!email) return AccountConfirmationMessage 
+		if(!email) {
+			//			If we get here, we are restarting Confirm and there is no email.
+			return accountConfirmationMessage 
+		}
 				
 		//			If we get here, we are retrying to confirm and the email is still available.
 		//				We DIDN'T reload the page.
 		let {name , domain} = parseEmail(email)
-		let obscureEmail = `${name[0]}***@${domain[0]}***`
-		AccountConfirmationMessage.Message2.value = `<b>${obscureEmail}</b> -- Confirm`
-		return AccountConfirmationMessage 
+		accountConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+		
+		return accountConfirmationMessage 
 	}
 	//			If we get here, we are on the SignUp Happypath
-	AccountConfirmationMessage.Title.value = "We Emailed You"
 	//			If we get here, the email arg contains data.
 	let {name , domain} = parseEmail(email)
-			let obscureEmail = `${name[0]}***@${domain[0]}***`
-
-				AccountConfirmationMessage.Message2.value =
-				`<b>${obscureEmail}</b> -- Happy`
+	let obscureEmail = `${name[0]}***@${domain[0]}***`
+	accountConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
 				
-				AccountConfirmationMessage.Message3.value =
-				`This may take a minuet to arrive.`
-			return AccountConfirmationMessage
+	accountConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+
+	return accountConfirmationMessage
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

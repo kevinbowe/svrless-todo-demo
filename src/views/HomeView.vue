@@ -273,7 +273,8 @@ const emailFormRef = ref()
 
 const invalidEmailConfirmCode = ref("")
 const confirmEmailCodeModel = ref("")
-const toggleConfirmEmail:boolean = ref(false)
+// const toggleConfirmEmail:boolean = ref(false)
+const toggleConfirmEmail:Ref<boolean> = ref(false)
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 
 const passwordIcon1 = ref(false)
@@ -281,8 +282,10 @@ const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
 const SignInSignUpTab = ref()
 
-const toggleConfirm:boolean = ref(false)
-const confirmCodeModel:Number = ref()
+// const toggleConfirm:boolean = ref(false)
+const toggleConfirm:Ref<boolean> = ref(false)
+// const confirmCodeModel:Number = ref()
+const confirmCodeModel:Ref<Number|undefined> = ref()
 const isSession = ref(true)
 
 const accountConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }

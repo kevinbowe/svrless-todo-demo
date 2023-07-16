@@ -738,9 +738,10 @@ const services = {
 			//				This is going to return an ValidationError string 
 			//				--OR-- a "passed validation" boolean true.
 			let nicknameValidationRtn = await Promise.all( [
-						checkReservedNickname(formData.nickname),
-						checkShortNickname(formData.nickname),
-						checkSpecialChars (formData.nickname),
+						checkNicknameReserved(formData.nickname),
+						checkNicknameTooShort(formData.nickname),
+						checkNicknameSpecialChars (formData.nickname),
+						checkNicknameFirstChar (formData.nickname)
 					]).then (resultArray => {
 						// 			This return exists to await Promise.all()
 						return checkValidationResults(resultArray)
@@ -788,25 +789,25 @@ async function submitNickname(event) {
 	}  }) 
 }	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function checkReservedNickname (workingNickname) {
+async function checkNicknameReserved (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
 		}
 		return true
 }
-async function checkShortNickname (workingNickname) {
+async function checkNicknameTooShort (workingNickname) {
 		if (workingNickname.length > 0 && workingNickname.length <= 3) {
 			return 'User nickname is too short. Please try another one.'
 		}
 		return true
 }
-async function checkFirstChar (workingNickname) {
+async function checkNicknameFirstChar (workingNickname) {
 		if (!isNaN(workingNickname[0])) {
 			return 'User nickname can not begin with a Number. Please try another one.'
 		}
 		return true
 }
-async function checkSpecialChars (workingNickname) {
+async function checkNicknameSpecialChars (workingNickname) {
 		const re = /[!@#$%\^&*(){}[\]<>?/|]/
 		const match = workingNickname.match(re)
 		// 				Check the format
@@ -818,7 +819,7 @@ async function checkSpecialChars (workingNickname) {
 					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /** Not referanced */
-async function UpdateNickname(workingNicknameModel){
+async function updateNickname(workingNicknameModel){
 		// 			This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })

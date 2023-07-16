@@ -144,7 +144,7 @@
 											clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
 										</v-text-field>
 										</v-col>
-										<v-btn :disabled="!isCompleteSignIn" size="large" color="primary" block class="mb-3" @click="AccountSignIn" > Sign In </v-btn>
+										<v-btn :disabled="!isCompleteSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
 									</v-row>
 								</v-window-item>
 								<!-- SignUp Form -->
@@ -183,7 +183,7 @@
 										<v-col cols="12">
 											<v-text-field id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
 										</v-col>
-										<v-btn block size="large" color="primary" class="mb-3" @click="AccountSignUp" > Sign Up </v-btn>
+										<v-btn block size="large" color="primary" class="mb-3" @click="signUpUser" > Sign Up </v-btn>
 									</v-row>
 								</v-window-item>
 							</v-window>
@@ -195,7 +195,7 @@
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 					<v-sheet width="20em" color="surface_alt" elevation="24" 
-							:style="{height:accountConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
+							:style="{height:userConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
 						<v-row>
 							<v-spacer></v-spacer>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
@@ -203,10 +203,10 @@
 						</v-row>
 						<v-col style="margin-top:-2.5em;">
 							<v-row no-gutters>
-								<h1 class="ma-auto" v-html="accountConfirmationMessage.Title.value"></h1>
-								<p v-html="accountConfirmationMessage.Message.value"></p>
-								<p class="ma-auto" v-html="accountConfirmationMessage.Message2.value"></p>
-								<p class="ma-auto" v-html="accountConfirmationMessage.Message3.value"></p>
+								<h1 class="ma-auto" v-html="userConfirmationMessage.Title.value"></h1>
+								<p v-html="userConfirmationMessage.Message.value"></p>
+								<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
+								<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
 							</v-row>
 							<v-row _no-gutters class="justify-center">Confirmation Code</v-row>
 							<v-row _no-gutters><v-spacer/>
@@ -218,8 +218,8 @@
 								</v-col><v-spacer/>
 							</v-row>
 							<v-row class="mx-5">
-								<v-btn :disabled="!confirmCodeModel" @click="AccountConfirmSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
-								<v-btn block color="background" class="mb-2" @click="AccountResendConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
+								<v-btn :disabled="!confirmCodeModel" @click="confirmUserSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
+								<v-btn block color="background" class="mb-2" @click="resendUserConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
 							</v-row>
 						</v-col>
 					</v-sheet>
@@ -228,7 +228,7 @@
 			<!-- Sign Out -->
 			<v-row no-gutters v-if="isSession">
 				<v-spacer></v-spacer>
-				<v-col cols="8"><div> <v-btn class="mt-3" color="primary" @click="AccountSignOut">
+				<v-col cols="8"><div> <v-btn class="mt-3" color="primary" @click="signOutUser">
 					Sign Out</v-btn></div></v-col>
 				<v-spacer></v-spacer>
 			</v-row>
@@ -288,7 +288,7 @@ const toggleConfirm:Ref<boolean> = ref(false)
 const confirmCodeModel:Ref<Number|undefined> = ref()
 const isSession = ref(true)
 
-const accountConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
@@ -313,7 +313,7 @@ const errorSigningUpMessage =ref("")
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
-/**/					const BLOCKAPIFLAG = ref(true)										 /**/
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /*																											*/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /*																											*/
@@ -506,7 +506,7 @@ Hub.listen('auth', (data) => {
 			confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
 			toggleConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = false
-			AccountBuildConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 			return
 		
 		case "confirmSignUp" :
@@ -599,7 +599,7 @@ async function checkSpecialCharExceptionsPreferred_username (workingPreferred_us
 const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const AccountSignOut = async () => {
+const signOutUser = async () => {
 	try { await Auth.signOut()
 		.then(result => {
 			emailModel.value = ""
@@ -623,7 +623,7 @@ const AccountSignOut = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const AccountSignIn = async () => {
+const signInUser = async () => {
 	try { 
 		errorSigningInMessage.value = ""
 		const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value)
@@ -637,7 +637,7 @@ const AccountSignIn = async () => {
 			//				Initialize the Invalid Confirm Code model and message
 			invalidConfirmCode.value = ""
 			confirmCodeModel.value = ""
-			AccountBuildConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 		}) // END_ASYNC_CATCH
 
 		if (user) isSession.value = true
@@ -649,8 +649,8 @@ const AccountSignIn = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const AccountSignUp = async () => {
-	// if(BLOCKAPI("AccountSignUp function "))return
+const signUpUser = async () => {
+	// if(BLOCKAPI("signUpUser function "))return
 
 	try {
 		await Auth.signUp({
@@ -673,7 +673,7 @@ const AccountSignUp = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function AccountConfirmSignUp() {
+async function confirmUserSignUp() {
 	try {
 		//					This function ONLY sets the user state to Confirmed.
 		//					The user is NOT signed in.
@@ -682,7 +682,7 @@ async function AccountConfirmSignUp() {
 		//					This will not start until the Auth.confirmSignUp(~) returns
 		if (restartConfirm.value === true) {
 			//				If we get here, try signing in again.
-			AccountSignIn()
+			signInUser()
 			toggleConfirm.value = false	// Close the Confirm Ui
 			isSession.value = true			// We are signed in
 			restartConfirm.value = false	// Lower the Confirm flag
@@ -694,40 +694,40 @@ async function AccountConfirmSignUp() {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function AccountResendConfirmationCode(username) {
+async function resendUserConfirmationCode(username) {
 	try { await Auth.resendSignUp(username) 	} 
 	catch (error) { err('error resending code:', error) }
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const AccountBuildConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
-	accountConfirmationMessage.Title.value = "We Emailed You"
-	accountConfirmationMessage.Message.value = 
+const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
+	userConfirmationMessage.Title.value = "We Emailed You"
+	userConfirmationMessage.Message.value = 
 		`To confirm your new account, you must enter the ` +
 		`code we emailed to the new email address you provided.` 
 
 	if(restartConfirm) {
 		if(!email) {
 			//			If we get here, we are restarting Confirm and there is no email.
-			return accountConfirmationMessage 
+			return userConfirmationMessage 
 		}
 				
 		//			If we get here, we are retrying to confirm and the email is still available.
 		//				We DIDN'T reload the page.
 		let {name , domain} = parseEmail(email)
-		accountConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+		userConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
 		
-		return accountConfirmationMessage 
+		return userConfirmationMessage 
 	}
 	//			If we get here, we are on the SignUp Happypath
 	//			If we get here, the email arg contains data.
 	let {name , domain} = parseEmail(email)
 	let obscureEmail = `${name[0]}***@${domain[0]}***`
-	accountConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
+	userConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
 				
-	accountConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+	userConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
 
-	return accountConfirmationMessage
+	return userConfirmationMessage
 }
 
 

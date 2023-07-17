@@ -6,12 +6,15 @@
 			<!-- PopUp Message Dialog -- Modal -->
 			<v-row justify="center" v-if="openDialogFlag" >
 				<v-dialog activator="parent" v-model="openDialogFlag" persistent >
-					<v-card class="ma-auto" height="10em" width="20em">
+					<v-card 	color="background_alt" border="lg" 
+								class="ma-auto" height="10em" width="20em" elevation="24">
 						<v-card-text> 
 							<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
 						</v-card-text>
 						<v-card-actions>
-							<v-btn @click="openDialogFlag = false" block color="surface" style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+							<v-btn @click="openDialogFlag = false" block 
+							color="surface" 
+							style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
 						</v-card-actions>
 					</v-card>
 				</v-dialog>
@@ -48,7 +51,7 @@
 								<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
 								<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
 							</v-row>
-							<v-row _no-gutters><v-spacer/>
+							<v-row><v-spacer/>
 								<v-col cols="11">
 									<v-text-field label="Confirmation Code" v-model="confirmEmailCodeModel" clearable @click:clear="invalidEmailConfirmCode = ''"
 										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
@@ -58,7 +61,7 @@
 							</v-row>
 							<v-row class="mx-5">
 								<v-btn :disabled="!confirmEmailCodeModel" @click="applyEmailConfirmationCode" block color="primary" class="mb-2" > Confirm </v-btn>
-								<v-btn block color="background" class="mb-2" @click="resendEmailConfirmationCode"> Resend Code </v-btn>
+								<v-btn block color="surface" class="mb-2" @click="resendEmailConfirmationCode"> Resend Code </v-btn>
 							</v-row>
 						</v-col>
 					</v-sheet>
@@ -113,8 +116,8 @@
 			<!-- SignIn & SignUp Forms -->
 			<v-row no-gutters v-if="!isSession">
 				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
-					<v-card style="background-color: rgb(var(--v-theme-surface_alt));" color="border_alt" variant="outlined" >
-						<v-tabs color="primary" bg-color="surface" fixed-tabs v-model="SignInSignUpTab" >
+					<v-card variant="outlined" >
+						<v-tabs fixed-tabs v-model="SignInSignUpTab" >
 							<v-tab value="signinTab">Sign In</v-tab>
 							<v-tab value="signupTab">Sign Up</v-tab>
 						</v-tabs>
@@ -124,19 +127,19 @@
 								<v-window-item __SIGN_IN__ value="signinTab">
 									<v-row no-gutters>
 										<v-col cols="12" class="my-5" >
-											<v-card v-if="errorSigningInMessage" style="background-color: rgb(var(--v-theme-warning));">
+											<v-card v-if="errorSigningInMessage" >
 												{{ errorSigningInMessage }}
 											</v-card>
 										</v-col>
 									</v-row>
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
+											<v-text-field label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
 											clearable @click:clear="workingUsernameModel = ''" variant="outlined" required>
 										</v-text-field>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" label="Password" id="passwordSignInId" v-model="workingPasswordModel" :append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
+											<v-text-field label="Password" id="passwordSignInId" v-model="workingPasswordModel" :append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
 												prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
 												clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
 											</v-text-field>
@@ -155,30 +158,30 @@
 									</v-row>
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
+											<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
 												prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
 												@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
 												label="Password*" required > 
 											</v-text-field></v-col>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" v-model="workingPasswordModel2"
+											<v-text-field v-model="workingPasswordModel2"
 												:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'" prepend-inner-icon="mdi-lock-outline" 
 												:type="passwordIcon2b ? 'text' : 'password'" @click:append-inner="passwordIcon2b = !passwordIcon2b"
 												clearable density="compact" variant="outlined" label="Confirm Password*" required >
 											</v-text-field>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" id="emailSuId" v-model="workingEmailModel" clearable density="compact" variant="outlined" label="Email" required />
+											<v-text-field id="emailSuId" v-model="workingEmailModel" clearable density="compact" variant="outlined" label="Email" required />
 										</v-col>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" id="usernameSuId" v-model="workingUsernameModel" clearable  density="compact" 
+											<v-text-field id="usernameSuId" v-model="workingUsernameModel" clearable  density="compact" 
 												variant="outlined" label="Username" required />
 										</v-col>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" id="phone_numberSuId" v-model="workingPhone_numberModel" clearable density="compact" variant="outlined" label="Phone number"/>
+											<v-text-field id="phone_numberSuId" v-model="workingPhone_numberModel" clearable density="compact" variant="outlined" label="Phone number"/>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field bg-color="surface" id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
+											<v-text-field id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
 										</v-col>
 										<v-btn block size="large" color="primary" class="mb-3" @click="signUpUser" > Sign Up </v-btn>
 									</v-row>
@@ -191,7 +194,7 @@
 			<!-- SignUp Confirmation -->
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleUserConfirm" >
-					<v-sheet width="20em" color="surface_alt" elevation="24" 
+					<v-sheet width="20em" color="background" border="lg" elevation="24" 
 							:style="{height:userConfirmationMessage.Message2.value ? '24em' : '21em'}">
 						<v-row>
 							<v-spacer/>
@@ -205,7 +208,7 @@
 								<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
 								<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
 							</v-row>
-							<v-row _no-gutters><v-spacer/>
+							<v-row><v-spacer/>
 								<v-col cols="11">
 									<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
 										clearable @click:clear="confirmUserCodeModel = undefined"
@@ -216,7 +219,7 @@
 							</v-row>
 							<v-row class="mx-5">
 								<v-btn :disabled="!confirmUserCodeModel" @click="confirmUserSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
-								<v-btn block color="background" class="mb-2" @click="resendUserConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
+								<v-btn block color="surface" class="mb-2" @click="resendUserConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
 							</v-row>
 						</v-col>
 					</v-sheet>
@@ -893,11 +896,13 @@ getSession().then( (result) => {
 		border-width: var(--amplify-components-fieldcontrol-border-width);
 	}
 	.v-slide-group-item--active {
-		background-color: rgb(var(--v-theme-surface_alt));
-		color: rgb(var(--v-theme-background));
+		/* background-color: rgb(var(--v-theme-surface_alt)); */
+		/* color: rgb(var(--v-theme-background)); */
+		/* background-color: rgb(var(--v-theme-surface)); */
 	}
 	.v-tab__slider {
-		top: 0;
+		/* top: 0; */
 		height:4px;
+		color: rgb(var(--v-theme-primary));
 	}
 </style>

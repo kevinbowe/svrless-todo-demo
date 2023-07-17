@@ -36,8 +36,7 @@
 			<!-- Email Confirmation -->
 			<v-row justify="center" v-if="isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
-					<v-sheet width="20em" color="surface_alt" elevation="24" 
-							:style="{height:emailConfirmationMessage.Message2.value ? '24em' : '21em'}"> <!-- Is this required for this feature? -->
+					<v-sheet height="24em" width="20em" color="surface_alt" elevation="24">
 							<v-row><v-spacer/>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirmEmail=false"></v-btn>

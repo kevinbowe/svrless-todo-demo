@@ -131,15 +131,15 @@
 									</v-row>
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
+											<v-text-field bg-color="surface" label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
 											clearable @click:clear="workingUsernameModel = ''" variant="outlined" required>
 										</v-text-field>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field label="Password" id="passwordSignInId" v-model="workingPasswordModel" :append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
-											prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
-											clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
-										</v-text-field>
+											<v-text-field bg-color="surface" label="Password" id="passwordSignInId" v-model="workingPasswordModel" :append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
+												prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
+												clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
+											</v-text-field>
 										</v-col>
 										<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
 									</v-row>
@@ -155,30 +155,30 @@
 									</v-row>
 									<v-row no-gutters>
 										<v-col cols="12">
-											<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
+											<v-text-field bg-color="surface" v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
 												prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
 												@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
 												label="Password*" required > 
 											</v-text-field></v-col>
 										<v-col cols="12">
-											<v-text-field v-model="workingPasswordModel2"
+											<v-text-field bg-color="surface" v-model="workingPasswordModel2"
 												:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'" prepend-inner-icon="mdi-lock-outline" 
 												:type="passwordIcon2b ? 'text' : 'password'" @click:append-inner="passwordIcon2b = !passwordIcon2b"
 												clearable density="compact" variant="outlined" label="Confirm Password*" required >
 											</v-text-field>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field id="emailSuId" v-model="workingEmailModel" clearable density="compact" variant="outlined" label="Email" required />
+											<v-text-field bg-color="surface" id="emailSuId" v-model="workingEmailModel" clearable density="compact" variant="outlined" label="Email" required />
 										</v-col>
 										<v-col cols="12">
-											<v-text-field id="usernameSuId" v-model="workingUsernameModel" clearable  density="compact" 
+											<v-text-field bg-color="surface" id="usernameSuId" v-model="workingUsernameModel" clearable  density="compact" 
 												variant="outlined" label="Username" required />
 										</v-col>
 										<v-col cols="12">
-											<v-text-field id="phone_numberSuId" v-model="workingPhone_numberModel" clearable density="compact" variant="outlined" label="Phone number"/>
+											<v-text-field bg-color="surface" id="phone_numberSuId" v-model="workingPhone_numberModel" clearable density="compact" variant="outlined" label="Phone number"/>
 										</v-col>
 										<v-col cols="12">
-											<v-text-field id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
+											<v-text-field bg-color="surface" id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
 										</v-col>
 										<v-btn block size="large" color="primary" class="mb-3" @click="signUpUser" > Sign Up </v-btn>
 									</v-row>

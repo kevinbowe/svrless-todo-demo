@@ -37,9 +37,8 @@
 			<v-row justify="center" v-if="isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
 					<v-sheet width="20em" color="surface_alt" elevation="24" 
-							:style="{height:emailConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
-						<v-row>
-							<v-spacer></v-spacer>
+							:style="{height:emailConfirmationMessage.Message2.value ? '24em' : '21em'}"> <!-- Is this required for this feature? -->
+							<v-row><v-spacer/>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirmEmail=false"></v-btn>
 						</v-row>
@@ -50,10 +49,9 @@
 								<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
 								<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
 							</v-row>
-							<v-row _no-gutters class="justify-center">Confirmation Code</v-row>
 							<v-row _no-gutters><v-spacer/>
 								<v-col cols="11">
-									<v-text-field v-model="confirmEmailCodeModel" clearable @click:clear="invalidEmailConfirmCode = ''"
+									<v-text-field label="Confirmation Code" v-model="confirmEmailCodeModel" clearable @click:clear="invalidEmailConfirmCode = ''"
 										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
 									</v-text-field>
 									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidEmailConfirmCode }}</p>
@@ -192,12 +190,13 @@
 				</v-col>
 			</v-row>
 			<!-- Preferred Username Confirmation -->
+			<!-- Is this necessary ? Is this EVER CALLED ? -->
 			<v-row justify="center" v-if="!isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
 					<v-sheet width="20em" color="surface_alt" elevation="24" 
-							:style="{height:userConfirmationMessage.Message2.value ? '25.5em' : '22.5em'}">
+							:style="{height:userConfirmationMessage.Message2.value ? '24em' : '21em'}">
 						<v-row>
-							<v-spacer></v-spacer>
+							<v-spacer/>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
 								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
 						</v-row>
@@ -208,10 +207,9 @@
 								<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
 								<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
 							</v-row>
-							<v-row _no-gutters class="justify-center">Confirmation Code</v-row>
 							<v-row _no-gutters><v-spacer/>
 								<v-col cols="11">
-									<v-text-field v-model="confirmCodeModel" clearable @click:clear="invalidConfirmCode = ''"
+									<v-text-field label="Confirmation Code" v-model="confirmCodeModel" clearable @click:clear="invalidConfirmCode = ''"
 										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
 									</v-text-field>
 									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidConfirmCode }}</p>
@@ -372,8 +370,8 @@ const applyEmailConfirmationCode = async function () {
 			toggleConfirmEmail.value = false
 		})
 		.catch((e) => {
-			err("verifyCurrentUserAttributeSubmit > Catch > ",e)
 			openDialogFlag.value = true
+			confirmEmailCodeModel.value = null
 		})
 		return
 	}
@@ -511,13 +509,16 @@ Hub.listen('auth', (data) => {
 		
 		case "confirmSignUp" :
 			// bar()
-			// enter1("Hub.listen => Case CONFIRM SignUp -> DO NOTHING")
+			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
 			toggleConfirm.value = false // Hide Confirm Ui
 			return
 			
 		case "autoSignIn" :
 			// bar()
-			// enter2("Hub.listen => Case AUTO SignIn -> DO NOTHING")
+			// enter2("Hub.listen => Case AUTO SignIn -> CLEAR Working Models")
+			workingNicknameModel.value = ""
+			workingEmailModel.value = ""
+			workingPreferred_usernameModel.value = ""
 			return
 			
 		case "signIn" :
@@ -559,6 +560,7 @@ async function submitPreferred_username (event) {
 	await Auth.currentUserInfo().then(result => {
 		//			If we get here, The update worked.
 		usernameModel.value = result.attributes.preferred_username
+		workingPreferred_usernameModel.value = ""
 	})
 }
 
@@ -614,6 +616,7 @@ const signOutUser = async () => {
 			workingNicknameModel.value = ""
 			workingUsernameModel.value = ""
 			workingPhone_numberModel.value = ""
+			workingPreferred_usernameModel.value = ""
 
 			toggleConfirm.value = false
 			isSession.value = false
@@ -651,7 +654,6 @@ const signInUser = async () => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signUpUser = async () => {
 	// if(BLOCKAPI("signUpUser function "))return
-
 	try {
 		await Auth.signUp({
 			username: workingUsernameModel.value,
@@ -668,7 +670,7 @@ const signUpUser = async () => {
 				errorSigningUpMessage.value = "This username is not available"
 		})
 	} catch (error) {
-		info('error signing up:', error);
+		console.log('error signing up:', error);
 	}
 }
 

@@ -188,16 +188,15 @@
 					</v-card>
 				</v-col>
 			</v-row>
-			<!-- Preferred Username Confirmation -->
-			<!-- Is this necessary ? Is this EVER CALLED ? -->
+			<!-- SignUp Confirmation -->
 			<v-row justify="center" v-if="!isSession">
-				<v-overlay class="align-center justify-center" v-model="toggleConfirm" >
+				<v-overlay class="align-center justify-center" v-model="toggleUserConfirm" >
 					<v-sheet width="20em" color="surface_alt" elevation="24" 
 							:style="{height:userConfirmationMessage.Message2.value ? '24em' : '21em'}">
 						<v-row>
 							<v-spacer/>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
-								class="mr-3" icon="$close" size="large" variant="text" @click="toggleConfirm=false"></v-btn>
+								class="mr-3" icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"></v-btn>
 						</v-row>
 						<v-col style="margin-top:-2.5em;">
 							<v-row no-gutters>
@@ -208,14 +207,14 @@
 							</v-row>
 							<v-row _no-gutters><v-spacer/>
 								<v-col cols="11">
-									<v-text-field label="Confirmation Code" v-model="confirmCodeModel" clearable @click:clear="invalidConfirmCode = ''"
+									<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" clearable @click:clear="invalidUserConfirmCode = ''"
 										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
 									</v-text-field>
-									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidConfirmCode }}</p>
+									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidUserConfirmCode }}</p>
 								</v-col><v-spacer/>
 							</v-row>
 							<v-row class="mx-5">
-								<v-btn :disabled="!confirmCodeModel" @click="confirmUserSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
+								<v-btn :disabled="!confirmUserCodeModel" @click="confirmUserSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
 								<v-btn block color="background" class="mb-2" @click="resendUserConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
 							</v-row>
 						</v-col>
@@ -270,7 +269,6 @@ const emailFormRef = ref()
 
 const invalidEmailConfirmCode = ref("")
 const confirmEmailCodeModel = ref("")
-// const toggleConfirmEmail:boolean = ref(false)
 const toggleConfirmEmail:Ref<boolean> = ref(false)
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 
@@ -279,10 +277,9 @@ const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
 const SignInSignUpTab = ref()
 
-// const toggleConfirm:boolean = ref(false)
-const toggleConfirm:Ref<boolean> = ref(false)
+const toggleUserConfirm:Ref<boolean> = ref(false)
 // const confirmCodeModel:Number = ref()
-const confirmCodeModel:Ref<Number|undefined> = ref()
+const confirmUserCodeModel:Ref<Number|undefined> = ref()
 const isSession = ref(true)
 
 const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
@@ -304,7 +301,7 @@ const nicknameModel = ref("")
 const emailModel = ref("")
 
 const restartConfirm = ref()
-const invalidConfirmCode = ref("")
+const invalidUserConfirmCode = ref("")
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
@@ -500,8 +497,8 @@ Hub.listen('auth', (data) => {
 		case "signUp" :
 			// bar()
 			// enter0("Hub.listen => Case SignUp")
-			confirmCodeModel.value = null // Clear confirmCodeModel - Prepare for input
-			toggleConfirm.value = true // Display Confirm Ui
+			confirmUserCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = false
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 			return
@@ -509,7 +506,7 @@ Hub.listen('auth', (data) => {
 		case "confirmSignUp" :
 			// bar()
 			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
-			toggleConfirm.value = false // Hide Confirm Ui
+			toggleUserConfirm.value = false // Hide Confirm Ui
 			return
 			
 		case "autoSignIn" :
@@ -617,7 +614,7 @@ const signOutUser = async () => {
 			workingPhone_numberModel.value = ""
 			workingPreferred_usernameModel.value = ""
 
-			toggleConfirm.value = false
+			toggleUserConfirm.value = false
 			isSession.value = false
 		})
 	}
@@ -634,11 +631,11 @@ const signInUser = async () => {
 			if(error.name !== "UserNotConfirmedException") return
 
 			//				Restart the confirmation.
-			toggleConfirm.value = true // Display Confirm Ui
+			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = true
 			//				Initialize the Invalid Confirm Code model and message
-			invalidConfirmCode.value = ""
-			confirmCodeModel.value = ""
+			invalidUserConfirmCode.value = ""
+			confirmUserCodeModel.value = ""
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 		}) // END_ASYNC_CATCH
 
@@ -678,19 +675,19 @@ async function confirmUserSignUp() {
 	try {
 		//					This function ONLY sets the user state to Confirmed.
 		//					The user is NOT signed in.
-		await Auth.confirmSignUp(workingUsernameModel.value, confirmCodeModel.value)
+		await Auth.confirmSignUp(workingUsernameModel.value, confirmUserCodeModel.value)
 		//					Check to see if we were trying to restart the confirmation
 		//					This will not start until the Auth.confirmSignUp(~) returns
 		if (restartConfirm.value === true) {
 			//				If we get here, try signing in again.
 			signInUser()
-			toggleConfirm.value = false	// Close the Confirm Ui
+			toggleUserConfirm.value = false	// Close the Confirm Ui
 			isSession.value = true			// We are signed in
 			restartConfirm.value = false	// Lower the Confirm flag
 		}
 	} catch (error) {
 		err('error confirming sign up', error);
-		invalidConfirmCode.value = "Invalid Confirm Code... Try again."
+		invalidUserConfirmCode.value = "Invalid Confirm Code... Try again."
 	}
 }
 

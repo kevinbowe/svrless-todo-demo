@@ -3,8 +3,8 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
-			<!-- PopUp Message Dialog -- Model -->
-			<v-row justify="center" v-if="isSession" >
+			<!-- PopUp Message Dialog -- Modal -->
+			<v-row justify="center" v-if="openDialogFlag" >
 				<v-dialog activator="parent" v-model="openDialogFlag" persistent >
 					<v-card class="ma-auto" height="10em" width="20em">
 						<v-card-text> 
@@ -33,7 +33,7 @@
 				</v-form>
 				</v-col>
 			</v-row>
-			<!-- Email Confirmation -->
+			<!-- Update Email Confirmation -->
 			<v-row justify="center" v-if="isSession">
 				<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
 					<v-sheet height="24em" width="20em" color="surface_alt" elevation="24">
@@ -141,7 +141,7 @@
 											clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
 										</v-text-field>
 										</v-col>
-										<v-btn :disabled="!isCompleteSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
+										<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
 									</v-row>
 								</v-window-item>
 								<!-- SignUp Form -->
@@ -207,10 +207,11 @@
 							</v-row>
 							<v-row _no-gutters><v-spacer/>
 								<v-col cols="11">
-									<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" clearable @click:clear="invalidUserConfirmCode = ''"
-										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" variant="outlined"  density="compact">
+									<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
+										clearable @click:clear="confirmUserCodeModel = undefined"
+										id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" 
+										variant="outlined" density="compact">
 									</v-text-field>
-									<p class="mt-4" style="color:rgb(var(--v-theme-error));" >{{ invalidUserConfirmCode }}</p>
 								</v-col><v-spacer/>
 							</v-row>
 							<v-row class="mx-5">
@@ -278,7 +279,6 @@ const passwordIcon2b = ref(false)
 const SignInSignUpTab = ref()
 
 const toggleUserConfirm:Ref<boolean> = ref(false)
-// const confirmCodeModel:Number = ref()
 const confirmUserCodeModel:Ref<Number|undefined> = ref()
 const isSession = ref(true)
 
@@ -295,13 +295,11 @@ const invalidUsernameDialogFlag = ref(false)
 
 const usernameModel = ref("")
 const phone_numberModel = ref("")
-const workingPhonenumberModel = ref("")
 const workingNicknameModel = ref("")
 const nicknameModel = ref("")
 const emailModel = ref("")
 
 const restartConfirm = ref()
-const invalidUserConfirmCode = ref("")
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
 
@@ -350,7 +348,9 @@ async function submitEmail (event) {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const resendEmailConfirmationCode = async () => {
-	const user = await Auth.currentAuthenticatedUser();
+	const user = await Auth.currentAuthenticatedUser().then( () => {
+		confirmEmailCodeModel.value = ""
+	});
 	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
 }
 
@@ -366,7 +366,7 @@ const applyEmailConfirmationCode = async function () {
 			toggleConfirmEmail.value = false
 		})
 		.catch((e) => {
-			openDialogFlag.value = true
+			openDialogFlag.value = true // open the Popup Dialog
 			confirmEmailCodeModel.value = null
 		})
 		return
@@ -387,6 +387,9 @@ const buildEmailConfirmationMessage = (email:string) => {
 	
 	return emailConfirmationMessage
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email -- Validation */
@@ -560,7 +563,6 @@ async function submitPreferred_username (event) {
 	})
 }
 
-const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetValidation()
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const clearPreferred_usernameModelValidationError = () => preferred_usernameFormRef.value.resetValidation()
 
@@ -592,9 +594,6 @@ async function checkPreferred_usernameSpecialCharExceptions (workingPreferred_us
 		}
 		return true
 }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const isCompleteSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signOutUser = async () => {
@@ -634,8 +633,7 @@ const signInUser = async () => {
 			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = true
 			//				Initialize the Invalid Confirm Code model and message
-			invalidUserConfirmCode.value = ""
-			confirmUserCodeModel.value = ""
+			confirmUserCodeModel.value = undefined
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 		}) // END_ASYNC_CATCH
 
@@ -646,6 +644,9 @@ const signInUser = async () => {
 			errorSigningInMessage.value = "Undefined Sign In Error. Please try again." 
 	} // END_TRY_CATCH
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signUpUser = async () => {
@@ -687,13 +688,15 @@ async function confirmUserSignUp() {
 		}
 	} catch (error) {
 		err('error confirming sign up', error);
-		invalidUserConfirmCode.value = "Invalid Confirm Code... Try again."
+		openDialogFlag.value = true
+		confirmUserCodeModel.value = undefined
 	}
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function resendUserConfirmationCode(username) {
-	try { await Auth.resendSignUp(username) 	} 
+	confirmUserCodeModel.value = undefined
+	try { await Auth.resendSignUp(username) }
 	catch (error) { err('error resending code:', error) }
 }
 
@@ -730,6 +733,7 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/** Not referanced */
 const services = {
 	async validateCustomSignUp(formData) {
 		if (formData.nickname) {
@@ -757,6 +761,7 @@ const services = {
 };
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/** Not referanced */
 function checkValidationResults(resultsArray) {
 		for(let i = 0; i <= resultsArray.length; i++) {
 			if (typeof resultsArray[i] == 'string'){
@@ -768,6 +773,7 @@ function checkValidationResults(resultsArray) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/** Not referanced */
 async function submitNickname(event) {
 	const results = await event
 	if(!results.valid) return
@@ -787,6 +793,7 @@ async function submitNickname(event) {
 	}  }) 
 }	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/** Not referanced */
 async function checkNicknameReserved (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
@@ -814,7 +821,6 @@ async function checkNicknameSpecialChars (workingNickname) {
 		}
 		return true
 }
-					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /** Not referanced */
 async function updateNickname(workingNicknameModel){

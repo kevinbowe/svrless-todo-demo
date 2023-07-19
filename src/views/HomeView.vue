@@ -272,10 +272,8 @@ import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 import { 
-	// nicknameFormRef,
 	workingNicknameModel,
 	nicknameModel,
-	// clearNicknameModelValidationError,
 	submitNickname,
 	checkNicknameReserved,
 	checkNicknameTooShort,

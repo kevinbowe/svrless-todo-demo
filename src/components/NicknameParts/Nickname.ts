@@ -7,12 +7,8 @@ import { ref } from 'vue'
 import { Auth } from 'aws-amplify';
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-//export const nicknameFormRef = ref()
 export const workingNicknameModel = ref("")
 export const nicknameModel = ref("")
-
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// export const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 export async function submitNickname(event) {
@@ -23,10 +19,12 @@ export async function submitNickname(event) {
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
 		nicknameModel.value = result.attributes.nickname
+		workingNicknameModel.value = ""
 	}) // END_THEN
 }	
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Validation */
 export async function checkNicknameReserved (workingNickname) {
 	if (workingNickname === 'kevin') return 'User nickname reserved. Please try another one.'
 	return true

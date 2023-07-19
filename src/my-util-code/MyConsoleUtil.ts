@@ -55,8 +55,6 @@ export const info5 =    	(msg: string, value: any = "") => { console.log(`%c   $
 export const info6 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: pink;", value) }
 export const info7 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: mediumpurple;", value) }
 
-
-
 export const enter =    (msg: string, value: any = "") =>  { console.log(`%c>>>-> ENTER -  ${msg}`, "color: yellow;font-weight:bold;", value) }
 export const enter0 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: green;font-weight:bold;", value) }
 export const enter1 =    (msg: string, value: any = "") => { console.log(`%c>>>-> ENTER -  ${msg}`, "color: red;font-weight:bold;", value) }
@@ -75,7 +73,9 @@ export const bar =		(msg: string = "", value: any = "") => { console.log(`%c    
 export const greybar = (msg: string = "", value: any = "") => { console.log(`      %c                                 %c ${msg}`, "color: black; background-color:dimgrey;", value) }
 export const whitebar = (msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) }
 export const bluebar = (msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:lightskyblue;", value) }
-
+export const redbar =	 (msg: string = "", value: any = "") => { console.log(`%c                              ${msg}   `, "color: white; background-color:red;", value) }
+export const greenbar =  (msg: string = "", value: any = "") => { console.log(`      %c                                 %c ${msg}`, "color: white; background-color:green;", value) }
+export const orangebar = (msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: white; background-color:orange;", value) }
 
 export const whitebar_SAFE = ((msg: string = "", value: any = "") => { console.log(`%c                                 %c ${msg}`, "color: black; background-color:white;", value) })
 

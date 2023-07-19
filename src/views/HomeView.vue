@@ -254,21 +254,6 @@
 					Sign Out</v-btn></div></v-col>
 				<v-spacer></v-spacer>
 			</v-row>
-			<!-- const HelloFromNickName [ {{ HelloFromNickName }} ]
-			<Nickname></Nickname>
-					
-			<v-row no-gutters v-if="isSession">
-				<v-spacer></v-spacer>
-				<v-col cols="8">
-					<div> 
-						<v-btn class="mt-3" color="primary" 
-								@click="TestFunc('Argument from HomeView')">
-							Test Func
-						</v-btn>
-					</div>
-				</v-col>
-				<v-spacer></v-spacer>
-			</v-row> -->
 		</MasterLayout>
 	</v-app>
 </template>
@@ -282,13 +267,24 @@ import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 }
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
 import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 				/*  */
-				
 import { translations} from '@aws-amplify/ui-vue';
 import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
-// import Nickname from  "../components/Nickname.vue"
-// import { HelloFromNickName, NicknameTestFunc } from  "../components/NicknameParts/Nickname"
+import { 
+	nicknameFormRef,
+	workingNicknameModel,
+	nicknameModel,
+	clearNicknameModelValidationError,
+	submitNickname,
+	checkNicknameReserved,
+	checkNicknameTooShort,
+	checkNicknameNumericFirstChar,
+	checkNicknameFirstChar,
+	checkNicknameLastChar,
+	checkNicknameSpecialChars
+} from  "../components/NicknameParts/Nickname"
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -308,7 +304,6 @@ const openDialogFlag = ref()
 
 const preferred_usernameFormRef = ref()
 const emailFormRef = ref()
-const nicknameFormRef = ref()
 
 const invalidEmailConfirmCode = ref("")
 const confirmEmailCodeModel = ref("")
@@ -337,25 +332,11 @@ const invalidUsernameDialogFlag = ref(false)
 
 const usernameModel = ref("")
 const phone_numberModel = ref("")
-const workingNicknameModel = ref("")
-const nicknameModel = ref("")
 const emailModel = ref("")
 
 const restartConfirm = ref()
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
-
-				// // DEBUG CODE
-				// whitebar()
-				// redbar("This is Red_bar - Imported from Nickname.tx to HomeView")
-				// greenbar("This is Green_bar - Imported from Nickname.tx to HomeView")
-				// orangebar("This is Orange_bar - Imported from Nickname.tx HomeView")
-				// 
-				// const TestFunc = (inputArg) => {
-				// 	const rtn = NicknameTestFunc("inputArd")
-				// 	const rtnPlus = rtn + " Mod by TestFunc"
-				// 	info(rtnPlus)
-				// }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -786,113 +767,9 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/** Not referanced */
-// const services = {
-// 	async validateCustomSignUp(formData) {
-// 		if (formData.nickname) {
-// 			let nicknameValidationRtn = await Promise.all( [
-// 						checkNicknameReserved(formData.nickname),
-// 						checkNicknameTooShort(formData.nickname),
-// 						checkNicknameSpecialChars (formData.nickname),
-// 						checkNicknameNumericFirstChar (formData.nickname)
-// 					]).then (resultArray => {
-// 						return checkValidationResults(resultArray)
-// 			} )
-// 			if(typeof nicknameValidationRtn == 'boolean') {
-// 				nicknameModel.value = formData.nickname
-// 			} else {
-// 				return nicknameValidationRtn
-// 			}
-// 		}
-// 	},
-// };
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/** Not referanced -- See const services = {~} */
-// function checkValidationResults(resultsArray) {
-// 		for(let i = 0; i <= resultsArray.length; i++) {
-// 			if (typeof resultsArray[i] == 'string'){
-// 				// 				This return exits the '.then'
-// 				return resultsArray[i]
-// 			}
-// 		}
-// 		return true
-// }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-async function submitNickname(event) {
-	const results = await event
-	if(!results.valid) return
-		// 				This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
-		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-		await Auth.currentUserInfo().then(result => {
-		nicknameModel.value = result.attributes.nickname
-	}) // END_THEN
-}	
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function checkNicknameReserved (workingNickname) {
-		if (workingNickname === 'kevin') {
-			return 'User nickname reserved. Please try another one.'
-		}
-		return true
-}
-async function checkNicknameTooShort (workingNickname) {
-		if (workingNickname.length <= 2) {
-			return 'User nickname is too short. Please try another one.'
-		}
-		return true
-}
-async function checkNicknameNumericFirstChar (workingNickname) {
-		if (!isNaN(workingNickname[0])) {
-			return 'User nickname can not begin with a Number. Please try another one.'
-		}
-		return true
-}
-async function checkNicknameFirstChar (workingNickname) {
-		//				All special chars must be rejected.
-		const re = /[-\._=+`!@#$%\^&*(){}[\]<>?/|]/
-
-		const firstChar = workingNickname[0]
-		const match = firstChar.match(re)
-		if (match) {
-			return 'User nickname can begin with any special characters. Please try another one.'
-		}
-		return true
-}
-async function checkNicknameLastChar (workingNickname) {
-		//				All special chars must be rejected.
-		const re = /[-\._=+`!@#$%\^&*(){}[\]<>?/|]/
-
-		const lastChar = workingNickname[workingNickname.length-1]
-		const match = lastChar.match(re)
-		if (match) {
-			return 'User nickname can not end with any special characters. Please try another one.'
-		}
-		return true
-}
-async function checkNicknameSpecialChars (workingNickname) {
-		//					These chars are valid.
-		//					>>>-->  -  .  _  =  +  ` <--<<<
-		const re = /[!@#$%\^&*(){}[\]<>?/|]/
-		const match = workingNickname.match(re)
-		// 				Check the format
-		if(match) {
-			return 'User nickname can not contain special characters. Please try another one.'
-		}
-		return true
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Decl getSession */
 async function getSession(){
 	//				This is NOT called during SignUp
-					// enter7("getSession(~)")
 	const cognitoAccessToken = await Auth.currentSession()
 	.then(currenSession => {
 		return currenSession .getAccessToken() .getJwtToken()})

@@ -272,10 +272,10 @@ import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 import { 
-	nicknameFormRef,
+	// nicknameFormRef,
 	workingNicknameModel,
 	nicknameModel,
-	clearNicknameModelValidationError,
+	// clearNicknameModelValidationError,
 	submitNickname,
 	checkNicknameReserved,
 	checkNicknameTooShort,
@@ -358,6 +358,10 @@ const parseEmail = (email) => {
 		if (match) return { name: match.groups.name, domain: match.groups.domain }
 		return null
 	}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const nicknameFormRef = ref()
+const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {

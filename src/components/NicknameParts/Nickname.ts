@@ -7,12 +7,12 @@ import { ref } from 'vue'
 import { Auth } from 'aws-amplify';
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-export const nicknameFormRef = ref()
+//export const nicknameFormRef = ref()
 export const workingNicknameModel = ref("")
 export const nicknameModel = ref("")
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-export const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// export const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 export async function submitNickname(event) {
@@ -41,13 +41,13 @@ export async function checkNicknameNumericFirstChar (workingNickname) {
 }
 export async function checkNicknameFirstChar (workingNickname) {
 	//				All special chars must be rejected.
-	const match = workingNickname[0].match(/[-\._=+`!@#$%\^&*(){}[\]<>?/|]/)
+	const match = workingNickname[0].match(/[-\._=+`~!@#$%\^&*(){}[\]<>?/|]/)
 	if (match) return 'User nickname can begin with any special characters. Please try another one.'
 	return true
 }
 export async function checkNicknameLastChar (workingNickname) {
 	//				All special chars must be rejected.
-	const match = workingNickname[workingNickname.length-1].match(/[-\._=+`!@#$%\^&*(){}[\]<>?/|]/)
+	const match = workingNickname[workingNickname.length-1].match(/[-\._=+`~!@#$%\^&*(){}[\]<>?/|]/)
 	if (match) {
 		return 'User nickname can not end with any special characters. Please try another one.'
 	}
@@ -55,7 +55,7 @@ export async function checkNicknameLastChar (workingNickname) {
 }
 export async function checkNicknameSpecialChars (workingNickname) {
 	//				These chars are valid.
-	//			>>>-->  -  .  _  =  +  ` <--<<<
+	//			>>>-->  -  .  _  =  +  ` ~ <--<<<
 	const match = workingNickname.match( /[!@#$%\^&*(){}[\]<>?/|]/)
 	if(match) {
 		return 'User nickname can not contain special characters. Please try another one.'

@@ -19,6 +19,29 @@
 					</v-card>
 				</v-dialog>
 			</v-row>
+			<!-- Update Nickname -->
+			<v-row justify="center" v-if="isSession">
+				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+				<v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
+					<v-row>
+						<v-text-field label="Nickname" :rules="[
+								value => checkNicknameReserved (value),
+								value => checkNicknameTooShort (value),
+								value => checkNicknameNumericFirstChar (value),
+								value => checkNicknameFirstChar (value),
+								value => checkNicknameLastChar (value),
+								value => checkNicknameSpecialChars (value),
+							]" 
+							clearable @click:clear="clearNicknameModelValidationError"
+							v-model="workingNicknameModel" hint="Example: kb1" variant="outlined" density="compact" >
+						</v-text-field>
+					</v-row>
+					<v-row class="justify-end">
+						<v-btn :disabled="!workingNicknameModel" color="primary" type="submit"> Save Nickname</v-btn>
+					</v-row>
+				</v-form>
+				</v-col>
+			</v-row>
 			<!-- Update Email-->
 			<v-row justify="center" v-if="isSession">
 				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
@@ -70,7 +93,6 @@
 			<!-- Update Preferred Username -->
 			<v-row justify="center" v-if="isSession">
 				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-
 				<v-form ref="preferred_usernameFormRef" validate-on="submit" @submit.prevent="submitPreferred_username">
 					<v-row>
 						<v-text-field label="User Name" :rules="[
@@ -232,6 +254,21 @@
 					Sign Out</v-btn></div></v-col>
 				<v-spacer></v-spacer>
 			</v-row>
+			<!-- const HelloFromNickName [ {{ HelloFromNickName }} ]
+			<Nickname></Nickname>
+					
+			<v-row no-gutters v-if="isSession">
+				<v-spacer></v-spacer>
+				<v-col cols="8">
+					<div> 
+						<v-btn class="mt-3" color="primary" 
+								@click="TestFunc('Argument from HomeView')">
+							Test Func
+						</v-btn>
+					</div>
+				</v-col>
+				<v-spacer></v-spacer>
+			</v-row> -->
 		</MasterLayout>
 	</v-app>
 </template>
@@ -240,17 +277,18 @@
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { toRefs, ref, Ref, computed } from 'vue'
 				/*  */
-import { info, info1, info2 , info3, info4, info5, info6, info7,
-			log, warn, err, err2, progress, joy, exit,
-			enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7, 
-			success, bar, whitebar, greybar, fini, start, pass, fail  }
-	from "../my-util-code/MyConsoleUtil"
+import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
+import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
+import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 				/*  */
+				
 import { translations} from '@aws-amplify/ui-vue';
 import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
-import router from "../router";
+// import Nickname from  "../components/Nickname.vue"
+// import { HelloFromNickName, NicknameTestFunc } from  "../components/NicknameParts/Nickname"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -270,6 +308,7 @@ const openDialogFlag = ref()
 
 const preferred_usernameFormRef = ref()
 const emailFormRef = ref()
+const nicknameFormRef = ref()
 
 const invalidEmailConfirmCode = ref("")
 const confirmEmailCodeModel = ref("")
@@ -305,6 +344,18 @@ const emailModel = ref("")
 const restartConfirm = ref()
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
+
+				// // DEBUG CODE
+				// whitebar()
+				// redbar("This is Red_bar - Imported from Nickname.tx to HomeView")
+				// greenbar("This is Green_bar - Imported from Nickname.tx to HomeView")
+				// orangebar("This is Orange_bar - Imported from Nickname.tx HomeView")
+				// 
+				// const TestFunc = (inputArg) => {
+				// 	const rtn = NicknameTestFunc("inputArd")
+				// 	const rtnPlus = rtn + " Mod by TestFunc"
+				// 	info(rtnPlus)
+				// }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -734,69 +785,57 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 	return userConfirmationMessage
 }
 
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /** Not referanced */
-const services = {
-	async validateCustomSignUp(formData) {
-		if (formData.nickname) {
-			//				This is going to return an ValidationError string 
-			//				--OR-- a "passed validation" boolean true.
-			let nicknameValidationRtn = await Promise.all( [
-						checkNicknameReserved(formData.nickname),
-						checkNicknameTooShort(formData.nickname),
-						checkNicknameSpecialChars (formData.nickname),
-						checkNicknameFirstChar (formData.nickname)
-					]).then (resultArray => {
-						// 			This return exists to await Promise.all()
-						return checkValidationResults(resultArray)
-			} )
-			//			At this point we have a validation error message "string" == fail
-			//			--OR-- a validation passed "boolean".
-			if(typeof nicknameValidationRtn == 'boolean') {
-				//			Update the nicknameModel
-				nicknameModel.value = formData.nickname
-			} else {
-				return nicknameValidationRtn
-			}
-		}
-	},
-};
+// const services = {
+// 	async validateCustomSignUp(formData) {
+// 		if (formData.nickname) {
+// 			let nicknameValidationRtn = await Promise.all( [
+// 						checkNicknameReserved(formData.nickname),
+// 						checkNicknameTooShort(formData.nickname),
+// 						checkNicknameSpecialChars (formData.nickname),
+// 						checkNicknameNumericFirstChar (formData.nickname)
+// 					]).then (resultArray => {
+// 						return checkValidationResults(resultArray)
+// 			} )
+// 			if(typeof nicknameValidationRtn == 'boolean') {
+// 				nicknameModel.value = formData.nickname
+// 			} else {
+// 				return nicknameValidationRtn
+// 			}
+// 		}
+// 	},
+// };
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/** Not referanced */
-function checkValidationResults(resultsArray) {
-		for(let i = 0; i <= resultsArray.length; i++) {
-			if (typeof resultsArray[i] == 'string'){
-				// 				This return exits the '.then'
-				return resultsArray[i]
-			}
-		}
-		return true
-}
+/** Not referanced -- See const services = {~} */
+// function checkValidationResults(resultsArray) {
+// 		for(let i = 0; i <= resultsArray.length; i++) {
+// 			if (typeof resultsArray[i] == 'string'){
+// 				// 				This return exits the '.then'
+// 				return resultsArray[i]
+// 			}
+// 		}
+// 		return true
+// }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/** Not referanced */
+const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
 async function submitNickname(event) {
 	const results = await event
 	if(!results.valid) return
-	// 				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
-	await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-	await Auth.currentUserInfo().then(result => {
+		// 				This will return the user in the user pool (not updated )
+		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
+		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
+		await Auth.currentUserInfo().then(result => {
 		nicknameModel.value = result.attributes.nickname
 	}) // END_THEN
-	//				Redirect to Profile page.
-	//				Pass the new nickname and the email-address
-	router.push({name:`profile`, params: {
-		p1:nicknameModel.value, 
-		p2:emailModel.value, 
-		p3:phone_numberModel.value,
-		p4:usernameModel.value
-	}  }) 
 }	
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/** Not referanced */
 async function checkNicknameReserved (workingNickname) {
 		if (workingNickname === 'kevin') {
 			return 'User nickname reserved. Please try another one.'
@@ -804,18 +843,42 @@ async function checkNicknameReserved (workingNickname) {
 		return true
 }
 async function checkNicknameTooShort (workingNickname) {
-		if (workingNickname.length > 0 && workingNickname.length <= 3) {
+		if (workingNickname.length <= 2) {
 			return 'User nickname is too short. Please try another one.'
 		}
 		return true
 }
-async function checkNicknameFirstChar (workingNickname) {
+async function checkNicknameNumericFirstChar (workingNickname) {
 		if (!isNaN(workingNickname[0])) {
 			return 'User nickname can not begin with a Number. Please try another one.'
 		}
 		return true
 }
+async function checkNicknameFirstChar (workingNickname) {
+		//				All special chars must be rejected.
+		const re = /[-\._=+`!@#$%\^&*(){}[\]<>?/|]/
+
+		const firstChar = workingNickname[0]
+		const match = firstChar.match(re)
+		if (match) {
+			return 'User nickname can begin with any special characters. Please try another one.'
+		}
+		return true
+}
+async function checkNicknameLastChar (workingNickname) {
+		//				All special chars must be rejected.
+		const re = /[-\._=+`!@#$%\^&*(){}[\]<>?/|]/
+
+		const lastChar = workingNickname[workingNickname.length-1]
+		const match = lastChar.match(re)
+		if (match) {
+			return 'User nickname can not end with any special characters. Please try another one.'
+		}
+		return true
+}
 async function checkNicknameSpecialChars (workingNickname) {
+		//					These chars are valid.
+		//					>>>-->  -  .  _  =  +  ` <--<<<
 		const re = /[!@#$%\^&*(){}[\]<>?/|]/
 		const match = workingNickname.match(re)
 		// 				Check the format
@@ -823,17 +886,6 @@ async function checkNicknameSpecialChars (workingNickname) {
 			return 'User nickname can not contain special characters. Please try another one.'
 		}
 		return true
-}
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/** Not referanced */
-async function updateNickname(workingNicknameModel){
-		// 			This will return the user in the user pool (not updated )
-		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
-		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
-		await Auth.currentUserInfo().then(result => {
-			nicknameModel.value = result.attributes.nickname
-			workingNicknameModel.value = result.attributes.nickname
-		}) // END_THEN
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

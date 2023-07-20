@@ -253,17 +253,7 @@ import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 
 import Nickname from "../components/Nickname.vue"
-import { 
-	// 	workingNicknameModel,
-	nicknameModel,
-	// 	submitNickname,
-	// 	checkNicknameReserved,
-	// 	checkNicknameTooShort,
-	// 	checkNicknameNumericFirstChar,
-	// 	checkNicknameFirstChar,
-	// 	checkNicknameLastChar,
-	// 	checkNicknameSpecialChars
-} from  "../components/NicknameParts/Nickname"
+import { nicknameModel } from  "../components/Nickname.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)

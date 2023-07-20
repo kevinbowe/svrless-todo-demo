@@ -76,30 +76,9 @@
 			<Preferred_username :isSession="isSession"></Preferred_username>
 
 			<!-- User Info -->
-			<v-row justify="center" v-if="isSession">
-				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
-					<v-divider :thickness="10" class="ma-2"></v-divider>
-					<v-row no-gutters>
-						<v-col style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-							<p>Nick Name:</p></v-col>
-						<v-col>
-							<p>{{ nicknameModel }}</p></v-col>
-					</v-row>
-					<v-divider :thickness="3" />
-					<v-row no-gutters style="background-color:rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-						<p class="ma-auto">Email:</p></v-row>
-					<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
-					<v-divider :thickness="3" />
-					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-						<p class="ma-auto">Phone Number:</p></v-row>
-					<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
-					<v-divider :thickness="3" />
-					<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-						<p class="ma-auto">User Name:</p></v-row>
-						<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
-					<v-divider :thickness="10"></v-divider>
-				</v-col>
-			</v-row>
+			<UserInfo :isSession="isSession" :nickname="nicknameModel" :email="emailModel"
+					:phone_number="phone_numberModel" :username="usernameModel"/>
+			
 			<!-- SignIn & SignUp Forms -->
 			<v-row no-gutters v-if="!isSession">
 				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
@@ -243,6 +222,9 @@ import { nicknameModel } from  "../components/Nickname.vue"
 
 import Preferred_username from "../components/Preferred_username.vue";
 import { usernameModel } from  "../components/Preferred_username.vue"
+
+
+import UserInfo from "../components/UserInfo.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)

@@ -19,8 +19,10 @@
 					</v-card>
 				</v-dialog>
 			</v-row>
+
 			<!-- Update Nickname -->
 			<Nickname :isSession="isSession"></Nickname>
+			
 			<!-- Update Email-->
 			<v-row justify="center" v-if="isSession">
 				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
@@ -69,26 +71,10 @@
 					</v-sheet>
 				</v-overlay>
 			</v-row>
+
 			<!-- Update Preferred Username -->
-			<v-row justify="center" v-if="isSession">
-				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-				<v-form ref="preferred_usernameFormRef" validate-on="submit" @submit.prevent="submitPreferred_username">
-					<v-row>
-						<v-text-field label="User Name" :rules="[
-								checkPreferred_usernameTooShort,
-								checkPreferred_usernameFirstChar,
-								checkPreferred_usernameSpecialCharExceptions
-							]" 
-							clearable @click:clear="clearPreferred_usernameModelValidationError"
-							v-model="workingPreferred_usernameModel" hint="Example: kb1" variant="outlined" density="compact" >
-						</v-text-field>
-					</v-row>
-					<v-row class="justify-end">
-						<v-btn :disabled="!workingPreferred_usernameModel" color="primary" type="submit"> Save Preferred Username</v-btn>
-					</v-row>
-				</v-form>
-				</v-col>
-			</v-row>
+			<Preferred_username :isSession="isSession"></Preferred_username>
+
 			<!-- User Info -->
 			<v-row justify="center" v-if="isSession">
 				<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
@@ -255,6 +241,9 @@ import "@aws-amplify/ui-vue/styles.css";
 import Nickname from "../components/Nickname.vue"
 import { nicknameModel } from  "../components/Nickname.vue"
 
+import Preferred_username from "../components/Preferred_username.vue";
+import { usernameModel } from  "../components/Preferred_username.vue"
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
 I18n.setLanguage('en')
@@ -271,7 +260,6 @@ const DEBUG_Model = ref()
 
 const openDialogFlag = ref()
 
-const preferred_usernameFormRef = ref()
 const emailFormRef = ref()
 
 const invalidEmailConfirmCode = ref("")
@@ -297,13 +285,8 @@ const workingPasswordModel2 = ref("")
 const workingEmailModel =ref("")
 const workingPhone_numberModel = ref("")
 
-const workingPreferred_usernameModel = ref("")
-const invalidUsernameDialogFlag = ref(false)
-
-const usernameModel = ref("")
 const phone_numberModel = ref("")
 const emailModel = ref("")
-//... const nicknameModel = ref("")
 
 const restartConfirm = ref()
 const errorSigningInMessage = ref("")
@@ -570,9 +553,6 @@ async function submitPreferred_username (event) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const clearPreferred_usernameModelValidationError = () => preferred_usernameFormRef.value.resetValidation()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function checkPreferred_usernameTooShort (workingPreferred_usernameModel) {
 	if (workingPreferred_usernameModel.length > 0 && workingPreferred_usernameModel.length <= 2) {
 		return 'User name is too short. Please try another one.'
@@ -617,7 +597,6 @@ const signOutUser = async () => {
 			workingNicknameModel.value = ""
 			workingUsernameModel.value = ""
 			workingPhone_numberModel.value = ""
-			workingPreferred_usernameModel.value = ""
 
 			toggleUserConfirm.value = false
 			isSession.value = false

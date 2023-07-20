@@ -26,7 +26,7 @@
 				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 				<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 					<v-row>
-						<v-text-field label="Email"  v-model= "workingEmailModel" 
+						<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
 							clearable @click:clear="clearWorkingEmailModelValidationError"
 							:rules="[ value => checkEmailSpecialChar(value), value => checkEmailName(value), value => checkEmailDomain(value),]"
 							variant="outlined" density="compact" 
@@ -184,7 +184,8 @@
 										<v-col cols="12">
 											<v-text-field id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
 										</v-col>
-										<v-btn block size="large" color="primary" class="mb-3" @click="signUpUser" > Sign Up </v-btn>
+										<v-btn 	:disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel || !workingPasswordModel2"
+													block size="large" color="primary" class="mb-3" @click="signUpUser" > Sign Up </v-btn>
 									</v-row>
 								</v-window-item>
 							</v-window>

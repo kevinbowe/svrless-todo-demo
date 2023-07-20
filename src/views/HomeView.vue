@@ -251,7 +251,7 @@ import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 
-
+import Nickname from "../components/Nickname.vue"
 import { 
 	// 	workingNicknameModel,
 	nicknameModel,
@@ -263,12 +263,6 @@ import {
 	// 	checkNicknameLastChar,
 	// 	checkNicknameSpecialChars
 } from  "../components/NicknameParts/Nickname"
-
-import Nickname from "../components/Nickname.vue"
-
-bar()
-info(`IMPORTED --> Nickname > Nickname.nicknameModel > \n      [ ${Nickname.nicknameModel} ]`)
-info1(`IMPORTED --> nicknameModel \n      [ ${nicknameModel.value} ]`)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)

@@ -20,28 +20,7 @@
 				</v-dialog>
 			</v-row>
 			<!-- Update Nickname -->
-			<v-row justify="center" v-if="isSession">
-				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-				<v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
-					<v-row>
-						<v-text-field label="Nickname" :rules="[
-								value => checkNicknameReserved (value),
-								value => checkNicknameTooShort (value),
-								value => checkNicknameNumericFirstChar (value),
-								value => checkNicknameFirstChar (value),
-								value => checkNicknameLastChar (value),
-								value => checkNicknameSpecialChars (value),
-							]" 
-							clearable @click:clear="clearNicknameModelValidationError"
-							v-model="workingNicknameModel" hint="Example: kb1" variant="outlined" density="compact" >
-						</v-text-field>
-					</v-row>
-					<v-row class="justify-end">
-						<v-btn :disabled="!workingNicknameModel" color="primary" type="submit"> Save Nickname</v-btn>
-					</v-row>
-				</v-form>
-				</v-col>
-			</v-row>
+			<Nickname :isSession="isSession"></Nickname>
 			<!-- Update Email-->
 			<v-row justify="center" v-if="isSession">
 				<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
@@ -271,18 +250,25 @@ import { translations} from '@aws-amplify/ui-vue';
 import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
+
+
 import { 
-	workingNicknameModel,
+	// 	workingNicknameModel,
 	nicknameModel,
-	submitNickname,
-	checkNicknameReserved,
-	checkNicknameTooShort,
-	checkNicknameNumericFirstChar,
-	checkNicknameFirstChar,
-	checkNicknameLastChar,
-	checkNicknameSpecialChars
+	// 	submitNickname,
+	// 	checkNicknameReserved,
+	// 	checkNicknameTooShort,
+	// 	checkNicknameNumericFirstChar,
+	// 	checkNicknameFirstChar,
+	// 	checkNicknameLastChar,
+	// 	checkNicknameSpecialChars
 } from  "../components/NicknameParts/Nickname"
 
+import Nickname from "../components/Nickname.vue"
+
+bar()
+info(`IMPORTED --> Nickname > Nickname.nicknameModel > \n      [ ${Nickname.nicknameModel} ]`)
+info1(`IMPORTED --> nicknameModel \n      [ ${nicknameModel.value} ]`)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -307,7 +293,7 @@ const invalidEmailConfirmCode = ref("")
 const confirmEmailCodeModel = ref("")
 const toggleConfirmEmail:Ref<boolean> = ref(false)
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
-
+	
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
@@ -316,9 +302,10 @@ const SignInSignUpTab = ref()
 const toggleUserConfirm:Ref<boolean> = ref(false)
 const confirmUserCodeModel:Ref<Number|undefined> = ref()
 const isSession = ref(true)
-
+	
 const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
-
+	
+const workingNicknameModel =  ref("")
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
 const workingPasswordModel2 = ref("")
@@ -331,6 +318,7 @@ const invalidUsernameDialogFlag = ref(false)
 const usernameModel = ref("")
 const phone_numberModel = ref("")
 const emailModel = ref("")
+//... const nicknameModel = ref("")
 
 const restartConfirm = ref()
 const errorSigningInMessage = ref("")
@@ -356,10 +344,6 @@ const parseEmail = (email) => {
 		if (match) return { name: match.groups.name, domain: match.groups.domain }
 		return null
 	}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const nicknameFormRef = ref()
-const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {

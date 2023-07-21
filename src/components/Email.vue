@@ -6,7 +6,11 @@
 			<v-row>
 				<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
 					clearable @click:clear="clearWorkingEmailModelValidationError"
-					:rules="[ value => checkEmailSpecialChar(value), value => checkEmailName(value), value => checkEmailDomain(value),]"
+					:rules="[ 
+						value => checkEmailSpecialChar(value), 
+						value => checkEmailName(value), 
+						value => checkEmailDomain(value),
+					]"
 					variant="outlined" density="compact" 
 				></v-text-field>
 			</v-row>
@@ -168,32 +172,35 @@ const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetVali
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email -- Validation */
+/* %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  % */
 const checkEmailSpecialChar = (emailArg) => {
-	//				Perform general special char check
-	const regexSpecialChar = new RegExp('^.*[!#$%^\'"*,:;|/ {}<>[\\]\\\\()]', 'gm')
+	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
+	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
 
-	const specialCharMatch = regexSpecialChar.exec(emailArg)
-	if ( specialCharMatch !== null) {
+	// 			Exclude these Special Chars
+	//						+  -  _  @  .
+	const rxExclude = /[`~!#$%^&'"*,:;/ {}[\]()<>]/gm
+	const matchExclude = emailArg.match(rxExclude)
+	if(matchExclude) {
 		//			If we get here, there was a match
-		return "FAIL checkEmailSpecialChar() > specialCharMatch"
-	}
+		return `Special chars are not allowed [ ${matchExclude} ]`
+	} 
+
 	//				Perform multiple @ check
-	const regexMultipleAtChar = new RegExp('^.*@.*@', 'gm')
-	const multipleAtCharMatch = regexMultipleAtChar.exec(emailArg)
-	if ( multipleAtCharMatch !== null) {
-		//			If we get here, there was a match
-		return "FAIL checkEmailSpecialChar() > multipleAtCharMatch"
-	}
+	const rxMultiAtChar = /@{2}|@.*@/gm
+	const matchMultiAtChar = emailArg.match(rxMultiAtChar)
+	if(matchMultiAtChar) return "Multiple '@' chars are not allowed"
+
 	//				Perform consecutive special char check
-	const regexConsecutiveSpecialChar = new RegExp('\\.\\.|--|\\+\\+', 'gm')
-	const consecutiveSpecialCharMatch = regexConsecutiveSpecialChar.exec(emailArg)
-	if ( consecutiveSpecialCharMatch !== null) {
+	let rxConsecutive = /\.\.|--|\+\+/gm
+	const matchConsecutive = emailArg.match(rxConsecutive)
+	if ( matchConsecutive) {
 		//			If we get here, there was a match
-		return "FAIL checkEmailSpecialChar() > ConsecutiveSpecialChar"
+		return `Consecutive Special Characters are not allowed. [ ${matchConsecutive} ]`
 	}
 	return true
 }
-
+/* %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  % */
 const checkEmailName = (emailArg) => {
 	const parsedEmail = parseEmail(emailArg)
 	if (!parsedEmail) return "FAIL checkEmailName() > Invalid Email"
@@ -203,23 +210,23 @@ const checkEmailName = (emailArg) => {
 	let len = parsedEmail.name.length;
 	if(len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
 	if(len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
+
 	//				Leading and trailing special char check
 	//				Note: The trailing '_' has been removed from the check.
-	//					Gmail accepts this trailing character.
-	/*			 	TEST DATA -- This patterns must fail.
-						asd_@gmail.com // This is valid
-						-asd@gmail.com		asd-@gmail.com		_asd@gmail.com		+asd@gmail.com
-						asd+@gmail.com		.asd@gmail.com		asd.@gmail.com
+	/*			 	TEST DATA -- These patterns must fail.
+						_asd@gmail.com		
+						-asd@gmail.com		asd-@gmail.com
+						+asd@gmail.com		asd+@gmail.com		
+						.asd@gmail.com		asd.@gmail.com
 	*/
-	const regex = new RegExp('^[-_+\\.]|[-+\\.]$', 'gm')
-	let match = regex.exec(parsedEmail.name)
-	if(match != null){
-		return `Invalid character [-_+.] used at begining or end of email name [ ${match} ]`
-	}
+	const rxLeadTrailChar = /^[-_+\\.]|[-+\\.]$/gm
+	let matchLeadTrailChar = parsedEmail.name.match(rxLeadTrailChar)
+	if(matchLeadTrailChar) 
+		return `[-_+.] can not be the first/last char of email name [ ${matchLeadTrailChar} ]`
 
-return true
+	return true
 }
-
+/* %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  %  % */
 const checkEmailDomain = (emailArg) => {
 	const emailDomain = parseEmail(emailArg).domain
 	//				Length check ( long & short )
@@ -236,37 +243,67 @@ const checkEmailDomain = (emailArg) => {
 
 	//				Domain and TopLevelDomain check
 	//				Split the domain and tld and check from both pieces.
-	const regex = new RegExp('^(?<domain>.*)[\\.|\\s](?<tld>.*)', 'gm')
-	let match:RegExpExecArray | null = regex.exec(emailDomain)
-	//				Domain Check Section
+	const rxDomainAndTop = /^(?<domain>.*)[\\.|\\s](?<tld>.*)/m
+	let matchDomainAndTop = emailDomain.match(rxDomainAndTop)
+																											// let matchDomainAndTop:RegExpMatchArray | null | undefined = emailDomain.match(rxDomainAndTop)
 	//				Exists Check
-	if(match?.groups.domain.length === 0 || match?.groups.domain === undefined){
-		//			Missing the Domain
-		return "FAIL checkEmailDomain() > Domain Check: Domain is missing"
-	}
+					// bar()
+					// info1("matchDomainAndTop?.groups?.domain.length === 0", matchDomainAndTop?.groups?.domain.length === 0)
+	/*				asd@qwe.com				*/
 
+	if(matchDomainAndTop?.groups?.domain.length === 0 || matchDomainAndTop?.groups?.domain === undefined) {
+		//			Missing the Domain
+					info2("Missing domain")
+		return `An email domain is required ${emailDomain}`
+	}
+					// info3("There is a Domain", matchDomainAndTop.groups.domain)
+																											//					THIS WORKS --- Reference
+																											// const rxDomainAndTop = new RegExp('^(?<domain>.*)[\\.|\\s](?<tld>.*)', 'gm')
+																											// let match:RegExpExecArray | null = rxDomainAndTop.exec(emailDomain)
+																											// //				Domain Check Section
+																											// //				Exists Check
+																											// if(match?.groups.domain.length === 0 || match?.groups.domain === undefined){
+																											// 	//			Missing the Domain
+																											// 	return "FAIL checkEmailDomain() > Domain Check: Domain is missing"
+																											// }
 	//		TEST DATA
 	// asd@-asd.com		asd@asd-.com		asd@.asd.com		asd@asd..com
 	// asd@_asd.com		asd@asd_.com		asd@+asd.com		asd@asd+.com
 
 	//				Leading/Trailing Special Char Check
-	const regexSpecialChar = new RegExp('^[-_+\\.]|[-_+\\.]$', 'gm')
-	let matchSpecialChar = regexSpecialChar.exec(match?.groups.domain)
-	if(matchSpecialChar != null){
-		return `Invalid character [-_+.] used at begining or end of domain name [ ${matchSpecialChar} ]`
+					// info("matchDomainAndTop.groups.domain",matchDomainAndTop.groups.domain)
+																											// const regexSpecialChar = new RegExp('^[-_+\\.]|[-_+\\.]$', 'gm')
+	const rxLeadTrailDomainChar = /^[-_+\\.]|[-_+\\.]$/gm
+																											// let matchSpecialChar = regexSpecialChar.exec(matchDomainAndTop.groups.domain)
+	let matchLeadTrailDomainChar = matchDomainAndTop.groups.domain.match(rxLeadTrailDomainChar)
+	if(matchLeadTrailDomainChar){
+		return `[-_+.] can not be the first/last char in the domain name [ ${matchLeadTrailDomainChar} ]`
+																											// return `[-_+.] can not be the first/last char of email name [ ${matchLeadTrailChar} ]`
 	}
-
+																											// if(matchSpecialChar != null){
+																											// 	return `Invalid character [-_+.] used at begining or end of domain name [ ${matchSpecialChar} ]`
+																											// }
 	//				TLD (Top-Level-Domain) Checks
 	//				Exists Check
-	if(match?.groups.tld.length === 0 || match?.groups.tld === undefined){
+	if(matchDomainAndTop?.groups.tld.length === 0 || matchDomainAndTop?.groups.tld === undefined){
 		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
 	}
+
 	//				Leading/Trailing Special Char Check
-	let matchTldSpecialChar = regexSpecialChar.exec(match?.groups.tld)
-	if(matchTldSpecialChar != null){
-		return `Invalid character [-_+.] used at begining or end of TLD name [ ${matchTldSpecialChar} ]`
+	let matchLeadAndTrailTldChar = matchDomainAndTop?.groups.tld.match(rxLeadTrailDomainChar)
+	if(matchLeadAndTrailTldChar){
+																											// let matchTldSpecialChar = regexSpecialChar.exec(matchDomainAndTop?.groups.tld)
+																											// if(matchTldSpecialChar != null){
+																											// return `Invalid character [-_+.] used at begining or end of TLD name [ ${matchLeadAndTrailTldChar} ]`
+		return `[-_+.] can not be the first/last char in the TLD name [ ${matchLeadAndTrailTldChar} ]`
 	}
 	return true
+																											//				ORIGINAL
+																											// let matchTldSpecialChar = regexSpecialChar.exec(matchDomainAndTop?.groups.tld)
+																											// if(matchTldSpecialChar != null){
+																											// 	return `Invalid character [-_+.] used at begining or end of TLD name [ ${matchTldSpecialChar} ]`
+																											// }
+																											//return true
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -277,4 +314,4 @@ const checkEmailDomain = (emailArg) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-</style>
+</style>src/components/Email.vue

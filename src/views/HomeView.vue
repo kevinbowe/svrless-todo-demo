@@ -178,7 +178,7 @@ import Preferred_username from "../components/Preferred_username.vue";
 import { usernameModel } from  "../components/Preferred_username.vue"
 
 import Email from "../components/Email.vue";
-import { emailModel } from  "../components/Email.vue"
+import { emailModel, parseEmail } from  "../components/Email.vue"
 
 import UserInfo from "../components/UserInfo.vue"
 
@@ -198,12 +198,6 @@ const DEBUG_Model = ref()
 
 const openDialogFlag = ref()
 const workingEmailModel =ref("")
-																											// const emailModel = ref("")
-																											// const emailFormRef = ref()
-																											// const invalidEmailConfirmCode = ref("")
-																											// const confirmEmailCodeModel = ref("")
-																											// const toggleConfirmEmail:Ref<boolean> = ref(false)
-																											// const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)

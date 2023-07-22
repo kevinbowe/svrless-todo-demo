@@ -55,6 +55,13 @@
 
 <script lang="ts">
 	export const emailModel = ref("")
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+	export const parseEmail = (email) => {
+		const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
+			let match = regex.exec(email)
+			if (match) return { name: match.groups.name, domain: match.groups.domain }
+			return null
+		}
 </script>
 
 <script setup lang="ts">
@@ -67,6 +74,7 @@ import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress,
 				/*  */
 import { ref, Ref } from 'vue'
 import { Auth } from 'aws-amplify';
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const invalidEmailConfirmCode = ref("")
 const emailFormRef = ref()
@@ -94,14 +102,6 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
 	return BLOCKAPIFLAG.value
 }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const parseEmail = (email) => {
-	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-		let match = regex.exec(email)
-		if (match) return { name: match.groups.name, domain: match.groups.domain }
-		return null
-	}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {
@@ -173,6 +173,8 @@ const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetVali
 /* Email -- Validation */
 /* ----------------------------------------------------------------------------- */
 const checkEmailSpecialChar = (emailArg) => {
+					// DEBUG CODE
+					if (emailArg === null) info7("checkEmailSpecialChar(emailArg) > emailArg is Null")
 	
 	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
 	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
@@ -181,7 +183,7 @@ const checkEmailSpecialChar = (emailArg) => {
 	const rxExclude = /[`~!#$%^&'"*,:;/ {}[\]()<>]/gm
 	const matchExclude = emailArg.match(rxExclude)
 	if(matchExclude) return `Special chars are not allowed [ ${matchExclude} ]`
-	
+			
 	//				Perform multiple '@'' check
 	const rxMultiAtChar = /@{2}|@.*@/gm
 	const matchMultiAtChar = emailArg.match(rxMultiAtChar)

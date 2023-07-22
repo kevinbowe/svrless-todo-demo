@@ -79,8 +79,28 @@
 			</v-card>
 		</v-col>
 	</v-row>
+
+	<!-- PopUp Message Dialog -- Modal -->
+	<v-row justify="center" v-if="openDialogFlag" >
+		<v-dialog activator="parent" v-model="openDialogFlag" persistent >
+			<v-card 	color="background_alt" border="lg" 
+						class="ma-auto" height="10em" width="20em" elevation="24">
+				<v-card-text> 
+					<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
+				</v-card-text>
+				<v-card-actions>
+					<v-btn @click="openDialogFlag = false" block 
+					color="surface" 
+					style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+	</v-row>
+
+
+
 	<!-- SignUp Confirmation -->
-	<!-- <v-row justify="center" v-if="!isSession">
+	<v-row justify="center" v-if="!isSession">
 		<v-overlay class="align-center justify-center" v-model="toggleUserConfirm" >
 			<v-sheet width="20em" color="background" border="lg" elevation="24" 
 					:style="{height:userConfirmationMessage.Message2.value ? '24em' : '21em'}">
@@ -112,7 +132,7 @@
 				</v-col>
 			</v-sheet>
 		</v-overlay>
-	</v-row> -->
+	</v-row>
 	<!-- Sign Out -->
 	<v-row no-gutters v-if="isSession">
 		<v-spacer></v-spacer>
@@ -133,8 +153,11 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 import { ref, Ref, computed } from 'vue'
+import { parseEmail, emailModel } from '../components/Email.vue'
+import { nicknameModel } from  "../components/Nickname.vue"
+import { usernameModel } from  "../components/Preferred_username.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
@@ -151,11 +174,147 @@ const errorSigningUpMessage =ref("")
 const workingEmailModel =ref("")
 const workingPhone_numberModel = ref("")
 const workingNicknameModel =  ref("")
+const workingPreferred_usernameModel = ref("")
+
+const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+const confirmUserCodeModel = ref()
 
 const toggleUserConfirm:Ref<boolean> = ref(false)
+const restartConfirm = ref()
+const openDialogFlag = ref()
+
+const phone_numberModel= ref("")
+
+
+				/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+				/*																											*/
+				/**/					const BLOCKAPIFLAG = ref(true)										 /**/
+				/*																											*/
+				/* 				if(BLOCKAPI("submitEmail function "))return								*/
+				/*																											*/
+				/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+				const BLOCKAPI = (message:string|null|undefined = null) => {
+					if(BLOCKAPIFLAG.value) 
+						message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+					return BLOCKAPIFLAG.value
+				}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+Hub.listen('auth', (data) => {
+	switch(data.payload.event) {
+		case "signUp" :
+			// bar()
+			enter0("Hub.listen => Case SignUp")
+			confirmUserCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+			toggleUserConfirm.value = true // Display Confirm Ui
+			restartConfirm.value = false
+			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+			return
+		
+		case "confirmSignUp" :
+			// bar()
+			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
+			toggleUserConfirm.value = false // Hide Confirm Ui
+			return
+			
+		case "autoSignIn" :
+			// bar()
+			// enter2("Hub.listen => Case AUTO SignIn -> CLEAR Working Models")
+			workingNicknameModel.value = ""
+			workingEmailModel.value = ""
+			workingPreferred_usernameModel.value = ""
+			return
+			
+		case "signIn" :
+			// bar()
+			// enter3("Hub.listen => Case SignIn")
+			Auth.currentAuthenticatedUser({bypassCache: true})
+			.then(results => {
+				emailModel.value = results.attributes.email
+				nicknameModel.value =  data.payload.data.attributes.nickname
+				phone_numberModel.value = data.payload.data.attributes.phone_number
+				usernameModel.value = data.payload.data.attributes.preferred_username 
+				? data.payload.data.attributes.preferred_username 
+				: data.payload.data.username
+			})
+			isSession.value = true
+			return
+			
+		case "signOut" :
+			return
+	} // END_SWITCH
+})
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
+	userConfirmationMessage.Title.value = "We Emailed You"
+	userConfirmationMessage.Message.value = 
+		`To confirm your new account, you must enter the ` +
+		`code we emailed to the new email address you provided.` 
+
+	if(restartConfirm) {
+		if(!email) {
+			//			If we get here, we are restarting Confirm and there is no email.
+			return userConfirmationMessage 
+		}
+				
+		//			If we get here, we are retrying to confirm and the email is still available.
+		//				We DIDN'T reload the page.
+		let {name , domain} = parseEmail(email)
+		userConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+		
+		return userConfirmationMessage 
+	}
+	//			If we get here, we are on the SignUp Happypath
+	//			If we get here, the email arg contains data.
+	let {name , domain} = parseEmail(email)
+	let obscureEmail = `${name[0]}***@${domain[0]}***`
+	userConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
+				
+	userConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+
+	return userConfirmationMessage
+}
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function confirmUserSignUp() {
+	// if(BLOCKAPI("confirmUserSignUp function "))return
+
+							enter("confirmUserSignUp")
+
+	try {
+		//					This function ONLY sets the user state to Confirmed.
+		//					The user is NOT signed in.
+		await Auth.confirmSignUp(workingUsernameModel.value, confirmUserCodeModel.value)
+		//					Check to see if we were trying to restart the confirmation
+		//					This will not start until the Auth.confirmSignUp(~) returns
+		if (restartConfirm.value === true) {
+			//				If we get here, try signing in again.
+			signInUser()
+			toggleUserConfirm.value = false	// Close the Confirm Ui
+			isSession.value = true			// We are signed in
+			restartConfirm.value = false	// Lower the Confirm flag
+		}
+	} catch (error) {
+		err('error confirming sign up', error);
+		openDialogFlag.value = true
+		confirmUserCodeModel.value = undefined
+	}
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function resendUserConfirmationCode(username) {
+	// if(BLOCKAPI("resendUserConfirmationCode function "))return
+
+	confirmUserCodeModel.value = undefined
+	try { await Auth.resendSignUp(username) }
+	catch (error) { err('error resending code:', error) }
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signUpUser = async () => {
@@ -185,17 +344,17 @@ const signInUser = async () => {
 	try { 
 		errorSigningInMessage.value = ""
 		const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value)
-// 		.catch(error => {
-// 			if(error.name === "NotAuthorizedException") errorSigningInMessage.value = "Incorrect username or password. Please try again." 
-// 			if(error.name !== "UserNotConfirmedException") return
-// 
-// 			//				Restart the confirmation.
-// 			toggleUserConfirm.value = true // Display Confirm Ui
-// 			restartConfirm.value = true
-// 			//				Initialize the Invalid Confirm Code model and message
-// 			confirmUserCodeModel.value = undefined
-// 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
-// 		}) // END_ASYNC_CATCH
+		.catch(error => {
+			if(error.name === "NotAuthorizedException") errorSigningInMessage.value = "Incorrect username or password. Please try again." 
+			if(error.name !== "UserNotConfirmedException") return
+
+			//				Restart the confirmation.
+			toggleUserConfirm.value = true // Display Confirm Ui
+			restartConfirm.value = true
+			//				Initialize the Invalid Confirm Code model and message
+			confirmUserCodeModel.value = undefined
+			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+		}) // END_ASYNC_CATCH
 		if (user) isSession.value = true
 	}
 	catch (error) { 
@@ -208,19 +367,19 @@ const signInUser = async () => {
 const signOutUser = async () => {
 	try { await Auth.signOut()
 		.then(result => {
-// 			emailModel.value = ""
-// 			nicknameModel.value = ""
-// 			usernameModel.value = ""
-// 			phone_numberModel.value = ""
-// 
-// 			workingPasswordModel.value = ""
-// 			workingPasswordModel2.value = ""
-// 
-// 			workingEmailModel.value = ""
-// 			workingNicknameModel.value = ""
-// 			workingUsernameModel.value = ""
-// 			workingPhone_numberModel.value = ""
-// 
+			emailModel.value = ""
+			nicknameModel.value = ""
+			usernameModel.value = ""
+			phone_numberModel.value = ""
+
+			workingPasswordModel.value = ""
+			workingPasswordModel2.value = ""
+
+			workingEmailModel.value = ""
+			workingNicknameModel.value = ""
+			workingUsernameModel.value = ""
+			workingPhone_numberModel.value = ""
+
  			toggleUserConfirm.value = false
  			isSession.value = false
 		})
@@ -228,40 +387,40 @@ const signOutUser = async () => {
 	catch (error) { console.log('error signing out: ', error);}
 }
 
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// /* Decl getSession */
-// async function getSession(){
-// 	//				This is NOT called during SignUp
-// 	const cognitoAccessToken = await Auth.currentSession()
-// 	.then(currenSession => {
-// 		return currenSession .getAccessToken() .getJwtToken()})
-// 		.catch(err => { return err})
-// 		if (cognitoAccessToken === "No current user") return { "isSession": false }
-// 
-// 	return await Auth.currentAuthenticatedUser({bypassCache: true })
-// 		.then((user) => {
-// 			return {
-// 				"nickname": user.attributes?.nickname,
-// 				"email": user.attributes?.email,
-// 				"phone_number": user.attributes?.phone_number,
-// 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-// 				"isSession": true
-// 			}
-// 		})
-// 	};
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Decl getSession */
+async function getSession(){
+	//				This is NOT called during SignUp
+	const cognitoAccessToken = await Auth.currentSession()
+	.then(currenSession => {
+		return currenSession .getAccessToken() .getJwtToken()})
+		.catch(err => { return err})
+		if (cognitoAccessToken === "No current user") return { "isSession": false }
+
+	return await Auth.currentAuthenticatedUser({bypassCache: true })
+		.then((user) => {
+			return {
+				"nickname": user.attributes?.nickname,
+				"email": user.attributes?.email,
+				"phone_number": user.attributes?.phone_number,
+				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
+				//"isSession": true
+			}
+		})
+	};
 
 
-// // const isSession = ref()
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// /* Execute getSession() */
-// /* 				This is NOT called during SignUp	 */
-// getSession().then( (result) => { 
-// 	// nicknameModel.value = result.nickname
-// 	// emailModel.value = result.email
-// 	// phone_numberModel.value = result.phone_number
-// 	// usernameModel.value = result.username
-// 	isSession.value = result.isSession;
-// })
+// const isSession = ref()
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Execute getSession() */
+/* 				This is NOT called during SignUp	 */
+getSession().then( (result) => { 
+	nicknameModel.value = result.nickname
+	emailModel.value = result.email
+	phone_numberModel.value = result.phone_number
+	usernameModel.value = result.username
+	// isSession.value = result.isSession;
+})
 
 
 

@@ -3,22 +3,22 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
-			<!-- PopUp Message Dialog -- Modal -->
-			<v-row justify="center" v-if="openDialogFlag" >
-				<v-dialog activator="parent" v-model="openDialogFlag" persistent >
-					<v-card 	color="background_alt" border="lg" 
-								class="ma-auto" height="10em" width="20em" elevation="24">
-						<v-card-text> 
-							<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
-						</v-card-text>
-						<v-card-actions>
-							<v-btn @click="openDialogFlag = false" block 
-							color="surface" 
-							style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
-						</v-card-actions>
-					</v-card>
-				</v-dialog>
-			</v-row>
+											<!-- PopUp Message Dialog -- Modal -->
+											<!-- <v-row justify="center" v-if="openDialogFlag" >
+												<v-dialog activator="parent" v-model="openDialogFlag" persistent >
+													<v-card 	color="background_alt" border="lg" 
+																class="ma-auto" height="10em" width="20em" elevation="24">
+														<v-card-text> 
+															<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
+														</v-card-text>
+														<v-card-actions>
+															<v-btn @click="openDialogFlag = false" block 
+															color="surface" 
+															style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+														</v-card-actions>
+													</v-card>
+												</v-dialog>
+											</v-row> -->
 
 			<!-- Update Nickname -->
 			<Nickname :isSession="isSession"></Nickname>
@@ -202,7 +202,8 @@ Amplify.configure(awsconfig);
 /* All Const Decls */
 const DEBUG_Model = ref()
 
-const openDialogFlag = ref()
+				// const openDialogFlag = ref()
+				
 const workingEmailModel =ref("")
 
 				// const passwordIcon1 = ref(false)
@@ -211,11 +212,11 @@ const workingEmailModel =ref("")
 				// const SignInSignUpTab = ref()
 
 const toggleUserConfirm:Ref<boolean> = ref(false)
-const confirmUserCodeModel:Ref<Number|undefined> = ref()
+				// const confirmUserCodeModel:Ref<Number|undefined> = ref()
 
 				// const isSession = ref(true)
 
-const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+				// const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 	
 const workingNicknameModel =  ref("")
 
@@ -224,9 +225,10 @@ const workingNicknameModel =  ref("")
 				// const workingPasswordModel2 = ref("")
 				// const workingPhone_numberModel = ref("")
 
-const workingPreferred_usernameModel = ref("")
+				// const workingPreferred_usernameModel = ref("")
 const phone_numberModel = ref("")
-const restartConfirm = ref()
+
+				// const restartConfirm = ref()
 
 				// const errorSigningInMessage = ref("")
 				// const errorSigningUpMessage =ref("")
@@ -244,51 +246,51 @@ const restartConfirm = ref()
 					return BLOCKAPIFLAG.value
 				}
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-Hub.listen('auth', (data) => {
-	switch(data.payload.event) {
-		case "signUp" :
-			// bar()
-			// enter0("Hub.listen => Case SignUp")
-			confirmUserCodeModel.value = null // Clear confirmCodeModel - Prepare for input
-			toggleUserConfirm.value = true // Display Confirm Ui
-			restartConfirm.value = false
-			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
-			return
-		
-		case "confirmSignUp" :
-			// bar()
-			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
-			toggleUserConfirm.value = false // Hide Confirm Ui
-			return
-			
-		case "autoSignIn" :
-			// bar()
-			// enter2("Hub.listen => Case AUTO SignIn -> CLEAR Working Models")
-			workingNicknameModel.value = ""
-			workingEmailModel.value = ""
-			workingPreferred_usernameModel.value = ""
-			return
-			
-		case "signIn" :
-			// bar()
-			// enter3("Hub.listen => Case SignIn")
-			Auth.currentAuthenticatedUser({bypassCache: true})
-			.then(results => {
-				emailModel.value = results.attributes.email
-				nicknameModel.value =  data.payload.data.attributes.nickname
-				phone_numberModel.value = data.payload.data.attributes.phone_number
-				usernameModel.value = data.payload.data.attributes.preferred_username 
-				? data.payload.data.attributes.preferred_username 
-				: data.payload.data.username
-			})
-			isSession.value = true
-			return
-			
-		case "signOut" :
-			return
-	} // END_SWITCH
-})
+				// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+				// Hub.listen('auth', (data) => {
+				// 	switch(data.payload.event) {
+				// 		case "signUp" :
+				// 			// bar()
+				// 			enter0("Hub.listen => Case SignUp")
+				// 			confirmUserCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+				// 			toggleUserConfirm.value = true // Display Confirm Ui
+				// 			restartConfirm.value = false
+				// 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+				// 			return
+				// 		
+				// 		case "confirmSignUp" :
+				// 			// bar()
+				// 			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
+				// 			toggleUserConfirm.value = false // Hide Confirm Ui
+				// 			return
+				// 			
+				// 		case "autoSignIn" :
+				// 			// bar()
+				// 			// enter2("Hub.listen => Case AUTO SignIn -> CLEAR Working Models")
+				// 			workingNicknameModel.value = ""
+				// 			workingEmailModel.value = ""
+				// 			workingPreferred_usernameModel.value = ""
+				// 			return
+				// 			
+				// 		case "signIn" :
+				// 			// bar()
+				// 			// enter3("Hub.listen => Case SignIn")
+				// 			Auth.currentAuthenticatedUser({bypassCache: true})
+				// 			.then(results => {
+				// 				emailModel.value = results.attributes.email
+				// 				nicknameModel.value =  data.payload.data.attributes.nickname
+				// 				phone_numberModel.value = data.payload.data.attributes.phone_number
+				// 				usernameModel.value = data.payload.data.attributes.preferred_username 
+				// 				? data.payload.data.attributes.preferred_username 
+				// 				: data.payload.data.username
+				// 			})
+				// 			isSession.value = true
+				// 			return
+				// 			
+				// 		case "signOut" :
+				// 			return
+				// 	} // END_SWITCH
+				// })
 
 				// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 				// const signOutUser = async () => {
@@ -394,36 +396,36 @@ Hub.listen('auth', (data) => {
 				// 	catch (error) { err('error resending code:', error) }
 				// }
 
-				/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-				const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
-					userConfirmationMessage.Title.value = "We Emailed You"
-					userConfirmationMessage.Message.value = 
-						`To confirm your new account, you must enter the ` +
-						`code we emailed to the new email address you provided.` 
-
-					if(restartConfirm) {
-						if(!email) {
-							//			If we get here, we are restarting Confirm and there is no email.
-							return userConfirmationMessage 
-						}
-								
-						//			If we get here, we are retrying to confirm and the email is still available.
-						//				We DIDN'T reload the page.
-						let {name , domain} = parseEmail(email)
-						userConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
-						
-						return userConfirmationMessage 
-					}
-					//			If we get here, we are on the SignUp Happypath
-					//			If we get here, the email arg contains data.
-					let {name , domain} = parseEmail(email)
-					let obscureEmail = `${name[0]}***@${domain[0]}***`
-					userConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
-								
-					userConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
-
-					return userConfirmationMessage
-				}
+				// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+				// const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
+				// 	userConfirmationMessage.Title.value = "We Emailed You"
+				// 	userConfirmationMessage.Message.value = 
+				// 		`To confirm your new account, you must enter the ` +
+				// 		`code we emailed to the new email address you provided.` 
+				// 
+				// 	if(restartConfirm) {
+				// 		if(!email) {
+				// 			//			If we get here, we are restarting Confirm and there is no email.
+				// 			return userConfirmationMessage 
+				// 		}
+				// 				
+				// 		//			If we get here, we are retrying to confirm and the email is still available.
+				// 		//				We DIDN'T reload the page.
+				// 		let {name , domain} = parseEmail(email)
+				// 		userConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+				// 		
+				// 		return userConfirmationMessage 
+				// 	}
+				// 	//			If we get here, we are on the SignUp Happypath
+				// 	//			If we get here, the email arg contains data.
+				// 	let {name , domain} = parseEmail(email)
+				// 	let obscureEmail = `${name[0]}***@${domain[0]}***`
+				// 	userConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
+				// 				
+				// 	userConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+				// 
+				// 	return userConfirmationMessage
+				// }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Decl getSession */

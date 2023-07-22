@@ -127,10 +127,9 @@ async function submitEmail (event) {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const resendEmailConfirmationCode = async () => {
-	const user = await Auth.currentAuthenticatedUser().then( () => {
-		confirmEmailCodeModel.value = ""
-	});
-	await Auth.updateUserAttributes(user, { email: workingEmailModel.value });
+	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true})
+	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value });
+	confirmEmailCodeModel.value = ""
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

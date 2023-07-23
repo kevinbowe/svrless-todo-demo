@@ -75,6 +75,8 @@
 							</v-row>
 						</v-window-item>
 					</v-window>
+					
+
 				</v-card-text>
 			</v-card>
 		</v-col>
@@ -96,7 +98,6 @@
 			</v-card>
 		</v-dialog>
 	</v-row>
-
 
 
 	<!-- SignUp Confirmation -->
@@ -185,19 +186,18 @@ const openDialogFlag = ref()
 
 const phone_numberModel= ref("")
 
-
-				/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-				/*																											*/
-				/**/					const BLOCKAPIFLAG = ref(true)										 /**/
-				/*																											*/
-				/* 				if(BLOCKAPI("submitEmail function "))return								*/
-				/*																											*/
-				/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-				const BLOCKAPI = (message:string|null|undefined = null) => {
-					if(BLOCKAPIFLAG.value) 
-						message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
-					return BLOCKAPIFLAG.value
-				}
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/*																											*/
+/**/					const BLOCKAPIFLAG = ref(true)										 /**/
+/*																											*/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/*																											*/
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Hub.listen('auth', (data) => {
@@ -210,13 +210,11 @@ Hub.listen('auth', (data) => {
 			restartConfirm.value = false
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 			return
-		
 		case "confirmSignUp" :
 			// bar()
 			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
 			toggleUserConfirm.value = false // Hide Confirm Ui
 			return
-			
 		case "autoSignIn" :
 			// bar()
 			// enter2("Hub.listen => Case AUTO SignIn -> CLEAR Working Models")
@@ -224,7 +222,6 @@ Hub.listen('auth', (data) => {
 			workingEmailModel.value = ""
 			workingPreferred_usernameModel.value = ""
 			return
-			
 		case "signIn" :
 			// bar()
 			// enter3("Hub.listen => Case SignIn")
@@ -239,12 +236,10 @@ Hub.listen('auth', (data) => {
 			})
 			isSession.value = true
 			return
-			
 		case "signOut" :
 			return
 	} // END_SWITCH
 })
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
@@ -255,18 +250,15 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 	userConfirmationMessage.Message.value = 
 		`To confirm your new account, you must enter the ` +
 		`code we emailed to the new email address you provided.` 
-
 	if(restartConfirm) {
 		if(!email) {
 			//			If we get here, we are restarting Confirm and there is no email.
 			return userConfirmationMessage 
 		}
-				
 		//			If we get here, we are retrying to confirm and the email is still available.
 		//				We DIDN'T reload the page.
 		let {name , domain} = parseEmail(email)
 		userConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
-		
 		return userConfirmationMessage 
 	}
 	//			If we get here, we are on the SignUp Happypath
@@ -274,19 +266,13 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 	let {name , domain} = parseEmail(email)
 	let obscureEmail = `${name[0]}***@${domain[0]}***`
 	userConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
-				
 	userConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
-
 	return userConfirmationMessage
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function confirmUserSignUp() {
 	// if(BLOCKAPI("confirmUserSignUp function "))return
-
-							enter("confirmUserSignUp")
-
 	try {
 		//					This function ONLY sets the user state to Confirmed.
 		//					The user is NOT signed in.
@@ -347,7 +333,6 @@ const signInUser = async () => {
 		.catch(error => {
 			if(error.name === "NotAuthorizedException") errorSigningInMessage.value = "Incorrect username or password. Please try again." 
 			if(error.name !== "UserNotConfirmedException") return
-
 			//				Restart the confirmation.
 			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = true
@@ -404,13 +389,10 @@ async function getSession(){
 				"email": user.attributes?.email,
 				"phone_number": user.attributes?.phone_number,
 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-				//"isSession": true
 			}
 		})
 	};
 
-
-// const isSession = ref()
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Execute getSession() */
 /* 				This is NOT called during SignUp	 */
@@ -419,10 +401,7 @@ getSession().then( (result) => {
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number
 	usernameModel.value = result.username
-	// isSession.value = result.isSession;
 })
-
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>

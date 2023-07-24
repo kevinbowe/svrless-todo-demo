@@ -9,6 +9,7 @@
 				</v-tabs>
 				<v-card-text >
 					<v-window  v-model="SignInSignUpTab">
+
 						<!-- SignIn Form -->
 						<v-window-item __SIGN_IN__ value="signinTab">
 							<v-row no-gutters>
@@ -43,51 +44,73 @@
 									</v-card>
 								</v-col>
 							</v-row>
-							<v-row no-gutters>
-								<v-col cols="12">
-									<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
-										prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
-										@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
-										label="Password*" required > 
-									</v-text-field></v-col>
-								<v-col cols="12">
-									<v-text-field v-model="workingPasswordModel2"
-										:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'" prepend-inner-icon="mdi-lock-outline" 
-										:type="passwordIcon2b ? 'text' : 'password'" @click:append-inner="passwordIcon2b = !passwordIcon2b"
-										clearable density="compact" variant="outlined" label="Confirm Password*" required >
-									</v-text-field>
-								</v-col>
-								<v-col cols="12">
-									<v-text-field id="emailSuId" v-model="workingEmailModel" 
-
-									ref="workingEmailFieldRef"
-									clearable @click:clear="clearWorkingEmailModelValidationError"
-									:rules="[ 
-										value => checkEmailSpecialChar(value), 
-										value => checkEmailName(value), 
-										value => checkEmailDomain(value),
-									]"
-
-
-									density="compact" variant="outlined" label="Email" required />
-								</v-col>
-								<v-col cols="12">
-									<v-text-field id="usernameSuId" v-model="workingUsernameModel" clearable  density="compact" 
-										variant="outlined" label="Username" required />
-								</v-col>
-								<v-col cols="12">
-									<v-text-field id="phone_numberSuId" v-model="workingPhone_numberModel" clearable density="compact" variant="outlined" label="Phone number"/>
-								</v-col>
-								<v-col cols="12">
-									<v-text-field id="nicknameSuId" v-model="workingNicknameModel" clearable density="compact" variant="outlined" label="Nickname"/>
-								</v-col>
-								<v-btn 	:disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel || !workingPasswordModel2"
-											block size="large" color="primary" class="mb-3" @click="signUpUser" > Sign Up </v-btn>
-							</v-row>
+							<v-form validate-on="submit" @submit.prevent="signUpUser">
+								<v-row no-gutters>
+									<v-col cols="12">
+										<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
+											prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
+											@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
+											label="Password*" required > 
+										</v-text-field></v-col>
+									<v-col cols="12">
+										<v-text-field v-model="workingPasswordModel2"
+											:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'" prepend-inner-icon="mdi-lock-outline" 
+											:type="passwordIcon2b ? 'text' : 'password'" @click:append-inner="passwordIcon2b = !passwordIcon2b"
+											clearable density="compact" variant="outlined" label="Confirm Password*" required >
+										</v-text-field>
+									</v-col>
+									<v-col cols="12">
+										<v-text-field id="emailSuId" v-model="workingEmailModel" 
+										ref="workingEmailFieldRef"
+										clearable @click:clear="clearWorkingEmailModelValidationError"
+										:rules="[ 
+											value => checkWorkingEmailSpecialChar(value), 
+											value => checkWorkingEmailName(value), 
+											value => checkWorkingEmailDomain(value),
+										]"
+										density="compact" variant="outlined" label="Email" required />
+									</v-col>
+									<v-col cols="12">
+										<v-text-field id="usernameSuId" v-model="workingUsernameModel" 
+										ref="workingUsernameFieldRef"
+										clearable @click:clear="clearWorkingUsernameModelValidationError"
+										:rules="[
+											value => checkWorkingUsernameTooShort(value),
+											value => checkWorkingUsernameFirstChar(value),
+											value => checkWorkingUsernameSpecialCharExceptions(value)
+										]" 
+										density="compact" variant="outlined" label="Username" required />
+									</v-col>
+									<v-col cols="12">
+										<v-text-field id="phone_numberSuId" v-model="workingPhone_numberModel" 
+										ref="workingPhone_numberFieldRef"
+										clearable @click:clear="clearWorkingPhone_numberValidationError"
+										:rules="[
+											value => checkPhone_number(value),
+											value => checkPhone_numberInvalidCountryCode(value),
+										]"
+										density="compact" variant="outlined" label="Phone number"/>
+									</v-col>
+									<v-col cols="12">
+										<v-text-field id="nicknameSuId" v-model="workingNicknameModel" 
+										ref="workingNicknameFieldRef"
+										clearable @click:clear="clearWorkingNicknameModelValidationError"
+										:rules="[
+											value => checkNicknameReserved(value),
+											value => checkNicknameTooShort(value),
+											value => checkNicknameNumericFirstChar(value),
+											value => checkNicknameFirstChar(value),
+											value => checkNicknameLastChar(value),
+											value => checkNicknameSpecialChars(value),
+										]"
+										density="compact" variant="outlined" label="Nickname"/>
+									</v-col>
+									<v-btn :disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel || !workingPasswordModel2"
+											block size="large" color="primary" class="mb-3" type="submit" > Sign Up </v-btn>
+								</v-row>
+							</v-form>
 						</v-window-item>
 					</v-window>
-					
-
 				</v-card-text>
 			</v-card>
 		</v-col>
@@ -109,7 +132,6 @@
 			</v-card>
 		</v-dialog>
 	</v-row>
-
 
 	<!-- SignUp Confirmation -->
 	<v-row justify="center" v-if="!isSession">
@@ -145,6 +167,7 @@
 			</v-sheet>
 		</v-overlay>
 	</v-row>
+
 	<!-- Sign Out -->
 	<v-row no-gutters v-if="isSession">
 		<v-spacer></v-spacer>
@@ -165,11 +188,22 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import { Auth, Hub } from 'aws-amplify';
-import { ref, Ref, computed } from 'vue'
-import { parseEmail, emailModel } from '../components/Email.vue'
-import { nicknameModel } from  "../components/Nickname.vue"
-import { usernameModel } from  "../components/Preferred_username.vue"
+import { Auth, Hub } 
+	from 'aws-amplify';
+import { ref, Ref, computed } 
+	from 'vue'
+			/*  */
+import { parseEmail, emailModel } 
+	from '../components/Email.vue'
+import { nicknameModel } 
+	from  "../components/Nickname.vue"
+import { usernameModel } 
+	from  "../components/Preferred_username.vue"
+import { checkNicknameReserved, checkNicknameTooShort, checkNicknameNumericFirstChar, 
+			checkNicknameFirstChar, checkNicknameLastChar, checkNicknameSpecialChars } 
+	from "../components/NicknameParts/NicknameValidators"
+import  { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCountryCode, }
+	from "../components/Phone_numberParts/Phone_numerValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
@@ -205,6 +239,14 @@ const phone_numberModel= ref("")
 const workingEmailFieldRef = ref()
 const clearWorkingEmailModelValidationError = () => workingEmailFieldRef.value.resetValidation()
 
+const workingUsernameFieldRef = ref()
+const clearWorkingUsernameModelValidationError = () => workingUsernameFieldRef.value.resetValidation()
+
+const workingPhone_numberFieldRef = ref()
+const clearWorkingPhone_numberValidationError = () => workingPhone_numberFieldRef.value.resetValidation()
+
+const workingNicknameFieldRef = ref()
+const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -225,19 +267,19 @@ Hub.listen('auth', (data) => {
 		case "signUp" :
 			// bar()
 			enter0("Hub.listen => Case SignUp")
-			confirmUserCodeModel.value = null // Clear confirmCodeModel - Prepare for input
+			confirmUserCodeModel.value = null 
 			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = false
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 			return
 		case "confirmSignUp" :
 			// bar()
-			// enter1("Hub.listen => Case CONFIRM SignUp -> Toggle Confirm")
+			// enter1("Hub.listen => Case CONFIRM SignUp")
 			toggleUserConfirm.value = false // Hide Confirm Ui
 			return
 		case "autoSignIn" :
 			// bar()
-			// enter2("Hub.listen => Case AUTO SignIn -> CLEAR Working Models")
+			// enter2("Hub.listen => Case AUTO SignIn")
 			workingNicknameModel.value = ""
 			workingEmailModel.value = ""
 			workingPreferred_usernameModel.value = ""
@@ -265,34 +307,63 @@ Hub.listen('auth', (data) => {
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Username Validation */
+/* ----------------------------------------------------------------------------- */
+async function checkWorkingUsernameTooShort (workingPreferred_usernameModel) {
+	if (workingPreferred_usernameModel.length > 0 && workingPreferred_usernameModel.length <= 2) 
+		return 'User name is too short. Please try another one.'
+	return true
+}
+/* ----------------------------------------------------------------------------- */
+async function checkWorkingUsernameFirstChar (workingPreferred_usernameModel) {
+		if (!isNaN(workingPreferred_usernameModel[0]))
+			return 'User name can not begin with a Number. Please try another one.'
+		return true
+}
+/* ----------------------------------------------------------------------------- */
+async function checkWorkingUsernameSpecialCharExceptions (workingPreferred_usernameModel) {
+		//				REF -- ALL Special Chars: /[-_.*\[\]@!#$%^\'"*,:;|/ {}<>()\\]/
+		//				Special Char with exceptions: <hyphen> <under_bar> and <period>
+		// let regexSpecialChar = /[*\[\]@!#$%^\'"*,:;|{}<>()\\\/]/
+		//				Add <space>
+		let regexSpecialChar = /[\s*\[\]@!#$%^\'"*,:;|{}<>()\\\/]/
+		const match = workingPreferred_usernameModel.match(regexSpecialChar)
+		// 				Check the format
+		if(match) return 'Only period, hyphen and underbar are allowed special characters. Try again.'
+		return true
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email -- Validation */
 /* ----------------------------------------------------------------------------- */
-const checkEmailSpecialChar = (emailArg) => {
+const checkWorkingEmailSpecialChar = (email) => {
+
+					// enter("checkEmailSpecialChar")
+
 					// DEBUG CODE
-					if (emailArg === null) info7("checkEmailSpecialChar(emailArg) > emailArg is Null")
+					if (email === null) info7("checkEmailSpecialChar(emailArg) > emailArg is Null")
 	
 	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
 	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
 
 	// 			Exclude these Special Chars ---->  +  -  _  @  .
 	const rxExclude = /[`~!#$%^&'"*,:;/ {}[\]()<>]/gm
-	const matchExclude = emailArg.match(rxExclude)
+	const matchExclude = email.match(rxExclude)
 	if(matchExclude) return `Special chars are not allowed [ ${matchExclude} ]`
 			
 	//				Perform multiple '@'' check
 	const rxMultiAtChar = /@{2}|@.*@/gm
-	const matchMultiAtChar = emailArg.match(rxMultiAtChar)
+	const matchMultiAtChar = email.match(rxMultiAtChar)
 	if(matchMultiAtChar) return "Multiple '@' chars are not allowed"
 
 	//				Perform consecutive special char check  ---->  . -  +
 	let rxConsecutive = /\.\.|--|\+\+/gm
-	const matchConsecutive = emailArg.match(rxConsecutive)
+	const matchConsecutive = email.match(rxConsecutive)
 	if ( matchConsecutive) return `Consecutive Special Characters are not allowed. [ ${matchConsecutive} ]`
-	
 	return true
 }
 /* ----------------------------------------------------------------------------- */
-const checkEmailName = (emailArg) => {
+const checkWorkingEmailName = (emailArg) => {
 	const parsedEmail = parseEmail(emailArg)
 	if (!parsedEmail) return "FAIL checkEmailName() > Invalid Email"
 	
@@ -308,11 +379,10 @@ const checkEmailName = (emailArg) => {
 		const rxLeadTrailChar = /^[-_+\\.]|[-+\\.]$/gm
 	let matchLeadTrailChar = parsedEmail.name.match(rxLeadTrailChar)
 	if(matchLeadTrailChar) return `[-_+.] can not be the first/last char of email name [ ${matchLeadTrailChar} ]`
-
 	return true
 }
 /* ----------------------------------------------------------------------------- */
-const checkEmailDomain = (emailArg) => {
+const checkWorkingEmailDomain = (emailArg) => {
 	const emailDomain = parseEmail(emailArg).domain
 
 	//			Length check ( long & short ) ----> 253 char
@@ -345,7 +415,6 @@ const checkEmailDomain = (emailArg) => {
 	if(matchLeadAndTrailTldChar) return `[-_+.] can not be the first/last char in the TLD name [ ${matchLeadAndTrailTldChar} ]`
 	return true
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
@@ -406,15 +475,19 @@ async function resendUserConfirmationCode(username) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const signUpUser = async () => {
+const signUpUser = async (event) => {
+	const results = await event
+	if(!results.valid) return /* Cancel Submission if validation FAILED */
 	// if(BLOCKAPI("signUpUser function "))return
+
 	try {
 		await Auth.signUp({
 			username: workingUsernameModel.value,
 			password: workingPasswordModel.value,
 			attributes: {
 				email: workingEmailModel.value,
-				phone_number: workingPhone_numberModel.value,
+				// Add a <plus> prefix to the phone number that has had the formatting removed.
+				phone_number: `+${stripPhone_numberFmt(workingPhone_numberModel.value).value}`, 
 				nickname: workingNicknameModel.value
 			},
 			autoSignIn: { enabled: true, }
@@ -500,6 +573,14 @@ async function getSession(){
 /* Execute getSession() */
 /* 				This is NOT called during SignUp	 */
 getSession().then( (result) => { 
+	nicknameModel.value = ""
+	emailModel.value = ""
+	phone_numberModel.value = ""
+	usernameModel.value = ""
+
+	if(!isSession) return
+
+	//			If we get here, there is an active session.
 	nicknameModel.value = result.nickname
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number

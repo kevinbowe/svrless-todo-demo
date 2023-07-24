@@ -205,6 +205,9 @@ import { checkNicknameReserved, checkNicknameTooShort, checkNicknameNumericFirst
 import  { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCountryCode, }
 	from "../components/Phone_numberParts/Phone_numerValidators"
 
+import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWorkingUsernameSpecialCharExceptions}
+	from "../components/UsernameParts/UsernameValidators"
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
 const errorSigningInMessage = ref("")
@@ -306,32 +309,6 @@ Hub.listen('auth', (data) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Username Validation */
-/* ----------------------------------------------------------------------------- */
-async function checkWorkingUsernameTooShort (workingPreferred_usernameModel) {
-	if (workingPreferred_usernameModel.length > 0 && workingPreferred_usernameModel.length <= 2) 
-		return 'User name is too short. Please try another one.'
-	return true
-}
-/* ----------------------------------------------------------------------------- */
-async function checkWorkingUsernameFirstChar (workingPreferred_usernameModel) {
-		if (!isNaN(workingPreferred_usernameModel[0]))
-			return 'User name can not begin with a Number. Please try another one.'
-		return true
-}
-/* ----------------------------------------------------------------------------- */
-async function checkWorkingUsernameSpecialCharExceptions (workingPreferred_usernameModel) {
-		//				REF -- ALL Special Chars: /[-_.*\[\]@!#$%^\'"*,:;|/ {}<>()\\]/
-		//				Special Char with exceptions: <hyphen> <under_bar> and <period>
-		// let regexSpecialChar = /[*\[\]@!#$%^\'"*,:;|{}<>()\\\/]/
-		//				Add <space>
-		let regexSpecialChar = /[\s*\[\]@!#$%^\'"*,:;|{}<>()\\\/]/
-		const match = workingPreferred_usernameModel.match(regexSpecialChar)
-		// 				Check the format
-		if(match) return 'Only period, hyphen and underbar are allowed special characters. Try again.'
-		return true
-}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email -- Validation */

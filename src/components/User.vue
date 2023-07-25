@@ -178,7 +178,11 @@
 </template>
 
 <script lang="ts">
-	export const isSession = ref(false)
+	export const isSession = ref()
+	export const emailModel = ref("")
+	export const nicknameModel = ref("")
+	export const phone_numberModel = ref("")
+	export const usernameModel = ref("")
 </script>
 
 <script setup lang="ts">
@@ -188,20 +192,20 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import { Auth, Hub } 
-	from 'aws-amplify';
-import { ref, Ref, computed } 
-	from 'vue'
-			/*  */
-import { parseEmail, emailModel } 
-	from '../components/Email.vue'
-import { nicknameModel } 
-	from  "../components/Nickname.vue"
-import { usernameModel } 
-	from  "../components/Preferred_username.vue"
-import { checkNicknameReserved, checkNicknameTooShort, checkNicknameNumericFirstChar, 
+import { Auth, Hub } from 'aws-amplify';
+import { ref, Ref, computed } from 'vue'
+/* ----------------------------------------------------------------------------- */
+// import { nicknameModel } from  "../components/Nickname.vue"
+// import { usernameModel } from  "../components/Preferred_username.vue"
+// import { emailModel } from "../components/Email.vue";
+
+import { checkWorkingEmailSpecialChar, checkWorkingEmailName, checkWorkingEmailDomain } 
+	from "../components/EmailParts/EmailValidators"
+
+import { checkNicknameReserved, checkNicknameTooShort, checkNicknameNumericFirstChar,  
 			checkNicknameFirstChar, checkNicknameLastChar, checkNicknameSpecialChars } 
 	from "../components/NicknameParts/NicknameValidators"
+
 import  { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCountryCode, }
 	from "../components/Phone_numberParts/Phone_numerValidators"
 
@@ -211,19 +215,20 @@ import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWork
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
 const errorSigningInMessage = ref("")
+
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
 const workingPasswordModel2 = ref("")
+const workingEmailModel =ref("")
+const workingPhone_numberModel = ref("")
+const workingNicknameModel =  ref("")
+const workingPreferred_usernameModel = ref("")
 
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
 const passwordIcon2b = ref(false)
 
 const errorSigningUpMessage =ref("")
-const workingEmailModel =ref("")
-const workingPhone_numberModel = ref("")
-const workingNicknameModel =  ref("")
-const workingPreferred_usernameModel = ref("")
 
 const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const confirmUserCodeModel = ref()
@@ -232,7 +237,14 @@ const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
 
-const phone_numberModel= ref("")
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+defineProps({
+	isSession: Boolean,
+// 	// nickname: String,
+// 	// email: String,
+// 	// phone_number:String,
+// 	// username: String
+})
 
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||                       MOVE THIS CODE WHEN FINISHED	
@@ -298,6 +310,21 @@ Hub.listen('auth', (data) => {
 				usernameModel.value = data.payload.data.attributes.preferred_username 
 				? data.payload.data.attributes.preferred_username 
 				: data.payload.data.username
+
+							// All the data exist at this point.				
+							exit("Hub.listen() case signIn")
+							info("emailModel.value",emailModel.value)
+							info("nicknameModel",nicknameModel.value)
+							info("phone_numberModel",phone_numberModel.value)
+							info("usernameModel",usernameModel.value)
+							info("usernameModel",phone_numberModel.value)
+
+							//... info("results.attributes.email",results.attributes.email)
+							//... info("data.payload.data.attributes.nickname",data.payload.data.attributes.nickname)
+							//... info("data.payload.data.attributes.phone_number",data.payload.data.attributes.phone_number)
+							//... info("data.payload.data.attributes.preferred_username",data.payload.data.attributes.preferred_username)
+							//... info("data.payload.data.username",data.payload.data.username)
+
 			})
 			isSession.value = true
 			return
@@ -308,90 +335,6 @@ Hub.listen('auth', (data) => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
-
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Email -- Validation */
-/* ----------------------------------------------------------------------------- */
-const checkWorkingEmailSpecialChar = (email) => {
-
-					// enter("checkEmailSpecialChar")
-
-					// DEBUG CODE
-					if (email === null) info7("checkEmailSpecialChar(emailArg) > emailArg is Null")
-	
-	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
-	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
-
-	// 			Exclude these Special Chars ---->  +  -  _  @  .
-	const rxExclude = /[`~!#$%^&'"*,:;/ {}[\]()<>]/gm
-	const matchExclude = email.match(rxExclude)
-	if(matchExclude) return `Special chars are not allowed [ ${matchExclude} ]`
-			
-	//				Perform multiple '@'' check
-	const rxMultiAtChar = /@{2}|@.*@/gm
-	const matchMultiAtChar = email.match(rxMultiAtChar)
-	if(matchMultiAtChar) return "Multiple '@' chars are not allowed"
-
-	//				Perform consecutive special char check  ---->  . -  +
-	let rxConsecutive = /\.\.|--|\+\+/gm
-	const matchConsecutive = email.match(rxConsecutive)
-	if ( matchConsecutive) return `Consecutive Special Characters are not allowed. [ ${matchConsecutive} ]`
-	return true
-}
-/* ----------------------------------------------------------------------------- */
-const checkWorkingEmailName = (emailArg) => {
-	const parsedEmail = parseEmail(emailArg)
-	if (!parsedEmail) return "FAIL checkEmailName() > Invalid Email"
-	
-	//				Length check ( long & short ) ---->	64 char
-	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
-	let len = parsedEmail.name.length;
-	if(len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
-	if(len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
-
-	//				Leading and trailing special char check. -- The trailing '_' has been removed from the check.
-	//			 	_asd@gmail.com		-asd@gmail.com		asd-@gmail.com
-	//				+asd@gmail.com		asd+@gmail.com		.asd@gmail.com		asd.@gmail.com
-		const rxLeadTrailChar = /^[-_+\\.]|[-+\\.]$/gm
-	let matchLeadTrailChar = parsedEmail.name.match(rxLeadTrailChar)
-	if(matchLeadTrailChar) return `[-_+.] can not be the first/last char of email name [ ${matchLeadTrailChar} ]`
-	return true
-}
-/* ----------------------------------------------------------------------------- */
-const checkWorkingEmailDomain = (emailArg) => {
-	const emailDomain = parseEmail(emailArg).domain
-
-	//			Length check ( long & short ) ----> 253 char
-	//			asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com   */
-	let len = emailDomain.length;
-	if(len > 253) return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain.length}`
-	if(len <= 2) return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain.length}`
-	
-	//			Split the domain and tld and check from both pieces.
-	const rxDomainAndTLD = /^(?<domain>.*)[\\.|\\s](?<tld>.*)/m
-	let matchDomainAndTLD = emailDomain.match(rxDomainAndTLD)
-
-	//			Check Domain
-	if(matchDomainAndTLD?.groups?.domain.length === 0 || matchDomainAndTLD?.groups?.domain === undefined) 
-		return `An email domain is required ${emailDomain}`
-	
-	//			Check Leading/Trailing Special Char in Domain
-	// 		asd@-asd.com	asd@asd-.com	asd@.asd.com	asd@asd..com
-	// 		asd@_asd.com	asd@asd_.com	asd@+asd.com	asd@asd+.com
-	const rxLeadTrailDomainChar = /^[-_+\\.]|[-_+\\.]$/gm
-	let matchLeadTrailDomainChar = matchDomainAndTLD.groups.domain.match(rxLeadTrailDomainChar)
-	if(matchLeadTrailDomainChar) return `[-_+.] can not be the first/last char in the domain name [ ${matchLeadTrailDomainChar} ]`
-	
-	//			Check	TLD (Top-Level-Domain)
-	if(matchDomainAndTLD?.groups.tld.length === 0 || matchDomainAndTLD?.groups.tld === undefined)
-		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
-	
-	//			Check Leading/Trailing Special Char in TLD
-	let matchLeadAndTrailTldChar = matchDomainAndTLD?.groups.tld.match(rxLeadTrailDomainChar)
-	if(matchLeadAndTrailTldChar) return `[-_+.] can not be the first/last char in the TLD name [ ${matchLeadAndTrailTldChar} ]`
-	return true
-}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
@@ -505,10 +448,10 @@ const signInUser = async () => {
 const signOutUser = async () => {
 	try { await Auth.signOut()
 		.then(result => {
-			emailModel.value = ""
-			nicknameModel.value = ""
-			usernameModel.value = ""
-			phone_numberModel.value = ""
+			//... emailModel.value = ""
+			//... nicknameModel.value = ""
+			//... usernameModel.value = ""
+			//... phone_numberModel.value = ""
 
 			workingPasswordModel.value = ""
 			workingPasswordModel2.value = ""
@@ -525,44 +468,46 @@ const signOutUser = async () => {
 	catch (error) { console.log('error signing out: ', error);}
 }
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Decl getSession */
-async function getSession(){
-	//				This is NOT called during SignUp
-	const cognitoAccessToken = await Auth.currentSession()
-	.then(currenSession => {
-		return currenSession .getAccessToken() .getJwtToken()})
-		.catch(err => { return err})
-		if (cognitoAccessToken === "No current user") return { "isSession": false }
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// /* Decl getSession */
+// async function getSession(){
+// 	//				This is NOT called during SignUp
+// 	const cognitoAccessToken = await Auth.currentSession()
+// 	.then(currenSession => {
+// 		return currenSession .getAccessToken() .getJwtToken()})
+// 		.catch(err => { return err})
+// 		if (cognitoAccessToken === "No current user") return { "isSession": false }
+// 
+// 	return await Auth.currentAuthenticatedUser({bypassCache: true })
+// 		.then((user) => {
+// 			return {
+// 				"nickname": user.attributes?.nickname,
+// 				"email": user.attributes?.email,
+// 				"phone_number": user.attributes?.phone_number,
+// 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
+// 			}
+// 		})
+// 	};
 
-	return await Auth.currentAuthenticatedUser({bypassCache: true })
-		.then((user) => {
-			return {
-				"nickname": user.attributes?.nickname,
-				"email": user.attributes?.email,
-				"phone_number": user.attributes?.phone_number,
-				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-			}
-		})
-	};
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Execute getSession() */
-/* 				This is NOT called during SignUp	 */
-getSession().then( (result) => { 
-	nicknameModel.value = ""
-	emailModel.value = ""
-	phone_numberModel.value = ""
-	usernameModel.value = ""
-
-	if(!isSession) return
-
-	//			If we get here, there is an active session.
-	nicknameModel.value = result.nickname
-	emailModel.value = result.email
-	phone_numberModel.value = result.phone_number
-	usernameModel.value = result.username
-})
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// /* Execute getSession() */
+// /* 				This is NOT called during SignUp	 */
+// getSession().then( (result) => { 
+// 	enter("User.vue > getSession()")
+// 
+// 	nicknameModel.value = ""
+// 	emailModel.value = ""
+// 	phone_numberModel.value = ""
+// 	usernameModel.value = ""
+// 
+// 	if(!isSession) return
+// 
+// 	//			If we get here, there is an active session.
+// 	nicknameModel.value = result.nickname
+// 	emailModel.value = result.email
+// 	phone_numberModel.value = result.phone_number
+// 	usernameModel.value = result.username
+// })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>

@@ -1,15 +1,15 @@
 <template>
 	<!-- Update Email-->
-	<v-row justify="center" v-if="isSession">
+	<v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 		<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 			<v-row>
 				<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
 					clearable @click:clear="clearWorkingEmailModelValidationError"
 					:rules="[ 
-						value => checkEmailSpecialChar(value), 
-						value => checkEmailName(value), 
-						value => checkEmailDomain(value),
+						value => checkWorkingEmailSpecialChar(value), 
+						value => checkWorkingEmailName(value), 
+						value => checkWorkingEmailDomain(value),
 					]"
 					variant="outlined" density="compact" 
 				></v-text-field>
@@ -21,7 +21,7 @@
 		</v-col>
 	</v-row>
 	<!-- Update Email Confirmation -->
-	<v-row justify="center" v-if="isSession">
+	<v-row justify="center" >
 		<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
 			<v-sheet height="24em" width="20em" color="surface_alt" elevation="24">
 					<v-row><v-spacer/>
@@ -53,16 +53,9 @@
 	</v-row>
 </template>
 
-<script lang="ts">
+<!-- <script lang="ts">
 	export const emailModel = ref("")
-	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-	export const parseEmail = (email) => {
-		const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-			let match = regex.exec(email)
-			if (match) return { name: match.groups.name, domain: match.groups.domain }
-			return null
-		}
-</script>
+</script> -->
 
 <script setup lang="ts">
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -75,6 +68,9 @@ import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress,
 import { ref, Ref } from 'vue'
 import { Auth } from 'aws-amplify';
 
+import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkWorkingEmailDomain } 
+	from "../components/EmailParts/EmailValidators"
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const invalidEmailConfirmCode = ref("")
 const emailFormRef = ref()
@@ -82,13 +78,13 @@ const confirmEmailCodeModel = ref("")
 const toggleConfirmEmail:Ref<boolean> = ref(false)
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const workingEmailModel =ref("")
-// const emailModel = ref("")
+//... const emailModel = ref("")
 const openDialogFlag = ref()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-defineProps({
-	isSession: Boolean
-})
+// defineProps({
+// 	isSession: Boolean,
+// })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -117,7 +113,7 @@ async function submitEmail (event) {
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
 	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value })
 	await Auth.currentUserInfo().then(result => {
-		emailModel.value = result.attributes.email
+		//...emailModel.value = result.attributes.email
 		//				Prepare the Confirm UI message
 		emailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
 		//				Display the Confirmation UI
@@ -137,7 +133,7 @@ const applyEmailConfirmationCode = async function () {
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
 		.then((response) => {
 			// 		If we get here, the email is CONFIRMED.
-			emailModel.value = workingEmailModel.value
+			//... emailModel.value = workingEmailModel.value
 			workingEmailModel.value = null
 			confirmEmailCodeModel.value = null
 			
@@ -168,88 +164,6 @@ const buildEmailConfirmationMessage = (email:string) => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetValidation()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Email -- Validation */
-/* ----------------------------------------------------------------------------- */
-const checkEmailSpecialChar = (emailArg) => {
-					// DEBUG CODE
-					if (emailArg === null) info7("checkEmailSpecialChar(emailArg) > emailArg is Null")
-	
-	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
-	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
-
-	// 			Exclude these Special Chars ---->  +  -  _  @  .
-	const rxExclude = /[`~!#$%^&'"*,:;/ {}[\]()<>]/gm
-	const matchExclude = emailArg.match(rxExclude)
-	if(matchExclude) return `Special chars are not allowed [ ${matchExclude} ]`
-			
-	//				Perform multiple '@'' check
-	const rxMultiAtChar = /@{2}|@.*@/gm
-	const matchMultiAtChar = emailArg.match(rxMultiAtChar)
-	if(matchMultiAtChar) return "Multiple '@' chars are not allowed"
-
-	//				Perform consecutive special char check  ---->  . -  +
-	let rxConsecutive = /\.\.|--|\+\+/gm
-	const matchConsecutive = emailArg.match(rxConsecutive)
-	if ( matchConsecutive) return `Consecutive Special Characters are not allowed. [ ${matchConsecutive} ]`
-	
-	return true
-}
-/* ----------------------------------------------------------------------------- */
-const checkEmailName = (emailArg) => {
-	const parsedEmail = parseEmail(emailArg)
-	if (!parsedEmail) return "FAIL checkEmailName() > Invalid Email"
-	
-	//				Length check ( long & short ) ---->	64 char
-	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
-	let len = parsedEmail.name.length;
-	if(len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
-	if(len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
-
-	//				Leading and trailing special char check. -- The trailing '_' has been removed from the check.
-	//			 	_asd@gmail.com		-asd@gmail.com		asd-@gmail.com
-	//				+asd@gmail.com		asd+@gmail.com		.asd@gmail.com		asd.@gmail.com
-		const rxLeadTrailChar = /^[-_+\\.]|[-+\\.]$/gm
-	let matchLeadTrailChar = parsedEmail.name.match(rxLeadTrailChar)
-	if(matchLeadTrailChar) return `[-_+.] can not be the first/last char of email name [ ${matchLeadTrailChar} ]`
-
-	return true
-}
-/* ----------------------------------------------------------------------------- */
-const checkEmailDomain = (emailArg) => {
-	const emailDomain = parseEmail(emailArg).domain
-
-	//			Length check ( long & short ) ----> 253 char
-	//			asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com   */
-	let len = emailDomain.length;
-	if(len > 253) return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain.length}`
-	if(len <= 2) return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain.length}`
-	
-	//			Split the domain and tld and check from both pieces.
-	const rxDomainAndTLD = /^(?<domain>.*)[\\.|\\s](?<tld>.*)/m
-	let matchDomainAndTLD = emailDomain.match(rxDomainAndTLD)
-
-	//			Check Domain
-	if(matchDomainAndTLD?.groups?.domain.length === 0 || matchDomainAndTLD?.groups?.domain === undefined) 
-		return `An email domain is required ${emailDomain}`
-	
-	//			Check Leading/Trailing Special Char in Domain
-	// 		asd@-asd.com	asd@asd-.com	asd@.asd.com	asd@asd..com
-	// 		asd@_asd.com	asd@asd_.com	asd@+asd.com	asd@asd+.com
-	const rxLeadTrailDomainChar = /^[-_+\\.]|[-_+\\.]$/gm
-	let matchLeadTrailDomainChar = matchDomainAndTLD.groups.domain.match(rxLeadTrailDomainChar)
-	if(matchLeadTrailDomainChar) return `[-_+.] can not be the first/last char in the domain name [ ${matchLeadTrailDomainChar} ]`
-	
-	//			Check	TLD (Top-Level-Domain)
-	if(matchDomainAndTLD?.groups.tld.length === 0 || matchDomainAndTLD?.groups.tld === undefined)
-		return "FAIL checkEmailDomain() > Domain Check: TopLevelDomain is missing"
-	
-	//			Check Leading/Trailing Special Char in TLD
-	let matchLeadAndTrailTldChar = matchDomainAndTLD?.groups.tld.match(rxLeadTrailDomainChar)
-	if(matchLeadAndTrailTldChar) return `[-_+.] can not be the first/last char in the TLD name [ ${matchLeadAndTrailTldChar} ]`
-	return true
-}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>

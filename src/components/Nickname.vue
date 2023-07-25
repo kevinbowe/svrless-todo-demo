@@ -1,6 +1,6 @@
 <template>
 	<!-- Update Nickname -->
-	<v-row justify="center" v-if="isSession">
+	<v-row justify="center" >
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 		<v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
 			<v-row>
@@ -24,9 +24,9 @@
 	</v-row>
 </template>
 
-<script lang="ts">
+<!-- <script lang="ts">
 	export const nicknameModel = ref("")
-</script>
+</script> -->
 
 <script setup lang="ts">
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -37,10 +37,9 @@ import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress,
 import { ref, } from 'vue'
 import { Auth } from 'aws-amplify';
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-defineProps({
-	isSession: Boolean
-})
+import { checkNicknameReserved,checkNicknameFirstChar, checkNicknameLastChar, 
+			checkNicknameNumericFirstChar, checkNicknameSpecialChars, checkNicknameTooShort } 
+	from "./NicknameParts/NicknameValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const nicknameFormRef = ref()
@@ -57,49 +56,11 @@ async function submitNickname(event) {
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
-		nicknameModel.value = result.attributes.nickname
+		//... nicknameModel.value = result.attributes.nickname
 		workingNicknameModel.value = ""
 	}) // END_THEN
 }	
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Validation */
-async function checkNicknameReserved (workingNickname) {
-	if (workingNickname.toLowerCase() === 'kevin') return 'User nickname reserved. Please try another one.'
-	return true
-}
-async function checkNicknameTooShort (workingNickname) {
-	if (workingNickname.length <= 2) return 'User nickname is too short. Please try another one.'
-	return true
-}
-async function checkNicknameNumericFirstChar (workingNickname) {
-	if (!isNaN(workingNickname[0])) return 'User nickname can not begin with a Number. Please try another one.'
-	return true
-}
-async function checkNicknameFirstChar (workingNickname) {
-	//				All special chars must be rejected.
-	const match = workingNickname[0].match(/[-\._=+`~\\!@#$%\^&*(){}[\]<>?/|]/)
-	if (match) return 'User nickname can begin with any special characters. Please try another one.'
-	return true
-}
-async function checkNicknameLastChar (workingNickname) {
-	//				All special chars must be rejected.
-	//		/[-\._=+`~\\!@#$%\^&*(){}[\]<>?|]/
-	const match = workingNickname[workingNickname.length-1].match(/[-\._=+`~\\!@#$%\^&*(){}[\]<>?|]/)
-	if (match) {
-		return 'User nickname can not end with any special characters. Please try another one.'
-	}
-	return true
-}
-async function checkNicknameSpecialChars (workingNickname) {
-	//				These chars are valid.
-	//			>>>-->  -  .  _  =  +  ~ <--<<<
-	const match = workingNickname.match( /[`\\!@#$%\^&*(){}[\]<>?/|]/)
-	if(match) {
-		return 'User nickname can not contain special characters. Please try another one.'
-	}
-	return true
-}
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>
 

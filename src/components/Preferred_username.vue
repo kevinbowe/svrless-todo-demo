@@ -5,9 +5,9 @@
 	<v-form ref="preferred_usernameFormRef" validate-on="submit" @submit.prevent="submitPreferred_username">
 		<v-row>
 			<v-text-field label="User Name" :rules="[
-					checkPreferred_usernameTooShort,
-					checkPreferred_usernameFirstChar,
-					checkPreferred_usernameSpecialCharExceptions
+					value => checkPreferred_usernameTooShort(value),
+					value => checkPreferred_usernameFirstChar(value),
+					value => checkPreferred_usernameSpecialCharExceptions(value)
 				]" 
 				clearable @click:clear="clearPreferred_usernameModelValidationError"
 				v-model="workingPreferred_usernameModel" hint="Example: kb1" variant="outlined" density="compact" >

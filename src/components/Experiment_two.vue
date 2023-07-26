@@ -1,5 +1,5 @@
 <template>
-	<h1>Experiment Two</h1>
+
 	<v-row no-gutters >
 		<v-spacer/>
 		<v-col cols="8">

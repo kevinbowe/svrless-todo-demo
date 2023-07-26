@@ -17,7 +17,10 @@
 				<SignOut @onSignOut="setSession"/>
 
 				<!-- Experiment-1 -->
-				<Experiment_one @onExperimentEmit="ExperimentOneHandler"/>
+				<Experiment_one 
+					@onExperimentEmit="ExperimentOneHandler"
+					@onExperimentEmit_B="ExperimentOne_B_Handler"
+				/>
 
 				<!-- Experiment-2 -->
 				<Experiment_two @onExperimentEmit="ExperimentTwoHandler"/>
@@ -64,6 +67,14 @@ Amplify.configure(awsconfig);
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function ExperimentOneHandler (obj) {
 	enter("HomeView.vue --> ExperimentOneHandler()")
+	info3(obj.isSignedInFlag)
+	info4(obj.username)
+	info5(obj.phone)
+	bar()
+}
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+function ExperimentOne_B_Handler (obj) {
+	enter("HomeView.vue --> ExperimentOne_B_Handler()")
 	info3(obj.isSignedInFlag)
 	info4(obj.username)
 	info5(obj.phone)

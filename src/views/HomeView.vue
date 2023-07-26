@@ -5,22 +5,27 @@
 			<hr class="mb-10">
 
 			<div v-if="isSession">
-
 				<!-- Update Nickname -->
 				<Nickname/>
-				
 				<!-- Update Email-->
 				<Email/>
-				
 				<!-- Update Preferred Username -->
 				<Preferred_username/>
-
 				<!-- User Info -->
-				<UserInfo/>
+				<UserInfo />
+				<!-- Sign Out -->
+				<SignOut @onSignOut="setSession"/>
+
+				<!-- Experiment-1 -->
+				<Experiment_one @onExperimentEmit="ExperimentOneHandler"/>
+
+				<!-- Experiment-2 -->
+				<Experiment_two @onExperimentEmit="ExperimentTwoHandler"/>
+
 			</div>
 
-			<!-- SignUp, SignIn, SignOut and Confirm -->
-			<User :isSession="!isSession"/>
+			<!-- SignUp, SignIn and Confirm -->
+			<User v-else />
 			
 		</MasterLayout>
 	</v-app>
@@ -41,19 +46,17 @@ import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 /* ----------------------------------------------------------------------------- */
 import User from "../components/User.vue"
-
-import {isSession} from "../components/User.vue"
-
 import Nickname from "../components/Nickname.vue"
-// import { nicknameModel } from  "../components/Nickname.vue"
-
 import Preferred_username from "../components/Preferred_username.vue";
-// import { usernameModel } from  "../components/Preferred_username.vue"
-
 import Email from "../components/Email.vue";
-// import { emailModel } from "../components/Email.vue"
-
 import UserInfo from "../components/UserInfo.vue"
+import SignOut from "../components/SignOut.vue"
+//////
+import Experiment_one from "../components/Experiment_one.vue"
+import Experiment_two from "../components/Experiment_two.vue"
+
+/* ----------------------------------------------------------------------------- */
+import {isSession} from "../components/User.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 I18n.putVocabularies(translations)
@@ -66,44 +69,73 @@ I18n.putVocabulariesForLanguage('en', {
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* All Const Decls */
-const DEBUG_Model = ref()
-//... const emailModel = ref("")
-//... const phone_numberModel = ref("")
+function ExperimentOneHandler (obj) {
+	enter("HomeView.vue --> ExperimentOneHandler()")
+	info3(obj.isSignedInFlag)
+	info4(obj.username)
+	info5(obj.phone)
+	bar()
+}
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+function ExperimentTwoHandler (obj) {
+	enter0("HomeView.vue --> ExperimentTwoHandler()")
+	info(obj.isSignedInFlag)
+	info1(obj.username)
+	bar()
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Decl getSession */
-async function getSession(){
-	//				This is NOT called during SignUp
-	const cognitoAccessToken = await Auth.currentSession()
-	.then(currenSession => {
-		return currenSession .getAccessToken() .getJwtToken()})
-		.catch(err => { return err})
-		if (cognitoAccessToken === "No current user") return { "isSession": false }
+function setSession ({isSessionFlag, myModel}) {
+	isSession.value = isSessionFlag
+}
 
-	return await Auth.currentAuthenticatedUser({bypassCache: true })
-		.then((user) => {
-			return {
-				"nickname": user.attributes?.nickname,
-				"email": user.attributes?.email,
-				"phone_number": user.attributes?.phone_number,
-				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-				"isSession": true
-			}
-		})
-	};
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// /* Decl getSession */
+// async function getSession(){
+// 	//				This is NOT called during SignUp
+// 	const cognitoAccessToken = await Auth.currentSession()
+// 	.then(currenSession => {
+// 		return currenSession .getAccessToken() .getJwtToken()})
+// 		.catch(err => { return err})
+// 		if (cognitoAccessToken === "No current user") return { "isSession": false }
+// 
+// 	return await Auth.currentAuthenticatedUser({bypassCache: true })
+// 		.then((user) => {
+// 			return {
+// 				"nickname": user.attributes?.nickname,
+// 				"email": user.attributes?.email,
+// 				"phone_number": user.attributes?.phone_number,
+// 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
+// 				"isSession": true
+// 			}
+// 		})
+// 	};
 	
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Execute getSession() */
-/* 				This is NOT called during SignUp	 */
-getSession().then( (result) => { 
-	enter("HomeView > getSession()")
-	// nicknameModel.value = result.nickname
-	// emailModel.value = result.email
-	// phone_numberModel.value = result.phone_number
-	// usernameModel.value = result.username
-	isSession.value = result.isSession;
-})
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// /* Execute getSession() */
+// /* 				This is NOT called during SignUp	 */
+// getSession().then( (result) => { 
+// 	bar()
+// 	enter("PARENT HomeView > getSession() -- Initialization")
+// 	//					These models are not available on a reload when signed in.
+// 	nicknameModel.value = result.nickname
+// 	emailModel.value = result.email
+// 	phone_numberModel.value = result.phone_number
+// 	usernameModel.value = result.username
+// 
+// 	//					Do the result values exist? -- Yes
+// 	info("result.nickname",result.nickname)
+// 	info("result.email",result.email)
+// 	info("result.phone_number",result.phone_number)
+// 	info("result.username",result.username)
+// 
+// 	info2("nicknameModel.value", nicknameModel.value)
+// 	info2("emaiModel.value", emailModel.value)
+// 	info2("phone_numberModel.value", phone_numberModel.value)
+// 	info2("usernameModel.value", usernameModel.value)
+// 
+// 	isSession.value = result.isSession;
+// })
 
 </script>
 

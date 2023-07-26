@@ -167,14 +167,6 @@
 			</v-sheet>
 		</v-overlay>
 	</v-row>
-
-	<!-- Sign Out -->
-	<v-row no-gutters v-if="isSession">
-		<v-spacer></v-spacer>
-		<v-col cols="8"><div> <v-btn class="mt-3" color="primary" @click="signOutUser">
-			Sign Out</v-btn></div></v-col>
-		<v-spacer></v-spacer>
-	</v-row>
 </template>
 
 <script lang="ts">
@@ -195,10 +187,6 @@ import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress,
 import { Auth, Hub } from 'aws-amplify';
 import { ref, Ref, computed } from 'vue'
 /* ----------------------------------------------------------------------------- */
-// import { nicknameModel } from  "../components/Nickname.vue"
-// import { usernameModel } from  "../components/Preferred_username.vue"
-// import { emailModel } from "../components/Email.vue";
-
 import { checkWorkingEmailSpecialChar, checkWorkingEmailName, checkWorkingEmailDomain } 
 	from "../components/EmailParts/EmailValidators"
 
@@ -236,15 +224,6 @@ const confirmUserCodeModel = ref()
 const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-defineProps({
-	isSession: Boolean,
-// 	// nickname: String,
-// 	// email: String,
-// 	// phone_number:String,
-// 	// username: String
-})
 
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||                       MOVE THIS CODE WHEN FINISHED	
@@ -310,21 +289,6 @@ Hub.listen('auth', (data) => {
 				usernameModel.value = data.payload.data.attributes.preferred_username 
 				? data.payload.data.attributes.preferred_username 
 				: data.payload.data.username
-
-							// All the data exist at this point.				
-							exit("Hub.listen() case signIn")
-							info("emailModel.value",emailModel.value)
-							info("nicknameModel",nicknameModel.value)
-							info("phone_numberModel",phone_numberModel.value)
-							info("usernameModel",usernameModel.value)
-							info("usernameModel",phone_numberModel.value)
-
-							//... info("results.attributes.email",results.attributes.email)
-							//... info("data.payload.data.attributes.nickname",data.payload.data.attributes.nickname)
-							//... info("data.payload.data.attributes.phone_number",data.payload.data.attributes.phone_number)
-							//... info("data.payload.data.attributes.preferred_username",data.payload.data.attributes.preferred_username)
-							//... info("data.payload.data.username",data.payload.data.username)
-
 			})
 			isSession.value = true
 			return
@@ -444,70 +408,18 @@ const signInUser = async () => {
 	} // END_TRY_CATCH
 }
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const signOutUser = async () => {
-	try { await Auth.signOut()
-		.then(result => {
-			//... emailModel.value = ""
-			//... nicknameModel.value = ""
-			//... usernameModel.value = ""
-			//... phone_numberModel.value = ""
-
-			workingPasswordModel.value = ""
-			workingPasswordModel2.value = ""
-
-			workingEmailModel.value = ""
-			workingNicknameModel.value = ""
-			workingUsernameModel.value = ""
-			workingPhone_numberModel.value = ""
-
- 			toggleUserConfirm.value = false
- 			isSession.value = false
-		})
-	}
-	catch (error) { console.log('error signing out: ', error);}
-}
-
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// /* Decl getSession */
-// async function getSession(){
-// 	//				This is NOT called during SignUp
-// 	const cognitoAccessToken = await Auth.currentSession()
-// 	.then(currenSession => {
-// 		return currenSession .getAccessToken() .getJwtToken()})
-// 		.catch(err => { return err})
-// 		if (cognitoAccessToken === "No current user") return { "isSession": false }
-// 
-// 	return await Auth.currentAuthenticatedUser({bypassCache: true })
-// 		.then((user) => {
-// 			return {
-// 				"nickname": user.attributes?.nickname,
-// 				"email": user.attributes?.email,
-// 				"phone_number": user.attributes?.phone_number,
-// 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-// 			}
-// 		})
-// 	};
-
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// /* Execute getSession() */
-// /* 				This is NOT called during SignUp	 */
-// getSession().then( (result) => { 
-// 	enter("User.vue > getSession()")
-// 
-// 	nicknameModel.value = ""
-// 	emailModel.value = ""
-// 	phone_numberModel.value = ""
-// 	usernameModel.value = ""
-// 
-// 	if(!isSession) return
-// 
-// 	//			If we get here, there is an active session.
-// 	nicknameModel.value = result.nickname
-// 	emailModel.value = result.email
-// 	phone_numberModel.value = result.phone_number
-// 	usernameModel.value = result.username
-// })
+start("User.vue > currentAuthenticatedUser()")
+Auth.currentAuthenticatedUser({bypassCache: true})
+	.then(results => {
+		nicknameModel.value =  results.attributes.nickname
+		emailModel.value = results.attributes.email
+		phone_numberModel.value = results.attributes.phone_number
+		usernameModel.value = results.attributes.preferred_username ? results.attributes.preferred_username : results.username
+		isSession.value = true
+	})
+	.catch( () => { 
+		isSession.value = false	
+	})
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>

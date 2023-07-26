@@ -59,13 +59,6 @@ import Experiment_two from "../components/Experiment_two.vue"
 import {isSession} from "../components/User.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-I18n.putVocabularies(translations)
-I18n.setLanguage('en')
-I18n.putVocabulariesForLanguage('en', {
-  'Create Account': 'Sign Up', // Tab header
-});
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

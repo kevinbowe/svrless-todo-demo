@@ -3,32 +3,54 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
-
 			<div v-if="isSession">
+				nicknameModel [ {{ nicknameModel }} ]
 				<!-- Update Nickname -->
-				<Nickname/>
+				<Nickname @onUpdateNickname="setNickname"/>
 				<!-- Update Email-->
 				<Email/>
 				<!-- Update Preferred Username -->
 				<Preferred_username/>
-				<!-- User Info -->
-				<UserInfo />
+
+				<!-- <UserInfo/> -->
+				<v-row justify="center">
+					<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
+						<v-divider :thickness="10" class="ma-2"></v-divider>
+						<v-row no-gutters>
+							<v-col style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+								<p>Nick Name:</p></v-col>
+							<v-col><p>{{ nicknameModel }}</p></v-col>
+						</v-row>
+						<v-divider :thickness="3" />
+						<v-row no-gutters style="background-color:rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+							<p class="ma-auto">Email:</p></v-row>
+						<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
+						<v-divider :thickness="3" />
+						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+							<p class="ma-auto">Phone Number:</p></v-row>
+						<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
+						<v-divider :thickness="3" />
+						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+							<p class="ma-auto">User Name:</p></v-row>
+							<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
+						<v-divider :thickness="10"></v-divider>
+					</v-col>
+				</v-row>
+
+
 				<!-- Sign Out -->
 				<SignOut @onSignOut="setSession"/>
-
 				<!-- Experiment-1 -->
-				<Experiment_one 
-					@onExperimentEmit="ExperimentOneHandler"
-					@onExperimentEmit_B="ExperimentOne_B_Handler"
-				/>
-
+				<Experiment_one @onExperimentEmit="ExperimentOneHandler"
+					@onExperimentEmit_B="ExperimentOne_B_Handler"/>
 				<!-- Experiment-2 -->
 				<Experiment_two @onExperimentEmit="ExperimentTwoHandler"/>
-
 			</div>
 
 			<!-- SignUp, SignIn and Confirm -->
-			<User v-else />
+			<!-- <User v-else /> -->
+			<User @onSignIn="setUserInfo"/>
+
 			
 		</MasterLayout>
 	</v-app>
@@ -43,26 +65,20 @@ import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 }
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
 import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
-import { translations} from '@aws-amplify/ui-vue';
 import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
 import awsconfig from '../aws-exports';
 import "@aws-amplify/ui-vue/styles.css";
 /* ----------------------------------------------------------------------------- */
-import User from "../components/User.vue"
+import User, { isSession } from "../components/User.vue"
+// import User, { emailModel, phone_numberModel, usernameModel } from "../components/User.vue"
 import Nickname from "../components/Nickname.vue"
 import Preferred_username from "../components/Preferred_username.vue";
 import Email from "../components/Email.vue";
-import UserInfo from "../components/UserInfo.vue"
+// import UserInfo from "../components/UserInfo.vue"
 import SignOut from "../components/SignOut.vue"
-//////
+// EXPERIMENTS
 import Experiment_one from "../components/Experiment_one.vue"
 import Experiment_two from "../components/Experiment_two.vue"
-
-/* ----------------------------------------------------------------------------- */
-import {isSession} from "../components/User.vue"
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-Amplify.configure(awsconfig);
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function ExperimentOneHandler (obj) {
@@ -72,7 +88,7 @@ function ExperimentOneHandler (obj) {
 	info5(obj.phone)
 	bar()
 }
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* ----------------------------------------------------------------------------- */
 function ExperimentOne_B_Handler (obj) {
 	enter("HomeView.vue --> ExperimentOne_B_Handler()")
 	info3(obj.isSignedInFlag)
@@ -80,7 +96,7 @@ function ExperimentOne_B_Handler (obj) {
 	info5(obj.phone)
 	bar()
 }
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* ----------------------------------------------------------------------------- */
 function ExperimentTwoHandler (obj) {
 	enter0("HomeView.vue --> ExperimentTwoHandler()")
 	info(obj.isSignedInFlag)
@@ -89,57 +105,58 @@ function ExperimentTwoHandler (obj) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-function setSession ({isSessionFlag, myModel}) {
-	isSession.value = isSessionFlag
+const setSession = (payload) => { isSession.value = payload.sessionState }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const nicknameModel = ref()
+const emailModel = ref()
+const phone_numberModel = ref()
+const usernameModel = ref()
+
+const setNickname = (payload) => { 
+			enter(`setNickname > [ ${payload.nickname} ]`)
+	nicknameModel.value = payload.nickname
 }
 
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// /* Decl getSession */
-// async function getSession(){
-// 	//				This is NOT called during SignUp
-// 	const cognitoAccessToken = await Auth.currentSession()
-// 	.then(currenSession => {
-// 		return currenSession .getAccessToken() .getJwtToken()})
-// 		.catch(err => { return err})
-// 		if (cognitoAccessToken === "No current user") return { "isSession": false }
-// 
-// 	return await Auth.currentAuthenticatedUser({bypassCache: true })
-// 		.then((user) => {
-// 			return {
-// 				"nickname": user.attributes?.nickname,
-// 				"email": user.attributes?.email,
-// 				"phone_number": user.attributes?.phone_number,
-// 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-// 				"isSession": true
-// 			}
-// 		})
-// 	};
+const setUserInfo = (payload) => { 
+			enter(`setUserInfo > [ ${payload} ]`)
+			info(`Payload.nickname.value > [ ${payload.nickname} ]`)
+			info(`Payload.email.value > [ ${payload.email} ]`)
+
+			info(`Payload.phonenumber.value > [ ${payload.phonenumber} ]`)
+			info(`Payload.Username.value > [ ${payload.username} ]`)
+
+	nicknameModel.value = payload.nickname
+	emailModel.value = payload.email
+	phone_numberModel.value = payload.phonenumber
+	usernameModel.value = payload.username
+}
 	
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// /* Execute getSession() */
-// /* 				This is NOT called during SignUp	 */
-// getSession().then( (result) => { 
-// 	bar()
-// 	enter("PARENT HomeView > getSession() -- Initialization")
-// 	//					These models are not available on a reload when signed in.
-// 	nicknameModel.value = result.nickname
-// 	emailModel.value = result.email
-// 	phone_numberModel.value = result.phone_number
-// 	usernameModel.value = result.username
-// 
-// 	//					Do the result values exist? -- Yes
-// 	info("result.nickname",result.nickname)
-// 	info("result.email",result.email)
-// 	info("result.phone_number",result.phone_number)
-// 	info("result.username",result.username)
-// 
-// 	info2("nicknameModel.value", nicknameModel.value)
-// 	info2("emaiModel.value", emailModel.value)
-// 	info2("phone_numberModel.value", phone_numberModel.value)
-// 	info2("usernameModel.value", usernameModel.value)
-// 
-// 	isSession.value = result.isSession;
-// })
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Decl getSession */
+async function getSession(){
+	return await Auth.currentAuthenticatedUser({bypassCache: true })
+		.then((user) => {
+			return {
+				"nickname": user.attributes?.nickname,
+				"email": user.attributes?.email,
+				"phone_number": user.attributes?.phone_number,
+				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
+				"isSession": true
+			}
+		})
+	};
+	
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* Execute getSession() -- This is not executed SignUp */
+getSession().then( (result) => { 
+	bar()
+	enter("PARENT HomeView > getSession() -- Initialization")
+	nicknameModel.value = result.nickname
+	emailModel.value = result.email
+	phone_numberModel.value = result.phone_number
+	usernameModel.value = result.username
+})
 
 </script>
 

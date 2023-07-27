@@ -1,6 +1,6 @@
 <template>
 	<!-- User Info -->
-	<v-row justify="center">
+	<!-- <v-row justify="center">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 			<v-divider :thickness="10" class="ma-2"></v-divider>
 			<v-row no-gutters>
@@ -22,12 +22,12 @@
 				<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
 			<v-divider :thickness="10"></v-divider>
 		</v-col>
-	</v-row>
+	</v-row> -->
 </template>
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { nicknameModel, emailModel, phone_numberModel, usernameModel} from "../components/User.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-</script>
+</script> -->
 

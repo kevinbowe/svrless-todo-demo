@@ -24,9 +24,6 @@
 	</v-row>
 </template>
 
-<!-- <script lang="ts">
-	export const nicknameModel = ref("")
-</script> -->
 
 <script setup lang="ts">
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -48,15 +45,18 @@ const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValid
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const workingNicknameModel = ref("")
 
+const emit = defineEmits()
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
 	const results = await event
 	if(!results.valid) return 
+
 		// 				This will return the user in the user pool (not updated )
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
-		//... nicknameModel.value = result.attributes.nickname
+		emit('onUpdateNickname', { nickname: result.attributes.nickname})
 		workingNicknameModel.value = ""
 	}) // END_THEN
 }	

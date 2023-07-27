@@ -175,9 +175,11 @@
 	export const nicknameModel = ref("")
 	export const phone_numberModel = ref("")
 	export const usernameModel = ref("")
+	export default {inheritAttrs: false}
 </script>
 
 <script setup lang="ts">
+
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
@@ -241,6 +243,8 @@ const clearWorkingPhone_numberValidationError = () => workingPhone_numberFieldRe
 
 const workingNicknameFieldRef = ref()
 const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.value.resetValidation()
+
+const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -400,7 +404,13 @@ const signInUser = async () => {
 			confirmUserCodeModel.value = undefined
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 		}) // END_ASYNC_CATCH
-		if (user) isSession.value = true
+		if (user) {
+			isSession.value = true
+			emit( 'onSignIn', { 
+				nickname: nicknameModel.value, email: emailModel.value,
+				phonenumber: phone_numberModel.value,	username: usernameModel.value
+			})
+		}
 	}
 	catch (error) { 
 							err('error signing in', error)
@@ -408,7 +418,6 @@ const signInUser = async () => {
 	} // END_TRY_CATCH
 }
 
-start("User.vue > currentAuthenticatedUser()")
 Auth.currentAuthenticatedUser({bypassCache: true})
 	.then(results => {
 		nicknameModel.value =  results.attributes.nickname

@@ -179,6 +179,7 @@
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
+import { err } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 import { Auth, Hub } from 'aws-amplify';
@@ -298,7 +299,7 @@ Hub.listen('auth', (data) => {
 			return
 		case "signOut" :
 			return
-	} // END_SWITCH
+	} 
 })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -333,6 +334,7 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function confirmUserSignUp() {
 	// if(BLOCKAPI("confirmUserSignUp function "))return
+
 	try {
 		//					This function ONLY sets the user state to Confirmed.
 		//					The user is NOT signed in.
@@ -341,11 +343,11 @@ async function confirmUserSignUp() {
 		//					This will not start until the Auth.confirmSignUp(~) returns
 		if (restartConfirm.value === true) {
 			//				If we get here, try signing in again.
-			signInUser()
 			toggleUserConfirm.value = false	// Close the Confirm Ui
 			isSession.value = true			// We are signed in
 			restartConfirm.value = false	// Lower the Confirm flag
-		}
+		} 
+		signInUser()
 	} catch (error) {
 		err('error confirming sign up', error);
 		openDialogFlag.value = true
@@ -403,21 +405,21 @@ const signInUser = async () => {
 			//				Initialize the Invalid Confirm Code model and message
 			confirmUserCodeModel.value = undefined
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
-		}) // END_ASYNC_CATCH
+		})
 		if (user) {
-			isSession.value = true
 			emit( 'onSignIn', { 
 				nickname: user.attributes?.nickname, 
 				email: user.attributes?.email,
 				phonenumber: user.attributes?.phone_number,	
 				username: user.attributes?.preferred_username ?? user.username,
+				sessionState: true
 			})
 		}
 	}
 	catch (error) { 
 							err('error signing in', error)
 			errorSigningInMessage.value = "Undefined Sign In Error. Please try again." 
-	} // END_TRY_CATCH
+	}
 }
 
 Auth.currentAuthenticatedUser({bypassCache: true})

@@ -3,6 +3,7 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
+
 			<div v-if="isSession">
 
 				<!-- Update Nickname -->
@@ -41,16 +42,10 @@
 
 				<!-- Sign Out -->
 				<SignOut @onSignOut="setSession"/>
-				<!-- Experiment-1 -->
-				<Experiment_one @onExperimentEmit="ExperimentOneHandler"
-					@onExperimentEmit_B="ExperimentOne_B_Handler"/>
-				<!-- Experiment-2 -->
-				<Experiment_two @onExperimentEmit="ExperimentTwoHandler"/>
 			</div>
 
 			<!-- SignUp, SignIn and Confirm -->
-			<!-- <User v-else /> -->
-			<User @onSignIn="setUserInfo"/>
+			<User v-else @onSignIn="setUserInfo"/>
 			
 		</MasterLayout>
 	</v-app>
@@ -67,39 +62,11 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { Auth } from 'aws-amplify';
 import "@aws-amplify/ui-vue/styles.css";
 /* ----------------------------------------------------------------------------- */
-import User, { isSession } from "../components/User.vue"
+import User from "../components/User.vue"
 import Nickname from "../components/Nickname.vue"
 import Preferred_username from "../components/Preferred_username.vue";
 import Email from "../components/Email.vue";
 import SignOut from "../components/SignOut.vue"
-// EXPERIMENTS
-import Experiment_one from "../components/Experiment_one.vue"
-import Experiment_two from "../components/Experiment_two.vue"
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-function ExperimentOneHandler (obj) {
-	enter("HomeView.vue --> ExperimentOneHandler()")
-	info3(obj.isSignedInFlag)
-	info4(obj.username)
-	info5(obj.phone)
-	bar()
-}
-/* ----------------------------------------------------------------------------- */
-function ExperimentOne_B_Handler (obj) {
-	enter("HomeView.vue --> ExperimentOne_B_Handler()")
-	info3(obj.isSignedInFlag)
-	info4(obj.username)
-	info5(obj.phone)
-	bar()
-}
-/* ----------------------------------------------------------------------------- */
-function ExperimentTwoHandler (obj) {
-	enter0("HomeView.vue --> ExperimentTwoHandler()")
-	info(obj.isSignedInFlag)
-	info1(obj.username)
-	bar()
-}
-/* ----------------------------------------------------------------------------- */
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }
@@ -109,24 +76,16 @@ const nicknameModel = ref()
 const emailModel = ref()
 const phone_numberModel = ref()
 const usernameModel = ref()
+const isSession = ref(true)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setEmail = (payload) => {
-			enter(`setEmail > [ ${payload.email} ]`)
-	emailModel.value = payload.email
-}
+const setEmail = (payload) => emailModel.value = payload.email 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setNickname = (payload) => { 
-			enter(`setNickname > [ ${payload.nickname} ]`)
-	nicknameModel.value = payload.nickname
-}
+const setNickname = (payload) => nicknameModel.value = payload.nickname 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setPreferred_username = (payload) => {
-			enter(`setPreferred_username > [ ${payload.preferred_username} ]`)
-	usernameModel.value = payload.preferred_username
-}
+const setPreferred_username = (payload) => usernameModel.value = payload.preferred_username
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setUserInfo = (payload) => { 
@@ -134,6 +93,7 @@ const setUserInfo = (payload) => {
 	emailModel.value = payload.email
 	phone_numberModel.value = payload.phonenumber
 	usernameModel.value = payload.username
+	isSession.value = payload.sessionState
 }
 	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -146,9 +106,11 @@ async function getSession(){
 				"email": user.attributes?.email,
 				"phone_number": user.attributes?.phone_number,
 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
-				"isSession": true
+				"session": true
 			}
-		})
+		}).catch((reason) => {
+			return {"session": false}
+		} )
 	};
 	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -158,6 +120,7 @@ getSession().then( (result) => {
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number
 	usernameModel.value = result.username
+	isSession.value = result.session
 })
 
 </script>

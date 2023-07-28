@@ -4,13 +4,15 @@
 			<h1 class="text-primary">Home Page Content</h1>
 			<hr class="mb-10">
 			<div v-if="isSession">
-				nicknameModel [ {{ nicknameModel }} ]
+
 				<!-- Update Nickname -->
 				<Nickname @onUpdateNickname="setNickname"/>
 				<!-- Update Email-->
 				<Email/>
+
 				<!-- Update Preferred Username -->
-				<Preferred_username/>
+				<!-- <Preferred_username/> -->
+				<Preferred_username @onUpdatePreferred_username="setPreferred_username"/>
 
 				<!-- <UserInfo/> -->
 				<v-row justify="center">
@@ -36,7 +38,6 @@
 						<v-divider :thickness="10"></v-divider>
 					</v-col>
 				</v-row>
-
 
 				<!-- Sign Out -->
 				<SignOut @onSignOut="setSession"/>
@@ -116,6 +117,11 @@ const usernameModel = ref()
 const setNickname = (payload) => { 
 			enter(`setNickname > [ ${payload.nickname} ]`)
 	nicknameModel.value = payload.nickname
+}
+
+const setPreferred_username = (payload) => {
+			enter(`setPreferred_username > [ ${payload.preferred_username} ]`)
+	usernameModel.value = payload.preferred_username
 }
 
 const setUserInfo = (payload) => { 

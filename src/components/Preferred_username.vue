@@ -43,6 +43,7 @@ const workingPreferred_usernameModel = ref("")
 const invalidUsernameDialogFlag = ref(false)
 //const usernameModel = ref("")
 const preferred_usernameFormRef = ref()
+const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -75,7 +76,7 @@ async function submitPreferred_username (event) {
 	})
 	await Auth.currentUserInfo().then(result => {
 		//			If we get here, The update worked.
-		//... usernameModel.value = result.attributes.preferred_username
+		emit('onUpdatePreferred_username', { preferred_username: result.attributes.preferred_username})
 		workingPreferred_usernameModel.value = ""
 	})
 }

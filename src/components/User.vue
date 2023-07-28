@@ -185,7 +185,7 @@ import { err } from "../my-util-code/MyConsoleUtil"
 import { Auth, Hub } from 'aws-amplify';
 import { ref, Ref, computed } from 'vue'
 /* ----------------------------------------------------------------------------- */
-import { checkWorkingEmailSpecialChar, checkWorkingEmailName, checkWorkingEmailDomain } 
+import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkWorkingEmailDomain } 
 	from "../components/EmailParts/EmailValidators"
 
 import { checkNicknameReserved, checkNicknameTooShort, checkNicknameNumericFirstChar,  

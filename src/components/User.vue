@@ -171,10 +171,6 @@
 
 <script lang="ts">
 	export const isSession = ref()
-	export const emailModel = ref("")
-	export const nicknameModel = ref("")
-	export const phone_numberModel = ref("")
-	export const usernameModel = ref("")
 	export default {inheritAttrs: false}
 </script>
 
@@ -183,7 +179,6 @@
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
-import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 import { Auth, Hub } from 'aws-amplify';
@@ -205,6 +200,11 @@ import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWork
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
 const errorSigningInMessage = ref("")
+
+const nicknameModel = ref("")
+const emailModel = ref("")
+const phone_numberModel = ref("")
+const usernameModel = ref("")
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")

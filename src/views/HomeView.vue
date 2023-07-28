@@ -51,7 +51,6 @@
 			<!-- SignUp, SignIn and Confirm -->
 			<!-- <User v-else /> -->
 			<User @onSignIn="setUserInfo"/>
-
 			
 		</MasterLayout>
 	</v-app>
@@ -64,18 +63,14 @@ import { ref } from 'vue'
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
-import { log, warn, err, err2, exit, success, pass, fail, fini, start, progress, joy, } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
-import { Amplify, Auth, Hub, I18n, } from 'aws-amplify';
-import awsconfig from '../aws-exports';
+import { Auth } from 'aws-amplify';
 import "@aws-amplify/ui-vue/styles.css";
 /* ----------------------------------------------------------------------------- */
 import User, { isSession } from "../components/User.vue"
-// import User, { emailModel, phone_numberModel, usernameModel } from "../components/User.vue"
 import Nickname from "../components/Nickname.vue"
 import Preferred_username from "../components/Preferred_username.vue";
 import Email from "../components/Email.vue";
-// import UserInfo from "../components/UserInfo.vue"
 import SignOut from "../components/SignOut.vue"
 // EXPERIMENTS
 import Experiment_one from "../components/Experiment_one.vue"
@@ -104,6 +99,7 @@ function ExperimentTwoHandler (obj) {
 	info1(obj.username)
 	bar()
 }
+/* ----------------------------------------------------------------------------- */
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }
@@ -114,29 +110,26 @@ const emailModel = ref()
 const phone_numberModel = ref()
 const usernameModel = ref()
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmail = (payload) => {
 			enter(`setEmail > [ ${payload.email} ]`)
 	emailModel.value = payload.email
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setNickname = (payload) => { 
 			enter(`setNickname > [ ${payload.nickname} ]`)
 	nicknameModel.value = payload.nickname
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setPreferred_username = (payload) => {
 			enter(`setPreferred_username > [ ${payload.preferred_username} ]`)
 	usernameModel.value = payload.preferred_username
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setUserInfo = (payload) => { 
-			enter(`setUserInfo > [ ${payload} ]`)
-			info(`Payload.nickname.value > [ ${payload.nickname} ]`)
-			info(`Payload.email.value > [ ${payload.email} ]`)
-
-			info(`Payload.phonenumber.value > [ ${payload.phonenumber} ]`)
-			info(`Payload.Username.value > [ ${payload.username} ]`)
-
 	nicknameModel.value = payload.nickname
 	emailModel.value = payload.email
 	phone_numberModel.value = payload.phonenumber
@@ -161,8 +154,6 @@ async function getSession(){
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Execute getSession() -- This is not executed SignUp */
 getSession().then( (result) => { 
-	bar()
-	enter("PARENT HomeView > getSession() -- Initialization")
 	nicknameModel.value = result.nickname
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number

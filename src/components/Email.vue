@@ -53,9 +53,9 @@
 	</v-row>
 </template>
 
-<!-- <script lang="ts">
-	export const emailModel = ref("")
-</script> -->
+<script lang="ts">
+	export default {inheritAttrs: false}
+</script>
 
 <script setup lang="ts">
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -78,9 +78,8 @@ const confirmEmailCodeModel = ref("")
 const toggleConfirmEmail:Ref<boolean> = ref(false)
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const workingEmailModel =ref("")
-//... const emailModel = ref("")
 const openDialogFlag = ref()
-
+const emit = defineEmits()
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 // defineProps({
 // 	isSession: Boolean,
@@ -133,7 +132,9 @@ const applyEmailConfirmationCode = async function () {
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
 		.then((response) => {
 			// 		If we get here, the email is CONFIRMED.
-			//... emailModel.value = workingEmailModel.value
+
+			info3(`workingEmailModel.value > [ ${workingEmailModel.value} ]`)
+			emit('onUpdateEmail', { email: workingEmailModel.value})
 			workingEmailModel.value = null
 			confirmEmailCodeModel.value = null
 			

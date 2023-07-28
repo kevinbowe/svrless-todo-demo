@@ -7,11 +7,11 @@
 
 				<!-- Update Nickname -->
 				<Nickname @onUpdateNickname="setNickname"/>
+
 				<!-- Update Email-->
-				<Email/>
+				<Email @onUpdateEmail="setEmail"/>
 
 				<!-- Update Preferred Username -->
-				<!-- <Preferred_username/> -->
 				<Preferred_username @onUpdatePreferred_username="setPreferred_username"/>
 
 				<!-- <UserInfo/> -->
@@ -113,6 +113,11 @@ const nicknameModel = ref()
 const emailModel = ref()
 const phone_numberModel = ref()
 const usernameModel = ref()
+
+const setEmail = (payload) => {
+			enter(`setEmail > [ ${payload.email} ]`)
+	emailModel.value = payload.email
+}
 
 const setNickname = (payload) => { 
 			enter(`setNickname > [ ${payload.nickname} ]`)

@@ -407,8 +407,10 @@ const signInUser = async () => {
 		if (user) {
 			isSession.value = true
 			emit( 'onSignIn', { 
-				nickname: nicknameModel.value, email: emailModel.value,
-				phonenumber: phone_numberModel.value,	username: usernameModel.value
+				nickname: user.attributes?.nickname, 
+				email: user.attributes?.email,
+				phonenumber: user.attributes?.phone_number,	
+				username: user.attributes?.preferred_username ?? user.username,
 			})
 		}
 	}

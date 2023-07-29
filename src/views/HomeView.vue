@@ -31,7 +31,7 @@
 						<v-divider :thickness="3" />
 						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 							<p class="ma-auto">Phone Number:</p></v-row>
-						<v-row no-gutters ><p class="ma-auto">{{ phone_numberModel }}</p></v-row>
+						<v-row no-gutters ><p class="ma-auto">{{ friendlyPhone(phone_numberModel) }}</p></v-row>
 						<v-divider :thickness="3" />
 						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 							<p class="ma-auto">User Name:</p></v-row>
@@ -77,6 +77,13 @@ const emailModel = ref()
 const phone_numberModel = ref()
 const usernameModel = ref()
 const isSession = ref(true)
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const friendlyPhone = (phone) => {
+	if (phone == undefined) return
+	const regex = /(?<plus>\+)(?<country>\d{1,3})(?<areacode>\d{3})(?<exchange>\d{3})(?<line>\d{4})/g;
+	let match = regex.exec(phone)
+	return `${match?.groups?.plus}${match?.groups?.country} (${match?.groups?.areacode}) ${match?.groups?.exchange}-${match?.groups?.line}`
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setEmail = (payload) => emailModel.value = payload.email 

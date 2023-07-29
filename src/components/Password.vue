@@ -3,7 +3,6 @@
 	<v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 		<v-form validate-on="submit" @submit.prevent="submitPassword" >
-			
 			<v-row>
 				<v-text-field label="Current Password"  v-model= "workingPasswordModel" 
 					:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
@@ -17,7 +16,6 @@
 					variant="outlined" density="compact" 
 				></v-text-field>
 			</v-row>
-			
 			<v-row>
 				<v-text-field label="New Password"  v-model= "newWorkingPasswordModel" 
 					:append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
@@ -31,7 +29,6 @@
 					variant="outlined" density="compact" 
 				></v-text-field>
 			</v-row>
-
 			<v-row class="justify-end">
 				<v-btn :disabled="!workingPasswordModel || !newWorkingPasswordModel" color="primary" type="submit"> Update Password </v-btn>
 			</v-row>
@@ -49,9 +46,9 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 				/*  */
 import { ref } from 'vue'
 import { Auth } from 'aws-amplify';
+import { checkPasswordTooShort, checkPasswordSpecialChars } from "../components/PasswordParts/PasswordValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const passwordFormRef = ref()
 const workingPasswordModel =ref("")
 const newWorkingPasswordModel =ref("")
 const passwordIcon1 = ref(false)
@@ -93,26 +90,6 @@ const clearWorkingPasswordModelValidationError = () => workingPasswordFormRef.va
 const newWorkingPasswordFormRef = ref()
 const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordFormRef.value.resetValidation()
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function checkPasswordTooShort (password) {
-	if (password.length <= 5) return 'User password is too short. Please try another one.'
-	return true
-}
-/* ----------------------------------------------------------------------------- */
-async function checkPasswordSpecialChars (password) {
-	//				These chars are valid.
-	//			>>>-->	!  @  #  $  %  ^  &  * <--<<<
-
-	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
-	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
-
-	const rxException = /[+\-_\.`~'",:;/ {}[\]()<>]/gm
-	const match = password.match(rxException)
-	if(match) return 'No Special characters. Exceptions: ! @ # $ % ^ & * '
-	return true
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>
 
 <style>

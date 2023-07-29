@@ -35,6 +35,24 @@
 		</v-form>
 		</v-col>
 	</v-row>
+
+	<!-- PopUp Message Dialog -- Modal -->
+	<v-row justify="center" v-if="openDialogFlag" >
+		<v-dialog activator="parent" v-model="openDialogFlag" persistent >
+			<v-card 	color="background_alt" border="lg" 
+						class="ma-auto" height="10em" width="22em" elevation="24">
+				<v-card-text> 
+					<h1>Success</h1><strong>Your password has been Updated.</strong>
+				</v-card-text>
+				<v-card-actions>
+					<v-btn @click="openDialogFlag = false" block 
+					color="surface" 
+					style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+	</v-row>
+
 </template>
 
 <script setup lang="ts">
@@ -67,6 +85,16 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const openDialogFlag = ref()
+const workingPasswordFormRef = ref()
+const newWorkingPasswordFormRef = ref()
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const clearWorkingPasswordModelValidationError = () => workingPasswordFormRef.value.resetValidation()
+/* ----------------------------------------------------------------------------- */
+const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordFormRef.value.resetValidation()
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPassword (event) {
 
 	if(BLOCKAPI("submitPassword function "))return
@@ -81,14 +109,9 @@ async function submitPassword (event) {
 
 	//				This updates the password
 	await Auth.changePassword(authUser, workingPasswordModel.value, newWorkingPasswordModel.value)
+	openDialogFlag.value = true
 }
 	
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const workingPasswordFormRef = ref()
-const clearWorkingPasswordModelValidationError = () => workingPasswordFormRef.value.resetValidation()
-/* ----------------------------------------------------------------------------- */
-const newWorkingPasswordFormRef = ref()
-const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordFormRef.value.resetValidation()
 
 </script>
 

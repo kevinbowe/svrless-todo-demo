@@ -52,13 +52,7 @@
 											@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
 											label="Password*" required > 
 										</v-text-field></v-col>
-									<!-- <v-col cols="12">
-										<v-text-field v-model="workingPasswordModel2"
-											:append-inner-icon="passwordIcon2b ? 'mdi-eye' : 'mdi-eye-off'" prepend-inner-icon="mdi-lock-outline" 
-											:type="passwordIcon2b ? 'text' : 'password'" @click:append-inner="passwordIcon2b = !passwordIcon2b"
-											clearable density="compact" variant="outlined" label="Confirm Password*" required >
-										</v-text-field>
-									</v-col> -->
+
 									<v-col cols="12">
 										<v-text-field id="emailSuId" v-model="workingEmailModel" 
 										ref="workingEmailFieldRef"
@@ -106,9 +100,9 @@
 										density="compact" variant="outlined" label="Nickname"/>
 									</v-col>
 									<v-btn :disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel"
-											block size="large" color="primary" class="mb-3" type="submit" > Sign Up </v-btn>
-									<!-- <v-btn :disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel || !workingPasswordModel2"
-											block size="large" color="primary" class="mb-3" type="submit" > Sign Up </v-btn> -->
+											block size="large" color="primary" class="mb-3" type="submit" > 
+												Sign Up 
+									</v-btn>
 								</v-row>
 							</v-form>
 						</v-window-item>
@@ -211,7 +205,6 @@ const usernameModel = ref("")
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
-// const workingPasswordModel2 = ref("")
 const workingEmailModel =ref("")
 const workingPhone_numberModel = ref("")
 const workingNicknameModel =  ref("")

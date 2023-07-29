@@ -100,18 +100,19 @@ async function submitPassword (event) {
 	if(BLOCKAPI("submitPassword function "))return
 	
 	const results = await event
-	if(!results.valid) {
-		return /* Cancel Submission if validation FAILED */
-	}
+	if(!results.valid)return /* Cancel Submission if validation FAILED */
+	
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
-
 	//				This updates the password
 	await Auth.changePassword(authUser, workingPasswordModel.value, newWorkingPasswordModel.value)
+	//				Clear the working fields.
+	newWorkingPasswordModel.value = ""
+	workingPasswordModel.value = ""
+	//				Display the confirmation dialog.
 	openDialogFlag.value = true
 }
-	
 
 </script>
 

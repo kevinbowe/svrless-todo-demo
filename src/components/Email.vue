@@ -133,7 +133,6 @@ const applyEmailConfirmationCode = async function () {
 		.then((response) => {
 			// 		If we get here, the email is CONFIRMED.
 
-			info3(`workingEmailModel.value > [ ${workingEmailModel.value} ]`)
 			emit('onUpdateEmail', { email: workingEmailModel.value})
 			workingEmailModel.value = null
 			confirmEmailCodeModel.value = null

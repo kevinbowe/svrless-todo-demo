@@ -260,7 +260,7 @@ Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
 		case "signUp" :
 			// bar()
-			enter0("Hub.listen => Case SignUp")
+			// enter0("Hub.listen => Case SignUp")
 			confirmUserCodeModel.value = null 
 			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = false

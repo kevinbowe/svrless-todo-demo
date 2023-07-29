@@ -6,6 +6,9 @@
 
 			<div v-if="isSession">
 
+				<!-- Update Password-->
+				<Password />
+
 				<!-- Update Nickname -->
 				<Nickname @onUpdateNickname="setNickname"/>
 
@@ -67,6 +70,7 @@ import Nickname from "../components/Nickname.vue"
 import Preferred_username from "../components/Preferred_username.vue";
 import Email from "../components/Email.vue";
 import SignOut from "../components/SignOut.vue"
+import Password from "../components/Password.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }

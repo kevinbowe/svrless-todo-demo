@@ -9,7 +9,11 @@ export async function checkPasswordSpecialChars (password) {
 	//			>>>-->	!  @  #  $  %  ^  &  * <--<<<
 
 	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
-	const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
+	// const rxAll = /[+\-_@\.`~!#$%^&'"*,:;/ {}[\]()<>]/gm
+
+	//				Handle the null condition.
+	//				This is not valid but the submit will not work with an empty/null field
+	if (!password) return true
 
 	const rxException = /[+\-_\.`~'",:;/ {}[\]()<>]/gm
 	const match = password.match(rxException)

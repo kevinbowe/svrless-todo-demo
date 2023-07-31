@@ -4,7 +4,7 @@ import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 }
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* Phone number Validation */
+/* Username Validation */
 /* ----------------------------------------------------------------------------- */
 //				Put functions here
 export async function checkWorkingUsernameTooShort (workingPreferred_usernameModel) {

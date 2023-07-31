@@ -31,7 +31,14 @@
 										clearable  @click:clear="workingPasswordModel = ''" density="compact" variant="outlined" required >
 									</v-text-field>
 								</v-col>
-								<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
+							</v-row>
+							<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
+							<v-row class="justify-end">
+								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
+								@click="openResetPasswordDialogFlag = true" > 
+									<v-tooltip activator="parent"> Reset/Forgot Password</v-tooltip>
+									<p>Reset Password</p>
+								</v-btn>
 							</v-row>
 						</v-window-item>
 
@@ -110,6 +117,26 @@
 				</v-card-text>
 			</v-card>
 		</v-col>
+	</v-row>
+				
+	<!-- PopUp Reset Password Dialog -- Modal -->
+	<v-row justify="center" v-if="openResetPasswordDialogFlag">
+		<v-dialog activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+			<v-card color="background_alt" border="lg" 
+						class="ma-auto" height="10em" width="20em" elevation="24">
+				<v-card-text> 
+					<h1>Reset Password</h1>
+				</v-card-text>
+				<v-card-actions>
+					<v-btn 
+					@click="openResetPasswordDialogFlag = false" block 
+					color="surface" 
+					style="background-color:rgb(var(--v-theme-primary))">
+						OK 
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</v-row>
 
 	<!-- PopUp Message Dialog -- Modal -->
@@ -222,6 +249,7 @@ const confirmUserCodeModel = ref()
 const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
+const openResetPasswordDialogFlag = ref()
 
 /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 |||                       MOVE THIS CODE WHEN FINISHED	

@@ -35,7 +35,8 @@
 							<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
-								@click="openResetPasswordDialogFlag = true" > 
+								_INSERT_CODE_TO_SET_STEP_TO_ONE
+								@click="openResetPasswordDialogFlag = true; passwordResetSignal = 1" > 
 									<v-tooltip activator="parent"> Reset/Forgot Password</v-tooltip>
 									<p>Reset Password</p>
 								</v-btn>
@@ -123,18 +124,67 @@
 	<v-row justify="center" v-if="openResetPasswordDialogFlag">
 		<v-dialog activator="parent" v-model="openResetPasswordDialogFlag" persistent >
 			<v-card color="background_alt" border="lg" 
-						class="ma-auto" height="10em" width="20em" elevation="24">
+						class="ma-auto" height="32em" width="30em" elevation="24">
 				<v-card-text> 
-					<h1>Reset Password</h1>
+					<v-row>
+						<v-col ><h1>Reset Password</h1></v-col>
+						<v-col cols="1" class="justify-end">
+							<v-btn icon="$close" size="large" variant="text" @click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"></v-btn>
+						</v-col>
+					</v-row>
+
+					Password Reset Signal [ {{ passwordResetSignal }} ]
+
+					<row v-if="passwordResetSignal==1">
+						<v-col>
+							<v-text-field id="usernameSuId" v-model="workingUsernameModel" 
+							ref="workingUsernameFieldRef"
+							clearable @click:clear="clearWorkingUsernameModelValidationError"
+							:rules="[
+								value => checkWorkingUsernameTooShort(value),
+								value => checkWorkingUsernameFirstChar(value),
+								value => checkWorkingUsernameSpecialCharExceptions(value)
+							]" 
+							density="compact" variant="outlined" label="Username" required />
+						</v-col>
+					</row>
+					<row v-if="passwordResetSignal==2">
+						<v-col>
+							<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
+							clearable @click:clear="confirmUserCodeModel = undefined"
+							id="ConfCode" placeholder="Enter your code" 
+							__style="height:1.75em;" 
+							variant="outlined" density="compact"/>
+						</v-col>
+						
+						<v-col>
+							<v-text-field label="New Password"  v-model= "newWorkingPasswordModel" 
+							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
+							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
+							ref=newWorkingPasswordRef
+							clearable @click:clear="clearNewWorkingPasswordModelValidationError"
+							:rules="[ 
+								value => checkPasswordTooShort(value),
+								value => checkPasswordSpecialChars(value),
+							]" 
+							variant="outlined" density="compact" />
+						</v-col>
+					</row>
+						
+					<row v-if="passwordResetSignal==3">
+						<p>Your Password has been reset.</p>
+					</row>
+						
 				</v-card-text>
+
 				<v-card-actions>
-					<v-btn 
-					@click="openResetPasswordDialogFlag = false" block 
-					color="surface" 
-					style="background-color:rgb(var(--v-theme-primary))">
+					<v-col> <v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
+					@click="passwordResetNextStep"
+					> 
 						OK 
-					</v-btn>
+					</v-btn> </v-col>
 				</v-card-actions>
+
 			</v-card>
 		</v-dialog>
 	</v-row>
@@ -221,6 +271,9 @@ import  { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCount
 import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWorkingUsernameSpecialCharExceptions}
 	from "../components/UsernameParts/UsernameValidators"
 
+import { checkPasswordSpecialChars, checkPasswordTooShort } 
+	from "../components/PasswordParts/PasswordValidators"
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
 const errorSigningInMessage = ref("")
@@ -232,10 +285,12 @@ const usernameModel = ref("")
 
 const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
+
 const workingEmailModel =ref("")
 const workingPhone_numberModel = ref("")
 const workingNicknameModel =  ref("")
 const workingPreferred_usernameModel = ref("")
+const newWorkingPasswordModel = ref("")
 
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
@@ -268,6 +323,17 @@ const clearWorkingPhone_numberValidationError = () => workingPhone_numberFieldRe
 const workingNicknameFieldRef = ref()
 const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.value.resetValidation()
 
+const newWorkingPasswordRef = ref()
+const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordRef.value.resetValidation()
+
+/**
+ * Request == 1
+ * Confirm == 2
+ * Fini ===== 3
+ * Done ===== 0
+ */
+const passwordResetSignal = ref()
+
 const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -294,40 +360,46 @@ Hub.listen('auth', (data) => {
 			restartConfirm.value = false
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 			return
-		case "confirmSignUp" :
-			// bar()
-			// enter1("Hub.listen => Case CONFIRM SignUp")
-			toggleUserConfirm.value = false // Hide Confirm Ui
-			return
-		case "autoSignIn" :
-			// bar()
-			// enter2("Hub.listen => Case AUTO SignIn")
-			workingNicknameModel.value = ""
-			workingEmailModel.value = ""
-			workingPreferred_usernameModel.value = ""
-			return
-		case "signIn" :
-			// bar()
-			// enter3("Hub.listen => Case SignIn")
-			Auth.currentAuthenticatedUser({bypassCache: true})
-			.then(results => {
-				emailModel.value = results.attributes.email
-				nicknameModel.value =  data.payload.data.attributes.nickname
-				phone_numberModel.value = data.payload.data.attributes.phone_number
-				usernameModel.value = data.payload.data.attributes.preferred_username 
-				? data.payload.data.attributes.preferred_username 
-				: data.payload.data.username
-			})
-			isSession.value = true
-			return
-		case "signOut" :
-			return
-	} 
-})
-
+			case "confirmSignUp" :
+				// bar()
+				// enter1("Hub.listen => Case CONFIRM SignUp")
+				toggleUserConfirm.value = false // Hide Confirm Ui
+				return
+				case "autoSignIn" :
+					// bar()
+					// enter2("Hub.listen => Case AUTO SignIn")
+					workingNicknameModel.value = ""
+					workingEmailModel.value = ""
+					workingPreferred_usernameModel.value = ""
+					return
+					case "signIn" :
+						// bar()
+						// enter3("Hub.listen => Case SignIn")
+						Auth.currentAuthenticatedUser({bypassCache: true})
+						.then(results => {
+							emailModel.value = results.attributes.email
+							nicknameModel.value =  data.payload.data.attributes.nickname
+							phone_numberModel.value = data.payload.data.attributes.phone_number
+							usernameModel.value = data.payload.data.attributes.preferred_username 
+							? data.payload.data.attributes.preferred_username 
+							: data.payload.data.username
+						})
+						isSession.value = true
+						return
+						case "signOut" :
+							return
+						} 
+					})
+					
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const passwordResetNextStep = () => {
+	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
+	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
+}
+		
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
-
+		
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
 	userConfirmationMessage.Title.value = "We Emailed You"

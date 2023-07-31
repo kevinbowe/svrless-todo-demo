@@ -32,7 +32,9 @@
 									</v-text-field>
 								</v-col>
 							</v-row>
+
 							<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
+							
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
 								_INSERT_CODE_TO_SET_STEP_TO_ONE
@@ -135,7 +137,7 @@
 
 					Password Reset Signal [ {{ passwordResetSignal }} ]
 
-					<row v-if="passwordResetSignal==1">
+					<v-row v-if="passwordResetSignal==1">
 						<v-col>
 							<v-text-field id="usernameSuId" v-model="workingUsernameModel" 
 							ref="workingUsernameFieldRef"
@@ -147,8 +149,8 @@
 							]" 
 							density="compact" variant="outlined" label="Username" required />
 						</v-col>
-					</row>
-					<row v-if="passwordResetSignal==2">
+					</v-row>
+					<v-row v-if="passwordResetSignal==2">
 						<v-col>
 							<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
 							clearable @click:clear="confirmUserCodeModel = undefined"
@@ -169,16 +171,17 @@
 							]" 
 							variant="outlined" density="compact" />
 						</v-col>
-					</row>
+					</v-row>
 						
-					<row v-if="passwordResetSignal==3">
+					<v-row v-if="passwordResetSignal==3">
 						<p>Your Password has been reset.</p>
-					</row>
+					</v-row>
 						
 				</v-card-text>
 
 				<v-card-actions>
-					<v-col> <v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
+					<v-col> 
+						<v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
 					@click="passwordResetNextStep"
 					> 
 						OK 
@@ -306,10 +309,6 @@ const restartConfirm = ref()
 const openDialogFlag = ref()
 const openResetPasswordDialogFlag = ref()
 
-/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-|||                       MOVE THIS CODE WHEN FINISHED	
-|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| */
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const workingEmailFieldRef = ref()
 const clearWorkingEmailModelValidationError = () => workingEmailFieldRef.value.resetValidation()
@@ -393,10 +392,39 @@ Hub.listen('auth', (data) => {
 					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const passwordResetNextStep = () => {
+
+	switch (passwordResetSignal.value) {
+		case 0:
+							info(`passwordResetNextStep > Case 0 -- Fini`)
+			break;
+		case 1:
+							info1(`passwordResetNextStep > Case 1 -- UID`)
+			break;
+		case 2:
+							info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+			break;
+		case 3:
+							info3(`passwordResetNextStep > Case 3 -- Msg`)
+			break;
+	}
+
+
+
+
 	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
 }
-		
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+
+
+
+
+
+
+
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
 		

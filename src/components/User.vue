@@ -126,38 +126,46 @@
 	<!-- PopUp Reset Password Dialog -- Modal -->
 	<v-row justify="center" v-if="openResetPasswordDialogFlag">
 		<v-dialog activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card color="background_alt" border="lg" __style="padding-bottom:0em;"
-			class="ma-auto" __GLOBAL__ height="18em" width="30em" elevation="24">
-					<v-card-text> 
-						<v-row v-if="passwordResetSignal < 3">
-							<v-col ><p class="text-h4">Reset Password</p></v-col>
-							<v-col cols="1" class="justify-end">
-								<v-btn icon="$close" size="large" variant="text" @click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"></v-btn>
-							</v-col>
-						</v-row>
-						<v-row v-else >
-							<p class="text-h4 mx-auto my-5">Reset Password Success</p>
-						</v-row>
-
-					<v-row v-if="passwordResetSignal==1" class="ma-auto" __style="margin-top:-2em">
-						<v-col>
-							<v-text-field __class="ma-auto"
-							id="usernameSuId" v-model="workingUsernameModel" 
-							ref="workingUsernameFieldRef"
-							clearable @click:clear="clearWorkingUsernameModelValidationError"
-							:rules="[
-								value => checkWorkingUsernameTooShort(value),
-								value => checkWorkingUsernameFirstChar(value),
-								value => checkWorkingUsernameSpecialCharExceptions(value)
-							]" 
-							density="compact" variant="outlined" label="Username" required />
+			<v-card class="mx-auto" _height="18em" width="21em" 
+			color="background_alt" border="lg" elevation="24">
+				<v-card-title>
+					<v-row v-if="passwordResetSignal < 3">
+						<v-col >
+							<p class="text-h4">Reset Password</p>
+						</v-col>
+						<v-col cols="1" class="justify-end">
+							<v-btn icon="$close" size="large" variant="text" 
+							@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
 						</v-col>
 					</v-row>
-
-					<v-row class="ma-auto" v-if="passwordResetSignal==2">
+					<v-row v-else >
+						<v-col>
+							<p class="text-h4">Reset Success</p>
+						</v-col>
+					</v-row>
+				</v-card-title>
+				<v-card-text>
+					<v-row v-if="passwordResetSignal==1">
+						<v-col cols="12">
+						<v-text-field style="height:1.75em;"
+						id="usernameSuId" 
+						v-model="workingUsernameModel" 
+						ref="workingUsernameFieldRef"
+						clearable @click:clear="clearWorkingUsernameModelValidationError"
+						:rules="[
+							value => checkWorkingUsernameTooShort(value),
+							value => checkWorkingUsernameFirstChar(value),
+							value => checkWorkingUsernameSpecialCharExceptions(value)
+						]" 
+						density="compact" 
+						variant="outlined" 
+						label="Username" 
+						required />
+						</v-col>
+					</v-row>
+					<v-row v-if="passwordResetSignal==2">
 						<v-col cols="12">
 							<v-text-field style="height:1.75em;" 
-
 							label="Confirmation Code" v-model="confirmUserCodeModel" 
 							clearable @click:clear="confirmUserCodeModel = undefined"
 							id="ConfCode" placeholder="Enter your code" 
@@ -165,7 +173,6 @@
 						</v-col>
 						<v-col cols="12">
 							<v-text-field style="height:1.75em;" 
-							
 							label="New Password"  v-model= "newWorkingPasswordModel" 
 							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
 							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
@@ -178,30 +185,18 @@
 							variant="outlined" density="compact" />
 						</v-col>
 					</v-row>
-
-
 					<v-row v-if="passwordResetSignal==3">
-						<p class="ma-auto text-body-1" >Your Password has been Updated.</p>
-						<!-- <p class="text-body-1 ma-auto" >Your Password has been Updated.</p> -->
+						<p class="mx-auto text-body-1" >Your Password has been Updated.</p>
 					</v-row>
-
-						
 				</v-card-text>
-
 				<v-card-actions>
-					<v-col no-gutter> 
-						<v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
-						@click="passwordResetNextStep"
-						> 
-						<!-- <v-btn block color="surface" style="padding:0em; background-color:rgb(var(--v-theme-primary))"
-						@click="passwordResetNextStep"
-						>  -->
-
-							OK 
-						</v-btn> 
-					</v-col>
+						<v-col> 
+							<v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
+							@click="passwordResetNextStep"> 
+								OK 
+							</v-btn> 
+						</v-col>
 				</v-card-actions>
-
 			</v-card>
 		</v-dialog>
 	</v-row>
@@ -292,6 +287,8 @@ import { checkPasswordSpecialChars, checkPasswordTooShort }
 	from "../components/PasswordParts/PasswordValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const DEBUG_Model = ref()
+
 const SignInSignUpTab = ref()
 const errorSigningInMessage = ref("")
 

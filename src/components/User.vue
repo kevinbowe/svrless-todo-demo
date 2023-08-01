@@ -126,21 +126,23 @@
 	<!-- PopUp Reset Password Dialog -- Modal -->
 	<v-row justify="center" v-if="openResetPasswordDialogFlag">
 		<v-dialog activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card color="background_alt" border="lg" 
-						class="ma-auto" height="32em" width="30em" elevation="24">
-				<v-card-text> 
-					<v-row>
-						<v-col ><h1>Reset Password</h1></v-col>
-						<v-col cols="1" class="justify-end">
-							<v-btn icon="$close" size="large" variant="text" @click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"></v-btn>
-						</v-col>
-					</v-row>
+			<v-card color="background_alt" border="lg" __style="padding-bottom:0em;"
+			class="ma-auto" __GLOBAL__ height="18em" width="30em" elevation="24">
+					<v-card-text> 
+						<v-row v-if="passwordResetSignal < 3">
+							<v-col ><p class="text-h4">Reset Password</p></v-col>
+							<v-col cols="1" class="justify-end">
+								<v-btn icon="$close" size="large" variant="text" @click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"></v-btn>
+							</v-col>
+						</v-row>
+						<v-row v-else >
+							<p class="text-h4 mx-auto my-5">Reset Password Success</p>
+						</v-row>
 
-					Password Reset Signal [ {{ passwordResetSignal }} ]
-
-					<v-row v-if="passwordResetSignal==1">
+					<v-row v-if="passwordResetSignal==1" class="ma-auto" __style="margin-top:-2em">
 						<v-col>
-							<v-text-field id="usernameSuId" v-model="workingUsernameModel" 
+							<v-text-field __class="ma-auto"
+							id="usernameSuId" v-model="workingUsernameModel" 
 							ref="workingUsernameFieldRef"
 							clearable @click:clear="clearWorkingUsernameModelValidationError"
 							:rules="[
@@ -151,18 +153,20 @@
 							density="compact" variant="outlined" label="Username" required />
 						</v-col>
 					</v-row>
-					<v-row v-if="passwordResetSignal==2">
-						<v-col>
-							<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
+
+					<v-row class="ma-auto" v-if="passwordResetSignal==2">
+						<v-col cols="12">
+							<v-text-field style="height:1.75em;" 
+
+							label="Confirmation Code" v-model="confirmUserCodeModel" 
 							clearable @click:clear="confirmUserCodeModel = undefined"
 							id="ConfCode" placeholder="Enter your code" 
-							__style="height:1.75em;" 
 							variant="outlined" density="compact"/>
 						</v-col>
-					</v-row>
-					<v-row v-if="passwordResetSignal==2">
-						<v-col>
-							<v-text-field label="New Password"  v-model= "newWorkingPasswordModel" 
+						<v-col cols="12">
+							<v-text-field style="height:1.75em;" 
+							
+							label="New Password"  v-model= "newWorkingPasswordModel" 
 							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
 							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
 							ref=newWorkingPasswordRef
@@ -170,24 +174,32 @@
 							:rules="[ 
 								value => checkPasswordTooShort(value),
 								value => checkPasswordSpecialChars(value),
-							]" 
+							]"
 							variant="outlined" density="compact" />
 						</v-col>
 					</v-row>
-						
+
+
 					<v-row v-if="passwordResetSignal==3">
-						<p>Your Password has been reset.</p>
+						<p class="ma-auto text-body-1" >Your Password has been Updated.</p>
+						<!-- <p class="text-body-1 ma-auto" >Your Password has been Updated.</p> -->
 					</v-row>
+
 						
 				</v-card-text>
 
 				<v-card-actions>
-					<v-col> 
+					<v-col no-gutter> 
 						<v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
-					@click="passwordResetNextStep"
-					> 
-						OK 
-					</v-btn> </v-col>
+						@click="passwordResetNextStep"
+						> 
+						<!-- <v-btn block color="surface" style="padding:0em; background-color:rgb(var(--v-theme-primary))"
+						@click="passwordResetNextStep"
+						>  -->
+
+							OK 
+						</v-btn> 
+					</v-col>
 				</v-card-actions>
 
 			</v-card>
@@ -409,7 +421,7 @@ const passwordResetNextStep = () => {
 			//				This will generate a confirmation code.
 			try {
 								info("   workingUsernameModel.value", workingUsernameModel.value)
-				Auth.forgotPassword(workingUsernameModel.value)
+				// Auth.forgotPassword(workingUsernameModel.value)
 			} catch(err) {
 				console.log(err);
 			}
@@ -421,10 +433,10 @@ const passwordResetNextStep = () => {
 								info(`   workingUsernameModel.value [ ${workingUsernameModel.value} ]`)
 								info(`   confirmUserCodeModel.value [ ${confirmUserCodeModel.value} ]`)
 								info(`   newWorkingPasswordModel.value [ ${newWorkingPasswordModel.value} ]`)				
-				const data = Auth.forgotPasswordSubmit(
-					workingUsernameModel.value, 
-					confirmUserCodeModel.value, 
-					newWorkingPasswordModel.value);
+				// const data = Auth.forgotPasswordSubmit(
+				// 	workingUsernameModel.value, 
+				// 	confirmUserCodeModel.value, 
+				// 	newWorkingPasswordModel.value);
 				console.log(data);
 			} catch(err) {
 				console.log(err);

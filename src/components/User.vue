@@ -409,7 +409,7 @@ const passwordResetNextStep = () => {
 			//				This will generate a confirmation code.
 			try {
 								info("   workingUsernameModel.value", workingUsernameModel.value)
-				// Auth.forgotPassword(workingUsernameModel.value);
+				Auth.forgotPassword(workingUsernameModel.value)
 			} catch(err) {
 				console.log(err);
 			}
@@ -421,11 +421,11 @@ const passwordResetNextStep = () => {
 								info(`   workingUsernameModel.value [ ${workingUsernameModel.value} ]`)
 								info(`   confirmUserCodeModel.value [ ${confirmUserCodeModel.value} ]`)
 								info(`   newWorkingPasswordModel.value [ ${newWorkingPasswordModel.value} ]`)				
-				// const data = Auth.forgotPasswordSubmit(
-				// 	workingUsernameModel.value, 
-				// 	confirmUserCodeModel.value, 
-				// 	newWorkingPasswordModel.value);
-				// console.log(data);
+				const data = Auth.forgotPasswordSubmit(
+					workingUsernameModel.value, 
+					confirmUserCodeModel.value, 
+					newWorkingPasswordModel.value);
+				console.log(data);
 			} catch(err) {
 				console.log(err);
 			}

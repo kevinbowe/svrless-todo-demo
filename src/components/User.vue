@@ -19,6 +19,7 @@
 									</v-card>
 								</v-col>
 							</v-row>
+							<p>Signal --- {{passwordResetSignal}}</p>
 							<v-row no-gutters>
 								<v-col cols="12">
 									<v-text-field label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
@@ -38,7 +39,7 @@
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
 								_INSERT_CODE_TO_SET_STEP_TO_ONE
-								@click="openResetPasswordDialogFlag = true; passwordResetSignal = 1" > 
+								@click="openResetPasswordDialogFlag = true; passwordResetNextStep()" > 
 									<v-tooltip activator="parent"> Reset/Forgot Password</v-tooltip>
 									<p>Reset Password</p>
 								</v-btn>
@@ -158,7 +159,8 @@
 							__style="height:1.75em;" 
 							variant="outlined" density="compact"/>
 						</v-col>
-						
+					</v-row>
+					<v-row v-if="passwordResetSignal==2">
 						<v-col>
 							<v-text-field label="New Password"  v-model= "newWorkingPasswordModel" 
 							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
@@ -326,12 +328,12 @@ const newWorkingPasswordRef = ref()
 const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordRef.value.resetValidation()
 
 /**
- * Request == 1
- * Confirm == 2
- * Fini ===== 3
- * Done ===== 0
+ * Done/Ready == 0
+ * Request ===== 1
+ * Confirm ===== 2
+ * Fini ======== 3
  */
-const passwordResetSignal = ref()
+const passwordResetSignal = ref(0)
 
 const emit = defineEmits()
 
@@ -395,16 +397,43 @@ const passwordResetNextStep = () => {
 
 	switch (passwordResetSignal.value) {
 		case 0:
-							info(`passwordResetNextStep > Case 0 -- Fini`)
+				bar()
+				info(`passwordResetNextStep > Case 0 -- Fini`)
+				info(`workingUsernameModel.value [ ${ workingUsernameModel.value} ] `)
 			break;
 		case 1:
-							info1(`passwordResetNextStep > Case 1 -- UID`)
+			greybar()
+			info1(`   passwordResetNextStep > Case 1 -- UID`)
+
+			// 			Collect the UID and send to Cognito.
+			//				This will generate a confirmation code.
+			try {
+								info("   workingUsernameModel.value", workingUsernameModel.value)
+				// Auth.forgotPassword(workingUsernameModel.value);
+			} catch(err) {
+				console.log(err);
+			}
 			break;
 		case 2:
-							info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+			greybar()
+			info2(`   passwordResetNextStep > Case 2 -- Conf Code & PID`)
+			try {
+								info(`   workingUsernameModel.value [ ${workingUsernameModel.value} ]`)
+								info(`   confirmUserCodeModel.value [ ${confirmUserCodeModel.value} ]`)
+								info(`   newWorkingPasswordModel.value [ ${newWorkingPasswordModel.value} ]`)				
+				// const data = Auth.forgotPasswordSubmit(
+				// 	workingUsernameModel.value, 
+				// 	confirmUserCodeModel.value, 
+				// 	newWorkingPasswordModel.value);
+				// console.log(data);
+			} catch(err) {
+				console.log(err);
+			}
+
 			break;
 		case 3:
-							info3(`passwordResetNextStep > Case 3 -- Msg`)
+			greybar()
+			info3(`   passwordResetNextStep > Case 3 -- Msg`)
 			break;
 	}
 

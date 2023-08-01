@@ -19,7 +19,6 @@
 									</v-card>
 								</v-col>
 							</v-row>
-							<p>Signal --- {{passwordResetSignal}}</p>
 							<v-row no-gutters>
 								<v-col cols="12">
 									<v-text-field label="Username" id="userSignInId" v-model="workingUsernameModel" density="compact"  
@@ -38,7 +37,6 @@
 							
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
-								_INSERT_CODE_TO_SET_STEP_TO_ONE
 								@click="openResetPasswordDialogFlag = true; passwordResetNextStep()" > 
 									<v-tooltip activator="parent"> Reset/Forgot Password</v-tooltip>
 									<p>Reset Password</p>
@@ -403,51 +401,37 @@ Hub.listen('auth', (data) => {
 					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const passwordResetNextStep = () => {
-
 	switch (passwordResetSignal.value) {
 		case 0:
-				bar()
-				info(`passwordResetNextStep > Case 0 -- Fini`)
-				info(`workingUsernameModel.value [ ${ workingUsernameModel.value} ] `)
+							// info(`passwordResetNextStep > Case 0 -- Fini`)
 			break;
 		case 1:
-			greybar()
-			info1(`   passwordResetNextStep > Case 1 -- UID`)
-
+							// info1(`passwordResetNextStep > Case 1 -- UID`)
 			// 			Collect the UID and send to Cognito.
 			//				This will generate a confirmation code.
 			try {
-								info("   workingUsernameModel.value", workingUsernameModel.value)
 				// Auth.forgotPassword(workingUsernameModel.value)
 			} catch(err) {
 				console.log(err);
 			}
 			break;
+
 		case 2:
-			greybar()
-			info2(`   passwordResetNextStep > Case 2 -- Conf Code & PID`)
+								// info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
 			try {
-								info(`   workingUsernameModel.value [ ${workingUsernameModel.value} ]`)
-								info(`   confirmUserCodeModel.value [ ${confirmUserCodeModel.value} ]`)
-								info(`   newWorkingPasswordModel.value [ ${newWorkingPasswordModel.value} ]`)				
-				// const data = Auth.forgotPasswordSubmit(
+				// Auth.forgotPasswordSubmit(
 				// 	workingUsernameModel.value, 
 				// 	confirmUserCodeModel.value, 
 				// 	newWorkingPasswordModel.value);
-				console.log(data);
 			} catch(err) {
 				console.log(err);
 			}
-
 			break;
+
 		case 3:
-			greybar()
-			info3(`   passwordResetNextStep > Case 3 -- Msg`)
+								// info3(`   passwordResetNextStep > Case 3 -- Msg`)
 			break;
 	}
-
-
-
 
 	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true

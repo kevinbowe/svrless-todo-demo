@@ -32,9 +32,9 @@
 									</v-text-field>
 								</v-col>
 							</v-row>
-
 							<v-btn :disabled="!isCompleteUserSignIn" size="large" color="primary" block class="mb-3" @click="signInUser" > Sign In </v-btn>
-							
+
+							<!-- Reset Password Link -->
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
 								@click="openResetPasswordDialogFlag = true; passwordResetNextStep()" > 
@@ -120,140 +120,103 @@
 			</v-card>
 		</v-col>
 	</v-row>
-				
+
 	<!-- PopUp Reset Password Dialog -- Modal -->
 	<v-row justify="center" v-if="openResetPasswordDialogFlag">
 		<v-dialog __RESET_SIGNAL_1__ 
-			v-if="passwordResetSignal == 1"
-			activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card class="mx-auto" width="21em" 
-			color="background_alt" border="lg" elevation="24">
-				<v-card-title>
-					<v-row>
-						<v-col >
-							<p class="text-h4">Reset Password</p>
-						</v-col>
-						<v-col cols="1" class="justify-end">
-							<v-btn icon="$close" size="large" variant="text" 
-							@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
-						</v-col>
-					</v-row>
-				</v-card-title>
+		v-if="passwordResetSignal == 1" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
 				<v-form validate-on="submit" @submit.prevent="submitSignal" >
-				<v-card-text>
-					<v-row v-if="passwordResetSignal==1">
-						<v-col cols="12">
-						<v-text-field style="height:1.75em;"
-						v-model="workingUsernameModel" 
-						ref="workingUsernameFieldRef"
+					<v-card-title>
+						<v-row>
+							<v-col >
+								<p class="text-h4">Reset Password</p>
+							</v-col>
+							<v-col cols="1" class="justify-end">
+								<v-btn style="padding-bottom:3em;"
+								icon="$close" size="large" variant="text" 
+								@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
+							</v-col>
+						</v-row>
+					</v-card-title>
+					<v-card-text>
+						<v-text-field
+						v-model="workingUsernameModel" ref="workingUsernameFieldRef"
 						clearable @click:clear="clearWorkingUsernameModelValidationError"
 						:rules="[
 							value => checkWorkingUsernameTooShort(value),
 							value => checkWorkingUsernameFirstChar(value),
 							value => checkWorkingUsernameSpecialCharExceptions(value)
 						]" 
-						density="compact" 
-						variant="outlined" 
-						label="Username" 
-						required />
-						</v-col>
-					</v-row>
+						density="compact" variant="outlined" label="Username" required />
 					</v-card-text>
 					<v-card-actions>
-							<v-col> 
-								<v-btn :disabled="!workingUsernameModel" type="submit" block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
-									OK 
-								</v-btn> 
-							</v-col>
+						<v-btn type="submit" :disabled="!workingUsernameModel" block color="surface" 
+						style="background-color:rgb(var(--v-theme-primary))"> 
+							OK 
+						</v-btn> 
 					</v-card-actions>
 				</v-form>
 			</v-card>
 		</v-dialog>
 
 		<v-dialog __RESET_SIGNAL_2__ 
-		v-if="passwordResetSignal == 2"
-		activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card class="mx-auto" width="21em" 
-			color="background_alt" border="lg" elevation="24">
-				<v-card-title>
-					<v-row>
-						<v-col >
-							<p class="text-h4">Reset Password</p>
-						</v-col>
-						<v-col cols="1" class="justify-end">
-							<v-btn icon="$close" size="large" variant="text" 
-							@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
-						</v-col>
-					</v-row>
-				</v-card-title>
+		v-if="passwordResetSignal == 2" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
 				<v-form validate-on="submit" @submit.prevent="submitSignal">
+					<v-card-title>
+						<v-row>
+							<v-col >
+								<p class="text-h4">Reset Password</p>
+							</v-col>
+							<v-col cols="1" class="justify-end">
+								<v-btn style="padding-bottom:3em;"
+								icon="$close" size="large" variant="text" 
+								@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
+							</v-col>
+						</v-row>
+					</v-card-title>
 					<v-card-text>
-					<v-row v-if="passwordResetSignal==2">
-						<v-col cols="12">
-							<v-text-field style="height:1.75em;" 
-							label="Confirmation Code" v-model="confirmUserCodeModel" 
+						<v-row __User_Code__ >
+							<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
 							clearable @click:clear="confirmUserCodeModel = undefined"
-								:rules="[
-									value => !!value || 'Required',
-								]"
-								placeholder="Enter your code" 
-							variant="outlined" density="compact"/>
-						</v-col>
-						<v-col cols="12">
-							<v-text-field style="height:1.75em;" 
-							label="New Password"  v-model= "newWorkingPasswordModel" 
+							:rules="[ value => !!value || 'Required', ]"
+							placeholder="Enter your code" variant="outlined" density="compact"/>
+						</v-row>
+						<v-row __New_Password__>
+							<v-text-field label="New Password" v-model="newWorkingPasswordModel" 
 							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
-							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
+							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  
+							@click:append-inner="passwordIcon1 = !passwordIcon1"
 							ref=newWorkingPasswordRef
 							clearable @click:clear="clearNewWorkingPasswordModelValidationError"
 							:rules="[ 
-									value => !!value || 'Required',
+								value => !!value || 'Required',
 								value => checkPasswordTooShort(value),
 								value => checkPasswordSpecialChars(value),
 							]"
 							variant="outlined" density="compact" />
-						</v-col>
-					</v-row>
-						
+						</v-row>
 					</v-card-text>
 					<v-card-actions>
-							<v-col> 
-								<v-btn :disabled="!confirmUserCodeModel || !newWorkingPasswordModel" type="submit" block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
-									OK 
-								</v-btn> 
-							</v-col>
+						<v-btn type="submit" :disabled="!confirmUserCodeModel || !newWorkingPasswordModel" 
+						block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
+							OK 
+						</v-btn> 
 					</v-card-actions>
 				</v-form>
 			</v-card>
 		</v-dialog>
 
-		<v-dialog __RESET_SIGNAL_3__ 
-		v-if="passwordResetSignal == 3"
-		activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card class="mx-auto" width="21em" 
-			color="background_alt" border="lg" elevation="24">
-				<v-card-title>
-					<v-row>
-						<v-col>
-							<p class="text-h4">Reset Success</p>
-						</v-col>
-					</v-row>
-				</v-card-title>
-				<v-card-text>
-					<v-row>
-						<p class="mx-auto text-body-1" >Your Password has been Updated.</p>
-					</v-row>
-				</v-card-text>
-				<v-card-actions>
-						<v-col> 
-							<v-btn block color="surface" style="background-color:rgb(var(--v-theme-primary))"
-							@click="passwordResetNextStep"> 
-								OK 
-							</v-btn> 
-						</v-col>
-				</v-card-actions>
+		<v-overlay __RESET_SIGNAL_3__
+		v-if="passwordResetSignal == 3" v-model="overlayVisible"
+		class="align-center justify-center">
+			<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
+				<p class="text-h4"> Reset Success </p>
+				<p> Your Password has been Updated. </p>
+				<v-btn class="mt-7" block color="primary" @click="passwordResetNextStep"> OK </v-btn> 
 			</v-card>
-		</v-dialog>
+		</v-overlay>
 	</v-row>
 
 	<!-- PopUp Message Dialog -- Modal -->
@@ -309,6 +272,7 @@
 	</v-row>
 </template>
 
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 <script lang="ts">
 	export const isSession = ref()
 	export default {inheritAttrs: false}
@@ -374,6 +338,15 @@ const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
 const openResetPasswordDialogFlag = ref()
+const overlayVisible = ref(true)
+/**
+ * Done/Ready == 0
+ * Request ===== 1
+ * Confirm ===== 2
+ * Fini ======== 3
+ */
+const passwordResetSignal = ref(0)
+const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const workingEmailFieldRef = ref()
@@ -390,16 +363,6 @@ const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.v
 
 const newWorkingPasswordRef = ref()
 const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordRef.value.resetValidation()
-
-/**
- * Done/Ready == 0
- * Request ===== 1
- * Confirm ===== 2
- * Fini ======== 3
- */
-const passwordResetSignal = ref(0)
-
-const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
@@ -462,18 +425,18 @@ const passwordResetNextStep = () => {
 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
 
 	switch (passwordResetSignal.value) {
-		case 0:			info(`passwordResetNextStep > Case 0 -- Fini`)
+		case 0:			//info(`passwordResetNextStep > Case 0 -- Fini`)
 			break;
-		case 1:			info1(`passwordResetNextStep > Case 1 -- UID`)
+		case 1:			//info1(`passwordResetNextStep > Case 1 -- UID`)
 			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
 			try { // Auth.forgotPassword(workingUsernameModel.value)
 			} catch(err) { console.log(err);}
 			break;
-		case 2:			info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+		case 2:			//info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
 			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
 			} catch(err) { console.log(err); }
 			break;
-		case 3:			info3(`   passwordResetNextStep > Case 3 -- Msg`)
+		case 3:			//info3(`   passwordResetNextStep > Case 3 -- Msg`)
 			break;
 	}
 }

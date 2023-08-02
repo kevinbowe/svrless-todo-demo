@@ -3,11 +3,14 @@ import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../../my
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../../my-util-code/MyConsoleUtil"
 
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Username Validation */
 /* ----------------------------------------------------------------------------- */
 //				Put functions here
 export async function checkWorkingUsernameTooShort (workingPreferred_usernameModel) {
+	if (!workingPreferred_usernameModel) return "Required"
+
 	if (workingPreferred_usernameModel.length > 0 && workingPreferred_usernameModel.length <= 2) 
 		return 'User name is too short. Please try another one.'
 	return true

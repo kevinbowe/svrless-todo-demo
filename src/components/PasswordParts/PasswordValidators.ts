@@ -1,5 +1,6 @@
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 export async function checkPasswordTooShort (password) {
+	if (!password) return "Required"
 	if (password.length <= 5) return 'User password is too short. Please try another one.'
 	return true
 }

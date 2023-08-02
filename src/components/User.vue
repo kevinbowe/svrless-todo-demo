@@ -123,11 +123,13 @@
 				
 	<!-- PopUp Reset Password Dialog -- Modal -->
 	<v-row justify="center" v-if="openResetPasswordDialogFlag">
-		<v-dialog activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card class="mx-auto" _height="18em" width="21em" 
+		<v-dialog __RESET_SIGNAL_1__ 
+			v-if="passwordResetSignal == 1"
+			activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+			<v-card class="mx-auto" width="21em" 
 			color="background_alt" border="lg" elevation="24">
 				<v-card-title>
-					<v-row v-if="passwordResetSignal < 3">
+					<v-row>
 						<v-col >
 							<p class="text-h4">Reset Password</p>
 						</v-col>
@@ -136,17 +138,12 @@
 							@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
 						</v-col>
 					</v-row>
-					<v-row v-else >
-						<v-col>
-							<p class="text-h4">Reset Success</p>
-						</v-col>
-					</v-row>
 				</v-card-title>
+				<v-form validate-on="submit" @submit.prevent="submitSignal" >
 				<v-card-text>
 					<v-row v-if="passwordResetSignal==1">
 						<v-col cols="12">
 						<v-text-field style="height:1.75em;"
-						id="usernameSuId" 
 						v-model="workingUsernameModel" 
 						ref="workingUsernameFieldRef"
 						clearable @click:clear="clearWorkingUsernameModelValidationError"
@@ -161,12 +158,45 @@
 						required />
 						</v-col>
 					</v-row>
+					</v-card-text>
+					<v-card-actions>
+							<v-col> 
+								<v-btn :disabled="!workingUsernameModel" type="submit" block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
+									OK 
+								</v-btn> 
+							</v-col>
+					</v-card-actions>
+				</v-form>
+			</v-card>
+		</v-dialog>
+
+		<v-dialog __RESET_SIGNAL_2__ 
+		v-if="passwordResetSignal == 2"
+		activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+			<v-card class="mx-auto" width="21em" 
+			color="background_alt" border="lg" elevation="24">
+				<v-card-title>
+					<v-row>
+						<v-col >
+							<p class="text-h4">Reset Password</p>
+						</v-col>
+						<v-col cols="1" class="justify-end">
+							<v-btn icon="$close" size="large" variant="text" 
+							@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
+						</v-col>
+					</v-row>
+				</v-card-title>
+				<v-form validate-on="submit" @submit.prevent="submitSignal">
+					<v-card-text>
 					<v-row v-if="passwordResetSignal==2">
 						<v-col cols="12">
 							<v-text-field style="height:1.75em;" 
 							label="Confirmation Code" v-model="confirmUserCodeModel" 
 							clearable @click:clear="confirmUserCodeModel = undefined"
-							id="ConfCode" placeholder="Enter your code" 
+								:rules="[
+									value => !!value || 'Required',
+								]"
+								placeholder="Enter your code" 
 							variant="outlined" density="compact"/>
 						</v-col>
 						<v-col cols="12">
@@ -177,13 +207,40 @@
 							ref=newWorkingPasswordRef
 							clearable @click:clear="clearNewWorkingPasswordModelValidationError"
 							:rules="[ 
+									value => !!value || 'Required',
 								value => checkPasswordTooShort(value),
 								value => checkPasswordSpecialChars(value),
 							]"
 							variant="outlined" density="compact" />
 						</v-col>
 					</v-row>
-					<v-row v-if="passwordResetSignal==3">
+						
+					</v-card-text>
+					<v-card-actions>
+							<v-col> 
+								<v-btn :disabled="!confirmUserCodeModel || !newWorkingPasswordModel" type="submit" block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
+									OK 
+								</v-btn> 
+							</v-col>
+					</v-card-actions>
+				</v-form>
+			</v-card>
+		</v-dialog>
+
+		<v-dialog __RESET_SIGNAL_3__ 
+		v-if="passwordResetSignal == 3"
+		activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+			<v-card class="mx-auto" width="21em" 
+			color="background_alt" border="lg" elevation="24">
+				<v-card-title>
+					<v-row>
+						<v-col>
+							<p class="text-h4">Reset Success</p>
+						</v-col>
+					</v-row>
+				</v-card-title>
+				<v-card-text>
+					<v-row>
 						<p class="mx-auto text-body-1" >Your Password has been Updated.</p>
 					</v-row>
 				</v-card-text>
@@ -346,7 +403,7 @@ const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/
-/**/					const BLOCKAPIFLAG = ref(true)										 /**/
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /*																											*/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /*																											*/
@@ -401,28 +458,36 @@ Hub.listen('auth', (data) => {
 					
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const passwordResetNextStep = () => {
+	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
+	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
+
 	switch (passwordResetSignal.value) {
-		case 0:			// info(`passwordResetNextStep > Case 0 -- Fini`)
+		case 0:			info(`passwordResetNextStep > Case 0 -- Fini`)
 			break;
-		case 1:			// info1(`passwordResetNextStep > Case 1 -- UID`)
+		case 1:			info1(`passwordResetNextStep > Case 1 -- UID`)
 			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
 			try { // Auth.forgotPassword(workingUsernameModel.value)
 			} catch(err) { console.log(err);}
 			break;
-		case 2:			// info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+		case 2:			info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
 			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
 			} catch(err) { console.log(err); }
 			break;
-		case 3:			// info3(`   passwordResetNextStep > Case 3 -- Msg`)
+		case 3:			info3(`   passwordResetNextStep > Case 3 -- Msg`)
 			break;
 	}
-	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
-	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitSignal (event) {
+	if(BLOCKAPI("submitPassword function ")) return
 
+	const results = await event
+	if(!results.valid) return /* Cancel Submission if validation FAILED */
 
+	//				If we get here, validation was sucessful
+	passwordResetNextStep()
+}
 
 
 

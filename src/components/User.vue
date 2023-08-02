@@ -402,37 +402,20 @@ Hub.listen('auth', (data) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const passwordResetNextStep = () => {
 	switch (passwordResetSignal.value) {
-		case 0:
-							// info(`passwordResetNextStep > Case 0 -- Fini`)
+		case 0:			// info(`passwordResetNextStep > Case 0 -- Fini`)
 			break;
-		case 1:
-							// info1(`passwordResetNextStep > Case 1 -- UID`)
-			// 			Collect the UID and send to Cognito.
-			//				This will generate a confirmation code.
-			try {
-				// Auth.forgotPassword(workingUsernameModel.value)
-			} catch(err) {
-				console.log(err);
-			}
+		case 1:			// info1(`passwordResetNextStep > Case 1 -- UID`)
+			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
+			try { // Auth.forgotPassword(workingUsernameModel.value)
+			} catch(err) { console.log(err);}
 			break;
-
-		case 2:
-								// info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
-			try {
-				// Auth.forgotPasswordSubmit(
-				// 	workingUsernameModel.value, 
-				// 	confirmUserCodeModel.value, 
-				// 	newWorkingPasswordModel.value);
-			} catch(err) {
-				console.log(err);
-			}
+		case 2:			// info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
+			} catch(err) { console.log(err); }
 			break;
-
-		case 3:
-								// info3(`   passwordResetNextStep > Case 3 -- Msg`)
+		case 3:			// info3(`   passwordResetNextStep > Case 3 -- Msg`)
 			break;
 	}
-
 	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
 }

@@ -144,6 +144,7 @@
 						v-model="workingUsernameModel" ref="workingUsernameFieldRef"
 						clearable @click:clear="clearWorkingUsernameModelValidationError"
 						:rules="[
+							value => !!value,
 							value => checkWorkingUsernameTooShort(value),
 							value => checkWorkingUsernameFirstChar(value),
 							value => checkWorkingUsernameSpecialCharExceptions(value)
@@ -191,7 +192,8 @@
 							ref=newWorkingPasswordRef
 							clearable @click:clear="clearNewWorkingPasswordModelValidationError"
 							:rules="[ 
-								value => !!value || 'Required',
+								// value => !!value || 'Required',
+								value => !!value,
 								value => checkPasswordTooShort(value),
 								value => checkPasswordSpecialChars(value),
 							]"
@@ -451,12 +453,6 @@ async function submitSignal (event) {
 	//				If we get here, validation was sucessful
 	passwordResetNextStep()
 }
-
-
-
-
-
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )

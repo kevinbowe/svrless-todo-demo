@@ -62,8 +62,7 @@
 							ref="confirmationCode_RESET_PID_FieldRef" 
 							clearable @click:clear="clearConfirmationCode_RESET_PID_ModelValidationError"
 							:rules="[ 
-								value => !!value,
-								value => value.length <= 1 ? 'Invalid Code' : true
+								value => !!value || value.length <= 1 ? 'Invalid Code' : true,
 						 	]"
 							placeholder="Enter your code" variant="outlined" density="compact"/>
 						</v-row>

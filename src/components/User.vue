@@ -140,9 +140,9 @@
 						</v-row>
 					</v-card-title>
 					<v-card-text>
-						<v-text-field
-						v-model="workingUsernameModel" ref="workingUsernameFieldRef"
-						clearable @click:clear="clearWorkingUsernameModelValidationError"
+						<v-text-field __User_Name__
+						v-model="workingUsername_RESET_PID_Model" ref="workingUsername_RESET_PID_FieldRef"
+						clearable @click:clear="clearWorkingUsername_RESET_PID_ModelValidationError"
 						:rules="[
 							value => !!value,
 							value => checkWorkingUsernameTooShort(value),
@@ -152,7 +152,7 @@
 						density="compact" variant="outlined" label="Username" required />
 					</v-card-text>
 					<v-card-actions>
-						<v-btn type="submit" :disabled="!workingUsernameModel" block color="surface" 
+						<v-btn type="submit" :disabled="!workingUsername_RESET_PID_Model" block color="surface" 
 						style="background-color:rgb(var(--v-theme-primary))"> 
 							OK 
 						</v-btn> 
@@ -160,7 +160,6 @@
 				</v-form>
 			</v-card>
 		</v-dialog>
-
 		<v-dialog __RESET_SIGNAL_2__ 
 		v-if="passwordResetSignal == 2" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
 			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
@@ -179,18 +178,22 @@
 					</v-card-title>
 					<v-card-text>
 						<v-row __User_Code__ >
-							<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
-							clearable @click:clear="confirmUserCodeModel = undefined"
-							:rules="[ value => !!value || 'Required', ]"
+							<v-text-field label="Confirmation Code" v-model="confirmationCode_RESET_PID_Model"
+							ref="confirmationCode_RESET_PID_FieldRef" 
+							clearable @click:clear="clearConfirmationCode_RESET_PID_ModelValidationError"
+							:rules="[ 
+								value => !!value,
+								value => value.length <= 1 ? 'Invalid Code' : true
+						 	]"
 							placeholder="Enter your code" variant="outlined" density="compact"/>
 						</v-row>
 						<v-row __New_Password__>
-							<v-text-field label="New Password" v-model="newWorkingPasswordModel" 
+							<v-text-field label="New Password" v-model="workingPassword_RESET_PID_Model" 
 							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
 							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  
 							@click:append-inner="passwordIcon1 = !passwordIcon1"
-							ref=newWorkingPasswordRef
-							clearable @click:clear="clearNewWorkingPasswordModelValidationError"
+							ref=workingPassword_RESET_PID_FieldRef
+							clearable @click:clear="clearWorkingPassword_RESET_PID_ModelValidationError"
 							:rules="[ 
 								// value => !!value || 'Required',
 								value => !!value,
@@ -201,7 +204,7 @@
 						</v-row>
 					</v-card-text>
 					<v-card-actions>
-						<v-btn type="submit" :disabled="!confirmUserCodeModel || !newWorkingPasswordModel" 
+						<v-btn type="submit" :disabled="!confirmationCode_RESET_PID_Model || !workingPassword_RESET_PID_Model" 
 						block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
 							OK 
 						</v-btn> 
@@ -311,60 +314,60 @@ import { checkPasswordSpecialChars, checkPasswordTooShort }
 const DEBUG_Model = ref()
 
 const SignInSignUpTab = ref()
-const errorSigningInMessage = ref("")
 
 const nicknameModel = ref("")
 const emailModel = ref("")
 const phone_numberModel = ref("")
 const usernameModel = ref("")
-
-const workingUsernameModel = ref("")
 const workingPasswordModel = ref("")
-
-const workingEmailModel =ref("")
-const workingPhone_numberModel = ref("")
-const workingNicknameModel =  ref("")
+const confirmUserCodeModel = ref()
 const workingPreferred_usernameModel = ref("")
-const newWorkingPasswordModel = ref("")
 
 const passwordIcon1 = ref(false)
 const passwordIcon2 = ref(false)
-const passwordIcon2b = ref(false)
 
+const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
-
 const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
-const confirmUserCodeModel = ref()
 
 const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
 const openResetPasswordDialogFlag = ref()
 const overlayVisible = ref(true)
-/**
- * Done/Ready == 0
- * Request ===== 1
- * Confirm ===== 2
- * Fini ======== 3
- */
-const passwordResetSignal = ref(0)
+
+const passwordResetSignal = ref(0) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
+
 const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const workingEmailFieldRef = ref()
+const workingEmailModel =ref("")
+const workingEmailFieldRef = ref("")
 const clearWorkingEmailModelValidationError = () => workingEmailFieldRef.value.resetValidation()
 
-const workingUsernameFieldRef = ref()
+const workingUsernameModel = ref("")
+const workingUsernameFieldRef = ref("")
 const clearWorkingUsernameModelValidationError = () => workingUsernameFieldRef.value.resetValidation()
 
-const workingPhone_numberFieldRef = ref()
+const workingPhone_numberModel = ref("")
+const workingPhone_numberFieldRef = ref("")
 const clearWorkingPhone_numberValidationError = () => workingPhone_numberFieldRef.value.resetValidation()
 
-const workingNicknameFieldRef = ref()
+const workingNicknameModel =  ref("")
+const workingNicknameFieldRef = ref("")
 const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.value.resetValidation()
 
-const newWorkingPasswordRef = ref()
-const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordRef.value.resetValidation()
+const workingPassword_RESET_PID_Model = ref("")
+const workingPassword_RESET_PID_FieldRef = ref("")
+const clearWorkingPassword_RESET_PID_ModelValidationError = () => workingPassword_RESET_PID_FieldRef.value.resetValidation()
+
+const workingUsername_RESET_PID_Model = ref("")
+const workingUsername_RESET_PID_FieldRef = ref("")
+const clearWorkingUsername_RESET_PID_ModelValidationError = () => workingUsername_RESET_PID_FieldRef.value.resetValidation()
+
+const confirmationCode_RESET_PID_Model = ref("")
+const confirmationCode_RESET_PID_FieldRef = ref("")
+const clearConfirmationCode_RESET_PID_ModelValidationError = () => confirmationCode_RESET_PID_FieldRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /*																											*/

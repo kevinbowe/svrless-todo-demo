@@ -2,6 +2,9 @@
 	<!-- SignIn & SignUp Forms -->
 	<v-row no-gutters v-if="!isSession">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
+
+			openResetPasswordDialogFlag ==> [ {{ openResetPasswordDialogFlag }} ]<br><br>
+
 			<v-card variant="outlined" >
 				<v-tabs fixed-tabs v-model="SignInSignUpTab" >
 					<v-tab value="signinTab">Sign In</v-tab>
@@ -37,7 +40,7 @@
 							<!-- Reset Password Link -->
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
-								@click="openResetPasswordDialogFlag = true; passwordResetNextStep()" > 
+								@click="openResetPasswordDialogFlag = true" > 
 									<v-tooltip activator="parent"> Reset/Forgot Password</v-tooltip>
 									<p>Reset Password</p>
 								</v-btn>
@@ -120,9 +123,11 @@
 			</v-card>
 		</v-col>
 	</v-row>
-
+	
 	<!-- PopUp Reset Password Dialog -- Modal -->
-	<v-row justify="center" v-if="openResetPasswordDialogFlag">
+	<ResetPassword v-if="openResetPasswordDialogFlag" @onResetPasswordFini="closeResetPassword"></ResetPassword>
+
+	<!-- <v-row justify="center" v-if="openResetPasswordDialogFlag">
 		<v-dialog __RESET_SIGNAL_1__ 
 		v-if="passwordResetSignal == 1" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
 			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
@@ -159,8 +164,8 @@
 					</v-card-actions>
 				</v-form>
 			</v-card>
-		</v-dialog>
-		<v-dialog __RESET_SIGNAL_2__ 
+		</v-dialog> -->
+		<!-- <v-dialog __RESET_SIGNAL_2__ 
 		v-if="passwordResetSignal == 2" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
 			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
 				<v-form validate-on="submit" @submit.prevent="submitSignal">
@@ -211,9 +216,9 @@
 					</v-card-actions>
 				</v-form>
 			</v-card>
-		</v-dialog>
+		</v-dialog> -->
 
-		<v-overlay __RESET_SIGNAL_3__
+		<!-- <v-overlay __RESET_SIGNAL_3__
 		v-if="passwordResetSignal == 3" v-model="overlayVisible"
 		class="align-center justify-center">
 			<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
@@ -222,7 +227,7 @@
 				<v-btn class="mt-7" block color="primary" @click="passwordResetNextStep"> OK </v-btn> 
 			</v-card>
 		</v-overlay>
-	</v-row>
+	</v-row> -->
 
 	<!-- PopUp Message Dialog -- Modal -->
 	<v-row justify="center" v-if="openDialogFlag" >
@@ -310,6 +315,8 @@ import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWork
 import { checkPasswordSpecialChars, checkPasswordTooShort } 
 	from "../components/PasswordParts/PasswordValidators"
 
+import ResetPassword from "../components/ResetPassword.vue"
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const DEBUG_Model = ref()
 
@@ -336,7 +343,7 @@ const openDialogFlag = ref()
 const openResetPasswordDialogFlag = ref()
 const overlayVisible = ref(true)
 
-const passwordResetSignal = ref(0) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
+// const passwordResetSignal = ref(0) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
 
 const emit = defineEmits()
 
@@ -424,38 +431,45 @@ Hub.listen('auth', (data) => {
 						} 
 					})
 					
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const passwordResetNextStep = () => {
-	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
-	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// const passwordResetNextStep = () => {
+// 	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
+// 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
+// 
+// 	switch (passwordResetSignal.value) {
+// 		case 0:			//info(`passwordResetNextStep > Case 0 -- Fini`)
+// 			break;
+// 		case 1:			//info1(`passwordResetNextStep > Case 1 -- UID`)
+// 			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
+// 			try { // Auth.forgotPassword(workingUsernameModel.value)
+// 			} catch(err) { console.log(err);}
+// 			break;
+// 		case 2:			//info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+// 			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
+// 			} catch(err) { console.log(err); }
+// 			break;
+// 		case 3:			//info3(`   passwordResetNextStep > Case 3 -- Msg`)
+// 			break;
+// 	}
+// }
 
-	switch (passwordResetSignal.value) {
-		case 0:			//info(`passwordResetNextStep > Case 0 -- Fini`)
-			break;
-		case 1:			//info1(`passwordResetNextStep > Case 1 -- UID`)
-			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
-			try { // Auth.forgotPassword(workingUsernameModel.value)
-			} catch(err) { console.log(err);}
-			break;
-		case 2:			//info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
-			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
-			} catch(err) { console.log(err); }
-			break;
-		case 3:			//info3(`   passwordResetNextStep > Case 3 -- Msg`)
-			break;
-	}
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// async function submitSignal (event) {
+// 	if(BLOCKAPI("submitPassword function ")) return
+// 
+// 	const results = await event
+// 	if(!results.valid) return /* Cancel Submission if validation FAILED */
+// 
+// 	//				If we get here, validation was sucessful
+// 	passwordResetNextStep()
+// }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const closeResetPassword = (payload) => { 
+	enter(`closeResetPassword > ${payload.resetPasswordState}`)
+	openResetPasswordDialogFlag.value = payload.resetPasswordState
 }
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function submitSignal (event) {
-	if(BLOCKAPI("submitPassword function ")) return
-
-	const results = await event
-	if(!results.valid) return /* Cancel Submission if validation FAILED */
-
-	//				If we get here, validation was sucessful
-	passwordResetNextStep()
-}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )

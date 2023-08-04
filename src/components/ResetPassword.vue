@@ -12,7 +12,7 @@
 							<v-col cols="1" class="justify-end">
 								<v-btn style="padding-bottom:3em;"
 								icon="$close" size="large" variant="text" 
-								@click="cancelResetPassword"/>
+								@click="exit"/>
 							</v-col>
 						</v-row>
 					</v-card-title>
@@ -51,7 +51,7 @@
 							<v-col cols="1" class="justify-end">
 								<v-btn style="padding-bottom:3em;"
 								icon="$close" size="large" variant="text" 
-								@click="cancelResetPassword"/>
+								@click="exit"/>
 							</v-col>
 						</v-row>
 					</v-card-title>
@@ -97,7 +97,9 @@
 			<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
 				<p class="text-h4"> Reset Success </p>
 				<p> Your Password has been Updated. </p>
-				<v-btn class="mt-7" block color="primary" @click="nextStep"> OK </v-btn> 
+				<v-btn class="mt-7" block color="primary" @click="nextStep"> 
+					OK 
+				</v-btn> 
 			</v-card>
 		</v-overlay>
 	</v-row>
@@ -152,45 +154,43 @@ async function submitSignal (event) {
 	const results = await event
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
 
-	//				If we get here, validation was sucessful
 	nextStep()
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const nextStep = () => {
-	step.value = step.value <= 2 ? ++step.value : 0 
-	showDialog.value = step.value == 0 ? false : true
-
 	switch (step.value) {
-		case 0:			// info(`passwordResetNextStep > Case 0 -- Fini`)
-			cancelResetPassword()
-			// emit( 'onResetPasswordFini', {resetPasswordState: false})
-			break;
-		case 1:			//info1(`passwordResetNextStep > Case 1 -- UID`)
+		
+		case 1:			info1(`passwordResetNextStep > Case 1 -- UID`)
 			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
-			try { // Auth.forgotPassword(workingUsernameModel.value)
-			} catch(err) { console.log(err);}
+			try { Auth.forgotPassword(usernameModel.value) } 
+			catch(err) { 
+				console.log(err);
+			}
 			break;
-		case 2:			//info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
-			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
-			} catch(err) { console.log(err); }
+
+		case 2:			info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+			try { Auth.forgotPasswordSubmit(	usernameModel.value, confcodeModel.value, passwordModel.value);} 
+			catch(err) { console.log(err); }
 			break;
-		case 3:			//info3(`   passwordResetNextStep > Case 3 -- Msg`)
+
+		case 3:			info3(`passwordResetNextStep > Case 3 -- Msg`)
+			exit()
 			break;
 	}
+
+	step.value = step.value <= 2 ? ++step.value : 0 
+	showDialog.value = step.value == 0 ? false : true
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const cancelResetPassword = () => {
-	emit( 'onResetPasswordFini', {resetPasswordState: false})
+const exit = () => {
+	emit( 'onExit', {state: false})
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/*																											*/
 /**/					const BLOCKAPIFLAG = ref(false)										 /**/
-/*																											*/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
-/*																											*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value) 

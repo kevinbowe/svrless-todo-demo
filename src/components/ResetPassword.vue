@@ -1,8 +1,7 @@
 <template>
-	<!-- PopUp Reset Password Dialog -- Modal -->
 	<v-row justify="center">
-		<v-dialog __RESET_SIGNAL_1__ 
-		v-if="passwordResetSignal == 1" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+		<v-dialog __Step_1__ 
+		v-if="step == 1" activator="parent" v-model="showDialog" persistent >
 			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
 				<v-form validate-on="submit" @submit.prevent="submitSignal" >
 					<v-card-title>
@@ -14,14 +13,13 @@
 								<v-btn style="padding-bottom:3em;"
 								icon="$close" size="large" variant="text" 
 								@click="cancelResetPassword"/>
-								<!-- @click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/> -->
 							</v-col>
 						</v-row>
 					</v-card-title>
 					<v-card-text>
 						<v-text-field __User_Name__
-						v-model="workingUsername_RESET_PID_Model" ref="workingUsername_RESET_PID_FieldRef"
-						clearable @click:clear="clearWorkingUsername_RESET_PID_ModelValidationError"
+						v-model="usernameModel" ref="usernameFieldRef"
+						clearable @click:clear="clearUsernameModelValidationError"
 						:rules="[
 							value => !!value,
 							value => checkWorkingUsernameTooShort(value),
@@ -31,7 +29,8 @@
 						density="compact" variant="outlined" label="Username" required />
 					</v-card-text>
 					<v-card-actions>
-						<v-btn type="submit" :disabled="!workingUsername_RESET_PID_Model" block color="surface" 
+
+						<v-btn type="submit" :disabled="!usernameModel" block color="surface" 
 						style="background-color:rgb(var(--v-theme-primary))"> 
 							OK 
 						</v-btn> 
@@ -39,8 +38,9 @@
 				</v-form>
 			</v-card>
 		</v-dialog>
-		<v-dialog __RESET_SIGNAL_2__ 
-		v-if="passwordResetSignal == 2" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
+
+		<v-dialog __Step_2__ 
+		v-if="step == 2" activator="parent" v-model="showDialog" persistent >
 			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
 				<v-form validate-on="submit" @submit.prevent="submitSignal">
 					<v-card-title>
@@ -52,27 +52,26 @@
 								<v-btn style="padding-bottom:3em;"
 								icon="$close" size="large" variant="text" 
 								@click="cancelResetPassword"/>
-								<!-- @click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/> -->
 							</v-col>
 						</v-row>
 					</v-card-title>
 					<v-card-text>
 						<v-row __User_Code__ >
-							<v-text-field label="Confirmation Code" v-model="confirmationCode_RESET_PID_Model"
-							ref="confirmationCode_RESET_PID_FieldRef" 
-							clearable @click:clear="clearConfirmationCode_RESET_PID_ModelValidationError"
+							<v-text-field label="Confirmation Code" v-model="confcodeModel"
+							ref="confcodeFieldRef" 
+							clearable @click:clear="clearConfcodeModelValidationError"
 							:rules="[ 
 								value => value.length <= 5 ? `Invalid Code > Length = [ ${value.length} ]` : true,
 						 	]"
 							placeholder="Enter your code" variant="outlined" density="compact"/>
 						</v-row>
 						<v-row __New_Password__>
-							<v-text-field label="New Password" v-model="workingPassword_RESET_PID_Model" 
-							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
-							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  
-							@click:append-inner="passwordIcon1 = !passwordIcon1"
-							ref=workingPassword_RESET_PID_FieldRef
-							clearable @click:clear="clearWorkingPassword_RESET_PID_ModelValidationError"
+							<v-text-field label="New Password" v-model="passwordModel" 
+							:append-inner-icon="showIcon ? 'mdi-eye' : 'mdi-eye-off'" 
+							prepend-inner-icon="mdi-lock-outline" :type="showIcon ? 'text' : 'password'"  
+							@click:append-inner="showIcon = !showIcon"
+							ref=passwordFieldRef							
+							clearable @click:clear="clearPasswordModelValidationError"
 							:rules="[ 
 								// value => !!value || 'Required',
 								value => !!value,
@@ -83,7 +82,7 @@
 						</v-row>
 					</v-card-text>
 					<v-card-actions>
-						<v-btn type="submit" :disabled="!confirmationCode_RESET_PID_Model || !workingPassword_RESET_PID_Model" 
+						<v-btn type="submit" :disabled="!confcodeModel || !passwordModel" 
 						block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
 							OK 
 						</v-btn> 
@@ -92,13 +91,13 @@
 			</v-card>
 		</v-dialog>
 
-		<v-overlay __RESET_SIGNAL_3__
-		v-if="passwordResetSignal == 3" v-model="overlayVisible"
+		<v-overlay _Step_3__
+		v-if="step == 3" v-model="showOverlay"
 		class="align-center justify-center">
 			<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
 				<p class="text-h4"> Reset Success </p>
 				<p> Your Password has been Updated. </p>
-				<v-btn class="mt-7" block color="primary" @click="passwordResetNextStep"> OK </v-btn> 
+				<v-btn class="mt-7" block color="primary" @click="nextStep"> OK </v-btn> 
 			</v-card>
 		</v-overlay>
 	</v-row>
@@ -106,21 +105,16 @@
 </template>
 
 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
-<script lang="ts">
-	export const isSession = ref()
-	export default {inheritAttrs: false}
-</script>
-
 <script setup lang="ts">
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
-import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
-import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0,} from "../my-util-code/MyConsoleUtil"
+import { bar, whitebar, greybar, } from "../my-util-code/MyConsoleUtil"
 import { err } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-import { Auth, Hub } from 'aws-amplify';
-import { ref, Ref, computed } from 'vue'
+import { Auth } from 'aws-amplify';
+import { ref } from 'vue'
 /* ----------------------------------------------------------------------------- */
 
 import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWorkingUsernameSpecialCharExceptions}
@@ -129,53 +123,27 @@ import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWork
 import { checkPasswordSpecialChars, checkPasswordTooShort } from "../components/PasswordParts/PasswordValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const DEBUG_Model = ref()
 
-const nicknameModel = ref("")
-const emailModel = ref("")
-const phone_numberModel = ref("")
-const usernameModel = ref("")
-
-const passwordIcon1 = ref(false)
-
-const openResetPasswordDialogFlag = ref(true)
-const overlayVisible = ref(true)
-const passwordResetSignal = ref(1) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
+const showIcon = ref(false)
+const showDialog = ref(true)
+const showOverlay = ref(true)
+const step = ref(1) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
 
 const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-const workingUsernameFieldRef = ref("")
-const clearWorkingUsernameModelValidationError = () => workingUsernameFieldRef.value.resetValidation()
+const passwordModel = ref("")
+const passwordFieldRef = ref("")
+const clearPasswordModelValidationError = () => passwordFieldRef.value.resetValidation()
 
-const workingPhone_numberFieldRef = ref("")
-const clearWorkingPhone_numberValidationError = () => workingPhone_numberFieldRef.value.resetValidation()
+const usernameModel = ref("")
+const usernameFieldRef = ref("")
+const clearUsernameModelValidationError = () => usernameFieldRef.value.resetValidation()
 
-const workingPassword_RESET_PID_Model = ref("")
-const workingPassword_RESET_PID_FieldRef = ref("")
-const clearWorkingPassword_RESET_PID_ModelValidationError = () => workingPassword_RESET_PID_FieldRef.value.resetValidation()
-
-const workingUsername_RESET_PID_Model = ref("")
-const workingUsername_RESET_PID_FieldRef = ref("")
-const clearWorkingUsername_RESET_PID_ModelValidationError = () => workingUsername_RESET_PID_FieldRef.value.resetValidation()
-
-const confirmationCode_RESET_PID_Model = ref("")
-const confirmationCode_RESET_PID_FieldRef = ref("")
-const clearConfirmationCode_RESET_PID_ModelValidationError = () => confirmationCode_RESET_PID_FieldRef.value.resetValidation()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/*																											*/
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
-/*																											*/
-/* 				if(BLOCKAPI("submitEmail function "))return								*/
-/*																											*/
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const BLOCKAPI = (message:string|null|undefined = null) => {
-	if(BLOCKAPIFLAG.value) 
-		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
-	return BLOCKAPIFLAG.value
-}
+const confcodeModel = ref("")
+const confcodeFieldRef = ref("")
+const clearConfcodeModelValidationError = () => confcodeFieldRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitSignal (event) {
@@ -185,15 +153,15 @@ async function submitSignal (event) {
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
 
 	//				If we get here, validation was sucessful
-	passwordResetNextStep()
+	nextStep()
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const passwordResetNextStep = () => {
-	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
-	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
+const nextStep = () => {
+	step.value = step.value <= 2 ? ++step.value : 0 
+	showDialog.value = step.value == 0 ? false : true
 
-	switch (passwordResetSignal.value) {
+	switch (step.value) {
 		case 0:			// info(`passwordResetNextStep > Case 0 -- Fini`)
 			cancelResetPassword()
 			// emit( 'onResetPasswordFini', {resetPasswordState: false})
@@ -218,17 +186,16 @@ const cancelResetPassword = () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-Auth.currentAuthenticatedUser({bypassCache: true})
-	.then(results => {
-		nicknameModel.value =  results.attributes.nickname
-		emailModel.value = results.attributes.email
-		phone_numberModel.value = results.attributes.phone_number
-		usernameModel.value = results.attributes.preferred_username ? results.attributes.preferred_username : results.username
-		isSession.value = true
-	})
-	.catch( () => { 
-		isSession.value = false	
-	})
-
+/*																											*/
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+/*																											*/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/*																											*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
+
 </script>

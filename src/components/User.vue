@@ -37,7 +37,7 @@
 							<!-- Reset Password Link -->
 							<v-row class="justify-end">
 								<v-btn size="large" color="link" variant="text" class="text-none" style="text-decoration: underline;" 
-								@click="openResetPasswordDialogFlag = true" > 
+								@click="resetPasswordDialog = true" > 
 									<v-tooltip activator="parent"> Reset/Forgot Password</v-tooltip>
 									<p>Reset Password</p>
 								</v-btn>
@@ -122,7 +122,7 @@
 	</v-row>
 	
 	<!-- PopUp Reset Password Dialog -- Modal -->
-	<ResetPassword v-if="openResetPasswordDialogFlag" @onResetPasswordFini="closeResetPassword"></ResetPassword>
+	<ResetPassword v-if="resetPasswordDialog" @onExit="closeResetPassword"></ResetPassword>
 
 	<!-- PopUp Message Dialog -- Modal -->
 	<v-row justify="center" v-if="openDialogFlag" >
@@ -232,7 +232,7 @@ const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: re
 const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
-const openResetPasswordDialogFlag = ref()
+const resetPasswordDialog = ref()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
@@ -256,7 +256,7 @@ const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.v
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const closeResetPassword = (payload) => { 
-	openResetPasswordDialogFlag.value = payload.resetPasswordState
+	resetPasswordDialog.value = payload.state
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

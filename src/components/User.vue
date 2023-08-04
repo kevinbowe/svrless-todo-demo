@@ -187,7 +187,7 @@
 <script setup lang="ts">
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
-import { enter } from "../my-util-code/MyConsoleUtil"
+import { enter, enter1, enter2 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar } from "../my-util-code/MyConsoleUtil"
 import { err } from "../my-util-code/MyConsoleUtil"
 
@@ -256,7 +256,6 @@ const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.v
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const closeResetPassword = (payload) => { 
-	enter(`closeResetPassword > ${payload.resetPasswordState}`)
 	openResetPasswordDialogFlag.value = payload.resetPasswordState
 }
 

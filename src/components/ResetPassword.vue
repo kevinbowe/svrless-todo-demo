@@ -1,6 +1,6 @@
 <template>
 	<!-- PopUp Reset Password Dialog -- Modal -->
-	<v-row justify="center" __v-if="openResetPasswordDialogFlag">
+	<v-row justify="center">
 		<v-dialog __RESET_SIGNAL_1__ 
 		v-if="passwordResetSignal == 1" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
 			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
@@ -194,7 +194,7 @@ const passwordResetNextStep = () => {
 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
 
 	switch (passwordResetSignal.value) {
-		case 0:			info(`passwordResetNextStep > Case 0 -- Fini`)
+		case 0:			// info(`passwordResetNextStep > Case 0 -- Fini`)
 			cancelResetPassword()
 			// emit( 'onResetPasswordFini', {resetPasswordState: false})
 			break;

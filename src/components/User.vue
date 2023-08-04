@@ -2,9 +2,6 @@
 	<!-- SignIn & SignUp Forms -->
 	<v-row no-gutters v-if="!isSession">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
-
-			openResetPasswordDialogFlag ==> [ {{ openResetPasswordDialogFlag }} ]<br><br>
-
 			<v-card variant="outlined" >
 				<v-tabs fixed-tabs v-model="SignInSignUpTab" >
 					<v-tab value="signinTab">Sign In</v-tab>
@@ -14,7 +11,7 @@
 					<v-window  v-model="SignInSignUpTab">
 
 						<!-- SignIn Form -->
-						<v-window-item __SIGN_IN__ value="signinTab">
+						<v-window-item value="signinTab">
 							<v-row no-gutters>
 								<v-col cols="12" class="my-5" >
 									<v-card v-if="errorSigningInMessage" >
@@ -127,108 +124,6 @@
 	<!-- PopUp Reset Password Dialog -- Modal -->
 	<ResetPassword v-if="openResetPasswordDialogFlag" @onResetPasswordFini="closeResetPassword"></ResetPassword>
 
-	<!-- <v-row justify="center" v-if="openResetPasswordDialogFlag">
-		<v-dialog __RESET_SIGNAL_1__ 
-		v-if="passwordResetSignal == 1" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
-				<v-form validate-on="submit" @submit.prevent="submitSignal" >
-					<v-card-title>
-						<v-row>
-							<v-col >
-								<p class="text-h4">Reset Password</p>
-							</v-col>
-							<v-col cols="1" class="justify-end">
-								<v-btn style="padding-bottom:3em;"
-								icon="$close" size="large" variant="text" 
-								@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
-							</v-col>
-						</v-row>
-					</v-card-title>
-					<v-card-text>
-						<v-text-field __User_Name__
-						v-model="workingUsername_RESET_PID_Model" ref="workingUsername_RESET_PID_FieldRef"
-						clearable @click:clear="clearWorkingUsername_RESET_PID_ModelValidationError"
-						:rules="[
-							value => !!value,
-							value => checkWorkingUsernameTooShort(value),
-							value => checkWorkingUsernameFirstChar(value),
-							value => checkWorkingUsernameSpecialCharExceptions(value)
-						]" 
-						density="compact" variant="outlined" label="Username" required />
-					</v-card-text>
-					<v-card-actions>
-						<v-btn type="submit" :disabled="!workingUsername_RESET_PID_Model" block color="surface" 
-						style="background-color:rgb(var(--v-theme-primary))"> 
-							OK 
-						</v-btn> 
-					</v-card-actions>
-				</v-form>
-			</v-card>
-		</v-dialog> -->
-		<!-- <v-dialog __RESET_SIGNAL_2__ 
-		v-if="passwordResetSignal == 2" activator="parent" v-model="openResetPasswordDialogFlag" persistent >
-			<v-card class="mx-auto" width="21em" color="background_alt" border="lg" elevation="24">
-				<v-form validate-on="submit" @submit.prevent="submitSignal">
-					<v-card-title>
-						<v-row>
-							<v-col >
-								<p class="text-h4">Reset Password</p>
-							</v-col>
-							<v-col cols="1" class="justify-end">
-								<v-btn style="padding-bottom:3em;"
-								icon="$close" size="large" variant="text" 
-								@click="{openResetPasswordDialogFlag=false; passwordResetSignal=0}"/>
-							</v-col>
-						</v-row>
-					</v-card-title>
-					<v-card-text>
-						<v-row __User_Code__ >
-							<v-text-field label="Confirmation Code" v-model="confirmationCode_RESET_PID_Model"
-							ref="confirmationCode_RESET_PID_FieldRef" 
-							clearable @click:clear="clearConfirmationCode_RESET_PID_ModelValidationError"
-							:rules="[ 
-								value => !!value,
-								value => value.length <= 1 ? 'Invalid Code' : true
-						 	]"
-							placeholder="Enter your code" variant="outlined" density="compact"/>
-						</v-row>
-						<v-row __New_Password__>
-							<v-text-field label="New Password" v-model="workingPassword_RESET_PID_Model" 
-							:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
-							prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  
-							@click:append-inner="passwordIcon1 = !passwordIcon1"
-							ref=workingPassword_RESET_PID_FieldRef
-							clearable @click:clear="clearWorkingPassword_RESET_PID_ModelValidationError"
-							:rules="[ 
-								// value => !!value || 'Required',
-								value => !!value,
-								value => checkPasswordTooShort(value),
-								value => checkPasswordSpecialChars(value),
-							]"
-							variant="outlined" density="compact" />
-						</v-row>
-					</v-card-text>
-					<v-card-actions>
-						<v-btn type="submit" :disabled="!confirmationCode_RESET_PID_Model || !workingPassword_RESET_PID_Model" 
-						block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
-							OK 
-						</v-btn> 
-					</v-card-actions>
-				</v-form>
-			</v-card>
-		</v-dialog> -->
-
-		<!-- <v-overlay __RESET_SIGNAL_3__
-		v-if="passwordResetSignal == 3" v-model="overlayVisible"
-		class="align-center justify-center">
-			<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
-				<p class="text-h4"> Reset Success </p>
-				<p> Your Password has been Updated. </p>
-				<v-btn class="mt-7" block color="primary" @click="passwordResetNextStep"> OK </v-btn> 
-			</v-card>
-		</v-overlay>
-	</v-row> -->
-
 	<!-- PopUp Message Dialog -- Modal -->
 	<v-row justify="center" v-if="openDialogFlag" >
 		<v-dialog activator="parent" v-model="openDialogFlag" persistent >
@@ -253,7 +148,7 @@
 					:style="{height:userConfirmationMessage.Message2.value ? '24em' : '21em'}">
 				<v-row>
 					<v-spacer/>
-					<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
+					<v-btn __X_IN_UPPER_RIGHT__ 
 						class="mr-3" icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"></v-btn>
 				</v-row>
 				<v-col style="margin-top:-2.5em;">
@@ -288,11 +183,12 @@
 	export default {inheritAttrs: false}
 </script>
 
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 <script setup lang="ts">
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
-import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
-import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
+import { enter } from "../my-util-code/MyConsoleUtil"
+import { bar, whitebar, greybar } from "../my-util-code/MyConsoleUtil"
 import { err } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -312,22 +208,18 @@ import  { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCount
 import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWorkingUsernameSpecialCharExceptions}
 	from "../components/UsernameParts/UsernameValidators"
 
-import { checkPasswordSpecialChars, checkPasswordTooShort } 
-	from "../components/PasswordParts/PasswordValidators"
-
 import ResetPassword from "../components/ResetPassword.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const DEBUG_Model = ref()
-
 const SignInSignUpTab = ref()
 
 const nicknameModel = ref("")
 const emailModel = ref("")
 const phone_numberModel = ref("")
 const usernameModel = ref("")
-const workingPasswordModel = ref("")
 const confirmUserCodeModel = ref()
+
+const workingPasswordModel = ref("")
 const workingPreferred_usernameModel = ref("")
 
 const passwordIcon1 = ref(false)
@@ -341,10 +233,8 @@ const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
 const openResetPasswordDialogFlag = ref()
-const overlayVisible = ref(true)
 
-// const passwordResetSignal = ref(0) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
-
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -364,112 +254,11 @@ const workingNicknameModel =  ref("")
 const workingNicknameFieldRef = ref("")
 const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.value.resetValidation()
 
-const workingPassword_RESET_PID_Model = ref("")
-const workingPassword_RESET_PID_FieldRef = ref("")
-const clearWorkingPassword_RESET_PID_ModelValidationError = () => workingPassword_RESET_PID_FieldRef.value.resetValidation()
-
-const workingUsername_RESET_PID_Model = ref("")
-const workingUsername_RESET_PID_FieldRef = ref("")
-const clearWorkingUsername_RESET_PID_ModelValidationError = () => workingUsername_RESET_PID_FieldRef.value.resetValidation()
-
-const confirmationCode_RESET_PID_Model = ref("")
-const confirmationCode_RESET_PID_FieldRef = ref("")
-const clearConfirmationCode_RESET_PID_ModelValidationError = () => confirmationCode_RESET_PID_FieldRef.value.resetValidation()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/*																											*/
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
-/*																											*/
-/* 				if(BLOCKAPI("submitEmail function "))return								*/
-/*																											*/
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const BLOCKAPI = (message:string|null|undefined = null) => {
-	if(BLOCKAPIFLAG.value) 
-		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
-	return BLOCKAPIFLAG.value
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-Hub.listen('auth', (data) => {
-	switch(data.payload.event) {
-		case "signUp" :
-			// bar()
-			// enter0("Hub.listen => Case SignUp")
-			confirmUserCodeModel.value = null 
-			toggleUserConfirm.value = true // Display Confirm Ui
-			restartConfirm.value = false
-			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
-			return
-			case "confirmSignUp" :
-				// bar()
-				// enter1("Hub.listen => Case CONFIRM SignUp")
-				toggleUserConfirm.value = false // Hide Confirm Ui
-				return
-				case "autoSignIn" :
-					// bar()
-					// enter2("Hub.listen => Case AUTO SignIn")
-					workingNicknameModel.value = ""
-					workingEmailModel.value = ""
-					workingPreferred_usernameModel.value = ""
-					return
-					case "signIn" :
-						// bar()
-						// enter3("Hub.listen => Case SignIn")
-						Auth.currentAuthenticatedUser({bypassCache: true})
-						.then(results => {
-							emailModel.value = results.attributes.email
-							nicknameModel.value =  data.payload.data.attributes.nickname
-							phone_numberModel.value = data.payload.data.attributes.phone_number
-							usernameModel.value = data.payload.data.attributes.preferred_username 
-							? data.payload.data.attributes.preferred_username 
-							: data.payload.data.username
-						})
-						isSession.value = true
-						return
-						case "signOut" :
-							return
-						} 
-					})
-					
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// const passwordResetNextStep = () => {
-// 	passwordResetSignal.value = passwordResetSignal.value <= 2 ? ++passwordResetSignal.value : 0 
-// 	openResetPasswordDialogFlag.value = passwordResetSignal.value == 0 ? false : true
-// 
-// 	switch (passwordResetSignal.value) {
-// 		case 0:			//info(`passwordResetNextStep > Case 0 -- Fini`)
-// 			break;
-// 		case 1:			//info1(`passwordResetNextStep > Case 1 -- UID`)
-// 			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
-// 			try { // Auth.forgotPassword(workingUsernameModel.value)
-// 			} catch(err) { console.log(err);}
-// 			break;
-// 		case 2:			//info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
-// 			try { // Auth.forgotPasswordSubmit(	workingUsernameModel.value, confirmUserCodeModel.value, newWorkingPasswordModel.value);
-// 			} catch(err) { console.log(err); }
-// 			break;
-// 		case 3:			//info3(`   passwordResetNextStep > Case 3 -- Msg`)
-// 			break;
-// 	}
-// }
-
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// async function submitSignal (event) {
-// 	if(BLOCKAPI("submitPassword function ")) return
-// 
-// 	const results = await event
-// 	if(!results.valid) return /* Cancel Submission if validation FAILED */
-// 
-// 	//				If we get here, validation was sucessful
-// 	passwordResetNextStep()
-// }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const closeResetPassword = (payload) => { 
 	enter(`closeResetPassword > ${payload.resetPasswordState}`)
 	openResetPasswordDialogFlag.value = payload.resetPasswordState
 }
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value && workingPasswordModel.value ? true : false )
@@ -591,17 +380,73 @@ const signInUser = async () => {
 	}
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/*																											*/
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+/*																											*/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/*																											*/
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+Hub.listen('auth', (data) => {
+	switch(data.payload.event) {
+		case "signUp" :
+			// bar()
+			// enter0("Hub.listen => Case SignUp")
+			confirmUserCodeModel.value = null 
+			toggleUserConfirm.value = true // Display Confirm Ui
+			restartConfirm.value = false
+			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
+			return
+		case "confirmSignUp" :
+			// bar()
+			// enter1("Hub.listen => Case CONFIRM SignUp")
+			toggleUserConfirm.value = false // Hide Confirm Ui
+			return
+		case "autoSignIn" :
+				// bar()
+				// enter2("Hub.listen => Case AUTO SignIn")
+				workingNicknameModel.value = ""
+				workingEmailModel.value = ""
+				workingPreferred_usernameModel.value = ""
+				return
+		case "signIn" :
+				// bar()
+				// enter3("Hub.listen => Case SignIn")
+				Auth.currentAuthenticatedUser({bypassCache: true})
+				.then(results => {
+					emailModel.value = results.attributes.email
+					nicknameModel.value =  data.payload.data.attributes.nickname
+					phone_numberModel.value = data.payload.data.attributes.phone_number
+					usernameModel.value = data.payload.data.attributes.preferred_username 
+					? data.payload.data.attributes.preferred_username 
+					: data.payload.data.username
+				})
+				isSession.value = true
+				return
+		case "signOut" :
+					return
+	} 
+})
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 Auth.currentAuthenticatedUser({bypassCache: true})
-	.then(results => {
-		nicknameModel.value =  results.attributes.nickname
-		emailModel.value = results.attributes.email
-		phone_numberModel.value = results.attributes.phone_number
-		usernameModel.value = results.attributes.preferred_username ? results.attributes.preferred_username : results.username
-		isSession.value = true
-	})
-	.catch( () => { 
-		isSession.value = false	
-	})
+.then(results => {
+	nicknameModel.value =  results.attributes.nickname
+	emailModel.value = results.attributes.email
+	phone_numberModel.value = results.attributes.phone_number
+	usernameModel.value = results.attributes.preferred_username ? results.attributes.preferred_username : results.username
+	isSession.value = true
+})
+.catch( () => { 
+	isSession.value = false	
+})
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>

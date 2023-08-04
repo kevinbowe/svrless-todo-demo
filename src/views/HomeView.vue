@@ -7,7 +7,7 @@
 			<div v-if="isSession">
 
 				<!-- Update Password-->
-				<Password />
+				<Password/>
 
 				<!-- Update Nickname -->
 				<Nickname @onUpdateNickname="setNickname"/>
@@ -47,7 +47,7 @@
 				<SignOut @onSignOut="setSession"/>
 			</div>
 
-			<!-- SignUp, SignIn and Confirm -->
+			<!-- SignUp, SignIn, Confirm and Reset Password -->
 			<User v-else @onSignIn="setUserInfo"/>
 			
 		</MasterLayout>

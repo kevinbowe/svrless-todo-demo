@@ -144,32 +144,42 @@
 	<!-- SignUp Confirmation -->
 	<v-row justify="center" v-if="!isSession">
 		<v-overlay class="align-center justify-center" v-model="toggleUserConfirm" >
-			<v-sheet width="20em" color="background" border="lg" elevation="24" 
-					:style="{height:userConfirmationMessage.Message2.value ? '24em' : '21em'}">
+			<v-sheet width="20em" color="background" border="lg" elevation="24" >
 				<v-row>
 					<v-spacer/>
-					<v-btn __X_IN_UPPER_RIGHT__ 
-						class="mr-3" icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"></v-btn>
+					<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"></v-btn>
 				</v-row>
-				<v-col style="margin-top:-2.5em;">
+				<v-col class="mb-5 pa-5" style="margin-top:-2.5em;">
 					<v-row no-gutters>
 						<h1 class="ma-auto" v-html="userConfirmationMessage.Title.value"></h1>
 						<p v-html="userConfirmationMessage.Message.value"></p>
 						<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
 						<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
 					</v-row>
-					<v-row><v-spacer/>
-						<v-col cols="11">
-							<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
-								clearable @click:clear="confirmUserCodeModel = undefined"
-								id="ConfCode" placeholder="Enter your code" class="mb-2" style="height:1.75em;" 
-								variant="outlined" density="compact">
-							</v-text-field>
-						</v-col><v-spacer/>
-					</v-row>
-					<v-row class="mx-5">
-						<v-btn :disabled="!confirmUserCodeModel" @click="confirmUserSignUp" block color="primary" class="mb-2" > Confirm </v-btn>
-						<v-btn block color="surface" class="mb-2" @click="resendUserConfirmationCode(workingUsernameModel)"> Resend Code </v-btn>
+					<v-form class="py-5" validate-on="submit" @submit.prevent="confirmUserSignUp">
+						<v-row>
+							<v-col>
+								<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
+								ref="confirmUserCodeModelFieldRef" clearable 
+								@click:clear="clearConfirmUserCodeModelValidationError"
+								:rules="[
+									value => !!value,
+									value => checkConfirmationTooShort(value),
+									value => checkConfirmationSpecialChars(value),
+								]"
+								id="ConfCode" placeholder="Enter your code" variant="outlined" density="compact"/>
+							</v-col>
+						</v-row>
+						<v-row class="mx-1">
+							<v-btn block class="mb-5" color="primary" type="submit" :disabled="!confirmUserCodeModel" > 
+								Confirm 
+							</v-btn>
+						</v-row>
+					</v-form>
+					<v-row class="mx-1">
+						<v-btn block color="surface" @click="resendUserConfirmationCode(workingUsernameModel)"> 
+							Resend Code 
+						</v-btn>
 					</v-row>
 				</v-col>
 			</v-sheet>
@@ -208,6 +218,9 @@ import  { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCount
 import  { checkWorkingUsernameTooShort, checkWorkingUsernameFirstChar, checkWorkingUsernameSpecialCharExceptions}
 	from "../components/UsernameParts/UsernameValidators"
 
+import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
+	from "../components/ConfirmationParts/ComfirmationValidators"
+
 import ResetPassword from "../components/ResetPassword.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -217,7 +230,6 @@ const nicknameModel = ref("")
 const emailModel = ref("")
 const phone_numberModel = ref("")
 const usernameModel = ref("")
-const confirmUserCodeModel = ref()
 
 const workingPasswordModel = ref("")
 const workingPreferred_usernameModel = ref("")
@@ -233,11 +245,15 @@ const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
 const openDialogFlag = ref()
 const resetPasswordDialog = ref()
-
+	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
-
+	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const confirmUserCodeModel = ref()
+const confirmUserCodeModelFieldRef = ref()
+const clearConfirmUserCodeModelValidationError = () => confirmUserCodeModelFieldRef.value.resetValidation()
+
 const workingEmailModel =ref("")
 const workingEmailFieldRef = ref("")
 const clearWorkingEmailModelValidationError = () => workingEmailFieldRef.value.resetValidation()
@@ -289,8 +305,11 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-async function confirmUserSignUp() {
+const confirmUserSignUp = async (event) => {
 	// if(BLOCKAPI("confirmUserSignUp function "))return
+	const results = await event
+	if(!results.valid) return /* Cancel Submission if validation FAILED */
+	// if(BLOCKAPI("signUpUser function "))return
 
 	try {
 		//					This function ONLY sets the user state to Confirmed.

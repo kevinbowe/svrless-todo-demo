@@ -4,11 +4,12 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../../my-ut
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 export const parseEmail = (email) => {
+	if (!(!!email)) return null
 	const regex = new RegExp('^(?<name>.*)@(?<domain>.*)', 'gm')
-		let match = regex.exec(email)
-		if (match) return { name: match.groups.name, domain: match.groups.domain }
-		return null
-	}
+	let match = regex.exec(email)
+	if (match) return { name: match.groups.name, domain: match.groups.domain }
+	return null
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Email -- Validation */

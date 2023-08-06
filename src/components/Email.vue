@@ -22,76 +22,55 @@
 	</v-row>
 
 	<!-- Update Email Confirmation -->
-	<v-row justify="center" >
-		<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
-			<v-sheet height="24em" width="20em" color="surface_alt" elevation="24">
-					<v-row><v-spacer/>
+	<v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
+		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
+				<v-row><v-spacer/>
+				<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" 
+				@click="toggleConfirmEmail=false; workingEmailModel = ''; "/>
+			</v-row>
+			<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
+				<h1 class="ma-auto" v-html="emailConfirmationMessage.Title.value"></h1>
+				<p v-html="emailConfirmationMessage.Message.value"></p>
+				<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
+				<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
+			</v-row>
 
-					<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
-					@click="toggleConfirmEmail=false; workingEmailModel = ''; "
-					class="mr-3" icon="$close" size="large" variant="text" ></v-btn>
+			<v-form validate-on="submit" @submit.prevent="applyEmailConfirmationCode">
+				<v-text-field label="Confirmation Code" v-model="confirmEmailCodeModel" 
+				ref="confirmEmailCodeModelFieldRef" id="ConfCode" 
+				:rules="[
+					value => !!value,
+					value => checkConfirmationTooShort(value),
+					value => checkConfirmationSpecialChars(value),
+				]"
+				placeholder="Enter your code" variant="outlined" density="compact"
+				clearable @click:clear="clearConfirmEmailCodeModelValidationError"/>
+				<v-btn block class="my-5" color="primary" type="submit" :disabled="!confirmEmailCodeModel" > 
+					Confirm 
+				</v-btn>
+			</v-form>
 
-				</v-row>
-				<v-col style="margin-top:-2.5em;">
-					<v-row no-gutters>
-						<h1 class="ma-auto" v-html="emailConfirmationMessage.Title.value"></h1>
-						<p v-html="emailConfirmationMessage.Message.value"></p>
-						<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
-						<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
-					</v-row>
-					<v-form validate-on="submit" @submit.prevent="applyEmailConfirmationCode">
-						<v-row>
-							<v-spacer/>
-							<v-col cols="11">
-								
-								<v-text-field 
-								_style="height:1.75em;" 
-								label="Confirmation Code" 
-								v-model="confirmEmailCodeModel" 
-								ref="confirmEmailCodeModelFieldRef"
-								id="ConfCode" 
-								:rules="[
-									value => !!value,
-									value => checkConfirmationTooShort(value),
-									value => checkConfirmationSpecialChars(value),
-								]"
-								placeholder="Enter your code" 
-								variant="outlined"  
-								density="compact"
-								class="mb-2" 
-								clearable @click:clear="clearConfirmEmailCodeModelValidationError"
-								/>
-							</v-col>
-							<v-spacer/>
-						</v-row>
-						<v-row class="mx-5 mt-5" _class="mx-5">
-							<v-btn type="submit" :disabled="!confirmEmailCodeModel" block color="primary" class="mb-2" > Confirm </v-btn>
-						</v-row>
-					</v-form>
-					<v-row class="mx-5">	
-						<v-btn block color="surface" class="mb-2" @click="resendEmailConfirmationCode"> Resend Code </v-btn>
-					</v-row>
-				</v-col>
-			</v-sheet>
-		</v-overlay>
-	</v-row>
+			<v-btn block color="surface" @click="resendEmailConfirmationCode" >
+				Resend Code 
+			</v-btn>
+
+		</v-sheet>
+	</v-overlay>
 
 	<!-- PopUp Message Dialog -- Modal -->
-	<v-row justify="center" v-if="openDialogFlag" >
-		<v-dialog activator="parent" v-model="openDialogFlag" persistent >
-			<v-card 	color="background_alt" border="lg" 
-						class="ma-auto" height="10em" width="20em" elevation="24">
-				<v-card-text> 
-					<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
-				</v-card-text>
-				<v-card-actions>
-					<v-btn @click="openDialogFlag = false" block 
-					color="surface" 
-					style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
-	</v-row>
+	<v-dialog v-if="openDialogFlag" activator="parent" v-model="openDialogFlag" persistent >
+		<v-card 	color="background_alt" border="lg" 
+					class="ma-auto" height="10em" width="20em" elevation="24">
+			<v-card-text> 
+				<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
+			</v-card-text>
+			<v-card-actions>
+				<v-btn @click="openDialogFlag = false" block 
+				color="surface" 
+				style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+			</v-card-actions>
+		</v-card>
+	</v-dialog>
 
 </template>
 

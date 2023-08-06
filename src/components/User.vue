@@ -142,42 +142,41 @@
 	</v-row>
 
 	<!-- SignUp Confirmation -->
-	<v-row v-if="!isSession">
-		<v-overlay class="align-center justify-center" v-model="toggleUserConfirm" >
-			<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
-				<v-row><v-spacer/>
-					<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"/>
-				</v-row>
-				<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
-					<h1 class="ma-auto" v-html="userConfirmationMessage.Title.value"></h1>
-					<p v-html="userConfirmationMessage.Message.value"></p>
-					<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
-					<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
-				</v-row>
+	<v-overlay v-if="!isSession" class="align-center justify-center" v-model="toggleUserConfirm" >
+		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
+			<v-row><v-spacer/>
+				<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"/>
+			</v-row>
+			<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
+				<h1 class="ma-auto" v-html="userConfirmationMessage.Title.value"></h1>
+				<p v-html="userConfirmationMessage.Message.value"></p>
+				<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
+				<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
+			</v-row>
 
-				<v-form validate-on="submit" @submit.prevent="confirmUserSignUp">
-					<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
-					ref="confirmUserCodeModelFieldRef" id="ConfCode"
-					:rules="[
-						value => !!value,
-						value => checkConfirmationTooShort(value),
-						value => checkConfirmationSpecialChars(value),
-					]"	
-					placeholder="Enter your code" variant="outlined" density="compact"
-					clearable @click:clear="clearConfirmUserCodeModelValidationError" />
-				
-					<v-btn block class="my-5" color="primary" type="submit" :disabled="!confirmUserCodeModel" > 
-						Confirm 
-					</v-btn>
-				</v-form>
+			<v-form validate-on="submit" @submit.prevent="confirmUserSignUp">
 
-				<v-btn block color="surface" @click="resendUserConfirmationCode(workingUsernameModel)"> 
-					Resend Code 
+				<v-text-field label="Confirmation Code" v-model="confirmUserCodeModel" 
+				ref="confirmUserCodeModelFieldRef" id="ConfCode"
+				:rules="[
+					value => !!value,
+					value => checkConfirmationTooShort(value),
+					value => checkConfirmationSpecialChars(value),
+				]"	
+				placeholder="Enter your code" variant="outlined" density="compact"
+				clearable @click:clear="clearConfirmUserCodeModelValidationError" />
+			
+				<v-btn block class="my-5" color="primary" type="submit" :disabled="!confirmUserCodeModel" > 
+					Confirm 
 				</v-btn>
+			</v-form>
 
-			</v-sheet>
-		</v-overlay>
-	</v-row>
+			<v-btn block color="surface" @click="resendUserConfirmationCode(workingUsernameModel)"> 
+				Resend Code 
+			</v-btn>
+
+		</v-sheet>
+	</v-overlay>
 </template>
 
 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->

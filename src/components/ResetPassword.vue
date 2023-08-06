@@ -30,10 +30,8 @@
 					</v-card-text>
 					<v-card-actions>
 
-						<v-btn type="submit" :disabled="!usernameModel" block color="surface" 
-						style="background-color:rgb(var(--v-theme-primary))"> 
-							OK 
-						</v-btn> 
+						<v-btn text="OK" type="submit" :disabled="!usernameModel" block color="surface" 
+						style="background-color:rgb(var(--v-theme-primary))"/> 
 					</v-card-actions>
 				</v-form>
 			</v-card>
@@ -82,10 +80,8 @@
 						</v-row>
 					</v-card-text>
 					<v-card-actions>
-						<v-btn type="submit" :disabled="!confcodeModel || !passwordModel" 
-						block color="surface" style="background-color:rgb(var(--v-theme-primary))"> 
-							OK 
-						</v-btn> 
+						<v-btn text="OK" type="submit" :disabled="!confcodeModel || !passwordModel" 
+						block color="surface" style="background-color:rgb(var(--v-theme-primary))"/> 
 					</v-card-actions>
 				</v-form>
 			</v-card>
@@ -97,16 +93,26 @@
 			<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
 				<p class="text-h4"> Reset Success </p>
 				<p> Your Password has been Updated. </p>
-				<v-btn class="mt-7" block color="primary" @click="nextStep"> 
-					OK 
-				</v-btn> 
+				<v-btn text="OK" class="mt-7" block color="primary" @click="nextStep"/> 
 			</v-card>
 		</v-overlay>
 	</v-row>
 
+	<!-- Update Failed -- Oops -->
+	<v-overlay v-if="showOops" v-model="showOverlay" class="align-center justify-center">
+		<v-card width="21em" class="pa-2 text-center" color="background_alt" border="lg" elevation="24">
+			<p class="ma-2 text-h4"> Oops </p>
+			<p> Your confirmation code was not accepted. Try again. </p>
+			<v-btn text="OK" class="mt-7" block color="primary" @click="step = 2; showOops=false"/> 
+		</v-card>
+	</v-overlay>
 </template>
 
 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<script lang="ts">
+	export default {inheritAttrs: false}
+</script>
+
 <script setup lang="ts">
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -130,6 +136,7 @@ const showIcon = ref(false)
 const showDialog = ref(true)
 const showOverlay = ref(true)
 const step = ref(1) //	[ Done/Ready == 0 | Request == 1 | Confirm == 2 | Fini == 3 ]
+const showOops = ref(false)
 
 const emit = defineEmits()
 
@@ -161,20 +168,20 @@ async function submitSignal (event) {
 const nextStep = () => {
 	switch (step.value) {
 		
-		case 1:			info1(`passwordResetNextStep > Case 1 -- UID`)
-			// 			Collect the UID and send to Cognito. -- This will generate a confirmation code.
+		case 1:					//info1(`passwordResetNextStep > Case 1 -- UID`)
+			// 					Collect the UID and send to Cognito. -- This will generate a confirmation code.
 			try { Auth.forgotPassword(usernameModel.value) } 
-			catch(err) { 
-				console.log(err);
-			}
+			catch(err) { console.log(err);}
 			break;
-
-		case 2:			info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
-			try { Auth.forgotPasswordSubmit(	usernameModel.value, confcodeModel.value, passwordModel.value);} 
-			catch(err) { console.log(err); }
+		case 2:					//info2(`passwordResetNextStep > Case 2 -- Conf Code & PID`)
+			try { Auth.forgotPasswordSubmit(	usernameModel.value, confcodeModel.value, passwordModel.value)
+					.catch(error => {
+						//			Display a 'Oops... Something went wrong dialog.'
+						showOops.value = true
+					})
+			} catch(err) { console.log(err); }
 			break;
-
-		case 3:			info3(`passwordResetNextStep > Case 3 -- Msg`)
+		case 3:			//info3(`passwordResetNextStep > Case 3 -- Msg`)
 			exit()
 			break;
 	}

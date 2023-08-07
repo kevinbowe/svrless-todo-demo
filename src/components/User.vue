@@ -378,7 +378,7 @@ const signInUser = async () => {
 			emit( 'onSignIn', { 
 				nickname: user.attributes?.nickname, 
 				email: user.attributes?.email,
-				phonenumber: user.attributes?.phone_number,	
+				phone_number: user.attributes?.phone_number,	
 				username: user.attributes?.preferred_username ?? user.username,
 				sessionState: true
 			})

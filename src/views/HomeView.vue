@@ -15,6 +15,9 @@
 				<!-- Update Email-->
 				<Email @onUpdateEmail="setEmail"/>
 
+				<!-- Update Phone number -->
+				<Phone_number @onUpdatePhone_number="setPhone_number"/>
+
 				<!-- Update Preferred Username -->
 				<Preferred_username @onUpdatePreferred_username="setPreferred_username"/>
 
@@ -71,6 +74,7 @@ import Preferred_username from "../components/Preferred_username.vue";
 import Email from "../components/Email.vue";
 import SignOut from "../components/SignOut.vue"
 import Password from "../components/Password.vue"
+import Phone_number from "../components/Phone_number.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }
@@ -96,13 +100,16 @@ const setEmail = (payload) => emailModel.value = payload.email
 const setNickname = (payload) => nicknameModel.value = payload.nickname 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setPhone_number = (payload) => phone_numberModel.value = payload.phone_number
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setPreferred_username = (payload) => usernameModel.value = payload.preferred_username
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setUserInfo = (payload) => { 
 	nicknameModel.value = payload.nickname
 	emailModel.value = payload.email
-	phone_numberModel.value = payload.phonenumber
+	phone_numberModel.value = payload.phone_number
 	usernameModel.value = payload.username
 	isSession.value = payload.sessionState
 }

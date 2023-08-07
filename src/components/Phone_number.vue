@@ -70,8 +70,9 @@ async function submitPhone_number(event) {
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number.value })
 	await Auth.currentUserInfo().then(result => {
-		phone_numberModel.value = result.attributes.phone_number
-		emit('onUpdatePhone_number', { phone_number: phone_numberModel.value})
+		
+		emit('onUpdatePhone_number', { phone_number: result.attributes.phone_number})
+		phone_numberModel.value = ""
 	})
 }
 

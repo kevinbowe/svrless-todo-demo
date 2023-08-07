@@ -47,13 +47,11 @@ import { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCountr
 	from "../components/Phone_numberParts/Phone_numerValidators"
 /* ----------------------------------------------------------------------------- */
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
-import { enter, enter0, enter1, 
-			bar, whitebar, greybar, 
-			log, warn, err } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from "../my-util-code/MyConsoleUtil"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* ----------------------------------------------------------------------------- */
 const phone_numberModel = ref("")
 const phone_numberFieldRef = ref("")
 const clearPhone_numberValidationError = () => phone_numberFieldRef.value.resetValidation()

@@ -1,4 +1,5 @@
 <template>
+	<!-- Save Phone number -->
 	<v-form 
 	class="w-50 mx-auto mt-1" 
 	validate-on="submit" 
@@ -24,7 +25,13 @@
 
 		<v-row class="justify-end">
 		
-			<v-btn class="ml-2" color="primary" size="large" type="submit"> Save Phone number</v-btn>
+			<v-btn text="Save Phone number" 
+			type="submit"
+			:disabled="!phone_numberModel" 
+			color="primary" 
+			size="large"
+			class="ml-2" 
+			/>
 		
 		</v-row>
 	
@@ -43,7 +50,6 @@ import { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCountr
 const phone_numberModel = ref("")
 const phone_numberFieldRef = ref("")
 const clearPhone_numberValidationError = () => phone_numberFieldRef.value.resetValidation()
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Submit Phone Number Decl */

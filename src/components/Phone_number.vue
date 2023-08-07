@@ -61,6 +61,8 @@ const clearPhone_numberValidationError = () => phone_numberFieldRef.value.resetV
 async function submitPhone_number(event) {
 	const results = await event
 	if(!results.valid) return // Cancel Submission if validation FAILED
+	if(BLOCKAPI("submitEmail function "))return
+
 	//				Strips these characters -- 'sp', '+', '-', '(', ')'
 	//				If a Country code is missing, add '1' (North America)
 	const strippedPhone_number = stripPhone_numberFmt(phone_numberModel)
@@ -75,5 +77,13 @@ async function submitPhone_number(event) {
 		phone_numberModel.value = ""
 	})
 }
-
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
 </script>

@@ -26,6 +26,7 @@ export const stripPhone_numberFmt = (phone_numberArg) => {
 
 /* ----------------------------------------------------------------------------- */
 export function checkPhone_number (workingPhone_number) {
+
 	let pNum = stripPhone_numberFmt(workingPhone_number)
 		
 	//				Check length
@@ -37,8 +38,18 @@ export function checkPhone_number (workingPhone_number) {
 	if (matchAtoZ !== null ) return `Alphabetical characters are invalid == [${matchAtoZ}] == ${pNum.value}`
 	
 	//				Check for special characters
-	let rxSpecChar = /[!@#$%\^&*(){}[\]<>?/|\\]/
-	let matchSpecChar = pNum.value.match(rxSpecChar)
+	
+	//				Check ALL Special Chars -- REFERENCE -- 7/21/23
+	// const rxAll = /[+\-_@\.`~!#$%  ^&'"*,:;/ {}[\]()<>]/gm
+	//---------------------------------------------------------------------------
+	//				Check ALL Special Chars -- REFERENCE -- Updated 8/7/23
+	//									Missing the plus char
+	const rxAll = /[\+!@#$%\^&*(){}[\]<>?/\\-_.`~ '",:;]/gm
+
+	//				At this point there should be absolutly NO special characters in the pNum
+	//				Characters like + ( ) - and sp will be added for display formatting.
+	let matchSpecChar = pNum.value.match(rxAll)
+	// let matchSpecChar = pNum.value.match(rxSpecChar)
 	if (matchSpecChar !== null) return `Special characters are invalid == [${matchSpecChar}] == ${pNum.value}`
 		return true
 	}

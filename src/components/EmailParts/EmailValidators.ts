@@ -16,8 +16,6 @@ export const parseEmail = (email) => {
 /* ----------------------------------------------------------------------------- */
 export const checkWorkingEmailSpecialChar = (email) => {
 
-	// enter("checkEmailSpecialChar")
-
 	// DEBUG CODE
 	if (email === null) info7("checkEmailSpecialChar(emailArg) > emailArg is Null")
 

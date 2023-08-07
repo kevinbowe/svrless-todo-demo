@@ -45,7 +45,14 @@ import {ref} from "vue"
 import { Auth } from "aws-amplify";
 import { stripPhone_numberFmt, checkPhone_number, checkPhone_numberInvalidCountryCode } 
 	from "../components/Phone_numberParts/Phone_numerValidators"
+/* ----------------------------------------------------------------------------- */
+import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, 
+			bar, whitebar, greybar, 
+			log, warn, err } from "../my-util-code/MyConsoleUtil"
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const emit = defineEmits()
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const phone_numberModel = ref("")
 const phone_numberFieldRef = ref("")
@@ -66,6 +73,7 @@ async function submitPhone_number(event) {
 	await Auth.updateUserAttributes(newuser, {'phone_number': strippedPhone_number.value })
 	await Auth.currentUserInfo().then(result => {
 		phone_numberModel.value = result.attributes.phone_number
+		emit('onUpdatePhone_number', { phone_number: phone_numberModel.value})
 	})
 }
 

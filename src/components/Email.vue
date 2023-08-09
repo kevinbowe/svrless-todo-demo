@@ -1,6 +1,28 @@
 <template>
 <!-- Update Email-->
-<v-row justify="center">
+<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
+	<v-row no-gutters>
+		<v-spacer/>
+		<v-col cols="3" class="ma-2">
+			<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
+				clearable @click:clear="clearWorkingEmailModelValidationError"
+				:rules="[ 
+					value => checkWorkingEmailSpecialChar(value), 
+					value => checkWorkingEmailName(value), 
+					value => checkWorkingEmailDomain(value),
+				]"
+				variant="outlined" density="compact" 
+			></v-text-field>
+		</v-col>
+		<v-col cols="2">
+			<v-btn class="mt-3" height="3em"
+			:disabled="!workingEmailModel" color="primary" type="submit"> Save Email </v-btn>
+		</v-col>
+		<v-spacer/>
+	</v-row>
+</v-form>
+
+<!-- <v-row justify="center">
 	<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 	<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 		<v-row>
@@ -19,7 +41,7 @@
 		</v-row>
 	</v-form>
 	</v-col>
-</v-row>
+</v-row> -->
 
 <!-- Update Email Confirmation -->
 <v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >

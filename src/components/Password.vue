@@ -1,6 +1,44 @@
 <template>
 	<!-- Update password-->
-	<v-row justify="center">
+	<v-form validate-on="submit" @submit.prevent="submitPassword" >
+		<v-row no-gutters class="mb-5">
+			<v-spacer/>
+			<v-col cols="3" > 
+				<v-row style="margin-left:.5em; margin-right:-.5em; ">
+					<v-text-field label="Current Password"  v-model= "workingPasswordModel" 
+					:append-inner-icon="passwordIcon1 ? 'mdi-eye' : 'mdi-eye-off'" 
+					prepend-inner-icon="mdi-lock-outline" :type="passwordIcon1 ? 'text' : 'password'"  @click:append-inner="passwordIcon1 = !passwordIcon1"
+					ref=workingPasswordFormRef
+					clearable @click:clear="clearWorkingPasswordModelValidationError"
+					:rules="[ 
+						value => checkPasswordTooShort(value),
+						value => checkPasswordSpecialChars(value),
+					]" 
+					variant="outlined" density="compact" />
+				</v-row>
+				<v-row style="margin-left:.5em; margin-right:-.5em; ">
+					<v-text-field label="New Password"  v-model= "newWorkingPasswordModel" 
+					:append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
+					prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  @click:append-inner="passwordIcon2 = !passwordIcon2"
+					ref=newWorkingPasswordFormRef
+					clearable @click:clear="clearNewWorkingPasswordModelValidationError"
+					:rules="[ 						
+						value => checkPasswordTooShort(value),
+						value => checkPasswordSpecialChars(value), 
+					]" 
+					variant="outlined" density="compact" />
+				</v-row>
+			</v-col>
+			<v-col style="margin-left:1em; margin-bottom:.65em; " _class="my-3"
+				cols="2" align-self="end" >
+				<v-btn class="mt-3" height="3em" 
+				:disabled="!workingPasswordModel || !newWorkingPasswordModel" color="primary" type="submit"> Update<br>Password </v-btn>
+			</v-col>
+			<v-spacer/>
+		</v-row>
+	</v-form>
+	
+	<!-- <v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 		<v-form validate-on="submit" @submit.prevent="submitPassword" >
 			<v-row>
@@ -34,7 +72,7 @@
 			</v-row>
 		</v-form>
 		</v-col>
-	</v-row>
+	</v-row> -->
 
 	<!-- PopUp Message Dialog -- Modal -->
 	<v-row justify="center" v-if="openDialogFlag" >

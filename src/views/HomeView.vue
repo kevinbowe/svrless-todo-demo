@@ -11,41 +11,49 @@
 
 				<!-- Update Nickname -->
 				<Nickname @onUpdateNickname="setNickname"/>
-
-				<!-- Update Email-->
-				<Email @onUpdateEmail="setEmail"/>
-
+				
 				<!-- Update Phone number -->
 				<Phone_number @onUpdatePhone_number="setPhone_number"/>
-
+				
 				<!-- Update Preferred Username -->
 				<Preferred_username @onUpdatePreferred_username="setPreferred_username"/>
+				
+				<!-- Update Email-->
+				<Email @onUpdateEmail="setEmail"/>
 
 				<!-- <UserInfo/> -->
 				<v-row justify="center">
 					<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 						<v-divider :thickness="10" class="ma-2"></v-divider>
+						
 						<v-row no-gutters>
 							<v-col style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
 								<p>Nick Name:</p></v-col>
 							<v-col><p>{{ nicknameModel }}</p></v-col>
 						</v-row>
+						
 						<v-divider :thickness="3" />
-						<v-row no-gutters style="background-color:rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-							<p class="ma-auto">Email:</p></v-row>
-						<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
-						<v-divider :thickness="3" />
+						
 						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-							<p class="ma-auto">Phone Number:</p></v-row>
+						<p class="ma-auto">Phone Number:</p></v-row>
 						<v-row no-gutters ><p class="ma-auto">{{ friendlyPhone(phone_numberModel) }}</p></v-row>
+							
 						<v-divider :thickness="3" />
+							
 						<v-row no-gutters style="background-color: rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
-							<p class="ma-auto">User Name:</p></v-row>
-							<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
+						<p class="ma-auto">User Name:</p></v-row>
+						<v-row no-gutters ><p class="ma-auto">{{ usernameModel }}</p></v-row>
+								
+						<v-divider :thickness="3" />
+		
+						<v-row no-gutters style="background-color:rgb(var(--v-theme-surface)); color: rgb(var(--v-theme-border_alt));">
+						<p class="ma-auto">Email:</p></v-row>
+						<v-row no-gutters><p class="ma-auto">{{ emailModel }}</p></v-row>
+
 						<v-divider :thickness="10"></v-divider>
 					</v-col>
 				</v-row>
-
+						
 				<!-- Sign Out -->
 				<SignOut @onSignOut="setSession"/>
 			</div>

@@ -1,6 +1,27 @@
 <template>
 	<!-- Update Preferred Username -->
-	<v-row justify="center">
+	<v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
+		<v-row no-gutters>
+			<v-spacer/>
+			<v-col cols="3" class="ma-2">
+					<v-text-field label="User Name" :rules="[
+							value => checkPreferred_usernameTooShort(value),
+							value => checkPreferred_usernameFirstChar(value),
+							value => checkPreferred_usernameSpecialCharExceptions(value)
+						]" 
+						clearable @click:clear="clearUsernameModelValidationError"
+						v-model="usernameModel" hint="Example: kb1" variant="outlined" density="compact" >
+					</v-text-field>
+			</v-col>
+			<v-col cols="2">
+					<v-btn class="mt-3" height="3em"
+					:disabled="!usernameModel" color="primary" type="submit"> Save<br>Username</v-btn>
+			</v-col>
+			<v-spacer/>
+		</v-row>
+	</v-form>
+	
+	<!-- <v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 			<v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
 				<v-row>
@@ -18,7 +39,7 @@
 				</v-row>
 			</v-form>
 		</v-col>
-	</v-row>
+	</v-row> -->
 
 	<!-- __ERROR_POPUP__ -->
 	<v-row justify="center" v-if="showDialog" >

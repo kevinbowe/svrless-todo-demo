@@ -1,6 +1,30 @@
 <template>
 	<!-- Save Phone number -->
-	<v-row justify="center">
+	<v-form validate-on="submit" @submit.prevent="submitPhone_number" >
+		<v-row no-gutters>
+			<v-spacer/>
+			<v-col cols="3" class="ma-2">
+			<v-text-field label="Phone number (optional)" 
+			v-model="phone_numberModel"
+			ref="phone_numberFieldRef"
+			:rules="[
+				value => checkPhone_number(value),
+				value => checkPhone_numberInvalidCountryCode(value),
+			]"
+			clearable @click:clear= "clearPhone_numberValidationError"
+			hint="Example: 1 (919) 333-4444" variant="outlined" density="compact"/>
+			</v-col>
+	
+			<v-col cols="2" >
+				<v-btn class="mt-3" height="3em" type="submit"
+				:disabled="!phone_numberModel" color="primary">
+				Save Phone<br>number</v-btn>
+			</v-col>
+			<v-spacer/>
+		</v-row>
+	</v-form>
+
+	<!-- <v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 			<v-form validate-on="submit" @submit.prevent="submitPhone_number" >
 				<v-row>
@@ -19,7 +43,7 @@
 				</v-row>
 			</v-form>
 		</v-col>
-	</v-row>
+	</v-row> -->
 </template>
 
 <script setup lang="ts">

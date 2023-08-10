@@ -1,6 +1,6 @@
 <template>
 	<!-- Update Nickname -->
-	<v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
+	<!-- <v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
 		<v-row no-gutters>
 			<v-spacer/>
 			<v-col cols="3" class="ma-2">
@@ -24,10 +24,14 @@
 
 			<v-spacer/>
 		</v-row>
-	</v-form>
+	</v-form> -->
 
-	<!-- <v-row justify="center" >
+	<v-row justify="center" >
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+
+			<v-row class="justify-start">
+				<v-label class="text-h5 mb-5" :text="nicknameModel" />
+			</v-row>
 		<v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
 			<v-row>
 				<v-text-field label="Nickname" :rules="[
@@ -43,11 +47,12 @@
 				</v-text-field>
 			</v-row>
 			<v-row class="justify-end">
+				<v-btn class="mx-1" color="surface" @click="emit('onCancelNickname', false )"> Cancel</v-btn>
 				<v-btn :disabled="!workingNicknameModel" color="primary" type="submit"> Save Nickname</v-btn>
 			</v-row>
 		</v-form>
 		</v-col>
-	</v-row> -->
+	</v-row>
 </template>
 
 
@@ -65,13 +70,16 @@ import { checkNicknameReserved,checkNicknameFirstChar, checkNicknameLastChar,
 	from "./NicknameParts/NicknameValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const emit = defineEmits()
+
+/* ----------------------------------------------------------------------------- */
+const props = defineProps({nicknameModel: {type: String}})
+const emailModel = ref("")
+emailModel.value = props.nicknameModel
+
+const workingNicknameModel = ref("")
 const nicknameFormRef = ref()
 const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const workingNicknameModel = ref("")
-
-const emit = defineEmits()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
@@ -82,7 +90,10 @@ async function submitNickname(event) {
 		const newuser = await Auth.currentAuthenticatedUser({bypassCache: true });
 		await Auth.updateUserAttributes(newuser, {'nickname': workingNicknameModel.value })
 		await Auth.currentUserInfo().then(result => {
-		emit('onUpdateNickname', { nickname: result.attributes.nickname})
+		emit('onUpdateNickname', { 
+			nickname: result.attributes.nickname,
+			showNickname: false
+		})
 		workingNicknameModel.value = ""
 	}) // END_THEN
 }	

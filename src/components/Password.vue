@@ -1,6 +1,6 @@
 <template>
 	<!-- Update password-->
-	<v-form validate-on="submit" @submit.prevent="submitPassword" >
+	<!-- <v-form validate-on="submit" @submit.prevent="submitPassword" >
 		<v-row no-gutters class="mb-5">
 			<v-spacer/>
 			<v-col cols="3" > 
@@ -36,9 +36,9 @@
 			</v-col>
 			<v-spacer/>
 		</v-row>
-	</v-form>
+	</v-form> -->
 	
-	<!-- <v-row justify="center">
+	<v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
 		<v-form validate-on="submit" @submit.prevent="submitPassword" >
 			<v-row>
@@ -68,11 +68,12 @@
 				></v-text-field>
 			</v-row>
 			<v-row class="justify-end">
+				<v-btn class="mx-1" color="surface" @click="emit('onCancelPassword', false )"> Cancel</v-btn>
 				<v-btn :disabled="!workingPasswordModel || !newWorkingPasswordModel" color="primary" type="submit"> Update Password </v-btn>
 			</v-row>
 		</v-form>
 		</v-col>
-	</v-row> -->
+	</v-row>
 
 	<!-- PopUp Message Dialog -- Modal -->
 	<v-row justify="center" v-if="openDialogFlag" >
@@ -83,15 +84,18 @@
 					<h1>Success</h1><strong>Your password has been Updated.</strong>
 				</v-card-text>
 				<v-card-actions>
-					<v-btn @click="openDialogFlag = false" block 
-					color="surface" 
-					style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+					<v-btn text="OK" @click="emit('onCancelPassword', false ); openDialogFlag = false" 
+					block color="surface" style="background-color:rgb(var(--v-theme-primary))"/>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
 	</v-row>
 
 </template>
+
+<script lang="ts">
+	export default {inheritAttrs: false}
+</script>
 
 <script setup lang="ts">
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -105,6 +109,8 @@ import { Auth } from 'aws-amplify';
 import { checkPasswordTooShort, checkPasswordSpecialChars } from "../components/PasswordParts/PasswordValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const emit = defineEmits()
+
 const workingPasswordModel =ref("")
 const newWorkingPasswordModel =ref("")
 const passwordIcon1 = ref(false)
@@ -134,12 +140,12 @@ const clearNewWorkingPasswordModelValidationError = () => newWorkingPasswordForm
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitPassword (event) {
-
-	if(BLOCKAPI("submitPassword function "))return
-	
 	const results = await event
-	if(!results.valid)return /* Cancel Submission if validation FAILED */
-	
+		if(!results.valid) {
+			return /* Cancel Submission if validation FAILED */
+		}
+	if(BLOCKAPI("submitPassword function "))return
+
 	//				If we get here, validation was sucessful
 	//				This will return the user in the user pool (not updated )
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
@@ -149,7 +155,8 @@ async function submitPassword (event) {
 	newWorkingPasswordModel.value = ""
 	workingPasswordModel.value = ""
 	//				Display the confirmation dialog.
-	openDialogFlag.value = true
+	//				The emit will be executed from the dialog.
+	openDialogFlag.value = true 
 }
 
 </script>

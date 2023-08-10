@@ -1,6 +1,6 @@
 <template>
 <!-- Update Email-->
-<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
+<!-- <v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 	<v-row no-gutters>
 		<v-spacer/>
 		<v-col cols="3" class="ma-2">
@@ -20,10 +20,13 @@
 		</v-col>
 		<v-spacer/>
 	</v-row>
-</v-form>
+</v-form> -->
 
-<!-- <v-row justify="center">
+<v-row justify="center">
 	<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+	<v-row class="justify-start">
+		<v-label class="text-h5 mb-5" :text="emailModel" />
+	</v-row>
 	<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
 		<v-row>
 			<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
@@ -37,11 +40,12 @@
 			></v-text-field>
 		</v-row>
 		<v-row class="justify-end">
+			<v-btn class="mx-1" color="surface" @click="emit('onCancelEmail', false )"> Cancel</v-btn>
 			<v-btn :disabled="!workingEmailModel" color="primary" type="submit"> Save Email </v-btn>
 		</v-row>
 	</v-form>
 	</v-col>
-</v-row> -->
+</v-row>
 
 <!-- Update Email Confirmation -->
 <v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
@@ -117,11 +121,15 @@ import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkW
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
+
 /* ----------------------------------------------------------------------------- */
+const props = defineProps({emailModel: { type: String }})
+const emailModel = ref("")
+emailModel.value = props.emailModel
+
 const workingEmailModel =ref("")
 const emailFormRef = ref()
 const clearWorkingEmailModelValidationError = () => emailFormRef.value.resetValidation()
-
 /* ----------------------------------------------------------------------------- */
 const confirmEmailCodeModel = ref("")
 const confirmEmailCodeModelFieldRef = ref()
@@ -170,7 +178,11 @@ const applyEmailConfirmationCode = async function (event) {
 	.then((response) => {
 		// 		If we get here, the email is CONFIRMED.
 
-		emit('onUpdateEmail', { email: workingEmailModel.value})
+		emit('onUpdateEmail', { 
+			email: workingEmailModel.value, 
+			showEmail: false
+		})
+		// emit('onUpdateEmail', { email: workingEmailModel.value})
 		workingEmailModel.value = ""
 		confirmEmailCodeModel.value = ""
 		toggleConfirmEmail.value = false

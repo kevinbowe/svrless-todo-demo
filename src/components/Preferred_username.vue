@@ -1,6 +1,6 @@
 <template>
 	<!-- Update Preferred Username -->
-	<v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
+	<!-- <v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
 		<v-row no-gutters>
 			<v-spacer/>
 			<v-col cols="3" class="ma-2">
@@ -19,27 +19,31 @@
 			</v-col>
 			<v-spacer/>
 		</v-row>
-	</v-form>
+	</v-form> -->
 	
-	<!-- <v-row justify="center">
+	<v-row justify="center">
 		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+			<v-row class="justify-start">
+				<v-label class="text-h5 mb-5" :text="usernameModel" />
+			</v-row>
 			<v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
 				<v-row>
-					<v-text-field label="User Name" :rules="[
-							value => checkPreferred_usernameTooShort(value),
-							value => checkPreferred_usernameFirstChar(value),
-							value => checkPreferred_usernameSpecialCharExceptions(value)
-						]" 
-						clearable @click:clear="clearUsernameModelValidationError"
-						v-model="usernameModel" hint="Example: kb1" variant="outlined" density="compact" >
-					</v-text-field>
+					<v-text-field label="User Name" 
+					:rules="[
+						value => checkPreferred_usernameTooShort(value),
+						value => checkPreferred_usernameFirstChar(value),
+						value => checkPreferred_usernameSpecialCharExceptions(value)
+					]" 
+					clearable @click:clear="clearUsernameModelValidationError"
+					v-model="workingUsernameModel" hint="Example: kb1" variant="outlined" density="compact" />
 				</v-row>
 				<v-row class="justify-end">
-					<v-btn :disabled="!usernameModel" color="primary" type="submit"> Save Preferred Username</v-btn>
+					<v-btn class="mx-1" color="surface" @click="emit('onCancelPreferred_username', false )"> Cancel</v-btn>
+					<v-btn :disabled="!workingUsernameModel" color="primary" type="submit"> Save Preferred Username</v-btn>
 				</v-row>
 			</v-form>
 		</v-col>
-	</v-row> -->
+	</v-row>
 
 	<!-- __ERROR_POPUP__ -->
 	<v-row justify="center" v-if="showDialog" >
@@ -76,10 +80,18 @@ import { checkPreferred_usernameTooShort, checkPreferred_usernameFirstChar,
 	from "../components/Preferred_usernameParts/Preferred_usernameValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const usernameModel = ref("")
-const usernameFormRef = ref()
-
 const emit = defineEmits()
+
+/* ----------------------------------------------------------------------------- */
+const props = defineProps({usernameModel: { type: String }})
+const usernameModel = ref("")
+usernameModel.value = props.usernameModel
+
+const workingUsernameModel = ref("")
+const usernameFormRef = ref()
+const clearUsernameModelValidationError = () => usernameFormRef.value.resetValidation()
+
+/* ----------------------------------------------------------------------------- */
 const showDialog = ref(false)
 const errorPopup = ref({title:"", msg:""})
 
@@ -92,25 +104,27 @@ async function submitUsername (event) {
 
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true});
-	await Auth.updateUserAttributes(newuser, {'preferred_username': usernameModel.value})
+	await Auth.updateUserAttributes(newuser, {'preferred_username': workingUsernameModel.value})
 	.then(response => {
 		//				This code will not execute --IF-- the function above causes an exception.
 		Auth.currentUserInfo().then(result => {
 			//			If we get here, The update worked.
-			emit('onUpdatePreferred_username', { preferred_username: result.attributes.preferred_username})
-			usernameModel.value = ""
+			emit('onUpdatePreferred_username', { 
+				preferred_username: result.attributes.preferred_username,
+				showPreferred_username: false
+			})
+			workingUsernameModel.value = ""
 		})
 	})
 	.catch((error) => {
 		//			If I get here, there was a problem updating the preferred_username
-		errorPopup.value = {title:`Username not available`, msg:`"${usernameModel.value}" is not available.` }
-		usernameModel.value = ""
+		errorPopup.value = {title:`Username not available`, msg:`"${workingUsernameModel.value}" is not available.` }
+		workingUsernameModel.value = ""
 		showDialog.value = true
 	}) 
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const clearUsernameModelValidationError = () => usernameFormRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /**/					const BLOCKAPIFLAG = ref(false)										 /**/

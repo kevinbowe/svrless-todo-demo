@@ -6,23 +6,117 @@
 
 			<div v-if="isSession">
 
+				<!-- Delete User -->
+				<DeleteUser v-if="showDeleteUser" :usernameModel="usernameModel" @onCancelDeleteUser="setShowDeleteUser"/>
+				<div class="ma-3">
+					<v-card v-if="!showDeleteUser" class="ma-auto pa-2" variant="tonal" color="major" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6"> Delete User </v-row>
+									<!-- <v-row>{{ nicknameModel }}</v-row> -->
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="major" @click="++showDeleteUser"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
+
+
 				<!-- Update Password-->
-				<Password/>
+				<Password v-if="showPassword" @onCancelPassword="setShowPassword"/>
+				<v-card v-if="!showPassword" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+					<v-card-text>
+						<v-row >
+							<v-col>
+								<v-row class="text-h6">
+									<v-icon start icon="mdi-lock-outline"></v-icon>Change Password
+								</v-row>
+								<v-row></v-row>
+							</v-col>
+							<v-col align-self="center">
+								<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPassword"/></v-row>
+							</v-col>
+						</v-row>
+					</v-card-text>
+				</v-card>
 
 				<!-- Update Nickname -->
-				<Nickname @onUpdateNickname="setNickname"/>
-				
+				<Nickname v-if="showNickname" :nicknameModel="nicknameModel" @onUpdateNickname="setNickname" @onCancelNickname="setShowNickname"/>
+				<div class="ma-3">
+					<v-card v-if="!showNickname" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6"> Change Nickname</v-row>
+									<v-row>{{ nicknameModel }}</v-row>
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showNickname"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
+					
 				<!-- Update Phone number -->
-				<Phone_number @onUpdatePhone_number="setPhone_number"/>
+				<Phone_number v-if="showPhone_number" :phone_numberModel="phone_numberModel" @onUpdatePhone_number="setPhone_number" @onCancelPhone_number="setShowPhone_number"/>
+				<div class="ma-3">
+					<v-card v-if="!showPhone_number" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6"> Change Phone number</v-row>
+									<v-row>{{ phone_numberModel }}</v-row>
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPhone_number"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
 				
 				<!-- Update Preferred Username -->
-				<Preferred_username @onUpdatePreferred_username="setPreferred_username"/>
-				
-				<!-- Update Email-->
-				<Email @onUpdateEmail="setEmail"/>
+				<Preferred_username v-if="showPreferred_username" :usernameModel="usernameModel" @onUpdatePreferred_username="setPreferred_username" @onCancelPreferred_username="setShowPreferred_username"/>
+				<div class="ma-3">
+					<v-card v-if="!showPreferred_username" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6"> Change User name</v-row>
+									<v-row>{{ usernameModel }}</v-row>
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPreferred_username"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
 
+				<!-- Update Email-->
+				<Email v-if="showEmail" :emailModel="emailModel" @onUpdateEmail="setEmail" @onCancelEmail="setShowEmail"/>
+				<div class="ma-3">
+					<v-card v-if="!showEmail" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6"> Change Email (conf)</v-row>
+									<v-row>{{ emailModel }}</v-row>
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showEmail"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
+					
 				<!-- <UserInfo/> -->
-				<v-row justify="center">
+				<!-- <v-row justify="center">
 					<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 						<v-divider :thickness="10" class="ma-2"></v-divider>
 						
@@ -52,7 +146,7 @@
 
 						<v-divider :thickness="10"></v-divider>
 					</v-col>
-				</v-row>
+				</v-row> -->
 						
 				<!-- Sign Out -->
 				<SignOut @onSignOut="setSession"/>
@@ -83,6 +177,7 @@ import Email from "../components/Email.vue";
 import SignOut from "../components/SignOut.vue"
 import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
+import DeleteUser from "../components/DeleteUser.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }
@@ -93,6 +188,14 @@ const emailModel = ref()
 const phone_numberModel = ref()
 const usernameModel = ref()
 const isSession = ref(true)
+
+const showNickname = ref(false)
+const showPhone_number = ref(false)
+const showPreferred_username = ref(false)
+const showEmail = ref(false)
+const showPassword = ref(false)
+const showDeleteUser = ref(false)
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const friendlyPhone = (phone) => {
 	if (phone == undefined) return
@@ -102,16 +205,38 @@ const friendlyPhone = (phone) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setEmail = (payload) => emailModel.value = payload.email 
+const setEmail = (payload) => {
+	emailModel.value = payload.email
+	showEmail.value = payload.showEmail
+}
+const setShowEmail = (payload) => showEmail.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setNickname = (payload) => nicknameModel.value = payload.nickname 
+const setNickname = (payload) => { 
+	nicknameModel.value = payload.nickname 
+	showNickname.value = payload.showNickname
+}
+const setShowNickname = (payload) => {	showNickname.value = payload }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setPhone_number = (payload) => phone_numberModel.value = payload.phone_number
+const setShowPassword = (payload) => showPassword.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setPreferred_username = (payload) => usernameModel.value = payload.preferred_username
+const setShowDeleteUser = (payload) => showDeleteUser.value = payload
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setPhone_number = (payload) => { 
+	phone_numberModel.value = payload.phone_number,
+	showPhone_number.value = payload.showPhone_number
+}
+const setShowPhone_number = (payload) => showPhone_number.value = payload
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setPreferred_username = (payload) => {
+	usernameModel.value = payload.preferred_username
+	showPreferred_username.value = payload.showPreferred_username
+}
+const setShowPreferred_username = (payload) => showPreferred_username.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setUserInfo = (payload) => { 

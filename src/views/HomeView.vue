@@ -6,6 +6,25 @@
 
 			<div v-if="isSession">
 
+				<!-- Delete User w/ Confirm -->
+				<DeleteUserConf v-if="showDeleteUserConf" :usernameModel="usernameModel" @onCancelDeleteUserConf="setShowDeleteUserConf"/>
+				<div class="ma-3">
+					<v-card v-if="!showDeleteUserConf" class="ma-auto pa-2" variant="tonal" 
+					color="orange-darken-2" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6"> Delete User w/ conf</v-row>
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="orange-darken-2" _color="major" @click="++showDeleteUserConf"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
+
+
 				<!-- Delete User -->
 				<DeleteUser v-if="showDeleteUser" :usernameModel="usernameModel" @onCancelDeleteUser="setShowDeleteUser"/>
 				<div class="ma-3">
@@ -14,7 +33,6 @@
 							<v-row >
 								<v-col>
 									<v-row class="text-h6"> Delete User </v-row>
-									<!-- <v-row>{{ nicknameModel }}</v-row> -->
 								</v-col>
 								<v-col align-self="center">
 									<v-row justify="end"><v-btn text="Edit" color="major" @click="++showDeleteUser"/></v-row>
@@ -27,21 +45,23 @@
 
 				<!-- Update Password-->
 				<Password v-if="showPassword" @onCancelPassword="setShowPassword"/>
-				<v-card v-if="!showPassword" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
-					<v-card-text>
-						<v-row >
-							<v-col>
-								<v-row class="text-h6">
-									<v-icon start icon="mdi-lock-outline"></v-icon>Change Password
-								</v-row>
-								<v-row></v-row>
-							</v-col>
-							<v-col align-self="center">
-								<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPassword"/></v-row>
-							</v-col>
-						</v-row>
-					</v-card-text>
-				</v-card>
+				<div class="ma-3">
+					<v-card v-if="!showPassword" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+						<v-card-text>
+							<v-row >
+								<v-col>
+									<v-row class="text-h6">
+										<v-icon start icon="mdi-lock-outline"></v-icon>Change Password
+									</v-row>
+									<v-row></v-row>
+								</v-col>
+								<v-col align-self="center">
+									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPassword"/></v-row>
+								</v-col>
+							</v-row>
+						</v-card-text>
+					</v-card>
+				</div>
 
 				<!-- Update Nickname -->
 				<Nickname v-if="showNickname" :nicknameModel="nicknameModel" @onUpdateNickname="setNickname" @onCancelNickname="setShowNickname"/>
@@ -178,6 +198,7 @@ import SignOut from "../components/SignOut.vue"
 import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
 import DeleteUser from "../components/DeleteUser.vue"
+import DeleteUserConf from "../components/DeleteUserConf.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }
@@ -195,6 +216,7 @@ const showPreferred_username = ref(false)
 const showEmail = ref(false)
 const showPassword = ref(false)
 const showDeleteUser = ref(false)
+const showDeleteUserConf = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const friendlyPhone = (phone) => {
@@ -223,6 +245,9 @@ const setShowPassword = (payload) => showPassword.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setShowDeleteUser = (payload) => showDeleteUser.value = payload
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setShowDeleteUserConf = (payload) => showDeleteUserConf.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setPhone_number = (payload) => { 

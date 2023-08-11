@@ -147,7 +147,7 @@ async function submitEmail (event) {
 	if(!results.valid) {
 		return /* Cancel Submission if validation FAILED */
 	}
-	//				If we get here, validation was sucessful
+	//				If we get here, validation was successful
 	//				This will return the user in the user pool (not updated )
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
 	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value })

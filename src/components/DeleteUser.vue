@@ -11,8 +11,8 @@
 				</p>
 			</v-row>
 			<v-row class="justify-end">
-				<v-btn class="mx-1" color="surface" @click="emit('onCancelDeleteUserConf', false )"> Cancel </v-btn>
-				<v-btn color="error" @click="sendDeleteUserConf"> Confirm Deletion </v-btn>
+				<v-btn class="mx-1" color="surface" @click="emit('onCancelDeleteUser', false )"> Cancel </v-btn>
+				<v-btn color="error" @click="sendDeleteUser"> Confirm Deletion </v-btn>
 			</v-row>
 		</v-col>
 	</v-row>
@@ -20,10 +20,14 @@
 	<!-- Delete Confirmation -->
 	<v-overlay class="align-center justify-center" v-model="toggleConfirmDelete" >
 		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
-				<v-row><v-spacer/>
+			
+			<!-- Cancel (X) -->
+			<v-row><v-spacer/>
 				<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" 
 				@click="toggleConfirmDelete=false;"/>
 			</v-row>
+
+			<!-- Confirmation Message -->
 			<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
 				<h1 class="ma-auto" v-html="deleteConfirmationMessage.Title.value"></h1>
 				<p v-html="deleteConfirmationMessage.Message.value"></p>
@@ -46,6 +50,7 @@
 				</v-btn>
 			</v-form>
 
+			<!-- Resend Code -->
 			<v-btn block color="surface" @click="resendDeleteConfirmationCode" >
 				Resend Code 
 			</v-btn>
@@ -88,11 +93,11 @@ import { parseEmail } from "../components/EmailParts/EmailValidators"
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
 
+/* ----------------------------------------------------------------------------- */
 const props = defineProps({
 	usernameModel: { type: String }, 
 	emailModel: {type: String}
 })
-
 const usernameModel = ref("")
 usernameModel.value = props.usernameModel
 /* ----------------------------------------------------------------------------- */
@@ -105,10 +110,8 @@ const deleteConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: 
 const openDialogFlag = ref()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const sendDeleteUserConf = async () => {
-						enter(`sendDeleteUserConf(~)`)
-	// if(BLOCKAPI("sendDeleteUserConf function ")){ emit('onCancelDeleteUserConf', false); return }
-	if(BLOCKAPI("sendDeleteUserConf function ")) { 
+const sendDeleteUser = async () => {
+	if(BLOCKAPI("sendDeleteUser function ")) { 
 		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.emailModel)
 		toggleConfirmDelete.value = true; 
 		return 
@@ -123,28 +126,20 @@ const sendDeleteUserConf = async () => {
 }
 /* ----------------------------------------------------------------------------- */
 const applyDeleteConfirmationCode = async (event) => {
-					enter(`applyDeleteConfirmationCode`)
 	const results = await event
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
 
-	// if(BLOCKAPI("applyDeleteConfirmationCode function ")) return
 	if(BLOCKAPI("applyDeleteConfirmationCode function ")) {
 		openDialogFlag.value = true // open the Popup Dialog
 		return
 	}
-
 	//				Verify the input confirmation code 
 	await Auth.verifyCurrentUserAttributeSubmit("email", confirmDeleteCodeModel.value)
 	.then(response => {
-					info(`Auth.verifyCurrentUserAttributeSubmit > response > ${response}`)
-					info(`The next thing we do is execute [ Auth.deleteUser() ]`)
-					info(`Then we Emit the [ onCancelDeleteUserConf ] event to close component. \n`)
-		const result = Auth.deleteUser();
-		console.log(result);
-		emit('onCancelDeleteUserConf', false)
+		Auth.deleteUser();
+		emit('onCancelDeleteUser', false)
 	})
 	.catch((e) => {
-					info3(`Auth.verifyCurrentUserAttributeSubmit > Code Failed\n      ${e.message}`)
 		openDialogFlag.value = true // open the Popup Dialog
 		confirmDeleteCodeModel.value = ""
 	})
@@ -162,7 +157,6 @@ const resendDeleteConfirmationCode = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildDeleteConfirmationMessage = (email:string) => {
-					enter(`buildDeleteConfirmationMessage > [ ${email} ]`)
 	deleteConfirmationMessage.Title.value = "Last Chance..."
 	deleteConfirmationMessage.Message.value = 
 	`Before we delete your account, you must enter the ` +

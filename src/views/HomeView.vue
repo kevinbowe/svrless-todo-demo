@@ -6,10 +6,10 @@
 
 			<div v-if="isSession">
 
-				<!-- Delete User w/ Confirm -->
-				<DeleteUserConf v-if="showDeleteUserConf" :usernameModel="usernameModel" :emailModel="emailModel" @onCancelDeleteUserConf="setShowDeleteUserConf"/>
+				<!-- Delete User -->
+				<DeleteUser v-if="showDeleteUser" :usernameModel="usernameModel" :emailModel="emailModel" @onCancelDeleteUser="setShowDeleteUser"/>
 				<div class="ma-3">
-					<v-card v-if="!showDeleteUserConf" max-width="30em" elevation="24" 
+					<v-card v-if="!showDeleteUser" max-width="30em" elevation="24" 
 					class="ma-auto pa-2" variant="tonal" color="major" _color="orange-darken-2">
 						<v-card-text>
 							<v-row >
@@ -17,7 +17,7 @@
 									<v-row class="text-h6"> Delete User w/ conf</v-row>
 								</v-col>
 								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" _color="orange-darken-2" color="major" @click="++showDeleteUserConf"/></v-row>
+									<v-row justify="end"><v-btn text="Edit" _color="orange-darken-2" color="major" @click="++showDeleteUser"/></v-row>
 								</v-col>
 							</v-row>
 						</v-card-text>
@@ -145,7 +145,7 @@ import Email from "../components/Email.vue";
 import SignOut from "../components/SignOut.vue"
 import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
-import DeleteUserConf from "../components/DeleteUserConf.vue"
+import DeleteUser from "../components/DeleteUser.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setSession = (payload) => { isSession.value = payload.sessionState }
@@ -163,7 +163,6 @@ const showPreferred_username = ref(false)
 const showEmail = ref(false)
 const showPassword = ref(false)
 const showDeleteUser = ref(false)
-const showDeleteUserConf = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const friendlyPhone = (phone) => {
@@ -192,9 +191,6 @@ const setShowPassword = (payload) => showPassword.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setShowDeleteUser = (payload) => showDeleteUser.value = payload
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setShowDeleteUserConf = (payload) => showDeleteUserConf.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setPhone_number = (payload) => { 

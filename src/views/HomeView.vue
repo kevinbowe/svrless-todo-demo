@@ -7,7 +7,7 @@
 			<div v-if="isSession">
 
 				<!-- Delete User w/ Confirm -->
-				<DeleteUserConf v-if="showDeleteUserConf" :usernameModel="usernameModel" @onCancelDeleteUserConf="setShowDeleteUserConf"/>
+				<DeleteUserConf v-if="showDeleteUserConf" :usernameModel="usernameModel" :emailModel="emailModel" @onCancelDeleteUserConf="setShowDeleteUserConf"/>
 				<div class="ma-3">
 					<v-card v-if="!showDeleteUserConf" class="ma-auto pa-2" variant="tonal" 
 					color="orange-darken-2" max-width="30em" elevation="24" >

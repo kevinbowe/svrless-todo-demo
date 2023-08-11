@@ -35,9 +35,9 @@
 				<v-text-field label="Confirmation Code" v-model="confirmDeleteCodeModel" 
 				ref="confirmDeleteCodeModelFieldRef" id="ConfCode" 
 				:rules="[
-					// value => !!value,
-					// value => checkConfirmationTooShort(value),
-					// value => checkConfirmationSpecialChars(value),
+					value => !!value,
+					value => checkConfirmationTooShort(value),
+					value => checkConfirmationSpecialChars(value),
 				]"
 				placeholder="Enter your code" variant="outlined" density="compact"
 				clearable @click:clear="clearConfirmDeleteCodeModelValidationError"/>
@@ -83,11 +83,16 @@ import { Auth } from 'aws-amplify';
 
 import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 	from "../components/ConfirmationParts/ComfirmationValidators"
+import { parseEmail } from "../components/EmailParts/EmailValidators"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
 
-const props = defineProps({usernameModel: { type: String }})
+const props = defineProps({
+	usernameModel: { type: String }, 
+	emailModel: {type: String}
+})
+
 const usernameModel = ref("")
 usernameModel.value = props.usernameModel
 /* ----------------------------------------------------------------------------- */
@@ -103,11 +108,17 @@ const openDialogFlag = ref()
 const sendDeleteUserConf = async () => {
 						enter(`sendDeleteUserConf(~)`)
 	// if(BLOCKAPI("sendDeleteUserConf function ")){ emit('onCancelDeleteUserConf', false); return }
-	if(BLOCKAPI("sendDeleteUserConf function "))
-	{ toggleConfirmDelete.value = true; return }
+	if(BLOCKAPI("sendDeleteUserConf function ")) { 
+		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.emailModel)
+		toggleConfirmDelete.value = true; 
+		return 
+	}
 
 	await Auth.verifyCurrentUserAttribute("email")
-	.then(response => { toggleConfirmDelete.value = true })
+	.then(response => { 
+		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.emailModel)
+		toggleConfirmDelete.value = true 
+	})
 	.catch(e => err(`Auth.verifyCurrentUserAttribute FAILED ${e}`))
 }
 /* ----------------------------------------------------------------------------- */
@@ -128,8 +139,8 @@ const applyDeleteConfirmationCode = async (event) => {
 					info(`Auth.verifyCurrentUserAttributeSubmit > response > ${response}`)
 					info(`The next thing we do is execute [ Auth.deleteUser() ]`)
 					info(`Then we Emit the [ onCancelDeleteUserConf ] event to close component. \n`)
-		//	const result = Auth.deleteUser();
-		//	console.log(result);
+		const result = Auth.deleteUser();
+		console.log(result);
 		emit('onCancelDeleteUserConf', false)
 	})
 	.catch((e) => {
@@ -148,6 +159,22 @@ const resendDeleteConfirmationCode = async () => {
 	//					Clear all validation messages.
 	confirmDeleteCodeModelFieldRef.value.resetValidation()
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const buildDeleteConfirmationMessage = (email:string) => {
+					enter(`buildDeleteConfirmationMessage > [ ${email} ]`)
+	deleteConfirmationMessage.Title.value = "Last Chance..."
+	deleteConfirmationMessage.Message.value = 
+	`Before we delete your account, you must enter the ` +
+	`code we sent to the email address associated with this account.` 
+
+	let {name , domain} = parseEmail(email)
+	deleteConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+	deleteConfirmationMessage.Message3.value = `It may take a minuet to arrive.`
+
+	return deleteConfirmationMessage
+}
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /**/					const BLOCKAPIFLAG = ref(true)										 /**/

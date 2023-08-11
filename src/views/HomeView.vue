@@ -9,39 +9,20 @@
 				<!-- Delete User w/ Confirm -->
 				<DeleteUserConf v-if="showDeleteUserConf" :usernameModel="usernameModel" :emailModel="emailModel" @onCancelDeleteUserConf="setShowDeleteUserConf"/>
 				<div class="ma-3">
-					<v-card v-if="!showDeleteUserConf" class="ma-auto pa-2" variant="tonal" 
-					color="orange-darken-2" max-width="30em" elevation="24" >
+					<v-card v-if="!showDeleteUserConf" max-width="30em" elevation="24" 
+					class="ma-auto pa-2" variant="tonal" color="major" _color="orange-darken-2">
 						<v-card-text>
 							<v-row >
 								<v-col>
 									<v-row class="text-h6"> Delete User w/ conf</v-row>
 								</v-col>
 								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" color="orange-darken-2" _color="major" @click="++showDeleteUserConf"/></v-row>
+									<v-row justify="end"><v-btn text="Edit" _color="orange-darken-2" color="major" @click="++showDeleteUserConf"/></v-row>
 								</v-col>
 							</v-row>
 						</v-card-text>
 					</v-card>
 				</div>
-
-
-				<!-- Delete User -->
-				<DeleteUser v-if="showDeleteUser" :usernameModel="usernameModel" @onCancelDeleteUser="setShowDeleteUser"/>
-				<div class="ma-3">
-					<v-card v-if="!showDeleteUser" class="ma-auto pa-2" variant="tonal" color="major" max-width="30em" elevation="24" >
-						<v-card-text>
-							<v-row >
-								<v-col>
-									<v-row class="text-h6"> Delete User </v-row>
-								</v-col>
-								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" color="major" @click="++showDeleteUser"/></v-row>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</div>
-
 
 				<!-- Update Password-->
 				<Password v-if="showPassword" @onCancelPassword="setShowPassword"/>
@@ -164,7 +145,6 @@ import Email from "../components/Email.vue";
 import SignOut from "../components/SignOut.vue"
 import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
-import DeleteUser from "../components/DeleteUser.vue"
 import DeleteUserConf from "../components/DeleteUserConf.vue"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

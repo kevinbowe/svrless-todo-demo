@@ -1,53 +1,43 @@
 <template>
-	<!-- Save Phone number -->
-	<!-- <v-form validate-on="submit" @submit.prevent="submitPhone_number" >
-		<v-row no-gutters>
-			<v-spacer/>
-			<v-col cols="3" class="ma-2">
-			<v-text-field label="Phone number (optional)" v-model="phone_numberModel"
-			ref="phone_numberFieldRef"
-			clearable @click:clear= "clearPhone_numberValidationError"
-			:rules="[
-				value => checkPhone_number(value),
-				value => checkPhone_numberInvalidCountryCode(value),
-			]"
-			hint="Example: 1 (919) 333-4444" 
-			variant="outlined" density="compact"/>
-			</v-col>
-	
-			<v-col cols="2" >
-				<v-btn class="mt-3" height="3em" 
-				 :disabled="!phone_numberModel" color="primary" type="submit">
-				Save Phone<br>number</v-btn>
-			</v-col>
-			<v-spacer/>
-		</v-row>
-	</v-form> -->
+	<div class="ma-3">
 
-	<v-row justify="center">
-		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-			<v-row class="justify-start">
-				<v-label class="text-h5 mb-5" :text="phone_numberModel" />
-			</v-row>
-			<v-form validate-on="submit" @submit.prevent="submitPhone_number" >
-				<v-row>
-					<v-text-field label="Phone number (optional)" v-model="workingPhone_numberModel"
-					ref="phone_numberFieldRef"
-					clearable @click:clear= "clearPhone_numberValidationError"
-					:rules="[
-						value => checkPhone_number(value),
-						value => checkPhone_numberInvalidCountryCode(value),
-					]"
-					hint="Example: 1 (919) 333-4444" variant="outlined" density="compact"/>
+		<!-- Access Phone number -->
+		<v-card class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+			<v-card-text>
+				<v-row >
+					<v-col>
+						<v-row class="text-h6"> Change Phone number </v-row>
+						<v-row>{{ props.phone_number }}</v-row>
+					</v-col>
+					<v-col align-self="center">
+						<v-row justify="end">
+							<v-btn text="Edit" v-if="!showPhone_number" color="minor" @click="showPhone_number=!showPhone_number"/>
+						</v-row>
+					</v-col>
 				</v-row>
-				<v-row class="justify-end">
-					<v-btn class="mx-1" color="surface" @click="emit('onCancelPhone_number', false )"> Cancel</v-btn>
-					<v-btn text="Save Phone number" type="submit"
-					:disabled="!workingPhone_numberModel" color="primary" _size="large"/>
+			</v-card-text>
+		</v-card>
+
+		<!-- Update Phone number -->
+		<v-sheet v-if="showPhone_number" color="background" max-width="30em" class="mx-auto my-3">
+			<v-form validate-on="submit" @submit.prevent="submitPhone_number" >
+				<v-text-field label="Phone number (optional)" v-model="workingPhone_numberModel"
+				ref="phone_numberFieldRef"
+				clearable @click:clear= "clearPhone_numberValidationError"
+				:rules="[
+					value => checkPhone_number(value),
+					value => checkPhone_numberInvalidCountryCode(value),
+				]"
+				hint="Example: 1 (919) 333-4444" variant="outlined" density="compact"/>
+
+				<v-row class="justify-end px-3 py-5">
+					<v-btn text="Cancel" class="mx-1" color="surface" @click="showPhone_number = false; workingPhone_numberModel='' "/>
+					<v-btn text="Save Phone number" type="submit" :disabled="!workingPhone_numberModel" color="primary" />
 				</v-row>
 			</v-form>
-		</v-col>
-	</v-row>
+		</v-sheet>
+
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -63,13 +53,14 @@ import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from ".
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
 /* ----------------------------------------------------------------------------- */
-const props = defineProps({phone_numberModel: { type: String }})
-const phone_numberModel = ref("")
-phone_numberModel.value = props.phone_numberModel
+const props = defineProps({phone_number: { type: String }})
+
 
 const workingPhone_numberModel = ref("")
 const phone_numberFieldRef = ref("")
 const clearPhone_numberValidationError = () => phone_numberFieldRef.value.resetValidation()
+
+const showPhone_number = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Submit Phone Number Decl */
@@ -90,9 +81,10 @@ async function submitPhone_number(event) {
 		
 		emit('onUpdatePhone_number', { 
 			phone_number: result.attributes.phone_number,
-			showPhone_number: false
+			// showPhone_number: false
 		})
 		workingPhone_numberModel.value = ""
+		showPhone_number.value = false
 	})
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

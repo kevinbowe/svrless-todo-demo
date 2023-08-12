@@ -48,22 +48,7 @@
 				<Nickname :nickname="nicknameModel" @onUpdateNickname="setNickname" />
 					
 				<!-- Update Phone number -->
-				<Phone_number v-if="showPhone_number" :phone_numberModel="phone_numberModel" @onUpdatePhone_number="setPhone_number" @onCancelPhone_number="setShowPhone_number"/>
-				<div class="ma-3">
-					<v-card v-if="!showPhone_number" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
-						<v-card-text>
-							<v-row >
-								<v-col>
-									<v-row class="text-h6"> Change Phone number</v-row>
-									<v-row>{{ phone_numberModel }}</v-row>
-								</v-col>
-								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPhone_number"/></v-row>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</div>
+				<Phone_number :phone_number="phone_numberModel" @onUpdatePhone_number="setPhone_number" />
 				
 				<!-- Update Preferred Username -->
 				<Preferred_username :username="usernameModel" @onUpdatePreferred_username="setPreferred_username" />
@@ -144,10 +129,10 @@ const setShowDeleteUser = (payload) => showDeleteUser.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setPhone_number = (payload) => { 
-	phone_numberModel.value = payload.phone_number,
-	showPhone_number.value = payload.showPhone_number
+	phone_numberModel.value = payload.phone_number
+	// showPhone_number.value = payload.showPhone_number
 }
-const setShowPhone_number = (payload) => showPhone_number.value = payload
+// const setShowPhone_number = (payload) => showPhone_number.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setPreferred_username = (payload) => {

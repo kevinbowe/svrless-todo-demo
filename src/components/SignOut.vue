@@ -2,7 +2,7 @@
 	<v-row no-gutters >
 		<v-spacer/>
 		<v-col cols="8">
-			<v-btn class="mt-3" color="primary" @click="signOutUser">
+			<v-btn class="my-3" color="primary" @click="signOutUser">
 				Sign Out
 			</v-btn>
 		</v-col>

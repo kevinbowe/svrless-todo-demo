@@ -1,32 +1,52 @@
 <template>
-<!-- Update Email-->
-<v-sheet color="background" max-width="30em" class="mx-auto px-3">
-	<v-row justify="start" class="mx-0 pt-5 text-h6"> Change Email </v-row>
-	<v-row justify="start" class="mx-0 pb-5"> {{ emailModel }} </v-row>
-	
-	<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
-		<v-text-field label="Email -- Confirmed" v-model= "workingEmailModel" 
-		:rules="[ 
-			value => checkWorkingEmailSpecialChar(value), 
-			value => checkWorkingEmailName(value), 
-			value => checkWorkingEmailDomain(value),
-		]"
-		variant="outlined" density="compact" 
-		clearable @click:clear="clearWorkingEmailModelValidationError"/>
+<div class="ma-3">
 
-		<v-row class="justify-end px-3">
-			<v-btn text="Cancel" class="mx-1" color="surface" @click="showEmail = false; emit('onCancelEmail', false )"/>
-			<v-btn text="Save Email" :disabled="!workingEmailModel" color="primary" type="submit"/>
-		</v-row>
-	</v-form>
-</v-sheet>
+	<!-- Access Email -->
+	<v-card class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+		<v-card-text>
+			<v-row >
+				<v-col>
+					<v-row class="text-h6"> Change Email w/ conf </v-row>
+					<v-row>{{ props.email }}</v-row>
+				</v-col>
+				<v-col align-self="center">
+					<v-row justify="end">
+						<v-btn text="Edit" v-if="!showEmail" color="minor" @click="showEmail=!showEmail"/>
+					</v-row>
+				</v-col>
+			</v-row>
+		</v-card-text>
+	</v-card>
+
+	<!-- Update Email-->
+	<v-sheet v-if="showEmail" color="background" max-width="30em" class="mx-auto my-3">
+
+		<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
+			<v-text-field label="New Email" v-model="workingEmailModel" 
+			:rules="[ 
+				value => checkWorkingEmailSpecialChar(value), 
+				value => checkWorkingEmailName(value), 
+				value => checkWorkingEmailDomain(value),
+			]"
+			variant="outlined" density="compact" 
+			clearable @click:clear="clearWorkingEmailModelValidationError"/>
+
+			<v-row class="justify-end px-3 py-5">
+				<v-btn text="Cancel" class="mx-1" color="surface" @click="showEmail = false; workingEmailModel='' "/>
+				<v-btn text="Save Email" :disabled="!workingEmailModel" color="primary" type="submit"/>
+			</v-row>
+		</v-form>
+
+	</v-sheet>
+
+</div>
 
 <!-- Update Email Confirmation -->
 <v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
 	<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
-			<v-row><v-spacer/>
+		<v-row><v-spacer/>
 			<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" 
-			@click="toggleConfirmEmail=false; workingEmailModel = ''; "/>
+			@click="toggleConfirmEmail=false; workingEmailModel=''; showEmail = false;"/>
 		</v-row>
 		<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
 			<h1 class="ma-auto" v-html="emailConfirmationMessage.Title.value"></h1>
@@ -45,29 +65,25 @@
 			]"
 			placeholder="Enter your code" variant="outlined" density="compact"
 			clearable @click:clear="clearConfirmEmailCodeModelValidationError"/>
-			<v-btn block class="my-5" color="primary" type="submit" :disabled="!confirmEmailCodeModel" > 
-				Confirm 
-			</v-btn>
+
+			<v-btn text="Confirm" block class="mb-5 mt-2" color="primary" type="submit" :disabled="!confirmEmailCodeModel" /> 
 		</v-form>
 
-		<v-btn block color="surface" @click="resendEmailConfirmationCode" >
-			Resend Code 
-		</v-btn>
+		<v-btn text="Resend Code" block color="surface" @click="resendEmailConfirmationCode"/>
 
 	</v-sheet>
 </v-overlay>
 
 <!-- PopUp Message Dialog -- Modal -->
 <v-dialog v-if="openDialogFlag" activator="parent" v-model="openDialogFlag" persistent >
-	<v-card 	color="background_alt" border="lg" 
-				class="ma-auto" height="10em" width="20em" elevation="24">
+	<v-card color="background_alt" border="lg" 
+	class="ma-auto" height="10em" width="20em" elevation="24">
 		<v-card-text> 
 			<h1>Error</h1><strong>Invalid Confirmation Code.</strong>
 		</v-card-text>
 		<v-card-actions>
-			<v-btn @click="openDialogFlag = false" block 
-			color="surface" 
-			style="background-color:rgb(var(--v-theme-primary))"> OK </v-btn>
+			<v-btn text="OK" @click="openDialogFlag = false" 
+			block color="surface" style="background-color:rgb(var(--v-theme-primary))"/>
 		</v-card-actions>
 	</v-card>
 </v-dialog>
@@ -97,9 +113,7 @@ import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkW
 const emit = defineEmits()
 
 /* ----------------------------------------------------------------------------- */
-const props = defineProps({email: { type: String }})
-const emailModel = ref("")
-emailModel.value = props.email
+const props = defineProps({ email: { type: String }})
 
 const workingEmailModel =ref("")
 const emailFormRef = ref()
@@ -110,6 +124,7 @@ const confirmEmailCodeModelFieldRef = ref()
 const clearConfirmEmailCodeModelValidationError = () => confirmEmailCodeModelFieldRef.value.resetValidation()
 /* ----------------------------------------------------------------------------- */
 const toggleConfirmEmail:Ref<boolean> = ref(false)
+	
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const openDialogFlag = ref()
 
@@ -123,6 +138,7 @@ async function submitEmail (event) {
 	}
 	
 	if(BLOCKAPI("submitEmail function ")){
+		emailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
 		toggleConfirmEmail.value = true
 		return
 	}
@@ -145,7 +161,6 @@ const resendEmailConfirmationCode = async () => {
 		return
 	}
 
-
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true})
 	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value });
 	confirmEmailCodeModel.value = ""
@@ -158,18 +173,23 @@ const applyEmailConfirmationCode = async function (event) {
 	const results = await event
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
 
-	if(BLOCKAPI("applyEmailConfirmationCode(~) function ")) { return }
+	if(BLOCKAPI("applyEmailConfirmationCode(~) function ")) { 
+		workingEmailModel.value = ""
+		confirmEmailCodeModel.value = ""
+		toggleConfirmEmail.value = false
+		showEmail.value = false
+		openDialogFlag.value = true // open the Popup Dialog
+		return 
+	}
 
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
 	.then((response) => {
 		// 		If we get here, the email is CONFIRMED.
-		emit('onUpdateEmail', { 
-			email: workingEmailModel.value, 
-			showEmail: false
-		})
+		emit('onUpdateEmail', { email: workingEmailModel.value, })
 		workingEmailModel.value = ""
 		confirmEmailCodeModel.value = ""
 		toggleConfirmEmail.value = false
+		showEmail.value = false
 	})
 	.catch((e) => {
 		openDialogFlag.value = true // open the Popup Dialog

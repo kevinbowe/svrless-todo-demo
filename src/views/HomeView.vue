@@ -25,24 +25,7 @@
 				</div>
 
 				<!-- Update Password-->
-				<Password v-if="showPassword" @onCancelPassword="setShowPassword"/>
-				<div class="ma-3">
-					<v-card v-if="!showPassword" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
-						<v-card-text>
-							<v-row >
-								<v-col>
-									<v-row class="text-h6">
-										<v-icon start icon="mdi-lock-outline"></v-icon>Change Password
-									</v-row>
-									<v-row></v-row>
-								</v-col>
-								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showPassword"/></v-row>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</div>
+				<Password />
 
 				<!-- Update Nickname -->
 				<Nickname :nickname="nicknameModel" @onUpdateNickname="setNickname" />
@@ -122,7 +105,7 @@ const setNickname = (payload) => {
 const setShowNickname = (payload) => {	showNickname.value = payload }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setShowPassword = (payload) => showPassword.value = payload
+// const setShowPassword = (payload) => showPassword.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setShowDeleteUser = (payload) => showDeleteUser.value = payload

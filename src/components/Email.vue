@@ -1,51 +1,25 @@
 <template>
 <!-- Update Email-->
-<!-- <v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
-	<v-row no-gutters>
-		<v-spacer/>
-		<v-col cols="3" class="ma-2">
-			<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
-				clearable @click:clear="clearWorkingEmailModelValidationError"
-				:rules="[ 
-					value => checkWorkingEmailSpecialChar(value), 
-					value => checkWorkingEmailName(value), 
-					value => checkWorkingEmailDomain(value),
-				]"
-				variant="outlined" density="compact" 
-			></v-text-field>
-		</v-col>
-		<v-col cols="2">
-			<v-btn class="mt-3" height="3em"
-			:disabled="!workingEmailModel" color="primary" type="submit"> Save Email </v-btn>
-		</v-col>
-		<v-spacer/>
-	</v-row>
-</v-form> -->
-
-<v-row justify="center">
-	<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-	<v-row class="justify-start">
-		<v-label class="text-h5 mb-5" :text="emailModel" />
-	</v-row>
+<v-sheet color="background" max-width="30em" class="mx-auto px-3">
+	<v-row justify="start" class="mx-0 pt-5 text-h6"> Change Email </v-row>
+	<v-row justify="start" class="mx-0 pb-5"> {{ emailModel }} </v-row>
+	
 	<v-form ref="emailFormRef" validate-on="submit" @submit.prevent="submitEmail" >
-		<v-row>
-			<v-text-field label="Email -- Confirmed"  v-model= "workingEmailModel" 
-				clearable @click:clear="clearWorkingEmailModelValidationError"
-				:rules="[ 
-					value => checkWorkingEmailSpecialChar(value), 
-					value => checkWorkingEmailName(value), 
-					value => checkWorkingEmailDomain(value),
-				]"
-				variant="outlined" density="compact" 
-			></v-text-field>
-		</v-row>
-		<v-row class="justify-end">
-			<v-btn class="mx-1" color="surface" @click="emit('onCancelEmail', false )"> Cancel</v-btn>
-			<v-btn :disabled="!workingEmailModel" color="primary" type="submit"> Save Email </v-btn>
+		<v-text-field label="Email -- Confirmed" v-model= "workingEmailModel" 
+		:rules="[ 
+			value => checkWorkingEmailSpecialChar(value), 
+			value => checkWorkingEmailName(value), 
+			value => checkWorkingEmailDomain(value),
+		]"
+		variant="outlined" density="compact" 
+		clearable @click:clear="clearWorkingEmailModelValidationError"/>
+
+		<v-row class="justify-end px-3">
+			<v-btn text="Cancel" class="mx-1" color="surface" @click="showEmail = false; emit('onCancelEmail', false )"/>
+			<v-btn text="Save Email" :disabled="!workingEmailModel" color="primary" type="submit"/>
 		</v-row>
 	</v-form>
-	</v-col>
-</v-row>
+</v-sheet>
 
 <!-- Update Email Confirmation -->
 <v-overlay class="align-center justify-center" v-model="toggleConfirmEmail" >
@@ -123,9 +97,9 @@ import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkW
 const emit = defineEmits()
 
 /* ----------------------------------------------------------------------------- */
-const props = defineProps({emailModel: { type: String }})
+const props = defineProps({email: { type: String }})
 const emailModel = ref("")
-emailModel.value = props.emailModel
+emailModel.value = props.email
 
 const workingEmailModel =ref("")
 const emailFormRef = ref()
@@ -138,15 +112,21 @@ const clearConfirmEmailCodeModelValidationError = () => confirmEmailCodeModelFie
 const toggleConfirmEmail:Ref<boolean> = ref(false)
 const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const openDialogFlag = ref()
-	
+
+const showEmail = ref(false)
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {
-	if(BLOCKAPI("submitEmail function "))return
-	
 	const results = await event
 	if(!results.valid) {
 		return /* Cancel Submission if validation FAILED */
 	}
+	
+	if(BLOCKAPI("submitEmail function ")){
+		toggleConfirmEmail.value = true
+		return
+	}
+
 	//				If we get here, validation was successful
 	//				This will return the user in the user pool (not updated )
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
@@ -161,6 +141,11 @@ async function submitEmail (event) {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const resendEmailConfirmationCode = async () => {
+	if(BLOCKAPI("resendEmailConfirmationCode(~) function ")) {
+		return
+	}
+
+
 	const authUser = await Auth.currentAuthenticatedUser({bypassCache: true})
 	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value });
 	confirmEmailCodeModel.value = ""
@@ -172,17 +157,16 @@ const resendEmailConfirmationCode = async () => {
 const applyEmailConfirmationCode = async function (event) {
 	const results = await event
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
-	// if(BLOCKAPI("signUpUser function "))return
+
+	if(BLOCKAPI("applyEmailConfirmationCode(~) function ")) { return }
 
 	await Auth.verifyCurrentUserAttributeSubmit('email', `${ confirmEmailCodeModel.value}`)
 	.then((response) => {
 		// 		If we get here, the email is CONFIRMED.
-
 		emit('onUpdateEmail', { 
 			email: workingEmailModel.value, 
 			showEmail: false
 		})
-		// emit('onUpdateEmail', { email: workingEmailModel.value})
 		workingEmailModel.value = ""
 		confirmEmailCodeModel.value = ""
 		toggleConfirmEmail.value = false
@@ -199,7 +183,7 @@ const buildEmailConfirmationMessage = (email:string) => {
 	emailConfirmationMessage.Title.value = "We Emailed You"
 	
 	emailConfirmationMessage.Message.value = 
-	`To confirm your new account, you must enter the ` +
+	`To confirm this change, you must enter the ` +
 	`code we emailed to the new email address you provided.` 
 
 	let {name , domain} = parseEmail(email)

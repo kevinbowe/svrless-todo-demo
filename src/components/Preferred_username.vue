@@ -1,49 +1,43 @@
 <template>
-	<!-- Update Preferred Username -->
-	<!-- <v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
-		<v-row no-gutters>
-			<v-spacer/>
-			<v-col cols="3" class="ma-2">
-					<v-text-field label="User Name" :rules="[
-							value => checkPreferred_usernameTooShort(value),
-							value => checkPreferred_usernameFirstChar(value),
-							value => checkPreferred_usernameSpecialCharExceptions(value)
-						]" 
-						clearable @click:clear="clearUsernameModelValidationError"
-						v-model="usernameModel" hint="Example: kb1" variant="outlined" density="compact" >
-					</v-text-field>
-			</v-col>
-			<v-col cols="2">
-					<v-btn class="mt-3" height="3em"
-					:disabled="!usernameModel" color="primary" type="submit"> Save<br>Username</v-btn>
-			</v-col>
-			<v-spacer/>
-		</v-row>
-	</v-form> -->
-	
-	<v-row justify="center">
-		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-			<v-row class="justify-start">
-				<v-label class="text-h5 mb-5" :text="usernameModel" />
-			</v-row>
-			<v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
-				<v-row>
-					<v-text-field label="User Name" 
-					:rules="[
-						value => checkPreferred_usernameTooShort(value),
-						value => checkPreferred_usernameFirstChar(value),
-						value => checkPreferred_usernameSpecialCharExceptions(value)
-					]" 
-					clearable @click:clear="clearUsernameModelValidationError"
-					v-model="workingUsernameModel" hint="Example: kb1" variant="outlined" density="compact" />
+	<div class="ma-3">
+
+		<!-- Access Preferred_username -->
+		<v-card class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+			<v-card-text>
+				<v-row >
+					<v-col>
+						<v-row class="text-h6"> Change Username </v-row>
+						<v-row>{{ props.username }}</v-row>
+					</v-col>
+					<v-col align-self="center">
+						<v-row justify="end">
+							<v-btn text="Edit" v-if="!showUsername" color="minor" @click="showUsername=!showUsername"/>
+						</v-row>
+					</v-col>
 				</v-row>
-				<v-row class="justify-end">
-					<v-btn class="mx-1" color="surface" @click="emit('onCancelPreferred_username', false )"> Cancel</v-btn>
-					<v-btn :disabled="!workingUsernameModel" color="primary" type="submit"> Save Preferred Username</v-btn>
+			</v-card-text>
+		</v-card>
+
+		<!-- Update Preferred Username -->
+		<v-sheet v-if="showUsername" color="background" max-width="30em" class="mx-auto my-3">
+			<v-form ref="usernameFormRef" validate-on="submit" @submit.prevent="submitUsername">
+				<v-text-field label="New Username" 
+				:rules="[
+					value => checkPreferred_usernameTooShort(value),
+					value => checkPreferred_usernameFirstChar(value),
+					value => checkPreferred_usernameSpecialCharExceptions(value)
+				]" 
+				clearable @click:clear="clearUsernameModelValidationError"
+				v-model="workingUsernameModel" hint="Example: kb1" variant="outlined" density="compact" />
+
+				<v-row class="justify-end px-3 py-5">
+					<v-btn text="Cancel" class="mx-1" color="surface" @click="showUsername = false; workingUsernameModel='' "/>
+					<v-btn text="Save Preferred Username" :disabled="!workingUsernameModel" color="primary" type="submit"/>
 				</v-row>
 			</v-form>
-		</v-col>
-	</v-row>
+		</v-sheet>
+
+	</div>
 
 	<!-- __ERROR_POPUP__ -->
 	<v-row justify="center" v-if="showDialog" >
@@ -83,13 +77,13 @@ import { checkPreferred_usernameTooShort, checkPreferred_usernameFirstChar,
 const emit = defineEmits()
 
 /* ----------------------------------------------------------------------------- */
-const props = defineProps({usernameModel: { type: String }})
-const usernameModel = ref("")
-usernameModel.value = props.usernameModel
+const props = defineProps({username: { type: String }})
 
 const workingUsernameModel = ref("")
 const usernameFormRef = ref()
 const clearUsernameModelValidationError = () => usernameFormRef.value.resetValidation()
+
+const showUsername = ref(false)
 
 /* ----------------------------------------------------------------------------- */
 const showDialog = ref(false)
@@ -111,9 +105,10 @@ async function submitUsername (event) {
 			//			If we get here, The update worked.
 			emit('onUpdatePreferred_username', { 
 				preferred_username: result.attributes.preferred_username,
-				showPreferred_username: false
+				// showPreferred_username: false
 			})
 			workingUsernameModel.value = ""
+			showUsername.value = false
 		})
 	})
 	.catch((error) => {

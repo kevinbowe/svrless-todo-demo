@@ -99,22 +99,7 @@
 				</div>
 
 				<!-- Update Email-->
-				<Email v-if="showEmail" :email="emailModel" @onUpdateEmail="setEmail" @onCancelEmail="setShowEmail"/>
-				<div class="ma-3">
-					<v-card v-if="!showEmail" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
-						<v-card-text>
-							<v-row >
-								<v-col>
-									<v-row class="text-h6"> Change Email w/ conf </v-row>
-									<v-row>{{ emailModel }}</v-row>
-								</v-col>
-								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" color="minor" @click="showEmail = !showEmail"/></v-row>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</div>
+				<Email :email="emailModel" @onUpdateEmail="updateEmail"/>
 									
 				<!-- Sign Out -->
 				<SignOut @onSignOut="setSession"/>
@@ -173,11 +158,9 @@ const friendlyPhone = (phone) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setEmail = (payload) => {
+const updateEmail = (payload) => {
 	emailModel.value = payload.email
-	showEmail.value = payload.showEmail
 }
-const setShowEmail = (payload) => showEmail.value = payload
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setNickname = (payload) => { 

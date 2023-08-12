@@ -1,8 +1,25 @@
 <template>
-	<v-row justify="center">
-		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
+	<!-- Access Delete User -->
+	<v-card class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+		<v-card-text>
+			<v-row >
+				<v-col>
+					<v-row class="text-h6"> Delete User w/ conf</v-row>
+				</v-col>
+				<v-col align-self="center">
+					<v-row justify="end">
+						<v-btn text="Edit" v-if="!showDeleteUser" color="minor" @click="showDeleteUser=!showDeleteUser"/>
+					</v-row>
+				</v-col>
+			</v-row>
+		</v-card-text>
+	</v-card>
+
+	<!-- Delete User -->
+	<v-sheet v-if="showDeleteUser" color="background" max-width="30em" class="mx-auto">
+		<div class="my-5 mx-3">
 			<v-row class="justify-start">
-				<v-label class="text-h5 mb-5" :text="`Delete User w/ Confirm: [ ${usernameModel}]`" />
+				<v-label class="text-h5 mb-5" :text="`User: ${props.username}`" />
 				<p align="left" class="mb-5">
 					You are about to <strong> DELETE</strong> your account. 
 					This deletion is <strong>PERMANENT</strong>. 
@@ -10,12 +27,12 @@
 					Your account and all associated data will be <strong>LOST</strong>.
 				</p>
 			</v-row>
-			<v-row class="justify-end">
-				<v-btn class="mx-1" color="surface" @click="emit('onCancelDeleteUser', false )"> Cancel </v-btn>
-				<v-btn color="error" @click="sendDeleteUser"> Confirm Deletion </v-btn>
+			<v-row class="justify-end mb-3">
+				<v-btn text="Cancel" class="mx-1" color="surface" @click="showDeleteUser=false"/>
+				<v-btn text="Confirm Deletion" color="error" @click="sendDeleteUser"/>
 			</v-row>
-		</v-col>
-	</v-row>
+		</div>
+	</v-sheet>
 
 	<!-- Delete Confirmation -->
 	<v-overlay class="align-center justify-center" v-model="toggleConfirmDelete" >
@@ -24,7 +41,7 @@
 			<!-- Cancel (X) -->
 			<v-row><v-spacer/>
 				<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" 
-				@click="toggleConfirmDelete=false;"/>
+				@click="showDeleteUser=false; toggleConfirmDelete=false;"/>
 			</v-row>
 
 			<!-- Confirmation Message -->
@@ -95,11 +112,10 @@ const emit = defineEmits()
 
 /* ----------------------------------------------------------------------------- */
 const props = defineProps({
-	usernameModel: { type: String }, 
-	emailModel: {type: String}
+	username: { type: String }, 
+	email: {type: String}
 })
-const usernameModel = ref("")
-usernameModel.value = props.usernameModel
+
 /* ----------------------------------------------------------------------------- */
 const confirmDeleteCodeModel = ref("")
 const confirmDeleteCodeModelFieldRef = ref()
@@ -109,17 +125,19 @@ const toggleConfirmDelete:Ref<boolean> = ref(false)
 const deleteConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 const openDialogFlag = ref()
 
+const showDeleteUser = ref(false)
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const sendDeleteUser = async () => {
 	if(BLOCKAPI("sendDeleteUser function ")) { 
-		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.emailModel)
+		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.email)
 		toggleConfirmDelete.value = true; 
 		return 
 	}
 
 	await Auth.verifyCurrentUserAttribute("email")
 	.then(response => { 
-		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.emailModel)
+		deleteConfirmationMessage.value = buildDeleteConfirmationMessage(props.email)
 		toggleConfirmDelete.value = true 
 	})
 	.catch(e => err(`Auth.verifyCurrentUserAttribute FAILED ${e}`))
@@ -130,14 +148,19 @@ const applyDeleteConfirmationCode = async (event) => {
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
 
 	if(BLOCKAPI("applyDeleteConfirmationCode function ")) {
-		openDialogFlag.value = true // open the Popup Dialog
+		//openDialogFlag.value = true // open the Popup Dialog
+		showDeleteUser.value = false
+		openDialogFlag.value = false
+		toggleConfirmDelete.value = false;
 		return
 	}
 	//				Verify the input confirmation code 
 	await Auth.verifyCurrentUserAttributeSubmit("email", confirmDeleteCodeModel.value)
 	.then(response => {
 		Auth.deleteUser();
-		emit('onCancelDeleteUser', false)
+		showDeleteUser.value = false
+		openDialogFlag.value = false
+		toggleConfirmDelete.value = false;
 	})
 	.catch((e) => {
 		openDialogFlag.value = true // open the Popup Dialog

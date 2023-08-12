@@ -7,22 +7,7 @@
 			<div v-if="isSession">
 
 				<!-- Delete User -->
-				<DeleteUser v-if="showDeleteUser" :usernameModel="usernameModel" :emailModel="emailModel" @onCancelDeleteUser="setShowDeleteUser"/>
-				<div class="ma-3">
-					<v-card v-if="!showDeleteUser" max-width="30em" elevation="24" 
-					class="ma-auto pa-2" variant="tonal" color="major" _color="orange-darken-2">
-						<v-card-text>
-							<v-row >
-								<v-col>
-									<v-row class="text-h6"> Delete User w/ conf</v-row>
-								</v-col>
-								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" _color="orange-darken-2" color="major" @click="++showDeleteUser"/></v-row>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</div>
+				<DeleteUser :username="usernameModel" :email="emailModel" />
 
 				<!-- Update Password-->
 				<Password />
@@ -80,11 +65,6 @@ const phone_numberModel = ref()
 const usernameModel = ref()
 const isSession = ref(true)
 
-const showNickname = ref(false)
-const showPhone_number = ref(false)
-const showPassword = ref(false)
-const showDeleteUser = ref(false)
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const friendlyPhone = (phone) => {
 	if (phone == undefined) return
@@ -94,35 +74,14 @@ const friendlyPhone = (phone) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const updateEmail = (payload) => {
-	emailModel.value = payload.email
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setNickname = (payload) => { 
-	nicknameModel.value = payload.nickname 
-}
-const setShowNickname = (payload) => {	showNickname.value = payload }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// const setShowPassword = (payload) => showPassword.value = payload
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setShowDeleteUser = (payload) => showDeleteUser.value = payload
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setPhone_number = (payload) => { 
-	phone_numberModel.value = payload.phone_number
-	// showPhone_number.value = payload.showPhone_number
-}
-// const setShowPhone_number = (payload) => showPhone_number.value = payload
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setPreferred_username = (payload) => {
-	usernameModel.value = payload.preferred_username
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const updateEmail = (payload) => { emailModel.value = payload.email }
+/* ----------------------------------------------------------------------------- */
+const setNickname = (payload) => { nicknameModel.value = payload.nickname }
+/* ----------------------------------------------------------------------------- */
+const setPhone_number = (payload) => { phone_numberModel.value = payload.phone_number }
+/* ----------------------------------------------------------------------------- */
+const setPreferred_username = (payload) => { usernameModel.value = payload.preferred_username }
+/* ----------------------------------------------------------------------------- */
 const setUserInfo = (payload) => { 
 	nicknameModel.value = payload.nickname
 	emailModel.value = payload.email

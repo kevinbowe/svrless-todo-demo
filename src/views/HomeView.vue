@@ -45,22 +45,8 @@
 				</div>
 
 				<!-- Update Nickname -->
-				<Nickname v-if="showNickname" :nicknameModel="nicknameModel" @onUpdateNickname="setNickname" @onCancelNickname="setShowNickname"/>
-				<div class="ma-3">
-					<v-card v-if="!showNickname" class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
-						<v-card-text>
-							<v-row >
-								<v-col>
-									<v-row class="text-h6"> Change Nickname</v-row>
-									<v-row>{{ nicknameModel }}</v-row>
-								</v-col>
-								<v-col align-self="center">
-									<v-row justify="end"><v-btn text="Edit" color="minor" @click="++showNickname"/></v-row>
-								</v-col>
-							</v-row>
-						</v-card-text>
-					</v-card>
-				</div>
+				<Nickname :nickname="nicknameModel" @onUpdateNickname="setNickname" />
+
 					
 				<!-- Update Phone number -->
 				<Phone_number v-if="showPhone_number" :phone_numberModel="phone_numberModel" @onUpdatePhone_number="setPhone_number" @onCancelPhone_number="setShowPhone_number"/>
@@ -165,7 +151,6 @@ const updateEmail = (payload) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setNickname = (payload) => { 
 	nicknameModel.value = payload.nickname 
-	showNickname.value = payload.showNickname
 }
 const setShowNickname = (payload) => {	showNickname.value = payload }
 

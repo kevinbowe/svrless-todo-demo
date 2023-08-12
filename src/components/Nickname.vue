@@ -1,58 +1,46 @@
 <template>
-	<!-- Update Nickname -->
-	<!-- <v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
-		<v-row no-gutters>
-			<v-spacer/>
-			<v-col cols="3" class="ma-2">
-				<v-text-field label="Nickname" :rules="[
-					value => checkNicknameReserved (value),
-					value => checkNicknameTooShort (value),
-					value => checkNicknameNumericFirstChar (value),
-					value => checkNicknameFirstChar (value),
-					value => checkNicknameLastChar (value),
-					value => checkNicknameSpecialChars (value),
-				]" 
-					clearable @click:clear="clearNicknameModelValidationError"
-					v-model="workingNicknameModel" hint="Example: kb1" variant="outlined" density="compact" >
-				</v-text-field>
-			</v-col>
-			
-			<v-col cols="2" >
-				<v-btn class="mt-3" height="3em" :disabled="!workingNicknameModel" 
-				color="primary" type="submit"> Save<br>Nickname</v-btn>
-			</v-col>
-
-			<v-spacer/>
-		</v-row>
-	</v-form> -->
-
-	<v-row justify="center" >
-		<v-col :sm="8" :md="6" :lg="4" class="ma-5" >
-
-			<v-row class="justify-start">
-				<v-label class="text-h5 mb-5" :text="nicknameModel" />
+<div class="ma-3">
+	
+	<!-- Access Nickname -->
+	<v-card class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+		<v-card-text>
+			<v-row >
+				<v-col>
+					<v-row class="text-h6"> Change Nickname </v-row>
+					<v-row>{{ props.nickname }}</v-row>
+				</v-col>
+				<v-col align-self="center">
+					<v-row justify="end">
+						<v-btn text="Edit" v-if="!showNickname" color="minor" @click="showNickname=!showNickname"/>
+					</v-row>
+				</v-col>
 			</v-row>
+		</v-card-text>
+	</v-card>
+
+	<!-- Update Nickname-->
+	<v-sheet v-if="showNickname" color="background" max-width="30em" class="mx-auto my-3">
 		<v-form ref="nicknameFormRef" validate-on="submit" @submit.prevent="submitNickname">
-			<v-row>
-				<v-text-field label="Nickname" :rules="[
-						value => checkNicknameReserved (value),
-						value => checkNicknameTooShort (value),
-						value => checkNicknameNumericFirstChar (value),
-						value => checkNicknameFirstChar (value),
-						value => checkNicknameLastChar (value),
-						value => checkNicknameSpecialChars (value),
-					]" 
-					clearable @click:clear="clearNicknameModelValidationError"
-					v-model="workingNicknameModel" hint="Example: kb1" variant="outlined" density="compact" >
-				</v-text-field>
-			</v-row>
-			<v-row class="justify-end">
-				<v-btn class="mx-1" color="surface" @click="emit('onCancelNickname', false )"> Cancel</v-btn>
-				<v-btn :disabled="!workingNicknameModel" color="primary" type="submit"> Save Nickname</v-btn>
+			<v-text-field label="New Nickname" :rules="[
+				value => checkNicknameReserved (value),
+				value => checkNicknameTooShort (value),
+				value => checkNicknameNumericFirstChar (value),
+				value => checkNicknameFirstChar (value),
+				value => checkNicknameLastChar (value),
+				value => checkNicknameSpecialChars (value),
+			]" 
+			clearable @click:clear="clearNicknameModelValidationError"
+			v-model="workingNicknameModel" hint="Example: kb1" variant="outlined" density="compact"/>
+
+			<v-row class="justify-end px-3 py-5">
+				<v-btn text="Cancel" class="mx-1" color="surface" @click="showNickname = false; workingNicknameModel='' "/>
+				<!-- <v-btn text="Cancel" class="mx-1" color="surface" @click="emit('onCancelNickname', false )"/> -->
+				<v-btn text="Save Nickname" :disabled="!workingNicknameModel" color="primary" type="submit"/>
 			</v-row>
 		</v-form>
-		</v-col>
-	</v-row>
+	</v-sheet>
+
+</div>
 </template>
 
 
@@ -73,13 +61,13 @@ import { checkNicknameReserved,checkNicknameFirstChar, checkNicknameLastChar,
 const emit = defineEmits()
 
 /* ----------------------------------------------------------------------------- */
-const props = defineProps({nicknameModel: {type: String}})
-const emailModel = ref("")
-emailModel.value = props.nicknameModel
+const props = defineProps({nickname: {type: String}})
 
 const workingNicknameModel = ref("")
 const nicknameFormRef = ref()
 const clearNicknameModelValidationError = () => nicknameFormRef.value.resetValidation()
+
+const showNickname = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitNickname(event) {
@@ -92,9 +80,9 @@ async function submitNickname(event) {
 		await Auth.currentUserInfo().then(result => {
 		emit('onUpdateNickname', { 
 			nickname: result.attributes.nickname,
-			showNickname: false
 		})
 		workingNicknameModel.value = ""
+		showNickname.value = false
 	}) // END_THEN
 }	
 

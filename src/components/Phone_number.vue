@@ -7,7 +7,7 @@
 				<v-row >
 					<v-col>
 						<v-row class="text-h6"> Change Phone number </v-row>
-						<v-row>{{ props.phone_number }}</v-row>
+						<v-row>{{ friendlyPhone(props.phone_number) }}</v-row>
 					</v-col>
 					<v-col align-self="center">
 						<v-row justify="end">
@@ -87,6 +87,15 @@ async function submitPhone_number(event) {
 		showPhone_number.value = false
 	})
 }
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const friendlyPhone = (phone) => {
+	if (phone == undefined) return
+	const regex = /(?<plus>\+)(?<country>\d{1,3})(?<areacode>\d{3})(?<exchange>\d{3})(?<line>\d{4})/g;
+	let match = regex.exec(phone)
+	return `${match?.groups?.plus}${match?.groups?.country} (${match?.groups?.areacode}) ${match?.groups?.exchange}-${match?.groups?.line}`
+}
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/

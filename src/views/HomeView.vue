@@ -66,14 +66,6 @@ const usernameModel = ref()
 const isSession = ref(true)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const friendlyPhone = (phone) => {
-	if (phone == undefined) return
-	const regex = /(?<plus>\+)(?<country>\d{1,3})(?<areacode>\d{3})(?<exchange>\d{3})(?<line>\d{4})/g;
-	let match = regex.exec(phone)
-	return `${match?.groups?.plus}${match?.groups?.country} (${match?.groups?.areacode}) ${match?.groups?.exchange}-${match?.groups?.line}`
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const updateEmail = (payload) => { emailModel.value = payload.email }
 /* ----------------------------------------------------------------------------- */
 const setNickname = (payload) => { nicknameModel.value = payload.nickname }

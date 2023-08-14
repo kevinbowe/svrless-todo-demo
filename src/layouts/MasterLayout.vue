@@ -120,11 +120,8 @@
 					<!-- Profile -->
 					<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
 
-					<!-- Dev -->
-					<v-btn to="/dev6" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Dev 6</v-btn>
-
 					<!-- Devs -->
-					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Develope
+					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Experiment
 						<v-menu activator="parent">
 							<v-list>
 								<v-list-item :to="link.url" v-for="link in devLinks" :key="link.label" :value="link.label">
@@ -227,22 +224,14 @@ const mainTitle: string = "v3-Auth-Vtfy3-v13"
 
 const menu = ref(false);
 const devLinks = ref([
-	{ label: "Dev 65", url: "/dev6" },
-	{ label: "Dev 5", url: "/dev5" },
-	{ label: "Dev 4", url: "/dev4" },
-	{ label: "Dev 3", url: "/dev3" },
-	{ label: "Dev 2", url: "/dev2" },
-	{ label: "Dev 1", url: "/dev1" },
+	{ label: "Dev", url: "/dev" },
 ]);
 const blogLinks = ref([
 	{ label: "Blog 1", url: "/blog1" },
-	{ label: "Blog 2", url: "/blog2" },
 	{ label: "Article 1", url: "/article1" },
-	{ label: "Article 2", url: "/article2" },
 ]);
 const accountLinks = ref([
 	{ label: "Profile", url: "/profile" },
-	{ label: "Sign In", url: "/signin" },
 	{ label: "Terms & Conditions", url: "/tandc" },
 ]);
 const footerLinks = ref([

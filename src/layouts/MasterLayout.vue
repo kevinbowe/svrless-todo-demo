@@ -113,7 +113,7 @@
 					<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 					<!-- //////	START Desktop Menu -->
 
-					<!-- Menu [ Profile | Dev | Devs | Blogs | Account ] -->
+					<!-- Menu [ Profile | Experiment | Blogs | Account ] -->
 					<!-- Theme switch -->
 					<v-switch class="mt-6" density="compact" :flat="true" inset @change="onChangeSwitch" ></v-switch>
 
@@ -242,7 +242,6 @@ const footerLinks = ref([
 ]);
 
 const theme = useTheme();
-//const themeVals = Object.keys(theme.computedThemes.value);
 const onChangeSwitch = () => {
 	switch(theme.global.name.value){
 		//				DEBUG

@@ -112,36 +112,4 @@ getSession().then( (result) => {
 </script>
 
 <style>
-	.amplify-button--link { color: rgb(var(--v-theme-primary)); }
-	.amplify-button[data-variation='primary'] { background-color: rgb(var(--v-theme-primary)); }
-	.amplify-tabs-item { color: rgb(var(--v-theme-primary)); }
-	.amplify-tabs-item:focus { color: rgb(var(--v-theme-primary)); }
-	.amplify-tabs-item:hover { color: rgb(var(--v-theme-primary)); }
-	.amplify-tabs-item[data-state=inactive] { 
-		color: rgb(var(--v-theme-primary)); 
-		border-color: rgb(var(--v-theme-primary));
-		background-color: #E0E0E0;
-	}
-	.amplify-tabs-item[data-state=active] { 
-		color: rgb(var(--v-theme-primary)); 
-		border-color: rgb(var(--v-theme-primary));
-		border-top-width: 5px;
-	}
-	.v-input { margin-top: 2px;}
-	.signup-nickname input {
-		color: var(--amplify-components-fieldcontrol-color);
-		border-color: var(--amplify-components-fieldcontrol-border-color);
-		border-style: var(--amplify-components-fieldcontrol-border-style);
-		border-width: var(--amplify-components-fieldcontrol-border-width);
-	}
-	.v-slide-group-item--active {
-		/* background-color: rgb(var(--v-theme-surface_alt)); */
-		/* color: rgb(var(--v-theme-background)); */
-		/* background-color: rgb(var(--v-theme-surface)); */
-	}
-	.v-tab__slider {
-		/* top: 0; */
-		height:4px;
-		color: rgb(var(--v-theme-primary));
-	}
 </style>

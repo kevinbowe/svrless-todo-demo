@@ -6,12 +6,14 @@
 			<v-card-text>
 				<v-row >
 					<v-col>
-						<v-row class="text-h6"> Change Username </v-row>
-						<v-row>{{ props.username }}</v-row>
+						<v-row class="text-h6"> 
+							<v-icon icon="mdi-account" class="mr-2"/> Change Username
+						</v-row>
+						<v-row class="mx-7">{{ props.username }}</v-row>
 					</v-col>
-					<v-col align-self="center">
+					<v-col cols="2" align-self="center">
 						<v-row justify="end">
-							<v-btn text="Edit" v-if="!showUsername" color="minor" @click="showUsername=!showUsername"/>
+							<v-btn text="Edit" v-if="!showUsername" color="secondary" @click="showUsername=!showUsername"/>
 						</v-row>
 					</v-col>
 				</v-row>

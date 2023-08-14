@@ -1,14 +1,17 @@
 <template>
+	<div class="ma-3">
 	<!-- Access Delete User -->
-	<v-card class="ma-auto pa-2" variant="tonal" max-width="30em" elevation="24" >
+	<v-card class="ma-auto pa-2" variant="tonal" color="major" max-width="30em" elevation="24" >
 		<v-card-text>
 			<v-row >
 				<v-col>
-					<v-row class="text-h6"> Delete User w/ conf</v-row>
+					<v-row class="text-h6" style="color: rgb(var(--v-theme-error));"> 
+						<v-icon icon="mdi-delete-forever" class="mr-2" /> Delete User w/ conf
+					</v-row>
 				</v-col>
-				<v-col align-self="center">
+				<v-col cols="2" align-self="center">
 					<v-row justify="end">
-						<v-btn text="Edit" v-if="!showDeleteUser" color="minor" @click="showDeleteUser=!showDeleteUser"/>
+						<v-btn text="Edit" v-if="!showDeleteUser" color="major" @click="showDeleteUser=!showDeleteUser"/>
 					</v-row>
 				</v-col>
 			</v-row>
@@ -33,7 +36,7 @@
 			</v-row>
 		</div>
 	</v-sheet>
-
+</div>
 	<!-- Delete Confirmation -->
 	<v-overlay class="align-center justify-center" v-model="toggleConfirmDelete" >
 		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">

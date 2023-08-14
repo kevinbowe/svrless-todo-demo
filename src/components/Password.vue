@@ -6,12 +6,13 @@
 			<v-card-text>
 				<v-row >
 					<v-col>
-						<v-row class="text-h6"> Change Password </v-row>
-						<!-- <v-row>{{ props.username }}</v-row> -->
+						<v-row class="text-h6"> 
+							<v-icon icon="mdi-lock" class="mr-2"/> Change Password 
+						</v-row>
 					</v-col>
-					<v-col align-self="center">
+					<v-col cols="2" align-self="center">
 						<v-row justify="end">
-							<v-btn text="Edit" v-if="!showPassword" color="minor" @click="showPassword=!showPassword"/>
+							<v-btn text="Edit" v-if="!showPassword" color="secondary" @click="showPassword=!showPassword"/>
 						</v-row>
 					</v-col>
 				</v-row>

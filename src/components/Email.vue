@@ -6,12 +6,14 @@
 		<v-card-text>
 			<v-row >
 				<v-col>
-					<v-row class="text-h6"> Change Email w/ conf </v-row>
-					<v-row>{{ props.email }}</v-row>
+					<v-row class="text-h6"> 
+						<v-icon icon="mdi-email" class="mr-2"/> Change Email w/ conf
+					</v-row>
+					<v-row class="mx-5">{{ props.email }}</v-row>
 				</v-col>
-				<v-col align-self="center">
+				<v-col cols="2" align-self="center">
 					<v-row justify="end">
-						<v-btn text="Edit" v-if="!showEmail" color="minor" @click="showEmail=!showEmail"/>
+						<v-btn text="Edit" v-if="!showEmail" color="secondary" @click="showEmail=!showEmail"/>
 					</v-row>
 				</v-col>
 			</v-row>

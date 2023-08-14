@@ -6,12 +6,14 @@
 			<v-card-text>
 				<v-row >
 					<v-col>
-						<v-row class="text-h6"> Change Phone number </v-row>
-						<v-row>{{ friendlyPhone(props.phone_number) }}</v-row>
+						<v-row class="text-h6"> 
+							<v-icon icon="mdi-phone" class="mr-2"/> Change Phone number
+						</v-row>
+						<v-row class="mx-7">{{ friendlyPhone(props.phone_number) }}</v-row>
 					</v-col>
-					<v-col align-self="center">
+					<v-col cols="2" align-self="center">
 						<v-row justify="end">
-							<v-btn text="Edit" v-if="!showPhone_number" color="minor" @click="showPhone_number=!showPhone_number"/>
+							<v-btn text="Edit" v-if="!showPhone_number" color="secondary" @click="showPhone_number=!showPhone_number"/>
 						</v-row>
 					</v-col>
 				</v-row>

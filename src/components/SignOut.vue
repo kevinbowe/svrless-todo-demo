@@ -21,16 +21,25 @@ import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 }
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
 import { Auth } from 'aws-amplify';
+import { sessionState } from "../sessionState"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
 
 const signOutUser = async () => { 
 	try { 
-		await Auth.signOut().then ( 
+		await Auth.signOut()
+		.then( (response) => {
+			sessionState.connected = false
 			emit( 'onSignOut', { sessionState:false })
-		)
+		})
+		.catch(error => {
+			sessionState.connected = true
+			console.log('error signing out: ', error)
+		})
 	}
-	catch (error) { console.log('error signing out: ', error);}
+	catch (error) { 
+		sessionState.connected = true
+		console.log('error signing out: ', error);}
 }
 </script>

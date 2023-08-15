@@ -215,6 +215,9 @@ import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 
 import ResetPassword from "../components/ResetPassword.vue"
 
+import { sessionState } from "../sessionState";
+
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
 
@@ -382,6 +385,7 @@ const signInUser = async () => {
 				username: user.attributes?.preferred_username ?? user.username,
 				sessionState: true
 			})
+			sessionState.connected = true
 		}
 	}
 	catch (error) { 

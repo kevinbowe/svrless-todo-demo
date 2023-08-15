@@ -27,12 +27,6 @@
 								</v-list-item-title>
 							</v-list-item>
 
-							<v-list-item :to="link.url" v-for="link in accountLinks" :key="link.label" :value="link.label">
-								<v-list-item-title>
-									{{ link.label }}
-								</v-list-item-title>
-							</v-list-item>
-
 							<v-btn variant="plain">
 								<v-tooltip activator="parent" location="bottom">
 									Toggle Theme
@@ -148,46 +142,43 @@
 						</v-menu>
 					</v-btn>
 
+					<!-- Sign In -->
+					<v-btn v-if="!sessionState.connected" to="/signin" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Sign In</v-btn>
+
 					<!-- Account : [ Profile | Sign In | Palette ] -->
-					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Account
-						<v-menu activator="parent">
-							<v-list>
-								<v-list-item :to="link.url" 
-									v-for="link in accountLinks" :key="link.label" :value="link.label" 
-								>
-									<v-list-item-title>
-										{{ link.label }}
-									</v-list-item-title>
-								</v-list-item>
-								<v-btn variant="plain">
-									<v-tooltip activator="parent" location="bottom">
-										Toggle Theme
-									</v-tooltip>
-									<v-icon color="secondary" icon="mdi-palette" size="30"
-									></v-icon>
-									<v-menu v-model="menu" activator="parent" location="end" 
-										:close-on-content-click="false"
-									>
-										<v-card>
-											<v-card-actions>
-												<v-spacer />
-												<v-btn variant="text" @click="menu = false"> 
-													Cancel
-												</v-btn>
-												<v-btn color="primary" variant="text" @click="menu = false"> 
-													Save
-												</v-btn>
-											</v-card-actions>
-											<ThemeChanger />
-											<ThemePreview />
-										</v-card>
-									</v-menu>
-								</v-btn>
-							</v-list>
-						</v-menu>
-					</v-btn>
+					<div v-if="sessionState.connected">
+						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Icon:Account
+							<v-menu activator="parent">
+								<v-list>
+									<v-list-item __ACCOUNT__>
+										<v-btn to="/account" _color="white" variant="plain" _rounded="xl" _class="mx-2 d-none d-sm-flex">Account</v-btn>
+									</v-list-item>
 
-
+									<v-list-item __THEME_CHANGER__>
+										<v-btn variant="plain">
+											Theme<v-icon color="secondary" icon="mdi-palette" size="30"/>
+											<v-menu v-model="menu" activator="parent" location="end" :close-on-content-click="false">
+												<v-card>
+													<v-card-actions>
+														<v-spacer />
+														<v-btn variant="text" @click="menu = false"> Cancel </v-btn>
+														<v-btn _color="primary" variant="text" @click="menu = false"> Save </v-btn>
+													</v-card-actions>
+													<ThemeChanger />
+													<ThemePreview />
+												</v-card>
+											</v-menu>
+										</v-btn>
+									</v-list-item>
+									
+									<v-list-item __SIGN_OUT__>
+										<v-btn to="/signout" _color="white" variant="plain" _rounded="xl" _class="mx-2 d-none d-sm-flex">Sign Out</v-btn>
+									</v-list-item>
+								</v-list>
+							</v-menu>
+						</v-btn>
+					</div>
+					
 					<!-- //////	END Desktop Menu -->
 					<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 				
@@ -215,10 +206,17 @@
 	</v-layout>
 </template>
 <script setup lang="ts" >
+import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
+import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
+/* ----------------------------------------------------------------------------- */
 import { useTheme } from "vuetify";
 import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
+import { Auth } from 'aws-amplify';
+import { sessionState } from "../sessionState"
+
 // <v-app-bar-title>
 const mainTitle: string = "v3-Auth-Vtfy3-v14"
 
@@ -230,10 +228,7 @@ const blogLinks = ref([
 	{ label: "Blog 1", url: "/blog1" },
 	{ label: "Article 1", url: "/article1" },
 ]);
-const accountLinks = ref([
-	{ label: "Profile", url: "/profile" },
-	{ label: "Terms & Conditions", url: "/tandc" },
-]);
+
 const footerLinks = ref([
 	{ label: "Home", url: "/" },
 	{ label: "About Us", url: "/about" },
@@ -255,6 +250,19 @@ const onChangeSwitch = () => {
 		case "dark_custom" : theme.global.name.value = "light"; break
 	}
 };
+
+//				This executes on Page load
+	Auth.currentAuthenticatedUser({bypassCache: true })
+	.then((user) => { 
+		sessionState.connected = true 
+		info2(`currentAuthenticatedUser(~).then(~) >\n                  `+
+				`sessionState.connected > [ ${sessionState.connected} ]`)
+	})
+	.catch((reason) => { 
+		sessionState.connected = false 
+		info3(`currentAuthenticatedUser(~).then(~) >\n                  `+
+				`sessionState.connected > [ ${sessionState.connected} ]`)	})
+// }
 
 </script>
 <style>

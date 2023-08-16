@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-center">
-    <h1 class="text-primary">Blog 1 Page Content</h1>
-		<v-btn class="pa-3" to="/">Go To Home</v-btn>
+    <h1 class="text-primary">Blog</h1>
+		<v-btn class="pa-3" to="/">Home</v-btn>
   </v-container>
 </template>
 

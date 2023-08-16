@@ -2,7 +2,7 @@
 	<v-app>
 		<MasterLayout>
 			<v-container class="text-center">
-				<h1 class="text-primary">Profile Page Content</h1>
+				<h1 class="text-primary">Profile</h1>
 				<hr class="mb-10">
 
 				<!-- User Info -->

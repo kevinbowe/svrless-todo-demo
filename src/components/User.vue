@@ -1,6 +1,6 @@
 <template>
 	<!-- SignIn & SignUp Forms -->
-	<v-row no-gutters v-if="!isSession">
+	<v-row no-gutters v-if="!sessionState.connected">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 			<v-card variant="outlined" >
 				<v-tabs fixed-tabs v-model="SignInSignUpTab" >
@@ -142,7 +142,7 @@
 	</v-row>
 
 	<!-- SignUp Confirmation -->
-	<v-overlay v-if="!isSession" class="align-center justify-center" v-model="toggleUserConfirm" >
+	<v-overlay v-if="!sessionState.connected" class="align-center justify-center" v-model="toggleUserConfirm" >
 		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
 			<v-row><v-spacer/>
 				<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"/>
@@ -181,7 +181,6 @@
 
 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 <script lang="ts">
-	export const isSession = ref()
 	export default {inheritAttrs: false}
 </script>
 
@@ -317,7 +316,7 @@ const confirmUserSignUp = async (event) => {
 		if (restartConfirm.value === true) {
 			//				If we get here, try signing in again.
 			toggleUserConfirm.value = false	// Close the Confirm Ui
-			isSession.value = true			// We are signed in
+			sessionState.connected = true			// We are signed in
 			restartConfirm.value = false	// Lower the Confirm flag
 		} 
 		signInUser()
@@ -444,7 +443,7 @@ Hub.listen('auth', (data) => {
 					? data.payload.data.attributes.preferred_username 
 					: data.payload.data.username
 				})
-				isSession.value = true
+				sessionState.connected = true
 				return
 		case "signOut" :
 					return
@@ -458,11 +457,8 @@ Auth.currentAuthenticatedUser({bypassCache: true})
 	emailModel.value = results.attributes.email
 	phone_numberModel.value = results.attributes.phone_number
 	usernameModel.value = results.attributes.preferred_username ? results.attributes.preferred_username : results.username
-	isSession.value = true
 })
-.catch( () => { 
-	isSession.value = false	
-})
+.catch( () => { })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>

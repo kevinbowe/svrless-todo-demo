@@ -85,3 +85,13 @@ export const fini =    	(msg: string, value: any = "") => { console.log(`%c<-- F
 
 export const pause =    (msg: string, value: any = "") =>    { console.log(`%c      --> PAUSE -- ${msg}`, "color: yellow;", value) }
 export const resume =    	(msg: string, value: any = "") => { console.log(`%c      <-- RESUME - ${msg}`, "color: magenta;", value) }
+
+
+export const exe =    		(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: cyan;", value) }
+export const exe1 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: red;", value) }
+export const exe2 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: chartreuse;", value) }
+export const exe3 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: fuchsia;", value) }
+export const exe4 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: yellow;", value) }
+export const exe5 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: darkorange;", value) }
+export const exe6 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: pink;", value) }
+export const exe7 =    	(msg: string, value: any = "") => { console.log(`%c   ${msg}`, "color: mediumpurple;", value) }

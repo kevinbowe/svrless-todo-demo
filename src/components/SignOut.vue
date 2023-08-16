@@ -2,9 +2,9 @@
 	<v-row no-gutters >
 		<v-spacer/>
 		<v-col cols="8">
-			<v-btn class="my-3" color="primary" @click="signOutUser">
-				Sign Out
-			</v-btn>
+			<v-btn text="Sign Out" 
+			rounded="xl" class="my-1" width="10em" color="surface_alt" 
+			@click="signOutUser"/>			
 		</v-col>
 		<v-spacer/>
 	</v-row>
@@ -22,6 +22,7 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 /* ----------------------------------------------------------------------------- */
 import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
+import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
@@ -32,6 +33,8 @@ const signOutUser = async () => {
 		.then( (response) => {
 			sessionState.connected = false
 			emit( 'onSignOut', { sessionState:false })
+			//				Redirect to Home View
+			router.push({name:'home'})
 		})
 		.catch(error => {
 			sessionState.connected = true

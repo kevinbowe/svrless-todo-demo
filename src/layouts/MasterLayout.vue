@@ -143,15 +143,18 @@
 					</v-btn>
 
 					<!-- Sign In -->
-					<v-btn v-if="!sessionState.connected" to="/signin" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Sign In</v-btn>
+					<v-btn text="Sign In" v-if="!sessionState.connected" 
+					to="/account" color="white" variant="tonal" rounded="xl" 
+					class="mx-2 d-none d-sm-flex"/>
 
 					<!-- Account : [ Profile | Sign In | Palette ] -->
 					<div v-if="sessionState.connected">
-						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Icon:Account
+						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> 
+							<v-icon icon="mdi-account"  size="x-large" class="mr-2"/> Account
 							<v-menu activator="parent">
 								<v-list>
 									<v-list-item __ACCOUNT__>
-										<v-btn to="/account" _color="white" variant="plain" _rounded="xl" _class="mx-2 d-none d-sm-flex">Account</v-btn>
+										<v-btn to="/account" variant="plain"> Settings </v-btn>
 									</v-list-item>
 
 									<v-list-item __THEME_CHANGER__>
@@ -172,7 +175,7 @@
 									</v-list-item>
 									
 									<v-list-item __SIGN_OUT__>
-										<v-btn to="/signout" _color="white" variant="plain" _rounded="xl" _class="mx-2 d-none d-sm-flex">Sign Out</v-btn>
+										<SignOut/>
 									</v-list-item>
 								</v-list>
 							</v-menu>
@@ -214,6 +217,7 @@ import { useTheme } from "vuetify";
 import { ref } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
+import SignOut from "../components/SignOut.vue"
 import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
 

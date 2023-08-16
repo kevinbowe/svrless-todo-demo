@@ -4,6 +4,14 @@ import { RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
 	{
+		path: "/account",
+		name: "Account",
+		component: () => import("../views/AccountSettingsView.vue"),
+		meta: {
+			layout: "default",
+		},
+	},
+	{
 		path: "/dev",
 		name: "Dev",
 		component: () => import("../views/DevView.vue"),

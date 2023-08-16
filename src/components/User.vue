@@ -189,7 +189,8 @@
 <script setup lang="ts">
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
-import { enter, enter1, enter2 } from "../my-util-code/MyConsoleUtil"
+import { exe, exe1, exe2 } from "../my-util-code/MyConsoleUtil"
+import { enter, enter1, enter2, exit } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar } from "../my-util-code/MyConsoleUtil"
 import { err } from "../my-util-code/MyConsoleUtil"
 
@@ -217,6 +218,7 @@ import ResetPassword from "../components/ResetPassword.vue"
 
 import { sessionState } from "../sessionState";
 
+import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const SignInSignUpTab = ref()
@@ -386,6 +388,7 @@ const signInUser = async () => {
 				sessionState: true
 			})
 			sessionState.connected = true
+			router.push({name:'home'})
 		}
 	}
 	catch (error) { 

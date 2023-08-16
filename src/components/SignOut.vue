@@ -32,7 +32,6 @@ const signOutUser = async () => {
 		await Auth.signOut()
 		.then( (response) => {
 			sessionState.connected = false
-			emit( 'onSignOut', { sessionState:false })
 			//				Redirect to Home View
 			router.push({name:'home'})
 		})

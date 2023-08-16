@@ -4,7 +4,7 @@
 			<h1 class="text-primary">Account Settings</h1>
 			<hr class="mb-10">
 
-			<div v-if="isSession">
+			<div v-if="sessionState.connected">
 
 				<!-- Delete User -->
 				<DeleteUser :username="usernameModel" :email="emailModel" />
@@ -25,7 +25,7 @@
 				<Email :email="emailModel" @onUpdateEmail="updateEmail"/>
 									
 				<!-- Sign Out -->
-				<SignOut @onSignOut="setSession"/>
+				<SignOut/>
 			</div>
 
 			<!-- SignUp, SignIn, Confirm and Reset Password -->
@@ -55,15 +55,13 @@ import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
 import DeleteUser from "../components/DeleteUser.vue"
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setSession = (payload) => { isSession.value = payload.sessionState }
+import { sessionState } from '../sessionState'
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const nicknameModel = ref()
 const emailModel = ref()
 const phone_numberModel = ref()
 const usernameModel = ref()
-const isSession = ref(true)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const updateEmail = (payload) => { emailModel.value = payload.email }
@@ -79,7 +77,6 @@ const setUserInfo = (payload) => {
 	emailModel.value = payload.email
 	phone_numberModel.value = payload.phone_number
 	usernameModel.value = payload.username
-	isSession.value = payload.sessionState
 }
 	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -106,7 +103,6 @@ getSession().then( (result) => {
 	emailModel.value = result.email
 	phone_numberModel.value = result.phone_number
 	usernameModel.value = result.username
-	isSession.value = result.session
 })
 
 </script>

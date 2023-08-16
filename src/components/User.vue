@@ -385,7 +385,6 @@ const signInUser = async () => {
 				email: user.attributes?.email,
 				phone_number: user.attributes?.phone_number,	
 				username: user.attributes?.preferred_username ?? user.username,
-				sessionState: true
 			})
 			sessionState.connected = true
 			router.push({name:'home'})

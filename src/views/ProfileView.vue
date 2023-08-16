@@ -11,7 +11,7 @@
 					<v-col cols="8">
 
 						<v-row no-gutters style="color:rgb(var(--v-theme-secondary))">
-							<p class="ma-auto text-h4">{{ isSession }} </p> </v-row>
+							<p class="ma-auto text-h4">{{ isSignedIn }} </p> </v-row>
 
 						<v-row no-gutters class="text-h5 mt-5" style="color:rgb(var(--v-theme-secondary))">
 							Nick Name:</v-row>
@@ -41,14 +41,15 @@
 <script lang="ts" setup>
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth } from 'aws-amplify';
-import { ref} from 'vue'
+import { ref } from 'vue'
+import { sessionState } from '../sessionState'
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const nicknameModel = ref()
 const phone_numberModel = ref()
 const emailModel = ref()
 const usernameModel = ref()
-const isSession = ref()
+const isSignedIn = ref()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* GetSession Decl */
@@ -56,7 +57,7 @@ async function getSession(){
 		//				Check to see if there is an active session.
 		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
-			isSession.value = "Active Session"
+			isSignedIn.value = "Signed In"
 			emailModel.value = user.attributes?.email
 			phone_numberModel.value =  user.attributes?.phone_number
 			nicknameModel.value = user.attributes?.nickname
@@ -64,8 +65,13 @@ async function getSession(){
 			usernameModel.value = user.username
 			if (user.attributes?.preferred_username) 
 			usernameModel.value = user.attributes?.preferred_username
+
+			sessionState.connected = true
 	})
-	.catch((error) => isSession.value = "No Session" )
+	.catch((error) => {
+		isSignedIn.value = "Not Signed In"
+		sessionState.connected = false
+	} )
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

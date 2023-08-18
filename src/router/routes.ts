@@ -12,9 +12,17 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: "/dev",
-		name: "Dev",
-		component: () => import("../views/DevView.vue"),
+		path: "/dev1",
+		name: "Dev1",
+		component: () => import("../views/Dev1View.vue"),
+		meta: {
+			layout: "default",
+		},
+	},
+	{
+		path: "/dev2",
+		name: "Dev2",
+		component: () => import("../views/Dev2View.vue"),
 		meta: {
 			layout: "default",
 		},

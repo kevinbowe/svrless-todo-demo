@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<MasterLayout>
-		<h1>Dev</h1>
+		<h1>Dev 2</h1>
 			<v-row class="my-5" justify="center">
 				<v-sheet width="300" color="background" class="mx-auto">
 

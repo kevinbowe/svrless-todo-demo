@@ -70,11 +70,8 @@
 						<v-icon icon="mdi-dots-vertical" />
 						<v-menu activator="parent">
 							<v-list>
-								<!-- Profile | Sign In -->
-								<v-list-item :to="link.url" v-for="link in accountLinks" :key="link.label" :value="link.label" >
-									<v-list-item-title>
-										{{ link.label }}
-									</v-list-item-title>
+								<v-list-item __ACCOUNT__>
+									<v-btn to="/account" variant="plain"> Settings </v-btn>
 								</v-list-item>
 								
 								<!-- Palette / Theme -->
@@ -83,14 +80,14 @@
 										Toggle Theme
 									</v-tooltip>
 									<v-icon color="secondary" icon="mdi-palette" size="30" />
-									<v-menu v-model="menu" activator="parent" location="end" :close-on-content-click="false">
+									<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 										<v-card>
 											<v-card-actions>
 												<v-spacer />
-												<v-btn variant="text" @click="menu = false">
+												<v-btn variant="text" @click="menuThemeChanger = false">
 													Cancel
 												</v-btn>
-												<v-btn color="primary" variant="text" @click="menu = false">
+												<v-btn color="primary" variant="text" @click="menuThemeChanger = false">
 													Save
 												</v-btn>
 											</v-card-actions>
@@ -101,6 +98,15 @@
 										</v-card>
 									</v-menu>
 								</v-btn>
+
+								<v-list-item v-if="!sessionState.connected" >
+										<v-btn text="Sign In" rounded="xl" class="my-1" width="10em" color="white"	to="/account" />
+								</v-list-item>
+
+								<v-list-item v-if="sessionState.connected">
+									<SignOut/>
+								</v-list-item>
+
 							</v-list>
 						</v-menu>
 					</v-btn>

@@ -10,8 +10,7 @@
 					<v-icon />
 					<v-menu activator="parent">
 						<v-list>
-
-							<v-list-Item to="/dev">
+							<v-list-Item to="/dev1">
 								Dev
 							</v-list-Item>
 
@@ -48,6 +47,12 @@
 									</v-card>
 								</v-menu>
 							</v-btn>
+
+							<v-list-item :to="exp.url" v-for="exp in experiments" :key="exp.label" :value="exp.label">
+								<v-list-item-title to="/"> 
+									{{ exp.label }} 
+								</v-list-item-title>
+							</v-list-item>
 
 						</v-list>
 					</v-menu>
@@ -225,8 +230,16 @@ import { sessionState } from "../sessionState"
 const mainTitle: string = "v3-Auth-Vtfy3-v14"
 
 const menu = ref(false);
+
+
+const experiments = ref([
+	{ label: "Dev1-XX", url: "/dev1" },
+	{ label: "Dev2-XX", url: "/dev2" },
+])
+
 const devLinks = ref([
-	{ label: "Dev", url: "/dev" },
+	{ label: "Dev1", url: "/dev1" },
+	{ label: "Dev2", url: "/dev2" },
 ]);
 const blogLinks = ref([
 	{ label: "Blog 1", url: "/blog1" },

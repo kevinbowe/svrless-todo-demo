@@ -31,14 +31,14 @@
 									Toggle Theme
 								</v-tooltip>
 								<v-icon color="secondary" icon="mdi-palette" size="30"/>
-								<v-menu v-model="menu" activator="parent" location="end" :close-on-content-click="false">
+								<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 									<v-card>
 										<v-card-actions>
 											<v-spacer />
-											<v-btn variant="text" @click="menu = false">
+											<v-btn variant="text" @click="menuThemeChanger = false">
 												Cancel
 											</v-btn>
-											<v-btn color="primary" variant="text" @click="menu = false">
+											<v-btn color="primary" variant="text" @click="menuThemeChanger = false">
 												Save
 											</v-btn>
 										</v-card-actions>
@@ -47,11 +47,6 @@
 									</v-card>
 								</v-menu>
 							</v-btn>
-							<v-list-item :to="exp.url" v-for="exp in experiments" :key="exp.label" :value="exp.label">
-								<v-list-item-title to="/"> 
-									{{ exp.label }} 
-								</v-list-item-title>
-							</v-list-item>
 						</v-list>
 					</v-menu>
 				</v-app-bar-nav-icon>

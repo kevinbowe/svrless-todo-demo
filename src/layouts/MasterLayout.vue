@@ -47,17 +47,14 @@
 									</v-card>
 								</v-menu>
 							</v-btn>
-
 							<v-list-item :to="exp.url" v-for="exp in experiments" :key="exp.label" :value="exp.label">
 								<v-list-item-title to="/"> 
 									{{ exp.label }} 
 								</v-list-item-title>
 							</v-list-item>
-
 						</v-list>
 					</v-menu>
-				</v-app-bar-nav-icon>
-
+				</v-app-bar-nav-icon> -->
 				<!-- |||||| END Mobile Burger Menu Layout -->
 				<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 
@@ -165,12 +162,12 @@
 									<v-list-item __THEME_CHANGER__>
 										<v-btn variant="plain">
 											Theme<v-icon color="secondary" icon="mdi-palette" size="30"/>
-											<v-menu v-model="menu" activator="parent" location="end" :close-on-content-click="false">
+											<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 												<v-card>
 													<v-card-actions>
 														<v-spacer />
-														<v-btn variant="text" @click="menu = false"> Cancel </v-btn>
-														<v-btn _color="primary" variant="text" @click="menu = false"> Save </v-btn>
+														<v-btn variant="text" @click="menuThemeChanger = false"> Cancel </v-btn>
+														<v-btn _color="primary" variant="text" @click="menuThemeChanger = false"> Save </v-btn>
 													</v-card-actions>
 													<ThemeChanger />
 													<ThemePreview />
@@ -228,14 +225,7 @@ import { sessionState } from "../sessionState"
 
 // <v-app-bar-title>
 const mainTitle: string = "v3-Auth-Vtfy3-v14"
-
-const menu = ref(false);
-
-
-const experiments = ref([
-	{ label: "Dev1-XX", url: "/dev1" },
-	{ label: "Dev2-XX", url: "/dev2" },
-])
+const menuThemeChanger = ref(false);
 
 const devLinks = ref([
 	{ label: "Dev1", url: "/dev1" },
@@ -272,14 +262,10 @@ const onChangeSwitch = () => {
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) => { 
 		sessionState.connected = true 
-		info2(`currentAuthenticatedUser(~).then(~) >\n                  `+
-				`sessionState.connected > [ ${sessionState.connected} ]`)
 	})
 	.catch((reason) => { 
 		sessionState.connected = false 
-		info3(`currentAuthenticatedUser(~).then(~) >\n                  `+
-				`sessionState.connected > [ ${sessionState.connected} ]`)	})
-// }
+	})
 
 </script>
 <style>

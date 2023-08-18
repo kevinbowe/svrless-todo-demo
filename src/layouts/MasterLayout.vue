@@ -54,7 +54,7 @@
 							</v-list-item>
 						</v-list>
 					</v-menu>
-				</v-app-bar-nav-icon> -->
+				</v-app-bar-nav-icon>
 				<!-- |||||| END Mobile Burger Menu Layout -->
 				<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 

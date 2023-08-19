@@ -1,12 +1,54 @@
 <template>
-	<v-layout>
-		<v-main>
+		<v-layout>
+
+			<v-navigation-drawer v-model="drawer" >
+				<v-list _v-model:opened="open">
+
+					<v-list-item prepend-icon="mdi-home" title="Home"> </v-list-item>
+					
+					<v-list-group value="Users">
+						<template v-slot:activator="{ props }">
+							<v-list-item prepend-icon="mdi-account" v-bind="props" >Users</v-list-item>
+						</template>
+					
+						<v-list-group value="Admin">
+							<template v-slot:activator="{ props }">
+								<v-list-item prepend-icon="mdi-account-supervisor" v-bind="props">Admin</v-list-item>
+							</template>
+							<v-list-item _:prepend-icon=admin.icon :title=admin.title v-for="admin in admins"></v-list-item>
+						</v-list-group>
+
+						<v-list-group value="Actions">
+							<template v-slot:activator="{ props }">
+								<v-list-Item prepend-icon="mdi-gesture-tap" v-bind="props">Actions</v-list-Item>
+							</template>
+							<v-list-item _:prepend-icon=crud.icon :title=crud.title v-for="crud in cruds"></v-list-item>
+						</v-list-group>
+
+					</v-list-group>   
+
+				</v-list>
+			</v-navigation-drawer>
+
 			<v-app-bar color="blue-grey-darken-1">
+				<v-app-bar-nav-icon variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
+				<v-toolbar-title>My files</v-toolbar-title>
+				<v-spacer></v-spacer>
+				<v-btn variant="text" icon="mdi-magnify"></v-btn>
+				<v-btn variant="text" icon="mdi-filter"></v-btn>
+				<v-btn variant="text" icon="mdi-dots-vertical"></v-btn>
+			</v-app-bar>
+
+			<v-main style="height: 500px;">
+
+			</v-main>
+		</v-layout>
+
 
 			<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 			<!-- ||||||  START Mobile Burger Menu Layout  -->
 
-				<v-app-bar-nav-icon size="30" icon="mdi-menu" class="d-sm-none">
+				<!-- <v-app-bar-nav-icon size="30" icon="mdi-menu" class="d-sm-none">
 					<v-icon />
 					<v-menu activator="parent">
 						<v-list>
@@ -49,28 +91,28 @@
 							</v-btn>
 						</v-list>
 					</v-menu>
-				</v-app-bar-nav-icon>
+				</v-app-bar-nav-icon> -->
 				<!-- |||||| END Mobile Burger Menu Layout -->
 				<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 
-				<v-app-bar-title>
+				<!-- <v-app-bar-title>
 					<a href="/" class="text-decoration-none"> {{ mainTitle }} </a>
 				</v-app-bar-title>
-				<v-spacer />
-				<template v-slot:append>
+				<v-spacer /> -->
+				<!-- <template v-slot:append> -->
 
 					<!-- //////	START Mobile dots-verticle Menu ////// -->
 
-					<v-btn color="white" variant="plain" class="d-sm-none">
+					<!-- <v-btn color="white" variant="plain" class="d-sm-none">
 						<v-icon icon="mdi-dots-vertical" />
 						<v-menu activator="parent">
 							<v-list>
 								<v-list-item __ACCOUNT__>
 									<v-btn to="/account" variant="plain"> Settings </v-btn>
-								</v-list-item>
+								</v-list-item> -->
 								
 								<!-- Palette / Theme -->
-								<v-btn variant="plain">
+								<!-- <v-btn variant="plain">
 									<v-tooltip activator="parent" location="bottom">
 										Toggle Theme
 									</v-tooltip>
@@ -104,7 +146,7 @@
 
 							</v-list>
 						</v-menu>
-					</v-btn>
+					</v-btn> -->
 
 					<!-- //////	END Mobile dots-verticle Menu -->
 					<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
@@ -112,13 +154,13 @@
 
 					<!-- Menu [ Profile | Experiment | Blogs | Account ] -->
 					<!-- Theme switch -->
-					<v-switch class="mt-6" density="compact" :flat="true" inset @change="onChangeSwitch" ></v-switch>
+					<!-- <v-switch class="mt-6" density="compact" :flat="true" inset @change="onChangeSwitch" ></v-switch> -->
 
 					<!-- Profile -->
-					<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
+					<!-- <v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn> -->
 
 					<!-- Devs -->
-					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Experiment
+					<!-- <v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Experiment
 						<v-menu activator="parent">
 							<v-list>
 								<v-list-item :to="link.url" v-for="link in devLinks" :key="link.label" :value="link.label">
@@ -128,10 +170,10 @@
 								</v-list-item>
 							</v-list>
 						</v-menu>
-					</v-btn>
+					</v-btn> -->
 
 					<!-- Blogs -->
-					<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Blogs
+					<!-- <v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Blogs
 						<v-menu activator="parent">
 							<v-list>
 								<v-list-item :to="link.url" 
@@ -143,15 +185,15 @@
 								</v-list-item>
 							</v-list>
 						</v-menu>
-					</v-btn>
+					</v-btn> -->
 
 					<!-- Sign In -->
-					<v-btn text="Sign In" v-if="!sessionState.connected" 
+					<!-- <v-btn text="Sign In" v-if="!sessionState.connected" 
 					to="/account" color="white" variant="tonal" rounded="xl" 
-					class="mx-2 d-none d-sm-flex"/>
+					class="mx-2 d-none d-sm-flex"/> -->
 
 					<!-- Account : [ Profile | Sign In | Palette ] -->
-					<div v-if="sessionState.connected">
+					<!-- <div v-if="sessionState.connected">
 						<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> 
 							<v-icon icon="mdi-account"  size="x-large" class="mr-2"/> Account
 							<v-menu activator="parent">
@@ -183,19 +225,19 @@
 								</v-list>
 							</v-menu>
 						</v-btn>
-					</div>
+					</div> -->
 					
 					<!-- //////	END Desktop Menu -->
 					<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
 				
-				</template>
-			</v-app-bar>
+				<!-- </template> -->
+			<!-- </v-app-bar> -->
 
 			<!-- |||||| START Content insertion here |||||||||||||||||||||||||||||| -->
-			<slot></slot>
+			<!-- <slot></slot> -->
 			<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
 
-			<v-footer app color="primary" dark fixed>
+			<!-- <v-footer app color="primary" dark fixed>
 				<v-row justify="center" no-gutters>
 					<v-btn :to="link.url" color="white" variant="text" rounded="xl" 
 						v-for="link in footerLinks" :key="link.label" class="mx-2"
@@ -206,10 +248,10 @@
 							<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
 					</v-col>
 				</v-row>
-			</v-footer>
+			</v-footer> -->
 
-		</v-main>
-	</v-layout>
+		<!-- </v-main> -->
+	<!-- </v-layout> -->
 </template>
 <script setup lang="ts" >
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -224,6 +266,27 @@ import SignOut from "../components/SignOut.vue"
 import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
 
+/* ----------------------------------------------------------------------------- */
+const drawer = ref(false)
+
+const open = ref(['Users'])
+
+const admins = ref([
+	{title:'Management', icon:'mdi-account-multiple-outline'},
+	{title:'Settings', icon:'mdi-cog-outline'},
+])
+
+const cruds = ref([
+	{title:'Create', icon:'mdi-plus-outline'},
+	{title:'Read', icon:'mdi-file-outline'},
+	{title:'Update', icon:'mdi-update'},
+	{title:'Delete', icon:'mdi-delete'},
+])
+
+
+
+
+/* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
 const mainTitle: string = "v3-Auth-Vtfy3-v14"
 const menuThemeChanger = ref(false);

@@ -1,18 +1,6 @@
 <template>
-	<v-row no-gutters >
-		<v-spacer/>
-		<v-col cols="8">
-			<v-btn text="Sign Out" 
-			rounded="xl" class="my-1" width="10em" color="surface_alt" 
-			@click="signOutUser"/>			
-		</v-col>
-		<v-spacer/>
-	</v-row>
+	<v-btn text="Sign Out" rounded="xl" class="my-1" width="10em" color="surface_alt" @click="signOutUser"/>			
 </template>
-
-<script lang="ts">
-	export default {inheritAttrs: false}
-</script>
 
 <script setup lang="ts">
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -25,8 +13,6 @@ import { sessionState } from "../sessionState"
 import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const emit = defineEmits()
-
 const signOutUser = async () => { 
 	try { 
 		await Auth.signOut()

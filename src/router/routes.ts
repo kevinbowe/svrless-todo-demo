@@ -28,6 +28,14 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: "/future",
+		name: "Future",
+		component: () => import("../views/Future.vue"),
+		meta: {
+			layout: "default",
+		},
+	},
+	{
 		path: "/",
 		name: "home",
 		component: () => import("../views/HomeView.vue"),
@@ -40,7 +48,7 @@ const routes: Array<RouteRecordRaw> = [
 		name: "About",
 		component: () => import("../views/AboutView.vue"),
 		meta: {
-			layout: "default",
+			layout: "master",
 		},
 	},
 	{
@@ -74,7 +82,15 @@ const routes: Array<RouteRecordRaw> = [
 		name: "Terms-and-Conditions",
 		component: () => import("../views/TermsConditionsView.vue"),
 		meta: {
-			layout: "dashboard",
+			layout: "master",
+		},
+	},
+	{
+		path: "/contact",
+		name: "Contact",
+		component: () => import("../views/Contact.vue"),
+		meta: {
+			layout: "master",
 		},
 	},
 ];

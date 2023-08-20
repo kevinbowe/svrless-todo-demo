@@ -1,5 +1,5 @@
 <template>
-<v-app>
+<!-- <v-app> -->
 <MasterLayout>
 	<v-container class="text-align:start">
 
@@ -36,7 +36,7 @@
 		</v-row>		
 	</v-container>
 </MasterLayout>
-</v-app>
+<!-- </v-app> -->
 </template>
 
 <script lang="ts" setup>

@@ -1,9 +1,7 @@
 <template>
 	<v-layout>
-
-		<v-navigation-drawer v-model="drawer">
-			<v-list denisty="compact" _v-model:opened="open">
-
+		<v-navigation-drawer v-model="drawer" >
+			<v-list nav>
 				<v-list-item class="justify-start" to="/" _prepend-icon="mdi-home" _title="Home"> 
 					<v-icon class="mr-3">mdi-home</v-icon> Home
 				</v-list-item>

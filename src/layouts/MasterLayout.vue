@@ -1,8 +1,8 @@
 <template>
 	<v-layout>
-		<v-navigation-drawer v-model="drawer" >
+		<v-navigation-drawer v-if="mobile" v-model="drawer" >
 			<v-list nav>
-				<v-list-item class="justify-start" to="/" _prepend-icon="mdi-home" _title="Home"> 
+				<v-list-item class="justify-start" to="/"> 
 					<v-icon class="mr-3">mdi-home</v-icon> Home
 				</v-list-item>
 
@@ -70,20 +70,19 @@
 		</v-navigation-drawer>
 
 		<v-app-bar color="blue-grey-darken-1">
-
-			<v-app-bar-nav-icon variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
-
+			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
+		
 			<!-- Title -->
-			<v-toolbar-title> <a href="/" class="text-decoration-none"> {{ mainTitle }} </a>	</v-toolbar-title>
-
-			<!-- Theme switch -->
-			<v-switch class="mt-6" density="compact" :flat="true" inset @change="onChangeSwitch" ></v-switch>
+			<v-toolbar-title style="text-align:start"> 
+				<a v-if="!mobile" href="/" class="text-decoration-none"> {{ mainTitle }} </a>
+				<a v-if="mobile" href="/" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	
+			</v-toolbar-title>
 
 			<!-- Profile -->
-			<v-btn to="/profile" color="white" variant="plain" rounded="xl" class="mx-2 d-none d-sm-flex">Profile</v-btn>
+			<v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn>
 
 			<!-- Experiment / Dev links -->
-			<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Experiment
+			<v-btn v-if="!mobile" color="white" variant="plain"> Exp
 				<v-menu activator="parent">
 					<v-list>
 						<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in experiment" :key="link.title" :value="link.title"/>
@@ -92,7 +91,7 @@
 			</v-btn>
 
 			<!-- Blogs -->
-			<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> Blogs
+			<v-btn v-if="!mobile" color="white" variant="plain" > Blogs
 				<v-menu activator="parent">
 					<v-list>
 						<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in blogs" :key="link.title" :value="link.title"/>
@@ -101,14 +100,15 @@
 			</v-btn>
 
 			<!-- Sign In -->
-			<v-btn text="Sign In" v-if="!sessionState.connected" 
-			to="/account" color="white" variant="tonal" rounded="xl" 
-			class="mx-2 d-none d-sm-flex"/>
+			<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/account" color="white" variant="tonal" rounded="xl"/>
+			<!-- Sign Out -->
+			<!-- <SignOut v-if="sessionState.connected && mobile" class="mx-2" color="white" variant="tonal" rounded="xl"/> -->
 
-			<!-- Account : [ Profile | Sign In | Palette ] -->
-			<div v-if="sessionState.connected">
-				<v-btn color="white" variant="plain" class="mx-2 d-none d-sm-flex"> 
-					<v-icon icon="mdi-account"  size="x-large" class="mr-2"/> Account
+			<!-- Account : [ Settings | Theme | Sign Out ] -->
+			<div v-if="sessionState.connected && !mobile">
+				<v-btn color="white" variant="plain"> 
+					<v-icon icon="mdi-account" size="x-large" /> 
+					Account
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item __ACCOUNT__>
@@ -140,9 +140,11 @@
 				</v-btn>
 			</div>
 
+			<v-icon @click="onChangeSwitch" :icon="themeIcon"/>
+			
 			<!-- Three Dots -->
-			<v-btn >
-				<v-icon icon="mdi-dots-vertical" size="x-large" class="mr-2"/>
+			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
+				<v-icon icon="mdi-dots-vertical" size="x-large"/>
 				<v-menu activator="parent">
 					<v-list >
 						<v-list-item :to="link.url" v-for="link in threeDots" :key="link.label" :value="link.label">
@@ -151,7 +153,7 @@
 							</v-list-item-title>
 						</v-list-item>
 						<v-list-item>
-							<v-icon class="mr-3" icon="mdi-palette" size="30"/> Theme Changer
+							<v-icon icon="mdi-palette" size="30"/> Theme Changer
 							<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 								<v-card>
 									<v-card-actions>
@@ -206,8 +208,8 @@ import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
 
 /* ----------------------------------------------------------------------------- */
-
-
+import { useDisplay } from "vuetify";
+const { mobile } = useDisplay()
 
 /* ----------------------------------------------------------------------------- */
 const drawer = ref(false)
@@ -246,12 +248,18 @@ const mainTitle: string = "v3-Auth-Vtfy3-v14"
 const menuThemeChanger = ref(false);
 
 const theme = useTheme();
+const themeIcon = ref('mdi-weather-night')
 const onChangeSwitch = () => {
 	switch(theme.global.name.value){
 		//				DEBUG
-		case "dark" : theme.global.name.value = "light"; break
-		case "light" : theme.global.name.value = "dark"; break
-		
+		case "dark" : 
+			theme.global.name.value = "light"; 
+			themeIcon.value = 'mdi-weather-sunny'
+			break
+
+		case "light" : theme.global.name.value = "dark"; 
+			themeIcon.value = 'mdi-weather-night'
+			break
 		// 			These cases below will be ignored because of debug above
 		case "light" : theme.global.name.value = "light_custom"; break
 		case "light_custom" : theme.global.name.value = "dark"; break
@@ -262,12 +270,8 @@ const onChangeSwitch = () => {
 
 //				This executes on Page load
 	Auth.currentAuthenticatedUser({bypassCache: true })
-	.then((user) => { 
-		sessionState.connected = true 
-	})
-	.catch((reason) => { 
-		sessionState.connected = false 
-	})
+	.then((user) =>  sessionState.connected = true )
+	.catch((reason) => sessionState.connected = false )
 
 </script>
 <style>

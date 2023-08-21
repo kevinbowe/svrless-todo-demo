@@ -115,6 +115,7 @@ const dark_custom: ThemeDefinition = {
 }
 
 export default createVuetify({
+	display: { mobileBreakpoint: 'sm' },
 	components,
 	directives,
 	theme: {

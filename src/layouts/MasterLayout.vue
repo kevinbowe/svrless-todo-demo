@@ -206,34 +206,32 @@ import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
 
 /* ----------------------------------------------------------------------------- */
-const drawer = ref(false)
 
+
+
+/* ----------------------------------------------------------------------------- */
+const drawer = ref(false)
 const experiment = ref([
 	{title:'Dev 1', icon:'mdi-hammer-screwdriver', url:'/dev1'},
 	{title:'Dev 2', icon:'mdi-hammer-screwdriver', url:'/dev2'},
 ])
-
 const blogs = ref([
 	{title:'Blog 1', icon:'mdi-post-outline', url:'/blog1'},
 	{title:'Article 1', icon:'mdi-school', url:'/article1'},
 ])
-
 const account = ref([
 	{title:'Settings', icon:'mdi-cog-outline', url:'/account'},
 ])
-
 const threeDots = ref([
 	{ label: "About Us", url: "/about" },
 	{ label: "Terms & Conditions", url: "/tandc" },
 ]);
-
 const cruds = ref([
 	{title:'Create', icon:'mdi-plus-outline',url: "/future" },
 	{title:'Read', icon:'mdi-file-outline', url: "/future"},
 	{title:'Update', icon:'mdi-update', url: "/future"},
 	{title:'Delete', icon:'mdi-delete', url: "/future"},
 ])
-
 const footerLinks = ref([
 	{ label: "Home", url: "/" },
 	{ label: "About Us", url: "/about" },

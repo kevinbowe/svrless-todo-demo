@@ -114,19 +114,14 @@
 						</v-list>
 					</v-menu>
 				</v-btn>
-				
-				<!-- Sign In -->
-				<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/account" color="white" variant="tonal" rounded="xl"/>
-				<!-- Sign Out -->
-				<!-- <SignOut v-if="sessionState.connected && mobile" class="mx-2" color="white" variant="tonal" rounded="xl"/> -->
-				
+								
 			</v-toolbar-title>
 
 			<!-- Account : [ Settings | Theme | Sign Out ] -->
-			<div v-if="sessionState.connected && !mobile">
+			<div v-if="sessionState.connected">
 				<v-btn color="white" variant="plain"> 
-					<v-icon icon="mdi-account" size="x-large" /> 
-					Account
+					<v-icon v-if="mobile" icon="mdi-account" size="x-large" /> 
+					<p v-else> Account </p>
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item __ACCOUNT__>
@@ -158,6 +153,10 @@
 				</v-btn>
 			</div>
 
+			<!-- Sign In -->
+			<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/account" color="white" variant="tonal" rounded="xl"/>
+
+			<!-- Theme Switch -->
 			<v-icon @click="onChangeSwitch" :icon="themeIcon"/>
 			
 			<!-- Three Dots -->

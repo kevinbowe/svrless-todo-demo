@@ -74,6 +74,7 @@ import { Auth } from 'aws-amplify';
 import { checkPreferred_usernameTooShort, checkPreferred_usernameFirstChar,
 			checkPreferred_usernameSpecialCharExceptions }
 	from "../components/Preferred_usernameParts/Preferred_usernameValidators"
+import { sessionState } from "../sessionState";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
@@ -109,6 +110,7 @@ async function submitUsername (event) {
 				preferred_username: result.attributes.preferred_username,
 				// showPreferred_username: false
 			})
+			sessionState.userName = result.attributes.preferred_username
 			workingUsernameModel.value = ""
 			showUsername.value = false
 		})

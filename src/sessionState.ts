@@ -1,5 +1,6 @@
 import {reactive} from 'vue'
 
 export const sessionState = reactive({
-	connected: false
+	connected: false,
+	userName: ""
 })

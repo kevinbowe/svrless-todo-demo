@@ -386,6 +386,7 @@ const signInUser = async () => {
 				username: user.attributes?.preferred_username ?? user.username,
 			})
 			sessionState.connected = true
+			sessionState.userName = user.attributes?.preferred_username ?? user.username
 			router.push({name:'home'})
 		}
 	}
@@ -444,6 +445,9 @@ Hub.listen('auth', (data) => {
 					: data.payload.data.username
 				})
 				sessionState.connected = true
+				sessionState.userName = data.payload.data.attributes.preferred_username 
+					? data.payload.data.attributes.preferred_username 
+					: data.payload.data.username
 				return
 		case "signOut" :
 					return

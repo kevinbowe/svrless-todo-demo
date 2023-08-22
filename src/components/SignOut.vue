@@ -18,6 +18,7 @@ const signOutUser = async () => {
 		await Auth.signOut()
 		.then( (response) => {
 			sessionState.connected = false
+			sessionState.userName = ""
 			//				Redirect to Home View
 			router.push({name:'home'})
 		})

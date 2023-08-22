@@ -69,6 +69,23 @@
 			</v-list>
 		</v-navigation-drawer>
 
+		<v-app-bar color="primary" _color="blue-darken-1" density="compact" >
+			<v-row no-gutters _style="height:16px;">
+				<v-col>
+					<p v-if="mobile">MOB</p>
+					<p v-if="!mobile">DSK</p>
+				</v-col>
+				<v-col>
+					<p v-if="sessionState.connected">Signed In</p>
+					<p v-if="!sessionState.connected">Signed Out</p>
+				</v-col>
+				<v-col>
+					<p v-if="sessionState.userName.length >0">UID: [ {{ sessionState.userName }} ]</p>
+					<p v-else> ---</p>
+				</v-col>
+			</v-row>
+		</v-app-bar>
+
 		<v-app-bar color="blue-grey-darken-1">
 			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
 		
@@ -76,33 +93,34 @@
 			<v-toolbar-title style="text-align:start"> 
 				<a v-if="!mobile" href="/" class="text-decoration-none"> {{ mainTitle }} </a>
 				<a v-if="mobile" href="/" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	
+				
+				<!-- Profile -->
+				<v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn>
+				
+				<!-- Experiment / Dev links -->
+				<v-btn v-if="!mobile" color="white" variant="plain"> Exp
+					<v-menu activator="parent">
+						<v-list>
+							<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in experiment" :key="link.title" :value="link.title"/>
+						</v-list>
+					</v-menu>
+				</v-btn>
+				
+				<!-- Blogs -->
+				<v-btn v-if="!mobile" color="white" variant="plain" > Blogs
+					<v-menu activator="parent">
+						<v-list>
+							<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in blogs" :key="link.title" :value="link.title"/>
+						</v-list>
+					</v-menu>
+				</v-btn>
+				
+				<!-- Sign In -->
+				<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/account" color="white" variant="tonal" rounded="xl"/>
+				<!-- Sign Out -->
+				<!-- <SignOut v-if="sessionState.connected && mobile" class="mx-2" color="white" variant="tonal" rounded="xl"/> -->
+				
 			</v-toolbar-title>
-
-			<!-- Profile -->
-			<v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn>
-
-			<!-- Experiment / Dev links -->
-			<v-btn v-if="!mobile" color="white" variant="plain"> Exp
-				<v-menu activator="parent">
-					<v-list>
-						<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in experiment" :key="link.title" :value="link.title"/>
-					</v-list>
-				</v-menu>
-			</v-btn>
-
-			<!-- Blogs -->
-			<v-btn v-if="!mobile" color="white" variant="plain" > Blogs
-				<v-menu activator="parent">
-					<v-list>
-						<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in blogs" :key="link.title" :value="link.title"/>
-					</v-list>
-				</v-menu>
-			</v-btn>
-
-			<!-- Sign In -->
-			<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/account" color="white" variant="tonal" rounded="xl"/>
-			<!-- Sign Out -->
-			<!-- <SignOut v-if="sessionState.connected && mobile" class="mx-2" color="white" variant="tonal" rounded="xl"/> -->
 
 			<!-- Account : [ Settings | Theme | Sign Out ] -->
 			<div v-if="sessionState.connected && !mobile">
@@ -178,19 +196,19 @@
 		</v-main>
 		<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
 
-	</v-layout>
-
-	<v-footer app color="primary" dark fixed>
-		<v-row justify="center" no-gutters>
-			<v-btn :to="link.url" color="white" variant="text" rounded="xl" 
+		
+		<v-footer app color="primary" dark fixed>
+			<v-row justify="center" no-gutters>
+				<v-btn :to="link.url" color="white" variant="text" rounded="xl" 
 			v-for="link in footerLinks" :key="link.label" class="mx-2">
-				{{ link.label }}
-			</v-btn>
-			<v-col cols="12" class="text-center mt-4"> 
-				<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
-			</v-col>
-		</v-row>
-	</v-footer>
+			{{ link.label }}
+		</v-btn>
+		<v-col cols="12" class="text-center mt-4"> 
+			<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
+		</v-col>
+	</v-row>
+</v-footer>
+</v-layout>
 
 </template>
 <script setup lang="ts" >
@@ -270,8 +288,17 @@ const onChangeSwitch = () => {
 
 //				This executes on Page load
 	Auth.currentAuthenticatedUser({bypassCache: true })
-	.then((user) =>  sessionState.connected = true )
-	.catch((reason) => sessionState.connected = false )
+	.then((user) =>  {
+		sessionState.connected = true 
+		sessionState.userName = user.attributes.preferred_username 
+					? user.attributes.preferred_username
+					: user.username
+	})
+	
+	.catch((reason) => {
+		sessionState.connected = false 
+		sessionState.userName = ""
+	})
 
 </script>
 <style>

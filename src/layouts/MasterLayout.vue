@@ -190,26 +190,25 @@
 		</v-app-bar>
 
 		<!-- |||||| START Content insertion here |||||||||||||||||||||||||||||| -->
-		<v-main>
+		<v-main class="mb-5">
 			<slot></slot>
 		</v-main>
 		<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
-
 		
-		<v-footer app color="primary" dark fixed>
+		<v-footer app color="primary" >
 			<v-row justify="center" no-gutters>
 				<v-btn :to="link.url" color="white" variant="text" rounded="xl" 
-			v-for="link in footerLinks" :key="link.label" class="mx-2">
-			{{ link.label }}
-		</v-btn>
-		<v-col cols="12" class="text-center mt-4"> 
-			<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
-		</v-col>
-	</v-row>
-</v-footer>
-</v-layout>
-
+				v-for="link in footerLinks" :key="link.label" class="mx-2">
+					{{ link.label }}
+				</v-btn>
+				<v-col cols="12" class="text-center mt-4"> 
+					<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
+				</v-col>
+			</v-row>
+		</v-footer>
+	</v-layout>
 </template>
+
 <script setup lang="ts" >
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"

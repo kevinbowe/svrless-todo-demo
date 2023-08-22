@@ -12,6 +12,14 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: "/user",
+		name: "User",
+		component: () => import("../views/UserView.vue"),
+		meta: {
+			layout: "master",
+		},
+	},
+	{
 		path: "/dev1",
 		name: "Dev1",
 		component: () => import("../views/Dev1View.vue"),

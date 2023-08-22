@@ -63,7 +63,7 @@
 				</v-list-item>
 				
 				<v-list-item v-if="!sessionState.connected">
-					<v-btn to="/account" text="Sign In" rounded="xl" class="my-1" width="10em" color="surface_alt" />
+					<v-btn to="/user" text="Sign In" rounded="xl" class="my-1" width="10em" color="surface_alt" />
 				</v-list-item>
 
 			</v-list>
@@ -154,7 +154,7 @@
 			</div>
 
 			<!-- Sign In -->
-			<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/account" color="white" variant="tonal" rounded="xl"/>
+			<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
 
 			<!-- Theme Switch -->
 			<v-icon @click="onChangeSwitch" :icon="themeIcon"/>

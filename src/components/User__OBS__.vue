@@ -1,4 +1,6 @@
 <template>
+<v-app>
+<MasterLayout>
 	<!-- SignIn & SignUp Forms -->
 	<v-row no-gutters v-if="!sessionState.connected">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
@@ -177,6 +179,8 @@
 
 		</v-sheet>
 	</v-overlay>
+</MasterLayout>
+</v-app>
 </template>
 
 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->

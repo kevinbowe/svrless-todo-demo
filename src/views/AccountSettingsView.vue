@@ -4,7 +4,7 @@
 			<h1 class="text-primary">Account Settings</h1>
 			<hr class="mb-10">
 
-			<div v-if="sessionState.connected">
+			<!-- <div v-if="sessionState.connected"> -->
 
 				<!-- Delete User -->
 				<DeleteUser :username="usernameModel" :email="emailModel" />
@@ -26,11 +26,11 @@
 									
 				<!-- Sign Out -->
 				<SignOut/>
-			</div>
+			<!-- </div> -->
 
 			<!-- SignUp, SignIn, Confirm and Reset Password -->
-			<User v-else @onSignIn="setUserInfo"/>
-			
+			<!-- <User v-else @onSignIn="setUserInfo"/>
+			 -->
 		</MasterLayout>
 	</v-app>
 </template>
@@ -46,7 +46,7 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { Auth } from 'aws-amplify';
 import "@aws-amplify/ui-vue/styles.css";
 /* ----------------------------------------------------------------------------- */
-import User from "../components/User.vue"
+// import User from "../components/User.vue"
 import Nickname from "../components/Nickname.vue"
 import Preferred_username from "../components/Preferred_username.vue";
 import Email from "../components/Email.vue";

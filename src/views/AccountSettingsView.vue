@@ -4,33 +4,27 @@
 			<h1 class="text-primary">Account Settings</h1>
 			<hr class="mb-10">
 
-			<!-- <div v-if="sessionState.connected"> -->
+			<!-- Delete User -->
+			<DeleteUser :username="usernameModel" :email="emailModel" />
 
-				<!-- Delete User -->
-				<DeleteUser :username="usernameModel" :email="emailModel" />
+			<!-- Update Password-->
+			<Password />
 
-				<!-- Update Password-->
-				<Password />
-
-				<!-- Update Nickname -->
-				<Nickname :nickname="nicknameModel" @onUpdateNickname="setNickname" />
-					
-				<!-- Update Phone number -->
-				<Phone_number :phone_number="phone_numberModel" @onUpdatePhone_number="setPhone_number" />
+			<!-- Update Nickname -->
+			<Nickname :nickname="nicknameModel" @onUpdateNickname="setNickname" />
 				
-				<!-- Update Preferred Username -->
-				<Preferred_username :username="usernameModel" @onUpdatePreferred_username="setPreferred_username" />
+			<!-- Update Phone number -->
+			<Phone_number :phone_number="phone_numberModel" @onUpdatePhone_number="setPhone_number" />
+			
+			<!-- Update Preferred Username -->
+			<Preferred_username :username="usernameModel" @onUpdatePreferred_username="setPreferred_username" />
 
-				<!-- Update Email-->
-				<Email :email="emailModel" @onUpdateEmail="updateEmail"/>
-									
-				<!-- Sign Out -->
-				<SignOut/>
-			<!-- </div> -->
+			<!-- Update Email-->
+			<Email :email="emailModel" @onUpdateEmail="updateEmail"/>
+								
+			<!-- Sign Out -->
+			<SignOut/>
 
-			<!-- SignUp, SignIn, Confirm and Reset Password -->
-			<!-- <User v-else @onSignIn="setUserInfo"/>
-			 -->
 		</MasterLayout>
 	</v-app>
 </template>

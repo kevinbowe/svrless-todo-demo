@@ -1,5 +1,6 @@
 <template>
 	<v-layout>
+		<!-- Burger Menu -->
 		<v-navigation-drawer v-if="mobile" v-model="drawer" >
 			<v-list nav>
 				<v-list-item class="justify-start" to="/"> 
@@ -69,6 +70,7 @@
 			</v-list>
 		</v-navigation-drawer>
 
+		<!-- Debugging Menu Bar DEV ONLY -->
 		<v-app-bar color="primary" _color="blue-darken-1" density="compact" >
 			<v-row no-gutters _style="height:16px;">
 				<v-col>
@@ -86,6 +88,7 @@
 			</v-row>
 		</v-app-bar>
 
+		<!-- Main Menu Bar -->	
 		<v-app-bar color="blue-grey-darken-1">
 			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
 		
@@ -195,6 +198,7 @@
 		</v-main>
 		<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
 		
+		<!-- Footer -->
 		<v-footer app color="primary" >
 			<v-row justify="center" no-gutters>
 				<v-btn :to="link.url" color="white" variant="text" rounded="xl" 

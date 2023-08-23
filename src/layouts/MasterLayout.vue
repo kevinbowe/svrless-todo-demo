@@ -226,12 +226,14 @@ import ThemePreview from "../components/ThemePreview.vue";
 import SignOut from "../components/SignOut.vue"
 import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
+import { useDisplay } from "vuetify";
+/* ----------------------------------------------------------------------------- */
+// <v-app-bar-title>
+const mainTitle: string = "v3a-theme-v1"
 
 /* ----------------------------------------------------------------------------- */
-import { useDisplay } from "vuetify";
 const { mobile } = useDisplay()
 
-/* ----------------------------------------------------------------------------- */
 const drawer = ref(false)
 const experiment = ref([
 	{title:'Dev 1', icon:'mdi-hammer-screwdriver', url:'/dev1'},
@@ -263,8 +265,6 @@ const footerLinks = ref([
 ]);
 
 /* ----------------------------------------------------------------------------- */
-// <v-app-bar-title>
-const mainTitle: string = "v3-Auth-Vtfy3-v14"
 const menuThemeChanger = ref(false);
 
 const theme = useTheme();

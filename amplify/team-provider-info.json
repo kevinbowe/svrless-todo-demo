@@ -13,11 +13,11 @@
     },
     "categories": {
       "auth": {
-        "vueawsauthrawv3d57d0f4f": {
-          "userPoolId": "us-east-1_ffCDzknd0",
-          "userPoolName": "vue3-auth-v1",
-          "webClientId": "3fal7vupak656b9o3j1e90q1g2",
-          "nativeClientId": "3fal7vupak656b9o3j1e90q1g2"
+        "vueawsauthrawv3861c4fc0": {
+          "userPoolId": "us-east-1_fWdLnFcoi",
+          "userPoolName": "v3a-theme",
+          "webClientId": "721bv9rmvjhnnh7u3n7q58rpmd",
+          "nativeClientId": "721bv9rmvjhnnh7u3n7q58rpmd"
         }
       }
     }

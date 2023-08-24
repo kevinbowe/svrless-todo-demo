@@ -1,6 +1,6 @@
 {
   "authSelections": "userPoolOnly",
-  "resourceName": "vueawsauthrawv3d57d0f4f",
+  "resourceName": "vueawsauthrawv3861c4fc0",
   "serviceType": "imported",
   "region": "us-east-1",
   "aliasAttributes": [
@@ -10,9 +10,7 @@
     "email"
   ],
   "passwordPolicyMinLength": 6,
-  "passwordPolicyCharacters": [
-    "Requires Lowercase"
-  ],
+  "passwordPolicyCharacters": [],
   "mfaConfiguration": "OFF",
   "autoVerifiedAttributes": [
     "email"

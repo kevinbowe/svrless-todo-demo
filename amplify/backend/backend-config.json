@@ -1,6 +1,6 @@
 {
   "auth": {
-    "vueawsauthrawv3d57d0f4f": {
+    "vueawsauthrawv3861c4fc0": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -9,35 +9,35 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_vueawsauthrawv3d57d0f4f_nativeClientId": {
+    "AMPLIFY_auth_vueawsauthrawv3861c4fc0_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3d57d0f4f"
+          "resourceName": "vueawsauthrawv3861c4fc0"
         }
       ]
     },
-    "AMPLIFY_auth_vueawsauthrawv3d57d0f4f_userPoolId": {
+    "AMPLIFY_auth_vueawsauthrawv3861c4fc0_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3d57d0f4f"
+          "resourceName": "vueawsauthrawv3861c4fc0"
         }
       ]
     },
-    "AMPLIFY_auth_vueawsauthrawv3d57d0f4f_userPoolName": {
+    "AMPLIFY_auth_vueawsauthrawv3861c4fc0_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3d57d0f4f"
+          "resourceName": "vueawsauthrawv3861c4fc0"
         }
       ]
     },
-    "AMPLIFY_auth_vueawsauthrawv3d57d0f4f_webClientId": {
+    "AMPLIFY_auth_vueawsauthrawv3861c4fc0_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vueawsauthrawv3d57d0f4f"
+          "resourceName": "vueawsauthrawv3861c4fc0"
         }
       ]
     }

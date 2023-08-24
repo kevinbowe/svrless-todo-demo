@@ -1,7 +1,7 @@
 <template>
 	<v-container>
-		<v-btn title="Cancel" variant="text" />
-		<v-btn title="Save" variant="text" @click="submitThemes"> Save </v-btn>
+		<v-btn text="Cancel" variant="text" @click="$emit('onThemeChangerFini', false )"/>
+		<v-btn text="Save" variant="text" @click="submitThemes"/>
 	</v-container>					
 	<v-container __DESKTOP__
 		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
@@ -77,8 +77,11 @@
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>
-	<!-- <ThemePreview /> -->
 </template>
+
+<script lang="ts">
+	export default {inheritAttrs: false}
+</script>
 
 <script setup lang="ts">
 import { ref } from "vue";
@@ -95,6 +98,7 @@ import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from ".
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);``
 const switchFlag = ref(false) // false == left
+const emit = defineEmits()
 
 // Set the default Models and Theme
 let leftModel:string = "light"
@@ -121,6 +125,7 @@ async function submitThemes() {
 		'custom:theme': custom_theme.value, 
 		'custom:theme-inactive': custom_themeInactive.value
 	})
+	emit('onThemeChangerFini',  false )
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

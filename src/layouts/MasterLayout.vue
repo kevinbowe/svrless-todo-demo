@@ -176,12 +176,7 @@
 							<v-icon icon="mdi-palette" size="30"/> Theme Changer
 							<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 								<v-card>
-									<!-- <v-card-actions>
-										<v-spacer />
-										<v-btn variant="text" @click="menuThemeChanger = false"> Cancel </v-btn>
-										<v-btn variant="text" @click="menuThemeChanger = false"> Save </v-btn>
-									</v-card-actions> -->
-									<ThemeChanger />
+									<ThemeChanger @onThemeChangerFini="handleThemeChangerFini"/>
 									<ThemePreview />
 								</v-card>
 							</v-menu>
@@ -288,6 +283,11 @@ const onChangeSwitch = () => {
 	}
 };
 
+/* ----------------------------------------------------------------------------- */
+// const updateEmail = (payload) => { emailModel.value = payload.email }
+const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
+
+/* ----------------------------------------------------------------------------- */
 //				This executes on Page load
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {

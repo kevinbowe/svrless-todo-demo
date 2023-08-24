@@ -1,4 +1,8 @@
 <template>
+	<v-container>
+		<v-btn title="Cancel" variant="text" />
+		<v-btn title="Save" variant="text" @click="submitThemes"> Save </v-btn>
+	</v-container>					
 	<v-container __DESKTOP__
 		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
 		<v-row no-gutters>
@@ -82,8 +86,14 @@ import { useTheme } from "vuetify";
 import ThemePreview from "./ThemePreview.vue";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
 import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
+import { Auth } from "aws-amplify";
+/* ----------------------------------------------------------------------------- */
+import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from "../my-util-code/MyConsoleUtil"
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const theme = useTheme();
-const themeVals = Object.keys(theme.computedThemes.value);
+const themeVals = Object.keys(theme.computedThemes.value);``
 const switchFlag = ref(false) // false == left
 
 // Set the default Models and Theme
@@ -91,11 +101,35 @@ let leftModel:string = "light"
 let rightModel:string = "dark"
 theme.global.name.value = "light";
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+async function submitThemes() {
+	if(BLOCKAPI("submitThemes function ")) { return }
+
+	const custom_theme = ref(leftModel)
+	const custom_themeInactive = ref(rightModel)
+	
+	//					Which side is 'active' based on the switchFlag?
+	//						Switch left == false || Switch right == true
+	if(switchFlag.value){
+		custom_theme.value = rightModel
+		custom_themeInactive.value = leftModel
+	}
+	
+	//				This will return the user in the user pool (not updated )
+	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	await Auth.updateUserAttributes(newuser, {
+		'custom:theme': custom_theme.value, 
+		'custom:theme-inactive': custom_themeInactive.value
+	})
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const onChangeSwitch = () => {
 	switchFlag.value = !switchFlag.value;
 	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 	// Update the right or left model depending on switchFlag
 	selectorSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
@@ -104,5 +138,13 @@ function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 	// Update active theme
 	theme.global.name.value = selectorModel;
 }
-
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
 </script>

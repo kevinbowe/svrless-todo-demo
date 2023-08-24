@@ -176,11 +176,11 @@
 							<v-icon icon="mdi-palette" size="30"/> Theme Changer
 							<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 								<v-card>
-									<v-card-actions>
+									<!-- <v-card-actions>
 										<v-spacer />
 										<v-btn variant="text" @click="menuThemeChanger = false"> Cancel </v-btn>
 										<v-btn variant="text" @click="menuThemeChanger = false"> Save </v-btn>
-									</v-card-actions>
+									</v-card-actions> -->
 									<ThemeChanger />
 									<ThemePreview />
 								</v-card>

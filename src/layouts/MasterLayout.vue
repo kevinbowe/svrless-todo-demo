@@ -69,27 +69,32 @@
 
 			</v-list>
 		</v-navigation-drawer>
-
 		<!-- Debugging Menu Bar DEV ONLY -->
-		<v-app-bar color="primary" _color="blue-darken-1" density="compact" >
-			<v-row no-gutters _style="height:16px;">
-				<v-col>
-					<p v-if="mobile">MOB</p>
-					<p v-if="!mobile">DSK</p>
-				</v-col>
-				<v-col>
+		<v-app-bar color="primary" style="height:75px;padding-top: 5px;" _density="compact" >
+			<v-row no-gutters class="ma-5">
+				<!-- <v-col > -->
+				<v-col align="left" >
+					<div v-if="mobile">MOB</div>
+					<div v-if="!mobile">DSK</div>
 					<p v-if="sessionState.connected">Signed In</p>
 					<p v-if="!sessionState.connected">Signed Out</p>
+					<div v-if="sessionState.userName.length >0">UID: [ {{ sessionState.userName }} ]</div>
+					<div v-else> --- </div>
 				</v-col>
-				<v-col>
-					<p v-if="sessionState.userName.length >0">UID: [ {{ sessionState.userName }} ]</p>
-					<p v-else> ---</p>
+				<v-col align="left" >
+					<br>
+					<p>SessionState...Theme: {{ sessionState.theme }}</p>
+					<p>SessionState...Theme-inactive: {{ sessionState.themeInactive }}</p>
+				</v-col>
+				<v-col align="left" >
+					<br><br>
+					<p> GLOBAL name value: {{ theme.global.name.value }}</p>
 				</v-col>
 			</v-row>
 		</v-app-bar>
 
 		<!-- Main Menu Bar -->	
-		<v-app-bar color="blue-grey-darken-1">
+		<v-app-bar class="my-3" color="blue-grey-darken-1">
 			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
 		
 			<!-- Title -->
@@ -188,7 +193,7 @@
 		</v-app-bar>
 
 		<!-- |||||| START Content insertion here |||||||||||||||||||||||||||||| -->
-		<v-main class="mb-5">
+		<v-main class="my-5" _class="mb-5">
 			<slot></slot>
 		</v-main>
 		<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
@@ -265,22 +270,82 @@ const menuThemeChanger = ref(false);
 const theme = useTheme();
 const themeIcon = ref('mdi-weather-night')
 const onChangeSwitch = () => {
-	switch(theme.global.name.value){
-		//				DEBUG
-		case "dark" : 
-			theme.global.name.value = "light"; 
-			themeIcon.value = 'mdi-weather-sunny'
-			break
 
-		case "light" : theme.global.name.value = "dark"; 
-			themeIcon.value = 'mdi-weather-night'
-			break
-		// 			These cases below will be ignored because of debug above
-		case "light" : theme.global.name.value = "light_custom"; break
-		case "light_custom" : theme.global.name.value = "dark"; break
-		case "dark" : theme.global.name.value = "dark_custom"; break
-		case "dark_custom" : theme.global.name.value = "light"; break
-	}
+	/*		There are two theme settings: Theme (active) and Theme-inactive.
+	 * 	The goal here is to 'flip' the active and inactive values.
+	 * 	Flipping these will NOT save the values.
+	 * 	Reloading the page will reset the settings.
+	 */ 
+						// bar()
+						// info (`theme.global.name.value     --> ${theme.global.name.value}`)
+						// info2(`sessionState.themeInactive  --> ${sessionState.themeInactive}`)
+
+	//					The TRUE active theme is in theme.global.name.value
+	let temp = sessionState.themeInactive
+	theme.global.name.value = sessionState.themeInactive
+	// 
+	//					swap the sessionStates.
+	sessionState.themeInactive = 	sessionState.theme 
+	sessionState.theme = temp
+	
+						// greybar()
+						// info (`theme.global.name.value     --> ${theme.global.name.value}`)
+						// info2(`sessionState.themeInactive  --> ${sessionState.themeInactive}`)
+						// info3(`sessionState.theme          --> ${sessionState.theme}`)
+
+						whitebar()
+						// info(`theme  ${Object.getOwnPropertyNames(theme)}`)
+						// info(`theme  ${Object.getOwnPropertyNames(theme.install)}`)
+						// info(`theme  ${Object.getOwnPropertyNames(theme.isDisabled)}`)
+						// info1(`theme name ${Object.getOwnPropertyNames(theme.name.value)}`)
+
+						// A list of all themes
+						// info2(`theme themes ${Object.getOwnPropertyNames(theme.themes.value)}`)
+
+						//
+						// info3(`theme current --> ${Object.getOwnPropertyNames(theme.current)}`)
+						// info3(`theme current.value --> ${Object.getOwnPropertyNames(theme.current.value)}`)
+
+						// This will return the dark flag: true / false
+						// Use this to set the icon properly
+						info3(`theme current.value.dark --> ${theme.current.value['dark']}`)
+	themeIcon.value = theme.current.value['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
+
+	//info4(`theme name ${Object.getOwnPropertyNames(theme.name.value)}`)
+	// info(`theme  ${theme}`)
+	// info(`theme  ${theme}`)
+	// info(`theme  ${theme}`)
+	// info(`theme.global  ${theme.global}`)
+
+	info5(`theme.global.name.value --> ${theme.global.name.value}`)
+
+// 	switch(theme.global.name.value){
+// 		//				DEBUG
+// 		case "dark" : 
+// 			theme.global.name.value = "light"; 
+// 			themeIcon.value = 'mdi-weather-sunny'
+// 			break
+// 
+// 		case "light" : theme.global.name.value = "dark"; 
+// 			themeIcon.value = 'mdi-weather-night'
+// 			break
+// 		// 			These cases below will be ignored because of debug above
+// 		case "light" : 
+// 			theme.global.name.value = "light_custom"; 
+// 			break
+// 
+// 		case "light_custom" : 
+// 			theme.global.name.value = "dark"; 
+// 			break
+// 		
+// 		case "dark" : 
+// 			theme.global.name.value = "dark_custom"; 
+// 			break
+// 		
+// 		case "dark_custom" : 
+// 			theme.global.name.value = "light"; 
+// 			break
+// 	}
 };
 
 /* ----------------------------------------------------------------------------- */
@@ -295,11 +360,18 @@ const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
 		sessionState.userName = user.attributes.preferred_username 
 					? user.attributes.preferred_username
 					: user.username
+		sessionState.theme = user.attributes['custom:theme']
+		sessionState.themeInactive = user.attributes['custom:theme-inactive']
+		theme.global.name.value = sessionState.theme
+		themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
 	})
 	
 	.catch((reason) => {
 		sessionState.connected = false 
 		sessionState.userName = ""
+		sessionState.theme = "light"
+		sessionState.themeInactive = "dark"
+		themeIcon.value = 'mdi-weather-night'
 	})
 
 </script>

@@ -1,7 +1,9 @@
 <template>
-	<v-container>
-		<v-btn text="Cancel" variant="text" @click="$emit('onThemeChangerFini', false )"/>
-		<v-btn text="Save" variant="text" @click="submitThemes"/>
+	<v-container >
+		<v-btn class="mx-2" text="Reload Saved" color="primary" _variant="text" @click="reloadSavedThemes"/>
+		<v-btn class="mx-2" text="Factory Reset" color="secondary" _variant="text" @click="factoryThemeReset"/>
+		<v-btn class="mx-2" text="Cancel" _variant="text" @click="$emit('onThemeChangerFini', false )"/>
+		<v-btn class="mx-2" text="Save New" color="primary" _variant="text" @click="submitThemes"/>
 	</v-container>					
 	<v-container __DESKTOP__
 		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
@@ -91,8 +93,9 @@ import StatusIcons from "./ThemeParts/StatusIcons.vue"
 import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
 import { Auth } from "aws-amplify";
 /* ----------------------------------------------------------------------------- */
-import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
+import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from "../my-util-code/MyConsoleUtil"
+import { sessionState } from "../sessionState";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const theme = useTheme();
@@ -103,7 +106,6 @@ const emit = defineEmits()
 // Set the default Models and Theme
 let leftModel:string = "light"
 let rightModel:string = "dark"
-theme.global.name.value = "light";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitThemes() {
@@ -121,30 +123,124 @@ async function submitThemes() {
 	
 	//				This will return the user in the user pool (not updated )
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	//				This performs that update
 	await Auth.updateUserAttributes(newuser, {
 		'custom:theme': custom_theme.value, 
 		'custom:theme-inactive': custom_themeInactive.value
 	})
+	sessionState.theme = custom_theme.value
+	sessionState.themeInactive = custom_themeInactive.value
 	emit('onThemeChangerFini',  false )
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const onChangeSwitch = () => {
 	switchFlag.value = !switchFlag.value;
-	theme.global.name.value = theme.global.name.value === leftModel ? rightModel : leftModel;
+	//					This will change the display theme 
+	// theme.global.name.value = 
+	// 	theme.global.name.value === leftModel 
+	// 		? rightModel 
+	// 		: leftModel;
+	//					Set the SessionState
+	// sessionState.theme = theme.global.name.value
+	// sessionState.themeInactive = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+//						This supports the LEFT and RIGHT v-selector
+
 function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 	// Update the right or left model depending on switchFlag
 	selectorSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
 	//	Update the switch.
 	if(selectorSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
+
 	// Update active theme
-	theme.global.name.value = selectorModel;
+	// theme.global.name.value = selectorModel;
 }
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+const reloadSavedThemes = async () => {
+	if(BLOCKAPI("submitThemes function ")) { return }
+
+	Auth.currentAuthenticatedUser({bypassCache: true })
+	.then((user) =>  {
+		sessionState.theme = user.attributes['custom:theme']
+		sessionState.themeInactive = user.attributes['custom:theme-inactive']
+		theme.global.name.value = sessionState.theme
+		//themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
+	})
+	
+	.catch((reason) => {
+		sessionState.theme = "light"
+		sessionState.themeInactive = "dark"
+		//themeIcon.value = 'mdi-weather-night'
+	})
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const factoryThemeReset = async () => {
+	//if(BLOCKAPI("submitThemes function ")) { return }
+
+	//				This will return the user in the user pool (not updated )
+	const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	//				This will delete the two attributes listed below.
+	await Auth.deleteUserAttributes(user, ['custom:theme', 'custom:theme-inactive']);
+
+	bar()
+	info(`${Object.getOwnPropertyNames(theme)}`)
+	//				This will display a theme name like 'dark_custom'
+	//				This is the name of the ACTIVE theme.
+	info1(`name.value --> ${Object.getOwnPropertyNames(theme.name)}`)
+	info1(`name.value --> ${theme.name.value}`)
+ 
+	info2(`current --> ${Object.getOwnPropertyNames(theme.current)}`)
+	info2(`current.value --> ${Object.getOwnPropertyNames(theme.current.value)}`)
+	info2(`current.value['dark'] --> ${theme.current.value['dark']}`)
+ 
+	info3(`current.value['colors'] --> ${Object.getOwnPropertyNames(theme.current.value['colors'])}`)
+	info3(`current.value['colors'] --> ${theme.current.value['colors']}`)
+ 	
+	info4(`current.value['variables'] --> ${Object.getOwnPropertyNames(theme.current.value['variables'])}`)
+	info4(`current.value['variables'] --> ${theme.current.value['variables']}`)
+ 
+	bluebar()
+	info4(`current.global --> ${Object.getOwnPropertyNames(theme.global)}`)
+	bar()				// This will display the Current Theme.
+	info5(`global['name']' PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['name'])}`)
+	info5(`global['name'].value --> ${theme.global[`name`].value}`)
+	info(``)
+	info6(`global['current']' PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['current'])}`)
+	info6(`global['current'].value --> ${theme.global[`current`].value}`)
+ 	
+	info(``)
+	info7(`theme.global['current'].value  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['current'].value)}`)
+	info1(`global['current'].value['dark'] --> ${theme.global[`current`].value['dark']}`)
+ 
+	info2(`theme.global['current'].value  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global[`current`].value['colors']) }`)
+	info2(`global['current'].value['colors'].primary --> ${theme.global[`current`].value['colors'].primary}`)
+ 
+	info3(`theme.global['current'].value['variables']  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global[`current`].value['variables']) }`)
+	info3(`global['current'].value['variables']['theme-code'] --> ${theme.global[`current`].value['variables']['theme-code']}`)
+
+	info(`--> ${Object.getOwnPropertyNames(theme)}`)
+	info(`--> ${Object.getOwnPropertyNames(theme.themes.value)}`)
+
+
+	whitebar()
+	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
+
+/**
+ * 	The theme labeled 'default' in vuetify.ts is not avaiable.
+ */
+
+
+	// theme.global.name.value = 'light'
+	//theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/**/					const BLOCKAPIFLAG = ref(true)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

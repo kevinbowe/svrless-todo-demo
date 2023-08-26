@@ -165,7 +165,8 @@
 			<v-btn class="mx-1" text="Sign In" v-if="!sessionState.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
 
 			<!-- Theme Switch -->
-			<v-icon @click="onChangeSwitch" :icon="themeIcon"/>
+			<v-icon :color="sessionState.connected ? '' : 'grey-darken-1'" 
+			v-on="sessionState.connected ? {click: onChangeSwitch} : {}" :icon="themeIcon"/>
 			
 			<!-- Three Dots -->
 			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
@@ -178,8 +179,11 @@
 							</v-list-item-title>
 						</v-list-item>
 						<v-list-item>
-							<v-icon icon="mdi-palette" size="30"/> Theme Changer
-							<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
+							<p :class="sessionState.connected ? '' :  'text-grey-lighten-1'">
+								<v-icon :color="sessionState.connected ? '' : 'grey-lighten-1'" :icon="themeIcon"/>
+								Theme Changer 
+							</p>
+							<v-menu :disabled="!sessionState.connected" v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 								<v-card>
 									<ThemeChanger @onThemeChangerFini="handleThemeChangerFini"/>
 									<ThemePreview />
@@ -266,86 +270,20 @@ const footerLinks = ref([
 
 /* ----------------------------------------------------------------------------- */
 const menuThemeChanger = ref(false);
-
 const theme = useTheme();
 const themeIcon = ref('mdi-weather-night')
+/* ----------------------------------------------------------------------------- */
 const onChangeSwitch = () => {
+	//				Toggle the light and dark themes based on the theme.current.value['dark'] which is a bool
+	//				Any theme name can be used. 
+	const themeCurrentDark = theme.current.value['dark']
+	theme.global.name.value = themeCurrentDark ? 'light' : 'dark'
 
-	/*		There are two theme settings: Theme (active) and Theme-inactive.
-	 * 	The goal here is to 'flip' the active and inactive values.
-	 * 	Flipping these will NOT save the values.
-	 * 	Reloading the page will reset the settings.
-	 */ 
-						// bar()
-						// info (`theme.global.name.value     --> ${theme.global.name.value}`)
-						// info2(`sessionState.themeInactive  --> ${sessionState.themeInactive}`)
-
-	//					The TRUE active theme is in theme.global.name.value
-	let temp = sessionState.themeInactive
-	theme.global.name.value = sessionState.themeInactive
-	// 
-	//					swap the sessionStates.
-	sessionState.themeInactive = 	sessionState.theme 
-	sessionState.theme = temp
-	
-						// greybar()
-						// info (`theme.global.name.value     --> ${theme.global.name.value}`)
-						// info2(`sessionState.themeInactive  --> ${sessionState.themeInactive}`)
-						// info3(`sessionState.theme          --> ${sessionState.theme}`)
-
-						whitebar()
-						// info(`theme  ${Object.getOwnPropertyNames(theme)}`)
-						// info(`theme  ${Object.getOwnPropertyNames(theme.install)}`)
-						// info(`theme  ${Object.getOwnPropertyNames(theme.isDisabled)}`)
-						// info1(`theme name ${Object.getOwnPropertyNames(theme.name.value)}`)
-
-						// A list of all themes
-						// info2(`theme themes ${Object.getOwnPropertyNames(theme.themes.value)}`)
-
-						//
-						// info3(`theme current --> ${Object.getOwnPropertyNames(theme.current)}`)
-						// info3(`theme current.value --> ${Object.getOwnPropertyNames(theme.current.value)}`)
-
-						// This will return the dark flag: true / false
-						// Use this to set the icon properly
-						info3(`theme current.value.dark --> ${theme.current.value['dark']}`)
-	themeIcon.value = theme.current.value['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
-
-	//info4(`theme name ${Object.getOwnPropertyNames(theme.name.value)}`)
-	// info(`theme  ${theme}`)
-	// info(`theme  ${theme}`)
-	// info(`theme  ${theme}`)
-	// info(`theme.global  ${theme.global}`)
-
-	info5(`theme.global.name.value --> ${theme.global.name.value}`)
-
-// 	switch(theme.global.name.value){
-// 		//				DEBUG
-// 		case "dark" : 
-// 			theme.global.name.value = "light"; 
-// 			themeIcon.value = 'mdi-weather-sunny'
-// 			break
-// 
-// 		case "light" : theme.global.name.value = "dark"; 
-// 			themeIcon.value = 'mdi-weather-night'
-// 			break
-// 		// 			These cases below will be ignored because of debug above
-// 		case "light" : 
-// 			theme.global.name.value = "light_custom"; 
-// 			break
-// 
-// 		case "light_custom" : 
-// 			theme.global.name.value = "dark"; 
-// 			break
-// 		
-// 		case "dark" : 
-// 			theme.global.name.value = "dark_custom"; 
-// 			break
-// 		
-// 		case "dark_custom" : 
-// 			theme.global.name.value = "light"; 
-// 			break
-// 	}
+	//				Update the sessionState themes
+	//				Then check the sessionState on page reload.
+	sessionState.theme = themeCurrentDark ? 'light' : 'dark'
+	sessionState.themeInactive = !themeCurrentDark ? 'light' : 'dark'
+					info(`theme.current.value['dark'] ${theme.current.value['dark']}`)
 };
 
 /* ----------------------------------------------------------------------------- */
@@ -353,25 +291,39 @@ const onChangeSwitch = () => {
 const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
 
 /* ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
 //				This executes on Page load
+
+	theme.global.name.value = "dark"
+
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
+						enter(`Signed In`)
+
 		sessionState.connected = true 
-		sessionState.userName = user.attributes.preferred_username 
-					? user.attributes.preferred_username
-					: user.username
-		sessionState.theme = user.attributes['custom:theme']
-		sessionState.themeInactive = user.attributes['custom:theme-inactive']
-		theme.global.name.value = sessionState.theme
-		themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
+		sessionState.userName = user.attributes.preferred_username ? user.attributes.preferred_username : user.username
+
+		// Check the sessionState.theme.
+		if( sessionState.theme ) {
+						// info(`sessionState.theme exists`)
+			// theme.global.name.value = sessionState.theme
+
+		} else {
+						// info2(`sessionState.theme doesn't exist`)
+			// sessionState.theme = theme.current.value['dark'] ? 'dark' : 'light'
+			// sessionState.themeInactive = !theme.current.value['dark'] ? 'dark' : 'light'
+			// theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
+		}
 	})
-	
 	.catch((reason) => {
+						// If we get here, the Cx is not signed in.
+						enter(`NOT Signed In`)
 		sessionState.connected = false 
 		sessionState.userName = ""
-		sessionState.theme = "light"
-		sessionState.themeInactive = "dark"
-		themeIcon.value = 'mdi-weather-night'
+					// info(`theme.current.value['dark'] ${theme.current.value['dark']}`)
+		//			This falls through to the Default value set in vuetify.ts
+		//			when the Cx is NOT signed in.
+		// theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
 	})
 
 </script>

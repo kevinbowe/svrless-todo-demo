@@ -244,7 +244,7 @@ import { onBeforeUnmount } from "vue"
 
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
-const mainTitle: string = "v3a-theme-v1"
+const mainTitle: string = "v3a-theme-pinia-v2"
 
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()

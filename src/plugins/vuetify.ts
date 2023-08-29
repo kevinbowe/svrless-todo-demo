@@ -120,7 +120,7 @@ export default createVuetify({
 	directives,
 	theme: {
 		// defaultTheme: 'light',
-		defaultTheme: 'dark',
+		// defaultTheme: 'dark',
 		themes: {
 			light,
 			dark,

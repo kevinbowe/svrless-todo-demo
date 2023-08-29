@@ -6,7 +6,7 @@ import { defineStore } from 'pinia'
 // 		function()s become actions
 
 export const useUserStore = defineStore('user', () => {
-	const dirty = ref(false)
+	// const dirty = ref(false)
 
 	//				Debug/Experimental Code
 	const count = ref(0)
@@ -15,5 +15,5 @@ export const useUserStore = defineStore('user', () => {
 	function increment() {
 	  count.value++
 	}
-	return { dirty, count, name, doubleCount, increment }
+	return { /* dirty, */ count, name, doubleCount, increment }
  })

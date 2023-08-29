@@ -84,14 +84,14 @@
 				</v-col>
 				<v-col align="left" >
 					<br>
-					<p>SS.Theme == [ {{ sessionState.theme }} ]</p>
-					<p>SS.Theme-inactive == [ {{ sessionState.themeInactive }} ]</p>
+					<!-- <p>SS.Theme == [ {{ sessionState.theme }} ]</p> -->
+					<!-- <p>SS.Theme-inactive == [ {{ sessionState.themeInactive }} ]</p> -->
 				</v-col>
 				<v-col align="left" >
-					<p>themeDirty flag == {{ sessionState.themeDirty }}</p>
+					<!-- <p>themeDirty flag == {{ sessionState.themeDirty }}</p> -->
 					<!-- <p>SessionState.counter == {{ sessionState.counter }}</p> -->
-					<p> GLOBAL name value == {{ theme.global.name.value }}</p>
-					<p> Pinia.dirty == {{ userStore.dirty }}</p>
+					<!-- <p> GLOBAL name value == {{ theme.global.name.value }}</p> -->
+					<!-- <p> Pinia.dirty == {{ userStore.dirty }}</p> -->
 				</v-col>
 			</v-row>
 		</v-app-bar>
@@ -112,6 +112,7 @@
 				
 				<!-- Dev link -->
 				<v-btn text="Dev 1" v-if="!mobile" to="dev1" color="white" variant="plain"/>
+				<v-btn text="Dev 2" v-if="!mobile" to="dev2" color="white" variant="plain"/>
 
 				<!-- <v-btn v-if="!mobile" color="white" variant="plain"> Exp
 					<v-menu activator="parent">
@@ -123,13 +124,13 @@
 				
 				
 				<!-- Blogs -->
-				<v-btn v-if="!mobile" color="white" variant="plain" > Blogs
+				<!-- <v-btn v-if="!mobile" color="white" variant="plain" > Blogs
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item :prepend-icon="link.icon" :title="link.title" :to="link.url" v-for="link in blogs" :key="link.title" :value="link.title"/>
 						</v-list>
 					</v-menu>
-				</v-btn>
+				</v-btn> -->
 								
 			</v-toolbar-title>
 
@@ -242,9 +243,9 @@ import { Auth } from 'aws-amplify';
 import { sessionState } from "../sessionState"
 import { useDisplay } from "vuetify";
 
-import { onBeforeUnmount } from "vue"
+// import { onBeforeUnmount } from "vue"
 
-import { useUserStore } from '../stores/user'
+// import { useUserStore } from '../stores/user'
 
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
@@ -253,7 +254,7 @@ const mainTitle: string = "v3a-theme-pinia-v2"
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()
 
-const userStore = useUserStore()
+// const userStore = useUserStore()
 
 const drawer = ref(false)
 const experiment = ref([
@@ -295,7 +296,9 @@ const onChangeSwitch = () => {
 	//				Toggle the light and dark themes based on the theme.current.value['dark'] which is a bool
 	//				Any theme name can be used. 
 	const themeCurrentDark = theme.current.value['dark']
+					info(`WAS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
 	theme.global.name.value = themeCurrentDark ? 'light' : 'dark'
+					info2(`IS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
 
 	//				Update the sessionState themes
 	//				Then check the sessionState on page reload.
@@ -303,9 +306,9 @@ const onChangeSwitch = () => {
 	// sessionState.themeInactive = !themeCurrentDark ? 'light' : 'dark'
 	
 	//				Toggle the themeDirty flag
-	sessionState.themeDirty = !sessionState.themeDirty
+	// sessionState.themeDirty = !sessionState.themeDirty
 
-	userStore.dirty = userStore.dirty ? false : true
+	// userStore.dirty = userStore.dirty ? false : true
 
 	// updateAuthenticatedUserThemes("onChangeSwitch")
 };
@@ -317,19 +320,19 @@ const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
 /* ----------------------------------------------------------------------------- */
 const updateAuthenticatedUserThemes = async (activeTheme) => {
 
-	if (!sessionState.themeDirty) { return }
+	// if (!sessionState.themeDirty) { return }
 
 	//				This will return the user in the user pool (not updated )
 	const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 	//				This performs that update
 	await Auth.updateUserAttributes(user, {
-		'custom:theme': activeTheme, 
-		'custom:theme-inactive': activeTheme === 'dark' ? 'light' : 'dark'
+		// 'custom:theme': activeTheme, 
+		// 'custom:theme-inactive': activeTheme === 'dark' ? 'light' : 'dark'
 	}).catch((error) => {  })
 
 	//					We need a NEW user to check the current Auth values.
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
-	theme.global.name.value = newuser.attributes['custom:theme']
+	// theme.global.name.value = newuser.attributes['custom:theme']
 
 }
 
@@ -340,10 +343,10 @@ const updateAuthenticatedUserThemes = async (activeTheme) => {
 				Nav from Profile to Home -- called 2x
 				Nav from Home to Profile (typical) -- Never called		<---<<< Note
 		*/
-	window.addEventListener("beforeunload",(event) => {
-		updateAuthenticatedUserThemes(theme.global.name.value)
+	// window.addEventListener("beforeunload",(event) => {
+	// 	updateAuthenticatedUserThemes(theme.global.name.value)
 		// ++sessionState.counter
-	}) 
+	// }) 
 
 
 	
@@ -373,7 +376,7 @@ const updateAuthenticatedUserThemes = async (activeTheme) => {
 				Nav from Profile to Exp > Dev 1 (typical) -- called once
 				Nav from Exp > Dev 1 to Profile (typical) -- called once
 		*/
-	onBeforeUnmount(() => { updateAuthenticatedUserThemes(theme.global.name.value) })
+	// onBeforeUnmount(() => { updateAuthenticatedUserThemes(theme.global.name.value) })
 
 /* ----------------------------------------------------------------------------- */
 	// /**	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
@@ -397,17 +400,17 @@ const updateAuthenticatedUserThemes = async (activeTheme) => {
 
 	// 				This is the defualt setting.
 	//					It must ALWAYS be set to default on page load/reload/nav
-	sessionState.themeDirty = false
+	// sessionState.themeDirty = false
 
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
 						/** Signed In */
-		sessionState.connected = true 
-		sessionState.userName = user.attributes.preferred_username ? user.attributes.preferred_username : user.username
-
-		sessionState.theme = ""
-		sessionState.themeInactive = ""
-		theme.global.name.value = user.attributes['custom:theme']
+ 		sessionState.connected = true 
+ 		sessionState.userName = user.attributes.preferred_username ? user.attributes.preferred_username : user.username
+// 
+// 		sessionState.theme = ""
+// 		sessionState.themeInactive = ""
+// 		theme.global.name.value = user.attributes['custom:theme']
 	})
 	.catch((reason) => {
 						/** Not Signed In */

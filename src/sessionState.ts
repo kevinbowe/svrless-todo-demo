@@ -5,7 +5,7 @@ export const sessionState = reactive({
 
 	connected: false,
 	userName: "",
-	theme:"",
-	themeInactive: "",
-	themeDirty: false
+	// theme:"",
+	// themeInactive: "",
+	// themeDirty: false
 })

@@ -165,15 +165,15 @@ const reloadSavedThemes = async () => {
 
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
-		sessionState.theme = user.attributes['custom:theme']
-		sessionState.themeInactive = user.attributes['custom:theme-inactive']
-		theme.global.name.value = sessionState.theme
+		// sessionState.theme = user.attributes['custom:theme']
+		// sessionState.themeInactive = user.attributes['custom:theme-inactive']
+		// theme.global.name.value = sessionState.theme
 		//themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
 	})
 	
 	.catch((reason) => {
-		sessionState.theme = "light"
-		sessionState.themeInactive = "dark"
+		// sessionState.theme = "light"
+		// sessionState.themeInactive = "dark"
 		//themeIcon.value = 'mdi-weather-night'
 	})
 }

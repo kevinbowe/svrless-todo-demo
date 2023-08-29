@@ -91,6 +91,7 @@
 					<p>themeDirty flag == {{ sessionState.themeDirty }}</p>
 					<!-- <p>SessionState.counter == {{ sessionState.counter }}</p> -->
 					<p> GLOBAL name value == {{ theme.global.name.value }}</p>
+					<p> Pinia.dirty == {{ userStore.dirty }}</p>
 				</v-col>
 			</v-row>
 		</v-app-bar>
@@ -227,7 +228,8 @@
 <script setup lang="ts" >
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
-import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
+import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil" 
+
 import { pass, fail } from "../my-util-code/MyConsoleUtil"
 
 /* ----------------------------------------------------------------------------- */
@@ -242,12 +244,16 @@ import { useDisplay } from "vuetify";
 
 import { onBeforeUnmount } from "vue"
 
+import { useUserStore } from '../stores/user'
+
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
 const mainTitle: string = "v3a-theme-pinia-v2"
-
+				enter(`MasterLayout is loading...`)
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()
+
+const userStore = useUserStore()
 
 const drawer = ref(false)
 const experiment = ref([
@@ -298,6 +304,9 @@ const onChangeSwitch = () => {
 	
 	//				Toggle the themeDirty flag
 	sessionState.themeDirty = !sessionState.themeDirty
+
+	userStore.dirty = userStore.dirty ? false : true
+
 	// updateAuthenticatedUserThemes("onChangeSwitch")
 };
 
@@ -308,9 +317,7 @@ const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
 /* ----------------------------------------------------------------------------- */
 const updateAuthenticatedUserThemes = async (activeTheme) => {
 
-	if (!sessionState.themeDirty) { info(`Theme is NOT DIRTY`); return }
-	info1(`Theme is DIRTY`)
-	info1(`activeTheme Arg -- > ${activeTheme}`)
+	if (!sessionState.themeDirty) { return }
 
 	//				This will return the user in the user pool (not updated )
 	const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
@@ -318,15 +325,12 @@ const updateAuthenticatedUserThemes = async (activeTheme) => {
 	await Auth.updateUserAttributes(user, {
 		'custom:theme': activeTheme, 
 		'custom:theme-inactive': activeTheme === 'dark' ? 'light' : 'dark'
-	}).catch((error) => { info1("ERROR -- Auth.updateUserAttributes") })
+	}).catch((error) => {  })
 
 	//					We need a NEW user to check the current Auth values.
 	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 	theme.global.name.value = newuser.attributes['custom:theme']
 
-	info5(`NEWUSER`)
-	info5(`newuser.attributes['custom:theme'] == > ${newuser.attributes['custom:theme']}`)
-	info5(`newuser.attributes['custom:theme-inactive'] == > ${newuser.attributes['custom:theme-inactive']}`)
 }
 
 /* ----------------------------------------------------------------------------- */
@@ -390,10 +394,6 @@ const updateAuthenticatedUserThemes = async (activeTheme) => {
 /* ----------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------- */
 //				This executes on Page load
-enter(`Page Load Code`)
-
-info(`sessionState.themeDirty --> ${sessionState.themeDirty}`)
-info(`theme.global.name.value --> ${theme.global.name.value}`)
 
 	// 				This is the defualt setting.
 	//					It must ALWAYS be set to default on page load/reload/nav

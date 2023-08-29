@@ -13,8 +13,13 @@ import awsExports from './aws-exports'
 Amplify.configure(awsExports)
 import { registerLayouts } from './layouts/register';
 
+// Pinia -- State Management
+import { createPinia } from 'pinia';
+const pinia = createPinia()
+
 const app = createApp(App);
 
+app.use(pinia)
 app.use(router);
 app.use(AmplifyVue)
 app.use(vuetify);

@@ -50,7 +50,8 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			layout: "master",
 		},
-	},	{
+	},	
+	{
 		path: "/home",
 		name: "home",
 		component: () => import("../views/HomeView.vue"),

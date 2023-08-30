@@ -1,12 +1,12 @@
-// src/stores/counter.ts
+// src/stores/user.ts
 
 import { defineStore } from 'pinia'
 // 		ref()s become state properties
 // 		computed()s become getters
 // 		function()s become actions
 
-//					counterStore is the ID of the store.
-export const useCounterStore = defineStore("counterStore", {
+//					userStore is the ID of the store.
+export const useUserStore = defineStore("userStore", {
 	state: () => {
 		return {
 			count: localStorage.getItem("counter_KEY") ?
@@ -24,7 +24,7 @@ export const useCounterStore = defineStore("counterStore", {
 		deleteAllStores() { 
 			localStorage.removeItem('counter_KEY')
 			localStorage.removeItem('activeTheme_KEY')
-			localStorage.removeItem('counterStore_KEY')
+			localStorage.removeItem('userStore_KEY')
 		},
 		resetAllStores() {
 			this.count = 0

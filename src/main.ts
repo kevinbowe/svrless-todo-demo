@@ -26,17 +26,17 @@ watch (
 		/**				
 		 * 				If we get here, the count or activeTheme variables in [pinia.state] have changed.
 		 * 				These references will return the actual value:
-		 * 					counterStore.count == 4
-		 * 					counterStore.activeTheme = "dark"
+		 * 					userStore.count == 4
+		 * 					userStore.activeTheme = "dark"
 		*/
-		localStorage.setItem( "counter_KEY", JSON.stringify(state.counterStore.count))
-		localStorage.setItem( "activeTheme_KEY", JSON.stringify(state.counterStore.activeTheme))
+		localStorage.setItem( "counter_KEY", JSON.stringify(state.userStore.count))
+		localStorage.setItem( "activeTheme_KEY", JSON.stringify(state.userStore.activeTheme))
 		
 		/**
-		 * 				This reference will return the whole counterStore:
-		 * 					counterStore == {"count":4,"activeTheme":"dark"}
+		 * 				This reference will return the whole userStore:
+		 * 					userStore == {"count":4,"activeTheme":"dark"}
 		 */
-		localStorage.setItem( "counterStore_KEY", JSON.stringify(state.counterStore))
+		localStorage.setItem( "userStore_KEY", JSON.stringify(state.userStore))
 	
 	},
 	{ deep: true }

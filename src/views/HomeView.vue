@@ -46,10 +46,10 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 /* ----------------------------------------------------------------------------- */
 
 
-import { useCounterStore } from "../stores/counter"
+import { useUserStore } from "../stores/user"
 import { useTheme } from "vuetify";
 
-const store = useCounterStore(); //initialize the store
+const store = useUserStore(); //initialize the store
 const theme = useTheme();
 
 const onChangeSwitch = () => {
@@ -71,4 +71,4 @@ theme.global.name.value = store.activeTheme
 </script>
 
 <style>
-</style>
+</style>../stores/user

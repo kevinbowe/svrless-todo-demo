@@ -19,7 +19,19 @@ export const useCounterStore = defineStore("counterStore", {
 	actions: {
 		increment(value = 1) { this.count += value },
 		decrement(value = 1) { this.count -= value },
-		reset() { this.count = 0 }
+		reset() { this.count = 0 },
+		deleteCounterKeyStore() { localStorage.removeItem('counter_KEY')},
+		deleteAllStores() { 
+			localStorage.removeItem('counter_KEY')
+			localStorage.removeItem('activeTheme_KEY')
+			localStorage.removeItem('counterStore_KEY')
+		},
+		resetAllStores() {
+			this.count = 0
+			this.activeTheme = "light"
+		},
+		// empties the entire storage object for that domain.
+		clearAllStores() { localStorage.clear()}
 	},
 
 	getters: { 

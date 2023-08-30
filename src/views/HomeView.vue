@@ -18,6 +18,13 @@
 
 			<v-spacer style="height:3em;"></v-spacer>
 
+			<v-btn @click="store.deleteCounterKeyStore()">Delete Counter_KEY Store</v-btn>
+			<v-btn @click="store.deleteAllStores()">Delete All stores</v-btn><br>
+			<v-btn @click="store.resetAllStores()">Reset All stores</v-btn><br>
+			<v-btn @click="store.clearAllStores()">Clear All stores</v-btn><br>
+
+			<v-spacer style="height:3em;"></v-spacer>
+
 			<h1>Counter App</h1>
 			<p>(Pinia Store) Count is {{ store.count }}</p>
 			<p>(Pinia Store) Double count is {{ store.doubleCount }}</p>

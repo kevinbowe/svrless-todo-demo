@@ -235,7 +235,7 @@ import { pass, fail } from "../my-util-code/MyConsoleUtil"
 
 /* ----------------------------------------------------------------------------- */
 import { useTheme } from "vuetify";
-import { ref} from "vue";
+import { onBeforeUnmount, ref} from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
 import SignOut from "../components/SignOut.vue"
@@ -337,63 +337,18 @@ const updateAuthenticatedUserThemes = async (activeTheme) => {
 }
 
 /* ----------------------------------------------------------------------------- */
-	/**	Win Listener -- Page -- Load / Reload
-				Home reload -- called 1x
-				Profile reload -- called 1x
-				Nav from Profile to Home -- called 2x
-				Nav from Home to Profile (typical) -- Never called		<---<<< Note
-		*/
-	// window.addEventListener("beforeunload",(event) => {
-	// 	updateAuthenticatedUserThemes(theme.global.name.value)
-		// ++sessionState.counter
-	// }) 
-
-
+//	Win Listener -- Page -- Load / Reload
+window.addEventListener("beforeunload",(event) => {
+	/* Do something here */
+}) 
 	
-// /* ----------------------------------------------------------------------------- */
-// 	/**	Win Listener -- Page -- Load / Reload
-// 				Home reload -- called 1x
-// 				Profile reload -- called 1x
-// 				Nav from Profile to Home -- called 2x
-// 				Nav from Home to Profile (typical) -- Never called		<---<<< Note
-// 		*/
-// 		window.addEventListener("beforeunload", event => { 
-// 		//				This is getting called TWICE
-// 		if (sessionState.themeDirty) {
-// 			//			If we get here, update Auth
-// 			fail('RED -- DIRTY -- Win -- |||||||||||||||||||||')
-// 			updateAuthenticatedUserThemes("WIN")
-// 		} else pass('GREEN -- CLEAN -- Win -- ||||||||||||||||||||||')
-// 
-// 		++sessionState.counter
-// 	})
 /* ----------------------------------------------------------------------------- */
-	/**	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
-				Home reload -- Never called 
-				Profile reload -- Never called
-				Nav from Profile to Home -- Never called		<---<<< Note
-				Nav from Home to Profile (typical) -- called once
-				Nav from Profile to Exp > Dev 1 (typical) -- called once
-				Nav from Exp > Dev 1 to Profile (typical) -- called once
-		*/
-	// onBeforeUnmount(() => { updateAuthenticatedUserThemes(theme.global.name.value) })
+//	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
+onBeforeUnmount(() => { 
+	/* Do something here */ 
+})
 
-/* ----------------------------------------------------------------------------- */
-	// /**	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
-	// 			Home reload -- Never called 
-	// 			Profile reload -- Never called
-	// 			Nav from Profile to Home -- Never called		<---<<< Note
-	// 			Nav from Home to Profile (typical) -- called once
-	// 			Nav from Profile to Exp > Dev 1 (typical) -- called once
-	// 			Nav from Exp > Dev 1 to Profile (typical) -- called once
-	// 	*/
-	// onBeforeUnmount(() => {
-	// 	if (sessionState.themeDirty) {
-	// 		//			If we get here, update Auth
-	// 		fail('RED -- DIRTY - Vue -- |||||||||||||||||||||')
-	// 		updateAuthenticatedUserThemes(theme.global.name.value)
-	// 	} else pass('GREEN -- CLEAN -- Vue -- ||||||||||||||||||||||')
-	// })
+
 /* ----------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------- */
 //				This executes on Page load

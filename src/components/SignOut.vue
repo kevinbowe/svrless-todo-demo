@@ -9,25 +9,33 @@ import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 }
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
 import { Auth } from 'aws-amplify';
-import { sessionState } from "../sessionState"
 import router from "../router";
+
+import { useUserStore } from "../stores/user"
+const store = useUserStore(); //initialize the store
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signOutUser = async () => { 
 	try { 
 		await Auth.signOut()
 		.then( (response) => {
-			sessionState.connected = false
+
+			store.connected = false
+			
 			//				Redirect to Home View
 			router.push({name:'home'})
 		})
 		.catch(error => {
-			sessionState.connected = true
+
+			store.connected = true
+
 			console.log('error signing out: ', error)
 		})
 	}
 	catch (error) { 
-		sessionState.connected = true
+
+		store.connected = true
+		
 		console.log('error signing out: ', error);}
 }
 </script>

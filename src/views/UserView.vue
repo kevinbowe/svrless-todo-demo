@@ -5,7 +5,7 @@
 	<hr class="mb-10">
 
 	<!-- SignIn & SignUp Forms -->
-	<v-row no-gutters v-if="!sessionState.connected">
+	<v-row no-gutters v-if="!store.connected">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 			<v-card variant="outlined" >
 				<v-tabs fixed-tabs v-model="SignInSignUpTab" >
@@ -147,7 +147,7 @@
 	</v-row>
 
 	<!-- SignUp Confirmation -->
-	<v-overlay v-if="!sessionState.connected" class="align-center justify-center" v-model="toggleUserConfirm" >
+	<v-overlay v-if="!store.connected" class="align-center justify-center" v-model="toggleUserConfirm" >
 		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
 			<v-row><v-spacer/>
 				<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"/>
@@ -223,11 +223,15 @@ import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 
 import ResetPassword from "../components/ResetPassword.vue"
 
-import { sessionState } from "../sessionState";
 
 import router from "../router";
 
+import { useUserStore } from "../stores/user"
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+const store = useUserStore(); //initialize the store
+
 const SignInSignUpTab = ref()
 
 const nicknameModel = ref("")
@@ -324,7 +328,9 @@ const confirmUserSignUp = async (event) => {
 		if (restartConfirm.value === true) {
 			//				If we get here, try signing in again.
 			toggleUserConfirm.value = false	// Close the Confirm Ui
-			sessionState.connected = true			// We are signed in
+
+			store.connected = true
+			
 			restartConfirm.value = false	// Lower the Confirm flag
 		} 
 		signInUser()
@@ -393,7 +399,9 @@ const signInUser = async () => {
 				phone_number: user.attributes?.phone_number,	
 				username: user.attributes?.preferred_username ?? user.username,
 			})
-			sessionState.connected = true
+
+			store.connected = true
+		
 			router.push({name:'home'})
 		}
 	}
@@ -451,7 +459,9 @@ Hub.listen('auth', (data) => {
 					? data.payload.data.attributes.preferred_username 
 					: data.payload.data.username
 				})
-				sessionState.connected = true
+				
+				store.connected = true
+
 				return
 		case "signOut" :
 					return

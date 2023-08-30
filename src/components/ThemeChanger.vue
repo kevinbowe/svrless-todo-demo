@@ -95,7 +95,6 @@ import { Auth } from "aws-amplify";
 /* ----------------------------------------------------------------------------- */
 import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from "../my-util-code/MyConsoleUtil"
-import { sessionState } from "../sessionState";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const theme = useTheme();
@@ -129,8 +128,6 @@ async function submitThemes() {
 		'custom:theme-inactive': custom_themeInactive.value
 	})
 	//				FINDME FIXME
-	sessionState.theme = custom_theme.value
-	sessionState.themeInactive = custom_themeInactive.value
 	emit('onThemeChangerFini',  false )
 }
 

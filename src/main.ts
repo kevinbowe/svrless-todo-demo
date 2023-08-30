@@ -31,10 +31,11 @@ watch (
 		*/
 		localStorage.setItem( "counter_KEY", JSON.stringify(state.userStore.count))
 		localStorage.setItem( "activeTheme_KEY", JSON.stringify(state.userStore.activeTheme))
+		localStorage.setItem( "connected_KEY", JSON.stringify(state.userStore.connected))
 		
 		/**
 		 * 				This reference will return the whole userStore:
-		 * 					userStore == {"count":4,"activeTheme":"dark"}
+		 * 					userStore == {"count":-1,"activeTheme":"dark_custom","connected":false}
 		 */
 		localStorage.setItem( "userStore_KEY", JSON.stringify(state.userStore))
 	

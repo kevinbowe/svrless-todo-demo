@@ -42,12 +42,12 @@
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth } from 'aws-amplify';
 import { ref } from 'vue'
-import { sessionState } from '../sessionState'
+import { useUserStore } from "../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
+const store = useUserStore(); //initialize the store
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const nicknameModel = ref()
 const phone_numberModel = ref()
 const emailModel = ref()
@@ -69,11 +69,15 @@ async function getSession(){
 			if (user.attributes?.preferred_username) 
 			usernameModel.value = user.attributes?.preferred_username
 
-			sessionState.connected = true
+
+			store.connected = true
+
 	})
 	.catch((error) => {
 		isSignedIn.value = "Not Signed In"
-		sessionState.connected = false
+
+		store.connected = false
+
 	} )
 }
 

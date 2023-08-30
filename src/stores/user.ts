@@ -13,7 +13,9 @@ export const useUserStore = defineStore("userStore", {
 					JSON.parse(localStorage.getItem("counter_KEY")) : -1,
 
 			activeTheme: localStorage.getItem("activeTheme_KEY") ?
-					JSON.parse(localStorage.getItem("activeTheme_KEY")) : 'dark_custom' 
+					JSON.parse(localStorage.getItem("activeTheme_KEY")) : 'dark_custom',
+					
+			connected: false 
 		}
 	},
 	actions: {
@@ -25,10 +27,12 @@ export const useUserStore = defineStore("userStore", {
 			localStorage.removeItem('counter_KEY')
 			localStorage.removeItem('activeTheme_KEY')
 			localStorage.removeItem('userStore_KEY')
+			localStorage.removeItem('connected_KEY')
 		},
 		resetAllStores() {
 			this.count = 0
 			this.activeTheme = "light"
+			this.connected = false
 		},
 		// empties the entire storage object for that domain.
 		clearAllStores() { localStorage.clear()}

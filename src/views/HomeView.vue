@@ -46,10 +46,11 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 /* ----------------------------------------------------------------------------- */
 
 
-import { useUserStore } from "../stores/user"
 import { useTheme } from "vuetify";
 
+import { useUserStore } from "../stores/user"
 const store = useUserStore(); //initialize the store
+
 const theme = useTheme();
 
 const onChangeSwitch = () => {

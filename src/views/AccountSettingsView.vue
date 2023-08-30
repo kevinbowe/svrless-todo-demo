@@ -49,7 +49,6 @@ import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
 import DeleteUser from "../components/DeleteUser.vue"
 
-import { sessionState } from '../sessionState'
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const nicknameModel = ref()

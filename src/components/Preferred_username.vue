@@ -110,7 +110,6 @@ async function submitUsername (event) {
 				preferred_username: result.attributes.preferred_username,
 				// showPreferred_username: false
 			})
-			sessionState.userName = result.attributes.preferred_username
 			workingUsernameModel.value = ""
 			showUsername.value = false
 		})

@@ -79,8 +79,10 @@
 					<div v-if="!mobile">DSK</div>
 					<p v-if="sessionState.connected">Signed In</p>
 					<p v-if="!sessionState.connected">Signed Out</p>
-					<div v-if="sessionState.userName.length >0">UID == [ {{ sessionState.userName }} ]</div>
-					<div v-else> --- </div>
+
+					<!-- FINDME FIXME -->
+					<!-- <div v-if="sessionState.userName.length >0">UID == [ {{ sessionState.userName }} ]</div>
+					<div v-else> --- </div> -->
 				</v-col>
 				<v-col align="left" >
 					<br>
@@ -321,12 +323,10 @@ onBeforeUnmount(() => { /* Do something here */ })
 	.then((user) =>  {
 						/** Signed In */
  		sessionState.connected = true 
- 		sessionState.userName = user.attributes.preferred_username ? user.attributes.preferred_username : user.username
 	})
 	.catch((reason) => {
 						/** Not Signed In */
 		sessionState.connected = false 
-		sessionState.userName = ""
 	})
 
 </script>

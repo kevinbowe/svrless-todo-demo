@@ -128,6 +128,7 @@ async function submitThemes() {
 		'custom:theme': custom_theme.value, 
 		'custom:theme-inactive': custom_themeInactive.value
 	})
+	//				FINDME FIXME
 	sessionState.theme = custom_theme.value
 	sessionState.themeInactive = custom_themeInactive.value
 	emit('onThemeChangerFini',  false )
@@ -135,15 +136,13 @@ async function submitThemes() {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const onChangeSwitch = () => {
+	enter(`onChangeSwitch`)
 	switchFlag.value = !switchFlag.value;
 	//					This will change the display theme 
 	// theme.global.name.value = 
 	// 	theme.global.name.value === leftModel 
 	// 		? rightModel 
 	// 		: leftModel;
-	//					Set the SessionState
-	// sessionState.theme = theme.global.name.value
-	// sessionState.themeInactive = theme.global.name.value === leftModel ? rightModel : leftModel;
 };
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -161,19 +160,18 @@ function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const reloadSavedThemes = async () => {
+	enter("reloadSavedThemes")
 	if(BLOCKAPI("submitThemes function ")) { return }
 
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
-		// sessionState.theme = user.attributes['custom:theme']
-		// sessionState.themeInactive = user.attributes['custom:theme-inactive']
-		// theme.global.name.value = sessionState.theme
+
+
 		//themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
 	})
 	
 	.catch((reason) => {
-		// sessionState.theme = "light"
-		// sessionState.themeInactive = "dark"
+
 		//themeIcon.value = 'mdi-weather-night'
 	})
 }

@@ -299,18 +299,6 @@ const onChangeSwitch = () => {
 					info(`WAS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
 	theme.global.name.value = themeCurrentDark ? 'light' : 'dark'
 					info2(`IS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
-
-	//				Update the sessionState themes
-	//				Then check the sessionState on page reload.
-	// sessionState.theme = themeCurrentDark ? 'light' : 'dark'
-	// sessionState.themeInactive = !themeCurrentDark ? 'light' : 'dark'
-	
-	//				Toggle the themeDirty flag
-	// sessionState.themeDirty = !sessionState.themeDirty
-
-	// userStore.dirty = userStore.dirty ? false : true
-
-	// updateAuthenticatedUserThemes("onChangeSwitch")
 };
 
 /* ----------------------------------------------------------------------------- */
@@ -318,54 +306,22 @@ const onChangeSwitch = () => {
 const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
 
 /* ----------------------------------------------------------------------------- */
-const updateAuthenticatedUserThemes = async (activeTheme) => {
-
-	// if (!sessionState.themeDirty) { return }
-
-	//				This will return the user in the user pool (not updated )
-	const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
-	//				This performs that update
-	await Auth.updateUserAttributes(user, {
-		// 'custom:theme': activeTheme, 
-		// 'custom:theme-inactive': activeTheme === 'dark' ? 'light' : 'dark'
-	}).catch((error) => {  })
-
-	//					We need a NEW user to check the current Auth values.
-	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
-	// theme.global.name.value = newuser.attributes['custom:theme']
-
-}
-
-/* ----------------------------------------------------------------------------- */
 //	Win Listener -- Page -- Load / Reload
-window.addEventListener("beforeunload",(event) => {
-	/* Do something here */
-}) 
+window.addEventListener("beforeunload",(event) => { /* Do something here */ }) 
 	
 /* ----------------------------------------------------------------------------- */
 //	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
-onBeforeUnmount(() => { 
-	/* Do something here */ 
-})
-
+onBeforeUnmount(() => { /* Do something here */ })
 
 /* ----------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------- */
 //				This executes on Page load
-
-	// 				This is the defualt setting.
-	//					It must ALWAYS be set to default on page load/reload/nav
-	// sessionState.themeDirty = false
 
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
 						/** Signed In */
  		sessionState.connected = true 
  		sessionState.userName = user.attributes.preferred_username ? user.attributes.preferred_username : user.username
-// 
-// 		sessionState.theme = ""
-// 		sessionState.themeInactive = ""
-// 		theme.global.name.value = user.attributes['custom:theme']
 	})
 	.catch((reason) => {
 						/** Not Signed In */

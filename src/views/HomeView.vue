@@ -9,13 +9,13 @@
 			<p>theme.global.name.value -- > [ {{ theme.global.name.value }} ]</p>
 			<p>piniaStore.activeTheme -- > [ {{ piniaStore.activeTheme }} ]</p><br>
 			
-			<v-btn @click="onChangeSwitch">Toggle Theme</v-btn>
+			<v-btn color="secondary" @click="onChangeSwitch">Toggle Theme</v-btn>
 
 			<v-spacer style="height:1em;"></v-spacer>
 
-			<v-btn class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev pinia Stores</v-btn><br>
-			<v-btn class="ma-1" @click="resetAllStores">Reset Dev pinia Stores</v-btn><br>
-			<v-btn class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) pinia Stores</v-btn><br>
+			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev pinia Stores</v-btn><br>
+			<v-btn color="grey-darken-2" class="ma-1" @click="resetAllStores">Reset Dev pinia Stores</v-btn><br>
+			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) pinia Stores</v-btn><br>
 			This will Sign Out User
 
 			<v-spacer style="height:1em;"></v-spacer>
@@ -24,9 +24,9 @@
 			<p>(piniaStore) Count is {{ piniaStore.count }}</p>
 			<p>(piniaStore) Double count is {{ piniaStore.doubleCount }}</p>
 
-			<v-btn class="ma-1" @click="piniaStore.increment(1)">Add</v-btn>
-			<v-btn class="ma-1" @click="piniaStore.decrement(1)">Subtract</v-btn>
-			<v-btn class="ma-1" @click="piniaStore.reset">Reset</v-btn>
+			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.increment(1)">Add</v-btn>
+			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.decrement(1)">Subtract</v-btn>
+			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.reset">Reset</v-btn>
 
 		</MasterLayout>
 	</v-app>

@@ -32,6 +32,9 @@ watch (
 		localStorage.setItem( "counter_KEY", JSON.stringify(pinia_state.userPiniaStore.count))
 		localStorage.setItem( "activeTheme_KEY", JSON.stringify(pinia_state.userPiniaStore.activeTheme))
 		localStorage.setItem( "connected_KEY", JSON.stringify(pinia_state.userPiniaStore.connected))
+
+		localStorage.setItem( "username_KEY", JSON.stringify(pinia_state.userPiniaStore.username))
+		localStorage.setItem( "preferred_username_KEY", JSON.stringify(pinia_state.userPiniaStore.preferred_username))
 	
 		/**
 		 * 				This reference will return the whole userStore:

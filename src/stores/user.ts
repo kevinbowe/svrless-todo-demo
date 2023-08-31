@@ -7,7 +7,9 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 		return {
 			count: localStorage.getItem("counter_KEY") ? JSON.parse(localStorage.getItem("counter_KEY")) : -1,
 			activeTheme: localStorage.getItem("activeTheme_KEY") ? JSON.parse(localStorage.getItem("activeTheme_KEY")) : 'dark_custom',
-			connected: false 
+			connected: false,
+			username: localStorage.getItem("username_KEY") ? JSON.parse(localStorage.getItem("username_KEY")) : 'blank',
+			preferred_username: localStorage.getItem("preferred_username_KEY") ? JSON.parse(localStorage.getItem("preferred_username_KEY")) : 'blank',
 		}
 	},
 	actions: {
@@ -20,11 +22,17 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 			localStorage.removeItem('activeTheme_KEY')
 			localStorage.removeItem('userStore_KEY')
 			localStorage.removeItem('connected_KEY')
+
+			localStorage.removeItem('username_KEY')
+			localStorage.removeItem('preferred_username_KEY')
+
 		},
 		resetAllStores() {
 			this.count = 0
 			this.activeTheme = "light"
 			this.connected = false
+			this.username = "blank"
+			this.preferred_username = "blank"
 		},
 		// empties the entire storage object for that domain.
 		clearAllStores() { localStorage.clear()}

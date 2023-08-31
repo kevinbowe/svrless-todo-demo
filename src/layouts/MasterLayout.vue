@@ -75,17 +75,15 @@
 			<v-row no-gutters class="ma-5">
 				<!-- <v-col > -->
 				<v-col align="left" >
-					<div v-if="mobile">MOB</div>
-					<div v-if="!mobile">DSK</div>
-					<p v-if="piniaStore.connected">Signed In</p>
+					<div v-if="mobile">MOB</div> <div v-if="!mobile">DSK</div>
+					<div v-if="piniaStore.connected">
+						<p> Signed In -- {{ piniaStore.username }}</p>
+						<p>Preferred UID -- {{ piniaStore.preferred_username }}</p>
+					</div> 
 					<p v-if="!piniaStore.connected">Signed Out</p>
-
-					<!-- FINDME FIXME -->
-					<div v-else> --- </div>
 				</v-col>
 				<v-col align="left" >
-					<br>
-					<p>Theme == [ ]</p>
+					<p> Theme == [ {{ piniaStore.activeTheme }} ] </p>
 					<p>Theme-inactive == [  ]</p>
 				</v-col>
 				<v-col align="left" >
@@ -314,6 +312,8 @@ onBeforeUnmount(() => { /* Do something here */ })
 	.then((user) =>  {
 						/** Signed In */
 		piniaStore.connected = true
+		piniaStore.username = user.username
+		piniaStore.preferred_username = user.attributes?.preferred_username
 	})
 	.catch((reason) => {
 						/** Not Signed In */

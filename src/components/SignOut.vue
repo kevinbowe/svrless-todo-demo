@@ -20,6 +20,9 @@ const signOutUser = async () => {
 		await Auth.signOut()
 		.then( (response) => {
 			piniaStore.connected = false
+			piniaStore.username = ""
+			piniaStore.preferred_username = ""
+
 			//				Redirect to Home View
 			router.push({name:'home'})
 		})

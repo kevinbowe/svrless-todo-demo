@@ -5,7 +5,7 @@
 	<hr class="mb-10">
 
 	<!-- SignIn & SignUp Forms -->
-	<v-row no-gutters v-if="!store.connected">
+	<v-row no-gutters v-if="!piniaStore.connected">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
 			<v-card variant="outlined" >
 				<v-tabs fixed-tabs v-model="SignInSignUpTab" >
@@ -147,7 +147,7 @@
 	</v-row>
 
 	<!-- SignUp Confirmation -->
-	<v-overlay v-if="!store.connected" class="align-center justify-center" v-model="toggleUserConfirm" >
+	<v-overlay v-if="!piniaStore.connected" class="align-center justify-center" v-model="toggleUserConfirm" >
 		<v-sheet width="20em" class="pa-3" elevation="24" color="background" border="lg">
 			<v-row><v-spacer/>
 				<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"/>
@@ -222,15 +222,12 @@ import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 	from "../components/ConfirmationParts/ComfirmationValidators"
 
 import ResetPassword from "../components/ResetPassword.vue"
-
-
 import router from "../router";
-
-import { useUserStore } from "../stores/user"
+import { useUserPiniaStore } from "../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-const store = useUserStore(); //initialize the store
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
 
 const SignInSignUpTab = ref()
 
@@ -328,9 +325,7 @@ const confirmUserSignUp = async (event) => {
 		if (restartConfirm.value === true) {
 			//				If we get here, try signing in again.
 			toggleUserConfirm.value = false	// Close the Confirm Ui
-
-			store.connected = true
-			
+			piniaStore.connected = true
 			restartConfirm.value = false	// Lower the Confirm flag
 		} 
 		signInUser()
@@ -399,9 +394,7 @@ const signInUser = async () => {
 				phone_number: user.attributes?.phone_number,	
 				username: user.attributes?.preferred_username ?? user.username,
 			})
-
-			store.connected = true
-		
+			piniaStore.connected = true
 			router.push({name:'home'})
 		}
 	}
@@ -459,9 +452,7 @@ Hub.listen('auth', (data) => {
 					? data.payload.data.attributes.preferred_username 
 					: data.payload.data.username
 				})
-				
-				store.connected = true
-
+				piniaStore.connected = true
 				return
 		case "signOut" :
 					return

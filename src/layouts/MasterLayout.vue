@@ -48,7 +48,7 @@
 
 				</v-list-group>
 					
-				<v-list-group v-if="store.connected" value="Account">
+				<v-list-group v-if="piniaStore.connected" value="Account">
 					<template v-slot:activator="{ props }">
 						<v-list-Item class="justify-start" _prepend-icon="mdi-account" v-bind="props">
 							<v-icon class="mr-3" icon="mdi-account"/>	Account
@@ -59,11 +59,11 @@
 					</v-list-item>
 				</v-list-group>
 					
-				<v-list-item v-if="store.connected">
+				<v-list-item v-if="piniaStore.connected">
 					<SignOut/>
 				</v-list-item>
 				
-				<v-list-item v-if="!store.connected">
+				<v-list-item v-if="!piniaStore.connected">
 					<v-btn to="/user" text="Sign In" rounded="xl" class="my-1" width="10em" color="surface_alt" />
 				</v-list-item>
 
@@ -77,8 +77,8 @@
 				<v-col align="left" >
 					<div v-if="mobile">MOB</div>
 					<div v-if="!mobile">DSK</div>
-					<p v-if="store.connected">Signed In</p>
-					<p v-if="!store.connected">Signed Out</p>
+					<p v-if="piniaStore.connected">Signed In</p>
+					<p v-if="!piniaStore.connected">Signed Out</p>
 
 					<!-- FINDME FIXME -->
 					<div v-else> --- </div>
@@ -123,7 +123,6 @@
 					</v-menu>
 				</v-btn> -->
 				
-				
 				<!-- Blogs -->
 				<!-- <v-btn v-if="!mobile" color="white" variant="plain" > Blogs
 					<v-menu activator="parent">
@@ -136,7 +135,7 @@
 			</v-toolbar-title>
 
 			<!-- Account : [ Settings | Theme | Sign Out ] -->
-			<div v-if="store.connected">
+			<div v-if="piniaStore.connected">
 				<v-btn color="white" variant="plain"> 
 					<v-icon v-if="mobile" icon="mdi-account" size="x-large" /> 
 					<p v-else> Account </p>
@@ -172,11 +171,11 @@
 			</div>
 
 			<!-- Sign In -->
-			<v-btn class="mx-1" text="Sign In" v-if="!store.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
+			<v-btn class="mx-1" text="Sign In" v-if="!piniaStore.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
 
 			<!-- Theme Switch -->
-			<v-icon :color="store.connected ? '' : 'grey-darken-1'" 
-			v-on="store.connected ? {click: onChangeSwitch} : {}" :icon="themeIcon"/>
+			<v-icon :color="piniaStore.connected ? '' : 'grey-darken-1'" 
+			v-on="piniaStore.connected ? {click: onChangeSwitch} : {}" :icon="themeIcon"/>
 			
 			<!-- Three Dots -->
 			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
@@ -189,11 +188,11 @@
 							</v-list-item-title>
 						</v-list-item>
 						<v-list-item>
-							<p :class="store.connected ? '' :  'text-grey-lighten-1'">
-								<v-icon :color="store.connected ? '' : 'grey-lighten-1'" :icon="themeIcon"/>
+							<p :class="piniaStore.connected ? '' :  'text-grey-lighten-1'">
+								<v-icon :color="piniaStore.connected ? '' : 'grey-lighten-1'" :icon="themeIcon"/>
 								Theme Changer 
 							</p>
-							<v-menu :disabled="!store.connected" v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
+							<v-menu :disabled="!piniaStore.connected" v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 								<v-card>
 									<ThemeChanger @onThemeChangerFini="handleThemeChangerFini"/>
 									<ThemePreview />
@@ -242,19 +241,14 @@ import ThemePreview from "../components/ThemePreview.vue";
 import SignOut from "../components/SignOut.vue"
 import { Auth } from 'aws-amplify';
 import { useDisplay } from "vuetify";
-
-
-import { useUserStore } from '../stores/user'
-
+import { useUserPiniaStore } from '../stores/user'
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
 const mainTitle: string = "v3a-theme-pinia-v2"
 				enter(`MasterLayout is loading...`)
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()
-
-const store = useUserStore()
-
+const piniaStore = useUserPiniaStore()
 const drawer = ref(false)
 const experiment = ref([
 	{title:'Dev 1', icon:'mdi-hammer-screwdriver', url:'/dev1'},
@@ -319,16 +313,11 @@ onBeforeUnmount(() => { /* Do something here */ })
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
 						/** Signed In */
-
-		store.connected = true
-
-		
+		piniaStore.connected = true
 	})
 	.catch((reason) => {
 						/** Not Signed In */
-
-		store.connected = false
-		
+		piniaStore.connected = false
 	})
 
 </script>

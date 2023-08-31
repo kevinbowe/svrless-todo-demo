@@ -1,20 +1,12 @@
 // src/stores/user.ts
 
-import { defineStore } from 'pinia'
-// 		ref()s become state properties
-// 		computed()s become getters
-// 		function()s become actions
-
-//					userStore is the ID of the store.
-export const useUserStore = defineStore("userStore", {
+import { defineStore as definePiniaStore} from 'pinia'
+//					userPiniaStore is the ID of the store.
+export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 	state: () => {
 		return {
-			count: localStorage.getItem("counter_KEY") ?
-					JSON.parse(localStorage.getItem("counter_KEY")) : -1,
-
-			activeTheme: localStorage.getItem("activeTheme_KEY") ?
-					JSON.parse(localStorage.getItem("activeTheme_KEY")) : 'dark_custom',
-					
+			count: localStorage.getItem("counter_KEY") ? JSON.parse(localStorage.getItem("counter_KEY")) : -1,
+			activeTheme: localStorage.getItem("activeTheme_KEY") ? JSON.parse(localStorage.getItem("activeTheme_KEY")) : 'dark_custom',
 			connected: false 
 		}
 	},
@@ -37,7 +29,6 @@ export const useUserStore = defineStore("userStore", {
 		// empties the entire storage object for that domain.
 		clearAllStores() { localStorage.clear()}
 	},
-
 	getters: { 
 		doubleCount: (state) => { return state.count * 2 },
 		squareCount: (state) => { return state.count ** 2 } 

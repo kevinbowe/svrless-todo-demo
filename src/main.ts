@@ -22,23 +22,22 @@ const app = createApp(App);
 
 watch (
 	pinia.state,
-	(state) => {
+	(pinia_state) => {
 		/**				
-		 * 				If we get here, the count or activeTheme variables in [pinia.state] have changed.
+		 * 				If we get here, the count or activeTheme variables in [pinia_state] have changed.
 		 * 				These references will return the actual value:
-		 * 					userStore.count == 4
-		 * 					userStore.activeTheme = "dark"
+		 * 					userPiniaStore.count == 4
+		 * 					userPiniaStore.activeTheme = "dark"
 		*/
-		localStorage.setItem( "counter_KEY", JSON.stringify(state.userStore.count))
-		localStorage.setItem( "activeTheme_KEY", JSON.stringify(state.userStore.activeTheme))
-		localStorage.setItem( "connected_KEY", JSON.stringify(state.userStore.connected))
-		
+		localStorage.setItem( "counter_KEY", JSON.stringify(pinia_state.userPiniaStore.count))
+		localStorage.setItem( "activeTheme_KEY", JSON.stringify(pinia_state.userPiniaStore.activeTheme))
+		localStorage.setItem( "connected_KEY", JSON.stringify(pinia_state.userPiniaStore.connected))
+	
 		/**
 		 * 				This reference will return the whole userStore:
-		 * 					userStore == {"count":-1,"activeTheme":"dark_custom","connected":false}
+		 * 					userPiniaStore == {"count":-1,"activeTheme":"dark_custom","connected":false}
 		 */
-		localStorage.setItem( "userStore_KEY", JSON.stringify(state.userStore))
-	
+		localStorage.setItem( "userStore_KEY", JSON.stringify(pinia_state.userPiniaStore))	
 	},
 	{ deep: true }
 )

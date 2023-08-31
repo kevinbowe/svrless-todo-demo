@@ -11,31 +11,25 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { Auth } from 'aws-amplify';
 import router from "../router";
 
-import { useUserStore } from "../stores/user"
-const store = useUserStore(); //initialize the store
+import { useUserPiniaStore } from "../stores/user"
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signOutUser = async () => { 
 	try { 
 		await Auth.signOut()
 		.then( (response) => {
-
-			store.connected = false
-			
+			piniaStore.connected = false
 			//				Redirect to Home View
 			router.push({name:'home'})
 		})
 		.catch(error => {
-
-			store.connected = true
-
+			piniaStore.connected = true
 			console.log('error signing out: ', error)
 		})
 	}
 	catch (error) { 
-
-		store.connected = true
-		
+		piniaStore.connected = true
 		console.log('error signing out: ', error);}
 }
 </script>

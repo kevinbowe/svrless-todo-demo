@@ -42,12 +42,10 @@
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth } from 'aws-amplify';
 import { ref } from 'vue'
-import { useUserStore } from "../stores/user"
+import { useUserPiniaStore } from "../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
-const store = useUserStore(); //initialize the store
-
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
 const nicknameModel = ref()
 const phone_numberModel = ref()
 const emailModel = ref()
@@ -68,16 +66,11 @@ async function getSession(){
 			usernameModel.value = user.username
 			if (user.attributes?.preferred_username) 
 			usernameModel.value = user.attributes?.preferred_username
-
-
-			store.connected = true
-
+			piniaStore.connected = true
 	})
 	.catch((error) => {
 		isSignedIn.value = "Not Signed In"
-
-		store.connected = false
-
+		piniaStore.connected = false
 	} )
 }
 

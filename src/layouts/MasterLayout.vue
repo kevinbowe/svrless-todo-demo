@@ -174,9 +174,8 @@
 			<v-btn class="mx-1" text="Sign In" v-if="!piniaStore.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
 
 			<!-- Theme Switch -->
-			<v-icon :color="piniaStore.connected ? '' : 'grey-darken-1'" 
-			v-on="piniaStore.connected ? {click: onChangeSwitch} : {}" :icon="themeIcon"/>
-			
+			<v-icon @click=onChangeSwitch :icon="themeIcon"/>
+
 			<!-- Three Dots -->
 			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
 				<v-icon icon="mdi-dots-vertical" size="x-large"/>
@@ -235,7 +234,7 @@ import { pass, fail } from "../my-util-code/MyConsoleUtil"
 
 /* ----------------------------------------------------------------------------- */
 import { useTheme } from "vuetify";
-import { onBeforeUnmount, ref} from "vue";
+import { onBeforeUnmount, ref, computed } from "vue";
 import ThemeChanger from "../components/ThemeChanger.vue";
 import ThemePreview from "../components/ThemePreview.vue";
 import SignOut from "../components/SignOut.vue"
@@ -282,7 +281,7 @@ const footerLinks = ref([
 /* ----------------------------------------------------------------------------- */
 const menuThemeChanger = ref(false);
 const theme = useTheme();
-const themeIcon = ref('mdi-weather-night')
+const themeIcon = computed<string>(() => piniaStore.activeTheme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
 /* ----------------------------------------------------------------------------- */
 const onChangeSwitch = () => {
 					enter(`onChangeSwitch`)
@@ -292,6 +291,7 @@ const onChangeSwitch = () => {
 					info(`WAS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
 	theme.global.name.value = themeCurrentDark ? 'light' : 'dark'
 					info2(`IS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
+	piniaStore.activeTheme = theme.global.name.value
 };
 
 /* ----------------------------------------------------------------------------- */

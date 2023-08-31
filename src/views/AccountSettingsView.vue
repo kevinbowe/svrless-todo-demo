@@ -48,9 +48,12 @@ import SignOut from "../components/SignOut.vue"
 import Password from "../components/Password.vue"
 import Phone_number from "../components/Phone_number.vue"
 import DeleteUser from "../components/DeleteUser.vue"
-
+import { useUserPiniaStore } from "../stores/user"
+import { useTheme } from "vuetify";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const theme = useTheme();
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
 const nicknameModel = ref()
 const emailModel = ref()
 const phone_numberModel = ref()
@@ -98,6 +101,9 @@ getSession().then( (result) => {
 	usernameModel.value = result.username
 })
 
+/* ----------------------------------------------------------------------------- */
+
+theme.global.name.value = piniaStore.activeTheme
 </script>
 
 <style>

@@ -43,9 +43,10 @@ import MasterLayout from "../layouts/MasterLayout.vue";
 import { Auth } from 'aws-amplify';
 import { ref } from 'vue'
 import { useUserPiniaStore } from "../stores/user"
-
+import { useTheme } from "vuetify";
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const piniaStore = useUserPiniaStore(); //initialize the piniaStore
+const theme = useTheme();
 const nicknameModel = ref()
 const phone_numberModel = ref()
 const emailModel = ref()
@@ -76,6 +77,9 @@ async function getSession(){
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 getSession()
+/* ----------------------------------------------------------------------------- */
+
+theme.global.name.value = piniaStore.activeTheme
 
 </script>
 <style></style>

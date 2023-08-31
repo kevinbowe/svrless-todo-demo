@@ -22,10 +22,18 @@
 
 import MasterLayout from "../layouts/MasterLayout.vue";
 import {Ref, ref} from "vue"
+import { useUserPiniaStore } from "../stores/user"
+import { useTheme } from "vuetify";
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const theme = useTheme();
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
 const something:Ref<string> = ref<string>("")
 const doSomething = () => {something.value = "Results of selecting Submit Btn"}
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+theme.global.name.value = piniaStore.activeTheme
 </script>
 
 <style></style>

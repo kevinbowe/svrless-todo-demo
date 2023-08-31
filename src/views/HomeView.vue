@@ -20,7 +20,7 @@
 
 			<v-btn @click="piniaStore.deleteCounterKeyStore()">Delete Counter_KEY piniaStore</v-btn>
 			<v-btn @click="piniaStore.deleteAllStores()">Delete All piniaStores</v-btn><br>
-			<v-btn @click="piniaStore.resetAllStores()">Reset All piniaStores</v-btn><br>
+			<v-btn @click="resetAllStores">Reset All piniaStores</v-btn><br>
 			<v-btn @click="piniaStore.clearAllStores()">Clear All piniaStores</v-btn><br>
 
 			<v-spacer style="height:3em;"></v-spacer>
@@ -60,6 +60,15 @@ const onChangeSwitch = () => {
 					info2(`IS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
 	piniaStore.activeTheme = theme.global.name.value
 }
+/* ----------------------------------------------------------------------------- */
+const resetAllStores = () => {
+	//				Do this to cause the watch (pinia.state) to fire.
+	piniaStore.activeTheme = ""
+	//				This will reset all piniaStore values.
+	piniaStore.resetAllStores()
+	theme.global.name.value = piniaStore.activeTheme
+}
+/* ----------------------------------------------------------------------------- */
 
 theme.global.name.value = piniaStore.activeTheme
 

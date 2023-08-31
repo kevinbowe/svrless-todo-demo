@@ -7,31 +7,26 @@
 
 			<h1>Theme Dirty App</h1>
 			<p>theme.global.name.value -- > [ {{ theme.global.name.value }} ]</p>
-			<hr>
-			<p>PinaStore</p>
-			<p>{{ piniaStore }}</p>
-			<br>
-			<p>piniaStore.activeTheme -- > {{ piniaStore.activeTheme }}</p>
-			<p>piniaStore.count -- > {{ piniaStore.count }}</p>
-
+			<p>piniaStore.activeTheme -- > [ {{ piniaStore.activeTheme }} ]</p><br>
+			
 			<v-btn @click="onChangeSwitch">Toggle Theme</v-btn>
 
-			<v-spacer style="height:3em;"></v-spacer>
+			<v-spacer style="height:1em;"></v-spacer>
 
-			<v-btn @click="piniaStore.deleteCounterKeyStore()">Delete Counter_KEY piniaStore</v-btn>
-			<v-btn @click="piniaStore.deleteAllStores()">Delete All piniaStores</v-btn><br>
-			<v-btn @click="resetAllStores">Reset All piniaStores</v-btn><br>
-			<v-btn @click="piniaStore.clearAllStores()">Clear All piniaStores</v-btn><br>
+			<v-btn class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev pinia Stores</v-btn><br>
+			<v-btn class="ma-1" @click="resetAllStores">Reset Dev pinia Stores</v-btn><br>
+			<v-btn class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) pinia Stores</v-btn><br>
+			This will Sign Out User
 
-			<v-spacer style="height:3em;"></v-spacer>
+			<v-spacer style="height:1em;"></v-spacer>
 
 			<h1>Counter App</h1>
 			<p>(piniaStore) Count is {{ piniaStore.count }}</p>
 			<p>(piniaStore) Double count is {{ piniaStore.doubleCount }}</p>
 
-			<v-btn @click="piniaStore.increment(1)">Add</v-btn>
-			<v-btn @click="piniaStore.decrement(1)">Subtract</v-btn>
-			<v-btn @click="piniaStore.reset">Reset</v-btn>
+			<v-btn class="ma-1" @click="piniaStore.increment(1)">Add</v-btn>
+			<v-btn class="ma-1" @click="piniaStore.decrement(1)">Subtract</v-btn>
+			<v-btn class="ma-1" @click="piniaStore.reset">Reset</v-btn>
 
 		</MasterLayout>
 	</v-app>

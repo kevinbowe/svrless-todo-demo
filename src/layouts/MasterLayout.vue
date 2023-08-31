@@ -81,7 +81,7 @@
 					<p v-if="!store.connected">Signed Out</p>
 
 					<!-- FINDME FIXME -->
-					<div v-else> --- </div> -->
+					<div v-else> --- </div>
 				</v-col>
 				<v-col align="left" >
 					<br>

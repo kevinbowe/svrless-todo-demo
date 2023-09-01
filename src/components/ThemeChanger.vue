@@ -11,7 +11,7 @@
 			<v-spacer />
 			<v-col cols="5">
 				<ThemeSelector selectorLabel="Left Theme" 
-					:selectorItems=themeVals defaultItem="light" :selectSwitchFlag=false selectorWidth="width:10em;" 
+					:selectorItems=themeVals :defaultItem="piniaStore.activeTheme" :selectSwitchFlag=false selectorWidth="width:10em;" 
 					class="float-right" 
 					@clickSelectorEvent="onClick" 
 				></ThemeSelector>
@@ -28,9 +28,10 @@
 			<v-col cols="5">
 				<ThemeSelector	selectorLabel="Right Theme" 
 					class="float-left"
-					:selectorItems=themeVals defaultItem="dark" :selectSwitchFlag=true selectorWidth="width:10em;" 
+					:selectorItems=themeVals :defaultItem="piniaStore.inactiveTheme" :selectSwitchFlag=true selectorWidth="width:10em;" 
 					@clickSelectorEvent="onClick"
 				></ThemeSelector>
+
 				<div class="float-left ml-4 mt-4">
 					<StatusIcons :stat="switchFlag" />
 				</div>
@@ -95,16 +96,19 @@ import { Auth } from "aws-amplify";
 /* ----------------------------------------------------------------------------- */
 import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from "../my-util-code/MyConsoleUtil"
+import { useUserPiniaStore } from "../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const piniaStore = useUserPiniaStore(); // initialize the piniaStore
+
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);``
-const switchFlag = ref(false) // false == left
+const switchFlag = ref(false) // false == left // Active Theme
 const emit = defineEmits()
 
 // Set the default Models and Theme
-let leftModel:string = "light"
-let rightModel:string = "dark"
+let leftModel:string = piniaStore.activeTheme
+let rightModel:string = piniaStore.inactiveTheme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitThemes() {
@@ -127,19 +131,22 @@ async function submitThemes() {
 		'custom:theme': custom_theme.value, 
 		'custom:theme-inactive': custom_themeInactive.value
 	})
+	piniaStore.activeTheme = custom_theme.value
+	piniaStore.inactiveTheme = custom_themeInactive.value
+	theme.global.name.value = custom_theme.value
 	//				FINDME FIXME
 	emit('onThemeChangerFini',  false )
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const onChangeSwitch = () => {
-	enter(`onChangeSwitch`)
+	//					This will toggle the switch flag
 	switchFlag.value = !switchFlag.value;
 	//					This will change the display theme 
-	// theme.global.name.value = 
-	// 	theme.global.name.value === leftModel 
-	// 		? rightModel 
-	// 		: leftModel;
+	theme.global.name.value = 
+		theme.global.name.value === leftModel 
+			? rightModel 
+			: leftModel;
 };
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -152,7 +159,7 @@ function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 	if(selectorSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
 
 	// Update active theme
-	// theme.global.name.value = selectorModel;
+	theme.global.name.value = selectorModel;
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -226,7 +233,7 @@ const factoryThemeReset = async () => {
 	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
 
 /**
- * 	The theme labeled 'default' in vuetify.ts is not avaiable.
+ * 	The theme labeled 'default' in vuetify.ts is not set.
  */
 
 
@@ -235,7 +242,7 @@ const factoryThemeReset = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(true)										 /**/
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

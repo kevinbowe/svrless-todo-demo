@@ -4,6 +4,7 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify, ThemeDefinition } from 'vuetify';
+import colors from 'vuetify/lib/util/colors'
 
 // import colors from 'vuetify/lib/util/colors';
 /* Cannot find module 'vuetify/lib/util/colors' or its corresponding type declarations.ts(2307) 
@@ -12,6 +13,7 @@ import { createVuetify, ThemeDefinition } from 'vuetify';
 const light: ThemeDefinition = {
 	dark: false,
 	colors: {
+		// background: colors.red.darken1, // This works
 		background: '#ffffff',
 		border: '#000000', // .............. // black
 		border_alt: '#ffffff',

@@ -83,14 +83,11 @@
 					<p v-if="!piniaStore.connected">Signed Out</p>
 				</v-col>
 				<v-col align="left" >
-					<p> Theme == [ {{ piniaStore.activeTheme }} ] </p>
-					<p>Theme-inactive == [  ]</p>
+					<p>pS.Theme == [ {{ piniaStore.activeTheme }} ] </p>
+					<p>pS.Theme-inactive == [ {{ piniaStore.inactiveTheme }} ]</p>
+					<p>Active Theme == [ {{ theme.global.name.value }} ]</p>
 				</v-col>
 				<v-col align="left" >
-					<p>themeDirty flag == [ ]</p>
-					<p></p>
-					<p> GLOBAL name value == {{ theme.global.name.value }}</p>
-					<p> pinia.dirty == [ ]</p>
 				</v-col>
 			</v-row>
 		</v-app-bar>
@@ -242,7 +239,7 @@ import { useUserPiniaStore } from '../stores/user'
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
 const mainTitle: string = "v3a-theme-pinia-v2"
-				enter(`MasterLayout is loading...`)
+
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore()
@@ -282,13 +279,9 @@ const theme = useTheme();
 const themeIcon = computed<string>(() => piniaStore.activeTheme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
 /* ----------------------------------------------------------------------------- */
 const onChangeSwitch = () => {
-					enter(`onChangeSwitch`)
-	//				Toggle the light and dark themes based on the theme.current.value['dark'] which is a bool
-	//				Any theme name can be used. 
-	const themeCurrentDark = theme.current.value['dark']
-					info(`WAS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
-	theme.global.name.value = themeCurrentDark ? 'light' : 'dark'
-					info2(`IS --> Theme --> ${themeCurrentDark ? 'light' : 'dark'}`)
+	//				Toggle the light and dark themes based on the piniaStore [ active and inactive ]
+	theme.global.name.value = piniaStore.inactiveTheme
+	piniaStore.inactiveTheme =	piniaStore.activeTheme
 	piniaStore.activeTheme = theme.global.name.value
 };
 

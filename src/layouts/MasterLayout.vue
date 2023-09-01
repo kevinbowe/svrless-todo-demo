@@ -145,11 +145,6 @@
 									Theme<v-icon color="secondary" icon="mdi-palette" size="30"/>
 									<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
 										<v-card>
-											<v-card-actions>
-												<v-spacer />
-												<v-btn variant="text" @click="menuThemeChanger = false"> Cancel </v-btn>
-												<v-btn _color="primary" variant="text" @click="menuThemeChanger = false"> Save </v-btn>
-											</v-card-actions>
 											<ThemeChanger />
 											<ThemePreview />
 										</v-card>
@@ -258,6 +253,8 @@ const account = ref([
 const threeDots = ref([
 	{ label: "About Us", url: "/about" },
 	{ label: "Terms & Conditions", url: "/tandc" },
+	{ label: "Themes", url: "/theme" },
+
 ]);
 const cruds = ref([
 	{title:'Create', icon:'mdi-plus-outline',url: "/future" },

@@ -109,6 +109,14 @@ const routes: Array<RouteRecordRaw> = [
 			layout: "master",
 		},
 	},
+	{
+		path: "/theme",
+		name: "Theme",
+		component: () => import("../views/ThemeView.vue"),
+		meta: {
+			layout: "master",
+		},
+	},
 ];
 
 export default routes;

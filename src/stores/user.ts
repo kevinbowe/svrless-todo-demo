@@ -36,9 +36,6 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 			this.count = 0
 			this.activeTheme = "light"
 			this.inactiveTheme = "dark"
-			this.connected = false
-			this.username = "blank"
-			this.preferred_username = "blank"
 		},
 		// empties the entire storage object for that domain.
 		clearAllStores() { localStorage.clear()}

@@ -1,9 +1,8 @@
 <template>
 	<v-container >
-		<v-btn class="mx-2" text="Reload Saved" color="primary" _variant="text" @click="reloadSavedThemes"/>
+		<v-btn class="mx-2" text="Load Saved" color="primary" _variant="text" @click="loadSavedThemes"/>
 		<v-btn class="mx-2" text="Factory Reset" color="secondary" _variant="text" @click="factoryThemeReset"/>
-		<v-btn class="mx-2" text="Cancel" _variant="text" @click="$emit('onThemeChangerFini', false )"/>
-		<v-btn class="mx-2" text="Save New" color="primary" _variant="text" @click="submitThemes"/>
+		<v-btn text="Save New" class="mx-2" color="primary" _variant="text" @click="submitThemes"/>
 	</v-container>					
 	<v-container __DESKTOP__
 		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
@@ -89,7 +88,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useTheme } from "vuetify";
-import ThemePreview from "./ThemePreview.vue";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
 import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
 import { Auth } from "aws-amplify";
@@ -112,7 +110,7 @@ let rightModel:string = piniaStore.inactiveTheme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitThemes() {
-	if(BLOCKAPI("submitThemes function ")) { return }
+	// if(BLOCKAPI("submitThemes function ")) { return }
 
 	const custom_theme = ref(leftModel)
 	const custom_themeInactive = ref(rightModel)
@@ -123,17 +121,26 @@ async function submitThemes() {
 		custom_theme.value = rightModel
 		custom_themeInactive.value = leftModel
 	}
-	
-	//				This will return the user in the user pool (not updated )
-	const newuser = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
-	//				This performs that update
-	await Auth.updateUserAttributes(newuser, {
-		'custom:theme': custom_theme.value, 
-		'custom:theme-inactive': custom_themeInactive.value
-	})
+
+	//					Update the active theme and piniaStores
 	piniaStore.activeTheme = custom_theme.value
 	piniaStore.inactiveTheme = custom_themeInactive.value
 	theme.global.name.value = custom_theme.value
+
+	if(BLOCKAPI("submitThemes function ")) { return }
+	//				This will return the user in the user pool (not updated )
+	Auth.currentAuthenticatedUser({bypassCache: true /* false */})
+	.then(user => {
+		Auth.updateUserAttributes(user, {
+		'custom:theme': custom_theme.value, 
+		'custom:theme-inactive': custom_themeInactive.value
+		})
+		info2(`Signed in -- Auth updated.`)
+	}).catch(reason => {
+					/** Not Signed in */
+					info(`Not signed in -- Auth not updated ${reason.message}`)
+		piniaStore.connected = false
+	})
 	//				FINDME FIXME
 	emit('onThemeChangerFini',  false )
 }
@@ -163,19 +170,15 @@ function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const reloadSavedThemes = async () => {
-	enter("reloadSavedThemes")
+const loadSavedThemes = async () => {
+	enter("loadSavedThemes")
 	if(BLOCKAPI("submitThemes function ")) { return }
 
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
-
-
 		//themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
 	})
-	
 	.catch((reason) => {
-
 		//themeIcon.value = 'mdi-weather-night'
 	})
 }
@@ -228,21 +231,19 @@ const factoryThemeReset = async () => {
 	info(`--> ${Object.getOwnPropertyNames(theme)}`)
 	info(`--> ${Object.getOwnPropertyNames(theme.themes.value)}`)
 
-
 	whitebar()
 	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
 
 /**
- * 	The theme labeled 'default' in vuetify.ts is not set.
+ * 				The theme labeled 'default' in vuetify.ts is not set.
  */
 
-
 	// theme.global.name.value = 'light'
-	//theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
+	//	theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+/**/					const BLOCKAPIFLAG = ref(true)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

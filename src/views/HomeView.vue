@@ -5,31 +5,31 @@
 			<h1 class="text-primary">Home</h1>
 			<hr class="mb-10">
 
-			<h1>Theme Dirty App</h1>
+			<!-- <h1>Theme Dirty App</h1>
 			<p>theme.global.name.value -- > [ {{ theme.global.name.value }} ]</p>
 			<hr style="margin:0 20em;">
 			<p>piniaStore.activeTheme -- > [ {{ piniaStore.activeTheme }} ]</p>
-			<p>piniaStore.inactiveTheme -- > [ {{ piniaStore.inactiveTheme }} ]</p><br>
+			<p>piniaStore.inactiveTheme -- > [ {{ piniaStore.inactiveTheme }} ]</p><br> -->
 			
 			<ThemeChanger/>
-			<v-btn color="secondary" @click="onChangeSwitch">Toggle Theme</v-btn>
+			<v-btn color="secondary" @click="onChangeSwitch">Toggle Theme</v-btn>
 
 			<v-spacer style="height:2em;"></v-spacer>
 
-			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev pinia Stores</v-btn><br>
-			<v-btn color="grey-darken-2" class="ma-1" @click="resetAllStores">Reset Dev pinia Stores</v-btn><br>
-			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) pinia Stores</v-btn><br>
+			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev LS</v-btn>
+			<v-btn color="grey-darken-2" class="ma-1" @click="resetAllStores">Reset LS</v-btn><br>
+			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn><br>
 			This will Sign Out User
 
 			<v-spacer style="height:1em;"></v-spacer>
 
-			<h1>Counter App</h1>
+			<!-- <h1>Counter App</h1>
 			<p>(piniaStore) Count is {{ piniaStore.count }}</p>
 			<p>(piniaStore) Double count is {{ piniaStore.doubleCount }}</p>
 
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.increment(1)">Add</v-btn>
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.decrement(1)">Subtract</v-btn>
-			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.reset">Reset</v-btn>
+			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.reset">Reset</v-btn> -->
 
 		</MasterLayout>
 	</v-app>

@@ -137,21 +137,9 @@
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item __ACCOUNT__>
-								<v-btn to="/account" variant="plain"> Settings </v-btn>
-							</v-list-item>
-
-							<v-list-item __THEME_CHANGER__>
-								<v-btn variant="plain">
-									Theme<v-icon color="secondary" icon="mdi-palette" size="30"/>
-									<v-menu v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
-										<v-card>
-											<ThemeChanger />
-											<ThemePreview />
-										</v-card>
-									</v-menu>
-								</v-btn>
-							</v-list-item>
-							
+								<v-icon icon="mdi-cog" _class="pa-5"/>
+								<v-btn text="Settings" to="/account" variant="plain"/>
+							</v-list-item>							
 							<v-list-item __SIGN_OUT__>
 								<SignOut/>
 							</v-list-item>
@@ -170,24 +158,12 @@
 			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
 				<v-icon icon="mdi-dots-vertical" size="x-large"/>
 				<v-menu activator="parent">
-					<v-list >
+					<v-list>
 						<v-list-item :to="link.url" v-for="link in threeDots" :key="link.label" :value="link.label">
-							<v-list-item-title>
-								{{ link.label }}
-							</v-list-item-title>
+							<v-icon :icon="link.icon" style="padding-bottom:5px;padding-right:5px;" :color="link.color"/> 
+							{{ link.label }}
 						</v-list-item>
-						<v-list-item>
-							<p :class="piniaStore.connected ? '' :  'text-grey-lighten-1'">
-								<v-icon :color="piniaStore.connected ? '' : 'grey-lighten-1'" :icon="themeIcon"/>
-								Theme Changer 
-							</p>
-							<v-menu :disabled="!piniaStore.connected" v-model="menuThemeChanger" activator="parent" location="end" :close-on-content-click="false">
-								<v-card>
-									<ThemeChanger @onThemeChangerFini="handleThemeChangerFini"/>
-									<ThemePreview />
-								</v-card>
-							</v-menu>
-						</v-list-item>
+
 					</v-list>
 				</v-menu>
 			</v-btn>
@@ -251,9 +227,9 @@ const account = ref([
 	{title:'Settings', icon:'mdi-cog-outline', url:'/account'},
 ])
 const threeDots = ref([
-	{ label: "About Us", url: "/about" },
-	{ label: "Terms & Conditions", url: "/tandc" },
-	{ label: "Themes", url: "/theme" },
+	{ label: "About Us", url: "/about", icon: "mdi-information-outline", color:"info" },
+	{ label: "Terms & Conditions", url: "/tandc", icon: "mdi-scale-balance", color:"warning" },
+	{ label: "Themes", url: "/theme", icon: "mdi-palette", color:"secondary" },
 
 ]);
 const cruds = ref([

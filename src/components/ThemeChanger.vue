@@ -15,7 +15,7 @@
 					:selectSwitchFlag=false 
 					selectorWidth="width:10em;" 
 					class="float-right" 
-					@clickSelectorEvent="onClick" 
+					@onClickSelectorEvent="setClickSelectHandler"
 				></ThemeSelector>
 				<div class="float-right mr-4 mt-3">
 					<StatusIcons :stat="!switchFlag" />
@@ -38,7 +38,7 @@
 				:defaultItem="piniaStore.inactiveTheme" 
 				:selectSwitchFlag=true 
 				selectorWidth="width:10em;" 
-				@clickSelectorEvent="onClick"
+				@onClickSelectorEvent="setClickSelectHandler"
 				/>
 
 
@@ -59,7 +59,7 @@
 				</div>
 				<ThemeSelector selectorLabel="Left Theme" 
 					:selectorItems=themeVals defaultItem="light" :selectSwitchFlag=false electorWidth="width:10em;" 
-					@clickSelectorEvent="onClick"
+					@onClickSelectorEvent="setClickSelectHandler"
 				></ThemeSelector>
 			</v-list-item-action>
 		</v-list-item>
@@ -85,7 +85,7 @@
 				<ThemeSelector selectorLabel="Right Theme" 
 					class="pt-4"
 					:selectorItems=themeVals defaultItem="dark" :selectSwitchFlag=true selectorWidth="width:10em;" 
-					@clickSelectorEvent="onClick" 
+					@onClickSelectorEvent="setClickSelectHandler"
 				></ThemeSelector>
 		</v-list-item-action>
 		</v-list-item>
@@ -171,7 +171,7 @@ const onChangeSwitch = () => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 //						This supports the LEFT and RIGHT v-selector
 
-function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
+function setClickSelectHandler( selectorModel: string  , selectorSwitchFlag: boolean ){
 
 					info(`selectorModel - > ${selectorModel}`)
 					info2(`selectorSwitchFlag - > ${selectorSwitchFlag}`)

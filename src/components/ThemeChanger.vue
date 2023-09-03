@@ -9,8 +9,11 @@
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col cols="5">
-				<ThemeSelector selectorLabel="Left Theme" 
-					:selectorItems=themeVals :defaultItem="piniaStore.activeTheme" :selectSwitchFlag=false selectorWidth="width:10em;" 
+				<ThemeSelector selectorLabel="Left Theme"
+					:selectorItems=themeVals 
+					:defaultItem="piniaStore.activeTheme" 
+					:selectSwitchFlag=false 
+					selectorWidth="width:10em;" 
 					class="float-right" 
 					@clickSelectorEvent="onClick" 
 				></ThemeSelector>
@@ -25,11 +28,19 @@
 				></v-switch>
 			</v-col>	
 			<v-col cols="5">
-				<ThemeSelector	selectorLabel="Right Theme" 
-					class="float-left"
-					:selectorItems=themeVals :defaultItem="piniaStore.inactiveTheme" :selectSwitchFlag=true selectorWidth="width:10em;" 
-					@clickSelectorEvent="onClick"
-				></ThemeSelector>
+
+
+
+				<ThemeSelector
+				selectorLabel="Right Theme" 
+				class="float-left"
+				:selectorItems=themeVals 
+				:defaultItem="piniaStore.inactiveTheme" 
+				:selectSwitchFlag=true 
+				selectorWidth="width:10em;" 
+				@clickSelectorEvent="onClick"
+				/>
+
 
 				<div class="float-left ml-4 mt-4">
 					<StatusIcons :stat="switchFlag" />
@@ -127,7 +138,8 @@ async function submitThemes() {
 	piniaStore.inactiveTheme = custom_themeInactive.value
 	theme.global.name.value = custom_theme.value
 
-	if(BLOCKAPI("submitThemes function ")) { return }
+	//... if(BLOCKAPI("submitThemes function ")) { return }
+
 	//				This will return the user in the user pool (not updated )
 	Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 	.then(user => {
@@ -160,6 +172,10 @@ const onChangeSwitch = () => {
 //						This supports the LEFT and RIGHT v-selector
 
 function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
+
+					info(`selectorModel - > ${selectorModel}`)
+					info2(`selectorSwitchFlag - > ${selectorSwitchFlag}`)
+
 	// Update the right or left model depending on switchFlag
 	selectorSwitchFlag ? rightModel = selectorModel : leftModel = selectorModel 
 	//	Update the switch.
@@ -171,15 +187,31 @@ function onClick( selectorModel: string  , selectorSwitchFlag: boolean ){
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const loadSavedThemes = async () => {
-	enter("loadSavedThemes")
-	if(BLOCKAPI("submitThemes function ")) { return }
+	//if(BLOCKAPI("submitThemes function ")) { return }
 
 	Auth.currentAuthenticatedUser({bypassCache: true })
 	.then((user) =>  {
-		//themeIcon.value = ['dark'] ? 'mdi-weather-sunny' : 'mdi-weather-night'
+		//				Set the piniaStores (Update localStorage)
+		//				When the piniaStores are updated, the localstorage will also ge updated.
+		//				This happens because of the 'watch' on the piniaStores
+		piniaStore.activeTheme = user.attributes['custom:theme']
+		piniaStore.inactiveTheme = user.attributes['custom:theme-inactive']
+	
+		//				Set the active theme
+		theme.global.name.value = user.attributes['custom:theme']
+		
+		//				Set the left and right selectors.
+
+
+
+
+			/**		CONTINUE WORKING HERE		*/
+
+
+
+
 	})
 	.catch((reason) => {
-		//themeIcon.value = 'mdi-weather-night'
 	})
 }
 

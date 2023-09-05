@@ -88,6 +88,8 @@
 					<p>Active Theme == [ {{ theme.global.name.value }} ]</p>
 				</v-col>
 				<v-col align="left" >
+					<p>pS.AuthLight == [ {{ piniaStore.authLightTheme }} ] </p>
+					<p>pS.AuthDark == [ {{ piniaStore.authDarkTheme }} ]</p>
 				</v-col>
 			</v-row>
 		</v-app-bar>

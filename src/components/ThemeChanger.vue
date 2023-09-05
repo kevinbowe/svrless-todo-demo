@@ -1,128 +1,55 @@
 <template>
-	<v-container >
-		<v-btn class="mx-2" text="Load Saved" color="primary" _variant="text" @click="loadSavedThemes"/>
-		<v-btn class="mx-2" text="Factory Reset" color="secondary" _variant="text" @click="factoryThemeReset"/>
-		<v-btn text="Save New" class="mx-2" color="primary" _variant="text" @click="submitThemes"/>
-		<v-row><v-spacer/>
-			<v-col _cols="2">
-				<v-icon icon="mdi-weather-sunny" color="green"></v-icon>
-			</v-col>
-			<v-col cols="3">
+	<v-container __DESKTOP__>
 
-
-				<v-chip-group  v-model="leftSelection" selected-class="text-black bg-yellow">
-						<v-chip v-for="theme in themeVals"
-						style="{ theme === piniaStore.activeTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
-						@click="setLeft(theme)"> 
-							{{ theme }} 
-						</v-chip>
-				</v-chip-group>
-
-
-			</v-col>
-			<v-divider vertical/>
-			<v-col _cols="2">
-				<v-icon icon="mdi-weather-night" color="grey-lighten-2"></v-icon>
-			</v-col>
-			<v-col cols="3">
-
-		
-				<v-chip-group  v-model="rightSelection" selected-class="text-black bg-yellow">
-						<v-chip v-for="theme in themeVals"
-						style="{ theme === piniaStore.inactiveTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
-						@click="setRight(theme)"> 
-							{{ theme }} 
-						</v-chip>
-				</v-chip-group>
-
-
-			</v-col>
-			<v-spacer/>
+		<v-row class="mb-5">
+			<v-btn class="mx-2" text="Load Saved" color="primary" @click="loadSavedThemes"/>
+			<v-btn class="mx-2" text="Factory Reset" color="secondary" @click="factoryThemeReset"/>
+			<v-btn text="Save New" class="mx-2" color="primary" @click="submitThemes"/>
 		</v-row>
 	
-	</v-container>					
-	<v-container __DESKTOP__
-		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
-		<v-row no-gutters>
-			<v-spacer />
-			<v-col cols="5">
-				<!-- <ThemeSelector selectorLabel="Left Theme"
-					:selectorItems=themeVals 
-					:defaultItem="piniaStore.activeTheme" 
-					:selectSwitchFlag=false 
-					selectorWidth="width:10em;" 
-					class="float-right" 
-					@onClickSelectorEvent="setClickSelectHandler"
-				></ThemeSelector> -->
-				<!-- <ThemeSelector :themeList = "themeVals"> </ThemeSelector> -->
-				<div class="float-right mr-4 mt-3">
-					<StatusIcons :stat="!switchFlag" />
+		<v-row class="mb-5">
+
+			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme(piniaStore.activeTheme)">
+				<div class="my-n5">
+					<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+					{{ piniaStore.activeTheme }}
 				</div>
-			</v-col>
-			<v-col cols="2" align-self="center">
-				<v-switch density="compact" :flat="true" inset class="mb-4 d-flex justify-center"
-					:model-value="switchFlag"
-					@change="onChangeSwitch" 
-				></v-switch>
-			</v-col>	
-			<v-col cols="5">
-				<!-- <ThemeSelector
-				selectorLabel="Right Theme" 
-				class="float-left"
-				:selectorItems=themeVals 
-				:defaultItem="piniaStore.inactiveTheme" 
-				:selectSwitchFlag=true 
-				selectorWidth="width:10em;" 
-				@onClickSelectorEvent="setClickSelectHandler"
-				/> -->
-				<div class="float-left ml-4 mt-4">
-					<StatusIcons :stat="switchFlag" />
-				</div>
-			</v-col>
-			<v-spacer />
+			</v-btn>
+			
+			<v-chip-group class="my-n1" v-model="leftSelection" >
+				<v-chip v-for="theme in themeVals"
+				style="{ theme === piniaStore.activeTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
+				@click="setLeft(theme)"> 
+					{{ theme }} 
+				</v-chip>
+			</v-chip-group>
+
 		</v-row>
+			
+		<v-row>
+			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme(piniaStore.inactiveTheme)">
+				<div class="my-n5">
+					<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+					{{ piniaStore.inactiveTheme }}
+				</div>
+			</v-btn>
+		
+			<v-chip-group class="my-n1" v-model="rightSelection" >
+				<v-chip v-for="theme in themeVals"
+				style="{ theme === piniaStore.inactiveTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
+				@click="setRight(theme)"> 
+					{{ theme }} 
+				</v-chip>
+			</v-chip-group>
+		</v-row>
+
 	</v-container>
 
-	<v-container __MOBILE__
-		class="d-sm-none">
-		<v-list-item>
-			<v-list-item-action>
-				<div class="mr-4 mb-4" >
-					<StatusIcons :stat="!switchFlag" />
-				</div>
-				<!-- <ThemeSelector selectorLabel="Left Theme" 
-					:selectorItems=themeVals defaultItem="light" :selectSwitchFlag=false electorWidth="width:10em;" 
-					@onClickSelectorEvent="setClickSelectHandler"
-				></ThemeSelector> -->
-			</v-list-item-action>
-		</v-list-item>
-		<v-row no-gutters> 
-			<v-col class="text-right">
-				<v-icon icon="mdi-arrow-up-left-bold" size="x-large" class="pb-2" />
-			</v-col>
-			<v-col cols="2">
-				<v-switch density="compact" :flat="true" inset class="d-flex justify-center"
-					:model-value="switchFlag" 
-					@change="onChangeSwitch"
-				></v-switch>
-			</v-col>
-			<v-col class="text-left">
-				<v-icon icon="mdi-arrow-down-right-bold" size="x-large" class="mt-4" />
-			</v-col>
-		</v-row>
-		<v-list-item>
-			<v-list-item-action>
-				<div class="mr-4 mb-4">
-					<StatusIcons :stat="switchFlag" />
-				</div>
-				<!-- <ThemeSelector selectorLabel="Right Theme" 
-					class="pt-4"
-					:selectorItems=themeVals defaultItem="dark" :selectSwitchFlag=true selectorWidth="width:10em;" 
-					@onClickSelectorEvent="setClickSelectHandler"
-				></ThemeSelector> -->
-		</v-list-item-action>
-		</v-list-item>
+	<v-container __MOBILE__ class="d-sm-none">
 	</v-container>
+	
 </template>
 
 <script lang="ts">
@@ -133,11 +60,13 @@
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
-//import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
 import { Auth } from "aws-amplify";
 /* ----------------------------------------------------------------------------- */
-import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
-import { enter, enter0, enter1, bar, whitebar, greybar, log, warn, err } from "../my-util-code/MyConsoleUtil"
+import {
+	enter, enter0, enter1, bar, 
+	greybar, bluebar, whitebar, 
+	info, info1, info2 , info3, info4, info5, info6, info7 } 
+		from "../my-util-code/MyConsoleUtil"
 import { useUserPiniaStore } from "../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -151,8 +80,6 @@ const emit = defineEmits()
 // Set the default Models and Theme
 let leftModel:string = piniaStore.activeTheme
 let rightModel:string = piniaStore.inactiveTheme
-
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const leftSelection = ref('light')
@@ -171,6 +98,11 @@ const setLeft = (themeArg) => {
 					info(`aT -> ${theme.global.name.value}`)
 	theme.global.name.value = themeArg
 }
+
+const toggleTheme = (themeArg) => {
+	theme.global.name.value = themeArg
+}
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitThemes() {
@@ -270,54 +202,74 @@ const loadSavedThemes = async () => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const factoryThemeReset = async () => {
-	//if(BLOCKAPI("submitThemes function ")) { return }
+
+	/**			DEBUG CODE ONLY 				*/
+	/**		Set the active theme.
+	 * 			Expect the theme to change
+	 * 		----------------------------------------------------
+	 * 		Set the left and right chip
+	 * 			The highlighted chip will be updated.
+	 * 		----------------------------------------------------		
+	 * 		The debug App-Bar will reflect the expected results.
+	 * 		----------------------------------------------------	*/
+
+	 //				WORKS
+	 theme.global.name.value = 'dark_custom'
+
+	 piniaStore.inactiveTheme = 'dark_custom'
+	 piniaStore.activeTheme = 'light_custom'
+
+	 leftSelection.value = 'left_custom'
+	 rightSelection.value = 'dark_custom'
+
+	 //if(BLOCKAPI("submitThemes function ")) { return }
 
 	//				This will return the user in the user pool (not updated )
-	const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
+	// const user = await Auth.currentAuthenticatedUser({bypassCache: true /* false */});
 	//				This will delete the two attributes listed below.
-	await Auth.deleteUserAttributes(user, ['custom:theme', 'custom:theme-inactive']);
+	// await Auth.deleteUserAttributes(user, ['custom:theme', 'custom:theme-inactive']);
 
-	bar()
-	info(`${Object.getOwnPropertyNames(theme)}`)
-	//				This will display a theme name like 'dark_custom'
-	//				This is the name of the ACTIVE theme.
-	info1(`name.value --> ${Object.getOwnPropertyNames(theme.name)}`)
-	info1(`name.value --> ${theme.name.value}`)
- 
-	info2(`current --> ${Object.getOwnPropertyNames(theme.current)}`)
-	info2(`current.value --> ${Object.getOwnPropertyNames(theme.current.value)}`)
-	info2(`current.value['dark'] --> ${theme.current.value['dark']}`)
- 
-	info3(`current.value['colors'] --> ${Object.getOwnPropertyNames(theme.current.value['colors'])}`)
-	info3(`current.value['colors'] --> ${theme.current.value['colors']}`)
- 	
-	info4(`current.value['variables'] --> ${Object.getOwnPropertyNames(theme.current.value['variables'])}`)
-	info4(`current.value['variables'] --> ${theme.current.value['variables']}`)
- 
-	bluebar()
-	info4(`current.global --> ${Object.getOwnPropertyNames(theme.global)}`)
-	bar()				// This will display the Current Theme.
-	info5(`global['name']' PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['name'])}`)
-	info5(`global['name'].value --> ${theme.global[`name`].value}`)
-	info(``)
-	info6(`global['current']' PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['current'])}`)
-	info6(`global['current'].value --> ${theme.global[`current`].value}`)
- 	
-	info(``)
-	info7(`theme.global['current'].value  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['current'].value)}`)
-	info1(`global['current'].value['dark'] --> ${theme.global[`current`].value['dark']}`)
- 
-	info2(`theme.global['current'].value  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global[`current`].value['colors']) }`)
-	info2(`global['current'].value['colors'].primary --> ${theme.global[`current`].value['colors'].primary}`)
- 
-	info3(`theme.global['current'].value['variables']  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global[`current`].value['variables']) }`)
-	info3(`global['current'].value['variables']['theme-code'] --> ${theme.global[`current`].value['variables']['theme-code']}`)
-
-	info(`--> ${Object.getOwnPropertyNames(theme)}`)
-	info(`--> ${Object.getOwnPropertyNames(theme.themes.value)}`)
-
-	whitebar()
-	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
+// 	bar()
+// 	info(`${Object.getOwnPropertyNames(theme)}`)
+// 	//				This will display a theme name like 'dark_custom'
+// 	//				This is the name of the ACTIVE theme.
+// 	info1(`name.value --> ${Object.getOwnPropertyNames(theme.name)}`)
+// 	info1(`name.value --> ${theme.name.value}`)
+//  
+// 	info2(`current --> ${Object.getOwnPropertyNames(theme.current)}`)
+// 	info2(`current.value --> ${Object.getOwnPropertyNames(theme.current.value)}`)
+// 	info2(`current.value['dark'] --> ${theme.current.value['dark']}`)
+//  
+// 	info3(`current.value['colors'] --> ${Object.getOwnPropertyNames(theme.current.value['colors'])}`)
+// 	info3(`current.value['colors'] --> ${theme.current.value['colors']}`)
+//  	
+// 	info4(`current.value['variables'] --> ${Object.getOwnPropertyNames(theme.current.value['variables'])}`)
+// 	info4(`current.value['variables'] --> ${theme.current.value['variables']}`)
+//  
+// 	bluebar()
+// 	info4(`current.global --> ${Object.getOwnPropertyNames(theme.global)}`)
+// 	bar()				// This will display the Current Theme.
+// 	info5(`global['name']' PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['name'])}`)
+// 	info5(`global['name'].value --> ${theme.global[`name`].value}`)
+// 	info(``)
+// 	info6(`global['current']' PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['current'])}`)
+// 	info6(`global['current'].value --> ${theme.global[`current`].value}`)
+//  	
+// 	info(``)
+// 	info7(`theme.global['current'].value  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global['current'].value)}`)
+// 	info1(`global['current'].value['dark'] --> ${theme.global[`current`].value['dark']}`)
+//  
+// 	info2(`theme.global['current'].value  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global[`current`].value['colors']) }`)
+// 	info2(`global['current'].value['colors'].primary --> ${theme.global[`current`].value['colors'].primary}`)
+//  
+// 	info3(`theme.global['current'].value['variables']  PROP-NAMES --> ${Object.getOwnPropertyNames(theme.global[`current`].value['variables']) }`)
+// 	info3(`global['current'].value['variables']['theme-code'] --> ${theme.global[`current`].value['variables']['theme-code']}`)
+// 
+// 	info(`--> ${Object.getOwnPropertyNames(theme)}`)
+// 	info(`--> ${Object.getOwnPropertyNames(theme.themes.value)}`)
+// 
+// 	whitebar()
+// 	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
 
 /**
  * 				The theme labeled 'default' in vuetify.ts is not set.

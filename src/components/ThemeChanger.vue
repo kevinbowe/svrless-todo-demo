@@ -54,11 +54,7 @@
 					class="float-right" 
 					@onClickSelectorEvent="setClickSelectHandler"
 				></ThemeSelector> -->
-
 				<!-- <ThemeSelector :themeList = "themeVals"> </ThemeSelector> -->
-
-
-
 				<div class="float-right mr-4 mt-3">
 					<StatusIcons :stat="!switchFlag" />
 				</div>
@@ -70,9 +66,6 @@
 				></v-switch>
 			</v-col>	
 			<v-col cols="5">
-
-
-
 				<!-- <ThemeSelector
 				selectorLabel="Right Theme" 
 				class="float-left"
@@ -82,8 +75,6 @@
 				selectorWidth="width:10em;" 
 				@onClickSelectorEvent="setClickSelectHandler"
 				/> -->
-
-
 				<div class="float-left ml-4 mt-4">
 					<StatusIcons :stat="switchFlag" />
 				</div>

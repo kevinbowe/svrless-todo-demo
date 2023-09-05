@@ -3,20 +3,62 @@
 		<v-btn class="mx-2" text="Load Saved" color="primary" _variant="text" @click="loadSavedThemes"/>
 		<v-btn class="mx-2" text="Factory Reset" color="secondary" _variant="text" @click="factoryThemeReset"/>
 		<v-btn text="Save New" class="mx-2" color="primary" _variant="text" @click="submitThemes"/>
+		<v-row><v-spacer/>
+			<v-col _cols="2">
+				<v-icon icon="mdi-weather-sunny" color="green"></v-icon>
+			</v-col>
+			<v-col cols="3">
+
+
+				<v-chip-group  v-model="leftSelection" selected-class="text-black bg-yellow">
+						<v-chip v-for="theme in themeVals"
+						style="{ theme === piniaStore.activeTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
+						@click="setLeft(theme)"> 
+							{{ theme }} 
+						</v-chip>
+				</v-chip-group>
+
+
+			</v-col>
+			<v-divider vertical/>
+			<v-col _cols="2">
+				<v-icon icon="mdi-weather-night" color="grey-lighten-2"></v-icon>
+			</v-col>
+			<v-col cols="3">
+
+		
+				<v-chip-group  v-model="rightSelection" selected-class="text-black bg-yellow">
+						<v-chip v-for="theme in themeVals"
+						style="{ theme === piniaStore.inactiveTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
+						@click="setRight(theme)"> 
+							{{ theme }} 
+						</v-chip>
+				</v-chip-group>
+
+
+			</v-col>
+			<v-spacer/>
+		</v-row>
+	
 	</v-container>					
 	<v-container __DESKTOP__
 		class="d-none d-sm-flex" Hide-All--Then-Show-All-SM-And-Larger>
 		<v-row no-gutters>
 			<v-spacer />
 			<v-col cols="5">
-				<ThemeSelector selectorLabel="Left Theme"
+				<!-- <ThemeSelector selectorLabel="Left Theme"
 					:selectorItems=themeVals 
 					:defaultItem="piniaStore.activeTheme" 
 					:selectSwitchFlag=false 
 					selectorWidth="width:10em;" 
 					class="float-right" 
 					@onClickSelectorEvent="setClickSelectHandler"
-				></ThemeSelector>
+				></ThemeSelector> -->
+
+				<!-- <ThemeSelector :themeList = "themeVals"> </ThemeSelector> -->
+
+
+
 				<div class="float-right mr-4 mt-3">
 					<StatusIcons :stat="!switchFlag" />
 				</div>
@@ -31,7 +73,7 @@
 
 
 
-				<ThemeSelector
+				<!-- <ThemeSelector
 				selectorLabel="Right Theme" 
 				class="float-left"
 				:selectorItems=themeVals 
@@ -39,7 +81,7 @@
 				:selectSwitchFlag=true 
 				selectorWidth="width:10em;" 
 				@onClickSelectorEvent="setClickSelectHandler"
-				/>
+				/> -->
 
 
 				<div class="float-left ml-4 mt-4">
@@ -57,10 +99,10 @@
 				<div class="mr-4 mb-4" >
 					<StatusIcons :stat="!switchFlag" />
 				</div>
-				<ThemeSelector selectorLabel="Left Theme" 
+				<!-- <ThemeSelector selectorLabel="Left Theme" 
 					:selectorItems=themeVals defaultItem="light" :selectSwitchFlag=false electorWidth="width:10em;" 
 					@onClickSelectorEvent="setClickSelectHandler"
-				></ThemeSelector>
+				></ThemeSelector> -->
 			</v-list-item-action>
 		</v-list-item>
 		<v-row no-gutters> 
@@ -82,11 +124,11 @@
 				<div class="mr-4 mb-4">
 					<StatusIcons :stat="switchFlag" />
 				</div>
-				<ThemeSelector selectorLabel="Right Theme" 
+				<!-- <ThemeSelector selectorLabel="Right Theme" 
 					class="pt-4"
 					:selectorItems=themeVals defaultItem="dark" :selectSwitchFlag=true selectorWidth="width:10em;" 
 					@onClickSelectorEvent="setClickSelectHandler"
-				></ThemeSelector>
+				></ThemeSelector> -->
 		</v-list-item-action>
 		</v-list-item>
 	</v-container>
@@ -100,7 +142,7 @@
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 import StatusIcons from "./ThemeParts/StatusIcons.vue"
-import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
+//import ThemeSelector from "./ThemeParts/ThemeSelector.vue"
 import { Auth } from "aws-amplify";
 /* ----------------------------------------------------------------------------- */
 import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -111,13 +153,33 @@ import { useUserPiniaStore } from "../stores/user"
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 
 const theme = useTheme();
-const themeVals = Object.keys(theme.computedThemes.value);``
+const themeVals = Object.keys(theme.computedThemes.value);
 const switchFlag = ref(false) // false == left // Active Theme
 const emit = defineEmits()
 
 // Set the default Models and Theme
 let leftModel:string = piniaStore.activeTheme
 let rightModel:string = piniaStore.inactiveTheme
+
+
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const leftSelection = ref('light')
+const rightSelection = ref('dark')
+
+const setRight = (themeArg) => { 
+					enter(`setRight(theme) ${themeArg}`) 
+	piniaStore.inactiveTheme = themeArg
+					info(`aT -> ${theme.global.name.value}`)
+	theme.global.name.value = themeArg
+}
+
+const setLeft = (themeArg) => { 
+					enter(`setLeft(themeArg) ${themeArg}`) 
+	piniaStore.activeTheme = themeArg
+					info(`aT -> ${theme.global.name.value}`)
+	theme.global.name.value = themeArg
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitThemes() {
@@ -196,14 +258,14 @@ const loadSavedThemes = async () => {
 		//				This happens because of the 'watch' on the piniaStores
 		piniaStore.activeTheme = user.attributes['custom:theme']
 		piniaStore.inactiveTheme = user.attributes['custom:theme-inactive']
+
+		piniaStore.authLightTheme = user.attributes['custom:theme']
+		piniaStore.authDarkTheme = user.attributes['custom:theme-inactive']
 	
 		//				Set the active theme
 		theme.global.name.value = user.attributes['custom:theme']
 		
 		//				Set the left and right selectors.
-
-
-
 
 			/**		CONTINUE WORKING HERE		*/
 

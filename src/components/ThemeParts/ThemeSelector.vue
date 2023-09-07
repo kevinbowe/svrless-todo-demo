@@ -1,5 +1,5 @@
 <template>
-	<v-chip-group v-for="theme in themes">
+	<!-- <v-chip-group v-for="theme in themes">
 		<div v-if="props.id ==='left'">
 			<v-chip v-if="theme === piniaStore.authLightTheme" style="color:white;background-color: magenta;"> {{ theme }} </v-chip>
 			<v-chip v-else @click="setLeft(theme)"> {{ theme }}</v-chip>
@@ -8,7 +8,7 @@
 			<v-chip v-if="theme === piniaStore.authDarkTheme" style="color:black;background-color: yellow;"> {{ theme }} </v-chip>
 			<v-chip v-else @click="setRight(theme)"> {{ theme }}</v-chip>
 		</div>
-	</v-chip-group>
+	</v-chip-group> -->
 </template>
 
 
@@ -42,26 +42,15 @@ import { useTheme } from "vuetify";
 /* ----------------------------------------------------------------------------- */
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../../my-util-code/MyConsoleUtil"
-import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../../my-util-code/MyConsoleUtil" 
-import { pass, fail } from "../../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
 import { useUserPiniaStore } from "../../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 
-// const theme = useTheme();
-// const themeVals = Object.keys(theme.computedThemes.value);
-
 const props = defineProps({
  	themeList: Array<string|undefined>,
 	id: String
 })
-
-const themes = ref(props.themeList)
-const id = ref(props.id)
-
-const setRight = (theme) => { enter(`setRight(theme) ${theme}`) }
-const setLeft = (theme) => { enter(`setLeft(theme) ${theme}`) }
 
 </script>

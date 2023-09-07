@@ -4,14 +4,10 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home</h1>
 			<hr class="mb-10">
+	
+			<ThemeChanger></ThemeChanger>
 
-			<!-- <h1>Theme Dirty App</h1>
-			<p>theme.global.name.value -- > [ {{ theme.global.name.value }} ]</p>
-			<hr style="margin:0 20em;">
-			<p>piniaStore.activeTheme -- > [ {{ piniaStore.activeTheme }} ]</p>
-			<p>piniaStore.inactiveTheme -- > [ {{ piniaStore.inactiveTheme }} ]</p><br> -->
-			
-			<ThemeChanger/>
+			<v-spacer style="height:2em;"></v-spacer>
 			
 			<v-btn color="secondary" @click="onChangeSwitch">Toggle Theme</v-btn>
 
@@ -22,15 +18,14 @@
 			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn><br>
 			This will Sign Out User
 			
-			
-			<!-- <v-spacer style="height:1em;"></v-spacer>
+			<v-spacer style="height:1em;"></v-spacer>
 			<h1>Counter App</h1>
 			<p>(piniaStore) Count is {{ piniaStore.count }}</p>
 			<p>(piniaStore) Double count is {{ piniaStore.doubleCount }}</p>
 			
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.increment(1)">Add</v-btn>
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.decrement(1)">Subtract</v-btn>
-			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.reset">Reset</v-btn> -->
+			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.reset">Reset</v-btn>
 				
 		</MasterLayout>
 	</v-app>
@@ -46,12 +41,16 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { useTheme } from "vuetify";
 import { useUserPiniaStore } from "../stores/user"
 import  ThemeChanger from "../components/ThemeChanger.vue"
+import { Auth } from "aws-amplify";
+import { ref } from "vue";
 
 import colors from 'vuetify/lib/util/colors'
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
+// const themeVals = Object.keys(theme.computedThemes.value);
 const onChangeSwitch = () => {
 	//				Toggle the light and dark themes based on the piniaStore [ active and inactive ]
 	theme.global.name.value = piniaStore.inactiveTheme
@@ -72,7 +71,15 @@ const resetAllStores = () => {
 theme.global.name.value = piniaStore.activeTheme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/**/					const BLOCKAPIFLAG = ref(false)										 /**/
+/* 				if(BLOCKAPI("submitEmail function "))return								*/
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const BLOCKAPI = (message:string|null|undefined = null) => {
+	if(BLOCKAPIFLAG.value) 
+		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+	return BLOCKAPIFLAG.value
+}
 </script>
 
 <style>
-</style>../stores/user
+</style>

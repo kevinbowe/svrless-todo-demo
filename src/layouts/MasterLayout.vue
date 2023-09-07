@@ -88,8 +88,6 @@
 					<p>Active Theme == [ {{ theme.global.name.value }} ]</p>
 				</v-col>
 				<v-col align="left" >
-					<p>pS.AuthLight == [ {{ piniaStore.authLightTheme }} ] </p>
-					<p>pS.AuthDark == [ {{ piniaStore.authDarkTheme }} ]</p>
 				</v-col>
 			</v-row>
 		</v-app-bar>
@@ -102,8 +100,6 @@
 			<v-toolbar-title style="text-align:start"> 
 				<a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a>
 				<a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	
-				<!-- <a v-if="!mobile" href="/" class="text-decoration-none"> {{ mainTitle }} </a>
-				<a v-if="mobile" href="/" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	 -->
 				
 				<!-- Profile -->
 				<v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn>
@@ -197,7 +193,6 @@
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil" 
-
 import { pass, fail } from "../my-util-code/MyConsoleUtil"
 
 /* ----------------------------------------------------------------------------- */
@@ -261,10 +256,6 @@ const onChangeSwitch = () => {
 };
 
 /* ----------------------------------------------------------------------------- */
-// const updateEmail = (payload) => { emailModel.value = payload.email }
-const handleThemeChangerFini = (payload) => { menuThemeChanger.value = payload }
-
-/* ----------------------------------------------------------------------------- */
 //	Win Listener -- Page -- Load / Reload
 window.addEventListener("beforeunload",(event) => { /* Do something here */ }) 
 	
@@ -272,8 +263,7 @@ window.addEventListener("beforeunload",(event) => { /* Do something here */ })
 //	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
 onBeforeUnmount(() => { /* Do something here */ })
 
-/* ----------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------- */
+////////////////////////////////////////////////////////////////////////////////
 //				This executes on Page load
 
 	Auth.currentAuthenticatedUser({bypassCache: true })

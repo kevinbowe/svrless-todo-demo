@@ -52,23 +52,23 @@ const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
 // const themeVals = Object.keys(theme.computedThemes.value);
 const onChangeSwitch = () => {
-	//				Toggle the light and dark themes based on the piniaStore [ active and inactive ]
-	theme.global.name.value = piniaStore.inactiveTheme
-	piniaStore.inactiveTheme =	piniaStore.activeTheme
-	piniaStore.activeTheme = theme.global.name.value
+	//				Toggle the light and dark themes based on the piniaStore [ C and B ]
+	theme.global.name.value = piniaStore.B_Theme
+	piniaStore.B_Theme =	piniaStore.A_Theme
+	piniaStore.A_Theme = theme.global.name.value
 }
 
 /* ----------------------------------------------------------------------------- */
 const resetAllStores = () => {
 	//				Do this to cause the watch (pinia.state) to fire.
-	piniaStore.activeTheme = ""
+	piniaStore.A_Theme = ""
 	//				This will reset all piniaStore values.
 	piniaStore.resetAllStores()
-	theme.global.name.value = piniaStore.activeTheme
+	theme.global.name.value = piniaStore.A_Theme
 }
 /* ----------------------------------------------------------------------------- */
 
-theme.global.name.value = piniaStore.activeTheme
+theme.global.name.value = piniaStore.A_Theme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /**/					const BLOCKAPIFLAG = ref(false)										 /**/

@@ -24,15 +24,15 @@ watch (
 	pinia.state,
 	(pinia_state) => {
 		/**				
-		 * 				If we get here, the count or activeTheme variables in [pinia_state] have changed.
+		 * 				If we get here, the count or A_Theme variables in [pinia_state] have changed.
 		 * 				These references will return the actual value:
 		 * 					userPiniaStore.count == 4
-		 * 					userPiniaStore.activeTheme = "dark"
+		 * 					userPiniaStore.A_Theme = "dark"
 		*/
 		localStorage.setItem( "counter_KEY", JSON.stringify(pinia_state.userPiniaStore.count))
 
-		localStorage.setItem( "activeTheme_KEY", JSON.stringify(pinia_state.userPiniaStore.activeTheme))
-		localStorage.setItem( "inactiveTheme_KEY", JSON.stringify(pinia_state.userPiniaStore.inactiveTheme))
+		localStorage.setItem( "A_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.A_Theme))
+		localStorage.setItem( "B_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.B_Theme))
 
 		localStorage.setItem( "connected_KEY", JSON.stringify(pinia_state.userPiniaStore.connected))
 
@@ -41,7 +41,7 @@ watch (
 	
 		/**
 		 * 				This reference will return the whole userStore: Example
-		 * 					userPiniaStore == {"count":-1,"activeTheme":"dark_custom","connected":false}
+		 * 					userPiniaStore == {"count":-1,"A_Theme":"dark_custom","connected":false}
 		 */
 		localStorage.setItem( "userStore_KEY", JSON.stringify(pinia_state.userPiniaStore))	
 	},

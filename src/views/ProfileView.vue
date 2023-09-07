@@ -79,7 +79,7 @@ async function getSession(){
 getSession()
 /* ----------------------------------------------------------------------------- */
 
-theme.global.name.value = piniaStore.activeTheme
+theme.global.name.value = piniaStore.A_Theme
 
 </script>
 <style></style>

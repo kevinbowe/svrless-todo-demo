@@ -12,12 +12,12 @@
 	<v-col class="d-flex justify-center">
 			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
 				<div class="my-n5">
-					<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+					<v-icon size="60" color="green" v-if="piniaStore.A_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
 					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-					{{ piniaStore.inactiveTheme }}
+					{{ piniaStore.A_Theme }}
 				</div>
 			</v-btn>
-			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setInactiveTheme(theme)"> {{ theme }} </v-chip>
+			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> {{ theme }} </v-chip>
 	</v-col>
 </v-row>
 
@@ -25,47 +25,50 @@
 	<v-col class="d-flex justify-center">
 			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
 				<div class="my-n5">
-					<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+					<v-icon size="60" color="green" v-if="piniaStore.B_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
 					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-					{{ piniaStore.activeTheme }}
+					{{ piniaStore.B_Theme }}
 				</div>
 			</v-btn>
-			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setActiveTheme(theme)"> {{ theme }} </v-chip>
+			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
 	</v-col>
 </v-row>
 
 <!-- ---------------------------------------------------------------------------
 	START MOBILE 
 -------------------------------------------------------------------------------- -->
-<v-row v-if="mobile">
-	<div class="ma-3">
-		<v-btn width="16em" rounded  @click="toggleTheme">
-			<div class="my-n4">
-				<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
-				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-				{{ piniaStore.inactiveTheme }}
-			</div>
-		</v-btn>
-	</div>
-	<div class="ma-3">
-		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setInactiveTheme(theme)"> {{ theme }} </v-chip>
-	</div>
-</v-row>
 
 <v-row v-if="mobile">
 	<div class="ma-3">
 		<v-btn width="16em" rounded @click="toggleTheme">
 			<div class="my-n4">
-				<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+				<v-icon size="60" color="green" v-if="piniaStore.A_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
 				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-				{{ piniaStore.activeTheme }}
+				{{ piniaStore.A_Theme }}
 			</div>
 		</v-btn>
 	</div>
 	<div class="ma-3">
-		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setActiveTheme(theme)"> {{ theme }} </v-chip>
+		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> {{ theme }} </v-chip>
 	</div>
 </v-row>
+
+<v-row v-if="mobile">
+	<div class="ma-3">
+		<v-btn width="16em" rounded  @click="toggleTheme">
+			<div class="my-n4">
+				<v-icon size="60" color="green" v-if="piniaStore.B_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
+				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+				{{ piniaStore.B_Theme }}
+			</div>
+		</v-btn>
+	</div>
+	<div class="ma-3">
+		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
+	</div>
+</v-row>
+
+
 </template>
 
 <script setup lang="ts">
@@ -89,22 +92,22 @@ const { mobile } = useDisplay()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const toggleTheme = () => {
-	//				Toggle the light and dark themes based on the piniaStore [ active and inactive ]
-	theme.global.name.value = piniaStore.inactiveTheme
-	piniaStore.inactiveTheme =	piniaStore.activeTheme
-	piniaStore.activeTheme = theme.global.name.value
+	//				Toggle the light and dark themes based on the piniaStore [ active and B ]
+	theme.global.name.value = piniaStore.B_Theme
+	piniaStore.B_Theme =	piniaStore.A_Theme
+	piniaStore.A_Theme = theme.global.name.value
 }
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-const setInactiveTheme = (themeArg) => { 
-	piniaStore.inactiveTheme = themeArg
+const setB_Theme = (themeArg) => { 
+	piniaStore.B_Theme = themeArg
 	theme.global.name.value = themeArg
 }
 
-const setActiveTheme = (themeArg) => { 
-	piniaStore.activeTheme = themeArg
+const setA_Theme = (themeArg) => { 
+	piniaStore.A_Theme = themeArg
 	theme.global.name.value = themeArg
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -115,8 +118,8 @@ async function saveNew() {
 	await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 	.then(user => {
 		Auth.updateUserAttributes(user, {
-		'custom:theme': piniaStore.activeTheme, 
-		'custom:theme-inactive': piniaStore.inactiveTheme
+		'custom:theme': piniaStore.A_Theme, 
+		'custom:theme-inactive': piniaStore.B_Theme
 	})
 	.then(result => {
 		loadSavedThemes()
@@ -136,10 +139,10 @@ const loadSavedThemes = async () => {
 		//				Set the piniaStores (Update localStorage)
 		//				When the piniaStores are updated, the localstorage will also ge updated.
 		//				This happens because of the 'watch' on the piniaStores
-		piniaStore.activeTheme = user.attributes['custom:theme']
-		piniaStore.inactiveTheme = user.attributes['custom:theme-inactive']
+		piniaStore.A_Theme = user.attributes['custom:theme']
+		piniaStore.B_Theme = user.attributes['custom:theme-inactive']
 
-		//				Set the active theme
+		//				Set the C theme
 		theme.global.name.value = user.attributes['custom:theme']
 	})
 	.catch((reason) => {
@@ -152,8 +155,8 @@ const factoryThemeReset = async () => {
 	theme.global.name.value = 'light'
 	//				NOTE:
 	//				When piniaStore is updated the localStore will also be updated
-	piniaStore.activeTheme = 'light'
-	piniaStore.inactiveTheme = 'dark'
+	piniaStore.A_Theme = 'light'
+	piniaStore.Bheme = 'dark'
 
 	if(BLOCKAPI("submitThemes function ")) { return }
 

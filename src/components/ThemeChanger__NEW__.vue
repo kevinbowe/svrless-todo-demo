@@ -4,18 +4,18 @@
 
 		<v-row >
 			<div class="float-md-left">
-				<v-btn width="16em" _class="float-md-left" class="mr-3" rounded @click="theme.global.name.value = piniaStore.activeTheme">
+				<v-btn width="16em" _class="float-md-left" class="mr-3" rounded @click="theme.global.name.value = piniaStore.A_Theme">
 					<div class="my-n5">
-						<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+						<v-icon size="60" color="green" v-if="piniaStore.A_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
 						<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-						{{ piniaStore.activeTheme }}
+						{{ piniaStore.A_Theme }}
 					</div>
 				</v-btn>
 			</div>
 			<div>
 				<v-chip v-for="theme in themeVals"
-				style="{ theme === piniaStore.activeTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
-				@click="setActiveTheme(theme)"> 
+				style="{ theme === piniaStore.A_Theme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
+				@click="setA_Theme(theme)"> 
 					{{ theme }} 
 				</v-chip>
 			</div>
@@ -23,18 +23,18 @@
 
 		<v-row>
 			<div class="float-md-left">
-				<v-btn width="16em" class="mr-3" rounded @click="theme.global.name.value = piniaStore.inactiveTheme">
+				<v-btn width="16em" class="mr-3" rounded @click="theme.global.name.value = piniaStore.B_Theme">
 					<div class="my-n5">
-						<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+						<v-icon size="60" color="green" v-if="piniaStore.B_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
 						<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-						{{ piniaStore.inactiveTheme }}
+						{{ piniaStore.B_Theme }}
 					</div>
 				</v-btn>
 			</div>
 			<div>
 				<v-chip v-for="theme in themeVals"
-				style="{ theme === piniaStore.inactiveTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
-				@click="setInactiveTheme(theme)"> 
+				style="{ theme === piniaStore.B_Theme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
+				@click="setB_Theme(theme)"> 
 					{{ theme }} 
 				</v-chip>
 			</div>
@@ -65,18 +65,18 @@ const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);
 
 // Set the default Models and Theme
-// let leftModel:string = piniaStore.activeTheme
-// let rightModel:string = piniaStore.inactiveTheme
+// let leftModel:string = piniaStore.A_Theme
+// let rightModel:string = piniaStore.B_Theme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-const setInactiveTheme = (themeArg) => { 
-	piniaStore.inactiveTheme = themeArg
+const setB_Theme = (themeArg) => { 
+	piniaStore.B_Theme = themeArg
 	theme.global.name.value = themeArg
 }
 
-const setActiveTheme = (themeArg) => { 
-	piniaStore.activeTheme = themeArg
+const setA_Theme = (themeArg) => { 
+	piniaStore.A_Theme = themeArg
 	theme.global.name.value = themeArg
 }
 

@@ -13,7 +13,7 @@
 			<v-card-text>
 				<v-card :color="generateThemesWithAllColors()[themeIndex].colorArray[0].code" 
 					class="my-2" style="border:3px solid grey"
-					@click="updateActiveTheme(eachThemeName)"
+					@click="updateA_Theme(eachThemeName)"
 					v-for="(eachThemeName, themeIndex) in computedThemesKeysValue" :key="themeIndex"
 				>
 					<v-list-item>
@@ -87,8 +87,8 @@ const generateThemesWithAllColors = () => {
 	return themeObjs;
 };
 
-// Update ActiveTheme
-function updateActiveTheme(myTheme:string){
+// Update A_Theme
+function updateA_Theme(myTheme:string){
 	uTheme.global.name.value = myTheme;
 }
 </script>

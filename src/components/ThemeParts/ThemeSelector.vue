@@ -14,7 +14,7 @@
 
 <!-- <template>
 	<p>{{ props.id }}</p>
-	<p>{{ props.id === 'right' ? piniaStore.activeTheme : piniaStore.inactiveTheme  }}</p>
+	<p>{{ props.id === 'right' ? piniaStore.A_Theme : piniaStore.B_Theme  }}</p>
 	<v-chip-group v-for="theme in themes"> -->
 	<!-- <v-chip-group> -->
 		<!-- <v-chip class="ma-2" style="color:white;background-color: grey;">FINDME-1</v-chip> -->
@@ -22,12 +22,12 @@
 		<!-- <v-chip v-for="theme in themes"> -->
 			<!-- <v-chip>
 				<div v-if="props.id ==='left'">
-					<div v-if="theme === piniaStore.activeTheme" style="color:red;">
+					<div v-if="theme === piniaStore.A_Theme" style="color:red;">
 					{{ theme }} </div>
 					<div v-else>{{ theme }}</div>
 				</div>
 				<div v-if="props.id ==='right'">
-					<div v-if="theme === piniaStore.inactiveTheme" style="color:red;">
+					<div v-if="theme === piniaStore.B_Theme" style="color:red;">
 					{{ theme }} </div>
 					<div v-else>{{ theme }}</div>
 				</div>

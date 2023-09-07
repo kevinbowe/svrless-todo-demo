@@ -83,8 +83,8 @@
 					<p v-if="!piniaStore.connected">Signed Out</p>
 				</v-col>
 				<v-col align="left" >
-					<p>pS.Theme == [ {{ piniaStore.activeTheme }} ] </p>
-					<p>pS.Theme-inactive == [ {{ piniaStore.inactiveTheme }} ]</p>
+					<p>pS.A_Theme == [ {{ piniaStore.A_Theme }} ] </p>
+					<p>pS.B_Theme == [ {{ piniaStore.B_Theme }} ]</p>
 					<p>Active Theme == [ {{ theme.global.name.value }} ]</p>
 				</v-col>
 				<v-col align="left" >
@@ -246,13 +246,13 @@ const footerLinks = ref([
 /* ----------------------------------------------------------------------------- */
 const menuThemeChanger = ref(false);
 const theme = useTheme();
-const themeIcon = computed<string>(() => piniaStore.activeTheme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
+const themeIcon = computed<string>(() => piniaStore.A_Theme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
 /* ----------------------------------------------------------------------------- */
 const onChangeSwitch = () => {
-	//				Toggle the light and dark themes based on the piniaStore [ active and inactive ]
-	theme.global.name.value = piniaStore.inactiveTheme
-	piniaStore.inactiveTheme =	piniaStore.activeTheme
-	piniaStore.activeTheme = theme.global.name.value
+	//				Toggle the light and dark themes based on the piniaStore [ C and B ]
+	theme.global.name.value = piniaStore.B_Theme
+	piniaStore.B_Theme =	piniaStore.A_Theme
+	piniaStore.A_Theme = theme.global.name.value
 };
 
 /* ----------------------------------------------------------------------------- */

@@ -32,7 +32,7 @@ const doSomething = () => {something.value = "Results of selecting Submit Btn"}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-theme.global.name.value = piniaStore.activeTheme
+theme.global.name.value = piniaStore.A_Theme
 </script>
 
 <style></style>

@@ -11,7 +11,7 @@
 			<v-col cols="5">
 				<ThemeSelector selectorLabel="Left Theme"
 					:selectorItems=themeVals 
-					:defaultItem="piniaStore.activeTheme" 
+					:defaultItem="piniaStore.A_Theme" 
 					:selectSwitchFlag=false 
 					selectorWidth="width:10em;" 
 					class="float-right" 
@@ -35,7 +35,7 @@
 				selectorLabel="Right Theme" 
 				class="float-left"
 				:selectorItems=themeVals 
-				:defaultItem="piniaStore.inactiveTheme" 
+				:defaultItem="piniaStore.B_Theme" 
 				:selectSwitchFlag=true 
 				selectorWidth="width:10em;" 
 				@onClickSelectorEvent="setClickSelectHandler"
@@ -112,31 +112,29 @@ const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);``
-const switchFlag = ref(false) // false == left // Active Theme
+const switchFlag = ref(false) // false == left // C Theme
 const emit = defineEmits()
 
 // Set the default Models and Theme
-let leftModel:string = piniaStore.activeTheme
-let rightModel:string = piniaStore.inactiveTheme
+let leftModel:string = piniaStore.A_Theme
+let rightModel:string = piniaStore.B_Theme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitThemes() {
 	// if(BLOCKAPI("submitThemes function ")) { return }
 
-	const custom_theme = ref(leftModel)
-	const custom_themeInactive = ref(rightModel)
+	const custom_theme_B_ = ref(leftModel)
+	const custom_themeB = ref(rightModel)
 	
-	//					Which side is 'active' based on the switchFlag?
-	//						Switch left == false || Switch right == true
 	if(switchFlag.value){
-		custom_theme.value = rightModel
-		custom_themeInactive.value = leftModel
+		custom_theme_B_.value = rightModel
+		custom_themeB.value = leftModel
 	}
 
 	//					Update the active theme and piniaStores
-	piniaStore.activeTheme = custom_theme.value
-	piniaStore.inactiveTheme = custom_themeInactive.value
-	theme.global.name.value = custom_theme.value
+	piniaStore.A_Theme = custom_theme_B_.value
+	piniaStore.B_Theme = custom_themeB.value
+	theme.global.name.value = custom_theme_B_.value
 
 	//... if(BLOCKAPI("submitThemes function ")) { return }
 
@@ -144,8 +142,8 @@ async function submitThemes() {
 	Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 	.then(user => {
 		Auth.updateUserAttributes(user, {
-		'custom:theme': custom_theme.value, 
-		'custom:theme-inactive': custom_themeInactive.value
+		'custom:theme': custom_theme_B_.value, 
+		'custom:theme-inactive': custom_themeB.value
 		})
 		info2(`Signed in -- Auth updated.`)
 	}).catch(reason => {
@@ -181,7 +179,7 @@ function setClickSelectHandler( selectorModel: string  , selectorSwitchFlag: boo
 	//	Update the switch.
 	if(selectorSwitchFlag != switchFlag.value) switchFlag.value = !switchFlag.value;
 
-	// Update active theme
+	// Update C theme
 	theme.global.name.value = selectorModel;
 }
 
@@ -194,22 +192,12 @@ const loadSavedThemes = async () => {
 		//				Set the piniaStores (Update localStorage)
 		//				When the piniaStores are updated, the localstorage will also ge updated.
 		//				This happens because of the 'watch' on the piniaStores
-		piniaStore.activeTheme = user.attributes['custom:theme']
-		piniaStore.inactiveTheme = user.attributes['custom:theme-inactive']
+		piniaStore.A_Theme = user.attributes['custom:theme']
+		piniaStore.B_Theme = user.attributes['custom:theme-inactive']
 	
 		//				Set the active theme
 		theme.global.name.value = user.attributes['custom:theme']
 		
-		//				Set the left and right selectors.
-
-
-
-
-			/**		CONTINUE WORKING HERE		*/
-
-
-
-
 	})
 	.catch((reason) => {
 	})
@@ -227,7 +215,7 @@ const factoryThemeReset = async () => {
 	bar()
 	info(`${Object.getOwnPropertyNames(theme)}`)
 	//				This will display a theme name like 'dark_custom'
-	//				This is the name of the ACTIVE theme.
+	//				This is the name of the C theme.
 	info1(`name.value --> ${Object.getOwnPropertyNames(theme.name)}`)
 	info1(`name.value --> ${theme.name.value}`)
  
@@ -266,12 +254,6 @@ const factoryThemeReset = async () => {
 	whitebar()
 	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
 
-/**
- * 				The theme labeled 'default' in vuetify.ts is not set.
- */
-
-	// theme.global.name.value = 'light'
-	//	theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

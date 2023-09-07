@@ -1,59 +1,76 @@
 <template>
-	<v-container __DESKTOP__>
+<!-- ---------------------------------------------------------------------------
+	START DESKTOP 
+-------------------------------------------------------------------------------- -->
+<v-btn text="Load Saved" class="mx-2 mb-2"  color="primary" @click="loadSavedThemes"/>
+<v-btn text="Factory Reset" class="mx-2 mb-2" color="secondary" @click="factoryThemeReset"/>
+<v-btn text="Save New" class="mx-2 mb-2" color="primary" @click="saveNew"/>
 
-		<v-row class="mb-5">
-			<v-btn class="mx-2" text="Load Saved" color="primary" @click="loadSavedThemes"/>
-			<v-btn class="mx-2" text="Factory Reset" color="secondary" @click="factoryThemeReset"/>
-			<v-btn text="Save New" class="mx-2" color="primary" @click="submitThemes"/>
-		</v-row>
+<v-spacer style="height:2em;"></v-spacer>
 
-		<v-row >
-			<div class="float-md-left">
-				<v-btn width="16em" _class="float-md-left" class="mr-3" rounded @click="theme.global.name.value = piniaStore.activeTheme">
-					<div class="my-n5">
-						<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
-						<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-						{{ piniaStore.activeTheme }}
-					</div>
-				</v-btn>
+<v-row v-if="!mobile">
+	<v-col class="d-flex justify-center">
+			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
+				<div class="my-n5">
+					<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+					{{ piniaStore.inactiveTheme }}
+				</div>
+			</v-btn>
+			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setInactiveTheme(theme)"> {{ theme }} </v-chip>
+	</v-col>
+</v-row>
+
+<v-row v-if="!mobile">
+	<v-col class="d-flex justify-center">
+			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
+				<div class="my-n5">
+					<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+					{{ piniaStore.activeTheme }}
+				</div>
+			</v-btn>
+			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setActiveTheme(theme)"> {{ theme }} </v-chip>
+	</v-col>
+</v-row>
+
+<!-- ---------------------------------------------------------------------------
+	START MOBILE 
+-------------------------------------------------------------------------------- -->
+<v-row v-if="mobile">
+	<div class="ma-3">
+		<v-btn width="16em" rounded  @click="toggleTheme">
+			<div class="my-n4">
+				<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+				{{ piniaStore.inactiveTheme }}
 			</div>
-			<div>
-				<v-chip v-for="theme in themeVals"
-				style="{ theme === piniaStore.activeTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
-				@click="setActiveTheme(theme)"> 
-					{{ theme }} 
-				</v-chip>
-			</div>
-		</v-row>
+		</v-btn>
+	</div>
+	<div class="ma-3">
+		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setInactiveTheme(theme)"> {{ theme }} </v-chip>
+	</div>
+</v-row>
 
-		<v-row>
-			<div class="float-md-left">
-				<v-btn width="16em" class="mr-3" rounded @click="theme.global.name.value = piniaStore.inactiveTheme">
-					<div class="my-n5">
-						<v-icon size="60" color="green" v-if="piniaStore.inactiveTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
-						<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-						{{ piniaStore.inactiveTheme }}
-					</div>
-				</v-btn>
+<v-row v-if="mobile">
+	<div class="ma-3">
+		<v-btn width="16em" rounded @click="toggleTheme">
+			<div class="my-n4">
+				<v-icon size="60" color="green" v-if="piniaStore.activeTheme === theme.global.name.value" icon="mdi-toggle-switch"/>
+				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
+				{{ piniaStore.activeTheme }}
 			</div>
-			<v-div>
-				<v-chip v-for="theme in themeVals"
-				style="{ theme === piniaStore.inactiveTheme ? color:black;background-color: yellow; : color:black;background-color:grey;}"
-				@click="setInactiveTheme(theme)"> 
-					{{ theme }} 
-				</v-chip>
-			</v-div>
-		</v-row>
-	</v-container>
-
-	<v-container __MOBILE__ class="d-sm-none">
-	</v-container>
-	
+		</v-btn>
+	</div>
+	<div class="ma-3">
+		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setActiveTheme(theme)"> {{ theme }} </v-chip>
+	</div>
+</v-row>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useTheme } from "vuetify";
+import { useTheme, useDisplay } from "vuetify";
 import { Auth } from "aws-amplify";
 /* ----------------------------------------------------------------------------- */
 import {
@@ -68,10 +85,16 @@ const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);
+const { mobile } = useDisplay()
 
-// Set the default Models and Theme
-let leftModel:string = piniaStore.activeTheme
-let rightModel:string = piniaStore.inactiveTheme
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const toggleTheme = () => {
+	//				Toggle the light and dark themes based on the piniaStore [ active and inactive ]
+	theme.global.name.value = piniaStore.inactiveTheme
+	piniaStore.inactiveTheme =	piniaStore.activeTheme
+	piniaStore.activeTheme = theme.global.name.value
+}
+
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -84,7 +107,6 @@ const setActiveTheme = (themeArg) => {
 	piniaStore.activeTheme = themeArg
 	theme.global.name.value = themeArg
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function saveNew() {
 	//... if(BLOCKAPI("submitThemes function ")) { return }
@@ -117,8 +139,6 @@ const loadSavedThemes = async () => {
 		piniaStore.activeTheme = user.attributes['custom:theme']
 		piniaStore.inactiveTheme = user.attributes['custom:theme-inactive']
 
-		piniaStore.authLightTheme = user.attributes['custom:theme']
-		piniaStore.authDarkTheme = user.attributes['custom:theme-inactive']
 		//				Set the active theme
 		theme.global.name.value = user.attributes['custom:theme']
 	})
@@ -134,9 +154,6 @@ const factoryThemeReset = async () => {
 	//				When piniaStore is updated the localStore will also be updated
 	piniaStore.activeTheme = 'light'
 	piniaStore.inactiveTheme = 'dark'
-
-	piniaStore.authLightTheme = 'light'
-	piniaStore.authDarkTheme = 'dark'
 
 	if(BLOCKAPI("submitThemes function ")) { return }
 
@@ -195,15 +212,6 @@ const factoryThemeReset = async () => {
 // 	info(`--> ${Object.getOwnPropertyNames(theme)}`)
 // 	info(`--> ${Object.getOwnPropertyNames(theme.themes.value)}`)
 // 
-// 	whitebar()
-// 	info(`theme.current.value['dark'] > ${theme.current.value['dark']}`)
-
-/**
- * 				The theme labeled 'default' in vuetify.ts is not set.
- */
-
-	// theme.global.name.value = 'light'
-	//	theme.global.name.value = theme.current.value['dark'] ? 'dark' : 'light'
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

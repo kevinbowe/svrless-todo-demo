@@ -1,6 +1,6 @@
 <template>
 <!-- ---------------------------------------------------------------------------
-	START DESKTOP 
+	START DESKTOP -- Sync this with MOB Below.
 -------------------------------------------------------------------------------- -->
 <v-btn text="Load Saved" class="mx-2 mb-2"  color="primary" @click="loadSavedThemes"/>
 <v-btn text="Factory Reset" class="mx-2 mb-2" color="secondary" @click="factoryThemeReset"/>
@@ -33,7 +33,7 @@
 </v-row>
 
 <!-- ---------------------------------------------------------------------------
-	START MOBILE 
+	START MOBILE -- Get in Synx with DSK Above.
 -------------------------------------------------------------------------------- -->
 <v-row v-if="mobile">
 	<div class="ma-3">
@@ -71,6 +71,7 @@
 </template>
 
 <script setup lang="ts">
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 import { ref } from "vue";
 import { useTheme, useDisplay } from "vuetify";
 import { Auth } from "aws-amplify";
@@ -80,6 +81,7 @@ import {
 	greybar, bluebar, whitebar, 
 	info, info1, info2 , info3, info4, info5, info6, info7 } 
 		from "../my-util-code/MyConsoleUtil"
+
 import { useUserPiniaStore } from "../stores/user"
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -87,6 +89,7 @@ const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 
 const theme = useTheme();
 const themeVals = Object.keys(theme.computedThemes.value);
+
 const { mobile } = useDisplay()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -138,10 +141,10 @@ async function saveNew() {
 		'custom:theme': piniaStore.A_Theme, 
 		'custom:theme-inactive': piniaStore.B_Theme
 	})
-	.then(result => {
+	.then(() => {
 		loadSavedThemes()
 	})
-	.catch(reason => {
+	.catch(() => {
 					/** Not Signed in */
 		piniaStore.connected = false
 	})

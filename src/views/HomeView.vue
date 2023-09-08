@@ -9,16 +9,19 @@
 
 			<v-spacer style="height:2em;"></v-spacer>
 			
+			<!-- MOVE THIS BLOCK TO <ThemeChanger> or Account > Settings -->
 			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev LS</v-btn>
 			<v-btn color="grey-darken-2" class="ma-1" @click="resetAllStores">Reset LS</v-btn><br>
 			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn><br>
 			This will Sign Out User
 			
+			<!-- DELETE THIS BLOCK -->
 			<v-spacer style="height:1em;"></v-spacer>
 			<h1>Counter App</h1>
 			<p>(piniaStore) Count is {{ piniaStore.count }}</p>
 			<p>(piniaStore) Double count is {{ piniaStore.doubleCount }}</p>
 			
+			<!-- DELETE THIS BLOCK -->
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.increment(1)">Add</v-btn>
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.decrement(1)">Subtract</v-btn>
 			<v-btn color="blue-grey-darken-2" class="ma-1" @click="piniaStore.reset">Reset</v-btn>
@@ -48,6 +51,7 @@ const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
 
 /* ----------------------------------------------------------------------------- */
+//				This is going to move the ThemeChanger or Account > Settings
 const resetAllStores = () => {
 	//				Do this to cause the watch (pinia.state) to fire.
 	piniaStore.A_Theme = ""
@@ -55,9 +59,6 @@ const resetAllStores = () => {
 	piniaStore.resetAllStores()
 	theme.global.name.value = piniaStore.A_Theme
 }
-/* ----------------------------------------------------------------------------- */
-
-theme.global.name.value = piniaStore.A_Theme
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /**/					const BLOCKAPIFLAG = ref(false)										 /**/
@@ -65,9 +66,14 @@ theme.global.name.value = piniaStore.A_Theme
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value) 
-		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
-	return BLOCKAPIFLAG.value
+	message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
+return BLOCKAPIFLAG.value
 }
+
+/* ----------------------------------------------------------------------------- */
+
+//				Do I need this ??? -- What is this here ???
+theme.global.name.value = piniaStore.A_Theme
 </script>
 
 <style>

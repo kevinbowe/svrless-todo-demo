@@ -2,7 +2,7 @@
 	<v-layout>
 		<!-- Burger Menu -->
 		
-		<v-navigation-drawer __v-if="mobile" v-model="drawer" >
+		<v-navigation-drawer __DEV_ONLY__ __v-if="mobile" v-model="drawer" >
 		<!-- <v-navigation-drawer v-if="mobile" v-model="drawer" > -->
 
 			<v-list nav>
@@ -98,7 +98,7 @@
 		<!-- Main Menu Bar -->	
 		<v-app-bar class="my-3" color="blue-grey-darken-1">
 
-			<v-app-bar-nav-icon __v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
+			<v-app-bar-nav-icon __DEV_ONLY__ __v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
 			<!-- <v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon> -->
 		
 			<!-- Title -->
@@ -154,8 +154,12 @@
 			<!-- Sign In -->
 			<v-btn class="mx-1" text="Sign In" v-if="!piniaStore.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
 
-			<!-- Theme Switch -->
+
+
+			<!-- Theme Switch -- FIX ME -->
 			<v-icon @click=onChangeSwitch :icon="themeIcon"/>
+
+
 
 			<!-- Three Dots -->
 			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
@@ -166,7 +170,6 @@
 							<v-icon :icon="link.icon" style="padding-bottom:5px;padding-right:5px;" :color="link.color"/> 
 							{{ link.label }}
 						</v-list-item>
-
 					</v-list>
 				</v-menu>
 			</v-btn>
@@ -203,8 +206,6 @@ import { pass, fail } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
 import { useTheme } from "vuetify";
 import { onBeforeUnmount, ref, computed } from "vue";
-import ThemeChanger from "../components/ThemeChanger.vue";
-import ThemePreview from "../components/ThemePreview.vue";
 import SignOut from "../components/SignOut.vue"
 import { Auth } from 'aws-amplify';
 import { useDisplay } from "vuetify";
@@ -249,10 +250,13 @@ const footerLinks = ref([
 ]);
 
 /* ----------------------------------------------------------------------------- */
-const menuThemeChanger = ref(false);
 const theme = useTheme();
+
 const themeIcon = computed<string>(() => piniaStore.A_Theme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
 /* ----------------------------------------------------------------------------- */
+//				This is supports the Icon in the Menubar.
+//				Should be replaced with the equivelent code in ThemeChanger
+//			/*  FIX ME  */
 const onChangeSwitch = () => {
 	//				Toggle the light and dark themes based on the piniaStore [ C and B ]
 	theme.global.name.value = piniaStore.B_Theme
@@ -263,8 +267,7 @@ const onChangeSwitch = () => {
 /* ----------------------------------------------------------------------------- */
 //	Win Listener -- Page -- Load / Reload
 window.addEventListener("beforeunload",(event) => { /* Do something here */ }) 
-	
-/* ----------------------------------------------------------------------------- */
+
 //	Vue Listener -- Page Nav -- Page to Page | !<page> to Home
 onBeforeUnmount(() => { /* Do something here */ })
 

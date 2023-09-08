@@ -39,9 +39,8 @@
 	<div class="ma-3">
 		<v-btn width="16em" rounded @click="toggleTheme">
 			<div class="my-n4">
-				<v-icon size="60" color="green" v-if="piniaStore.A_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
-				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-				{{ piniaStore.A_Theme }}
+				<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
+				{{ piniaStore.A_ThemeText }}
 			</div>
 		</v-btn>
 	</div>
@@ -54,9 +53,8 @@
 	<div class="ma-3">
 		<v-btn width="16em" rounded  @click="toggleTheme">
 			<div class="my-n4">
-				<v-icon size="60" color="green" v-if="piniaStore.B_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
-				<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-				{{ piniaStore.B_Theme }}
+				<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
+				{{ piniaStore.B_ThemeText }}
 			</div>
 		</v-btn>
 	</div>

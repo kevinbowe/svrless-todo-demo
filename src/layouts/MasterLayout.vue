@@ -1,7 +1,10 @@
 <template >
 	<v-layout>
 		<!-- Burger Menu -->
-		<v-navigation-drawer v-if="mobile" v-model="drawer" >
+		
+		<v-navigation-drawer __v-if="mobile" v-model="drawer" >
+		<!-- <v-navigation-drawer v-if="mobile" v-model="drawer" > -->
+
 			<v-list nav>
 				<v-list-item class="justify-start" to="/home"> 
 					<v-icon class="mr-3">mdi-home</v-icon> Home
@@ -94,7 +97,9 @@
 
 		<!-- Main Menu Bar -->	
 		<v-app-bar class="my-3" color="blue-grey-darken-1">
-			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
+
+			<v-app-bar-nav-icon __v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
+			<!-- <v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon> -->
 		
 			<!-- Title -->
 			<v-toolbar-title style="text-align:start"> 

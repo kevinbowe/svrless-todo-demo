@@ -23,26 +23,28 @@ const app = createApp(App);
 watch (
 	pinia.state,
 	(pinia_state) => {
-		/**				
-		 * 				If we get here, the count or A_Theme variables in [pinia_state] have changed.
-		 * 				These references will return the actual value:
-		 * 					userPiniaStore.count == 4
-		 * 					userPiniaStore.A_Theme = "dark"
-		*/
+		//				If we get here one of the pinia_state variables has changed.
+		//				This will cause the localstorage to be updated based on the state data that is referenced.
+
 		localStorage.setItem( "counter_KEY", JSON.stringify(pinia_state.userPiniaStore.count))
 
 		localStorage.setItem( "A_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.A_Theme))
 		localStorage.setItem( "B_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.B_Theme))
 
+		//				Experimental Code. -- Create a Custom localstorage object
+		var allThemes = {
+			A_Theme: pinia_state.userPiniaStore.A_Theme,
+			B_Theme: pinia_state.userPiniaStore.B_Theme
+		}
+		localStorage.setItem( "All_Themes_KEY", JSON.stringify(allThemes))
+
 		localStorage.setItem( "connected_KEY", JSON.stringify(pinia_state.userPiniaStore.connected))
 
 		localStorage.setItem( "username_KEY", JSON.stringify(pinia_state.userPiniaStore.username))
 		localStorage.setItem( "preferred_username_KEY", JSON.stringify(pinia_state.userPiniaStore.preferred_username))
-	
-		/**
-		 * 				This reference will return the whole userStore: Example
-		 * 					userPiniaStore == {"count":-1,"A_Theme":"dark_custom","connected":false}
-		 */
+		
+		// 	This will return the whole userStore.
+		//		userPiniaStore == {"count":-1,"A_Theme":"dark_custom","connected":false, ...}
 		localStorage.setItem( "userStore_KEY", JSON.stringify(pinia_state.userPiniaStore))	
 	},
 	{ deep: true }

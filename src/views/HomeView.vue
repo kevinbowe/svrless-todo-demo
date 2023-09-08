@@ -9,10 +9,6 @@
 
 			<v-spacer style="height:2em;"></v-spacer>
 			
-			<v-btn color="secondary" @click="onChangeSwitch">Toggle Theme</v-btn>
-
-			<v-spacer style="height:2em;"></v-spacer>
-			
 			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev LS</v-btn>
 			<v-btn color="grey-darken-2" class="ma-1" @click="resetAllStores">Reset LS</v-btn><br>
 			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn><br>
@@ -50,13 +46,6 @@ import colors from 'vuetify/lib/util/colors'
 // const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
-// const themeVals = Object.keys(theme.computedThemes.value);
-const onChangeSwitch = () => {
-	//				Toggle the light and dark themes based on the piniaStore [ C and B ]
-	theme.global.name.value = piniaStore.B_Theme
-	piniaStore.B_Theme =	piniaStore.A_Theme
-	piniaStore.A_Theme = theme.global.name.value
-}
 
 /* ----------------------------------------------------------------------------- */
 const resetAllStores = () => {

@@ -9,12 +9,11 @@
 <v-spacer style="height:2em;"></v-spacer>
 
 <v-row v-if="!mobile">
-	<v-col class="d-flex justify-center">
+	<v-col class="d-flex justify-center"><h1>A</h1>
 			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
 				<div class="my-n5">
-					<v-icon size="60" color="green" v-if="piniaStore.A_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
-					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-					{{ piniaStore.A_Theme }}
+					<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
+					{{ piniaStore.A_ThemeText }}
 				</div>
 			</v-btn>
 			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> {{ theme }} </v-chip>
@@ -22,12 +21,11 @@
 </v-row>
 
 <v-row v-if="!mobile">
-	<v-col class="d-flex justify-center">
+	<v-col class="d-flex justify-center"><h1>B</h1>
 			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
 				<div class="my-n5">
-					<v-icon size="60" color="green" v-if="piniaStore.B_Theme === theme.global.name.value" icon="mdi-toggle-switch"/>
-					<v-icon size="60" v-else color="red" icon="mdi-toggle-switch-off"/>
-					{{ piniaStore.B_Theme }}
+					<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
+					{{ piniaStore.B_ThemeText }}
 				</div>
 			</v-btn>
 			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
@@ -37,7 +35,6 @@
 <!-- ---------------------------------------------------------------------------
 	START MOBILE 
 -------------------------------------------------------------------------------- -->
-
 <v-row v-if="mobile">
 	<div class="ma-3">
 		<v-btn width="16em" rounded @click="toggleTheme">
@@ -68,6 +65,8 @@
 	</div>
 </v-row>
 
+	<!-- <v-spacer style="height:2em;"></v-spacer> -->
+	<!-- <v-btn color="secondary" @click="toggleTheme">Toggle Theme</v-btn> -->
 
 </template>
 
@@ -92,22 +91,40 @@ const { mobile } = useDisplay()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const toggleTheme = () => {
-	//				Toggle the light and dark themes based on the piniaStore [ active and B ]
-	theme.global.name.value = piniaStore.B_Theme
-	piniaStore.B_Theme =	piniaStore.A_Theme
-	piniaStore.A_Theme = theme.global.name.value
+	//				Toggle the colors and icons -- Leave the ThemeText alone
+	piniaStore.A_ThemeColor = piniaStore.A_ThemeColor === 'green' ? 'red' : 'green'
+	piniaStore.A_ThemeIcon = piniaStore.A_ThemeIcon === 'mdi-toggle-switch' ? 'mdi-toggle-switch-off' : 'mdi-toggle-switch'
+	
+	piniaStore.B_ThemeColor = piniaStore.B_ThemeColor === 'red' ? 'green' : 'red'
+	piniaStore.B_ThemeIcon = piniaStore.B_ThemeIcon === 'mdi-toggle-switch-off' ? 'mdi-toggle-switch' : 'mdi-toggle-switch-off'
+	
+	//				Toggle the Active Theme
+	theme.global.name.value = theme.global.name.value === piniaStore.A_Theme ? piniaStore.B_Theme : piniaStore.A_Theme 
 }
 
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
 const setB_Theme = (themeArg) => { 
 	piniaStore.B_Theme = themeArg
+	piniaStore.B_ThemeIcon = "mdi-toggle-switch"
+	piniaStore.B_ThemeColor = "green"
+	
+	piniaStore.A_ThemeIcon = "mdi-toggle-switch-off"
+	piniaStore.A_ThemeColor = "red"
+
+	piniaStore.B_ThemeText = themeArg
 	theme.global.name.value = themeArg
 }
 
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setA_Theme = (themeArg) => { 
 	piniaStore.A_Theme = themeArg
+	piniaStore.A_ThemeIcon = "mdi-toggle-switch"
+	piniaStore.A_ThemeColor = "green"
+	
+	piniaStore.B_ThemeIcon = "mdi-toggle-switch-off"
+	piniaStore.B_ThemeColor = "red"
+	
+	piniaStore.A_ThemeText = themeArg
 	theme.global.name.value = themeArg
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -140,7 +157,14 @@ const loadSavedThemes = async () => {
 		//				When the piniaStores are updated, the localstorage will also ge updated.
 		//				This happens because of the 'watch' on the piniaStores
 		piniaStore.A_Theme = user.attributes['custom:theme']
+		piniaStore.A_ThemeText = user.attributes['custom:theme']
+		piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
+		piniaStore.A_ThemeColor = 'green'
+		//
 		piniaStore.B_Theme = user.attributes['custom:theme-inactive']
+		piniaStore.B_ThemeText = user.attributes['custom:theme-inactive']
+		piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
+		piniaStore.B_ThemeColor = 'red'
 
 		//				Set the C theme
 		theme.global.name.value = user.attributes['custom:theme']
@@ -156,7 +180,14 @@ const factoryThemeReset = async () => {
 	//				NOTE:
 	//				When piniaStore is updated the localStore will also be updated
 	piniaStore.A_Theme = 'light'
-	piniaStore.Bheme = 'dark'
+	piniaStore.A_ThemeText = 'light'
+	piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
+	piniaStore.A_ThemeColor = 'green'
+	//
+	piniaStore.B_Theme = 'dark'
+	piniaStore.B_ThemeText = 'dark'
+	piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
+	piniaStore.B_ThemeColor = 'red'
 
 	if(BLOCKAPI("submitThemes function ")) { return }
 
@@ -226,4 +257,17 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
 	return BLOCKAPIFLAG.value
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//				Initialize the page on reload.
+piniaStore.A_Theme = JSON.parse(localStorage.getItem("A_Theme_KEY"))
+piniaStore.A_ThemeText = JSON.parse(localStorage.getItem("A_Theme_KEY"))
+piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
+piniaStore.A_ThemeColor = 'green'
+//
+piniaStore.B_Theme =  JSON.parse(localStorage.getItem("B_Theme_KEY"))
+piniaStore.B_ThemeText =  JSON.parse(localStorage.getItem("B_Theme_KEY"))
+piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
+piniaStore.B_ThemeColor = 'red'
+
 </script>

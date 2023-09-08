@@ -8,7 +8,14 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 			count: localStorage.getItem("counter_KEY") ? JSON.parse(localStorage.getItem("counter_KEY")) : -1,
 
 			A_Theme: localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'dark_custom',
+			A_ThemeIcon: "",
+			A_ThemeColor: "",
+			A_ThemeText: "",
+
 			B_Theme: localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'light_custom',
+			B_ThemeIcon: "",
+			B_ThemeColor: "",
+			B_ThemeText: "",
 
 			connected: false,
 			username: localStorage.getItem("username_KEY") ? JSON.parse(localStorage.getItem("username_KEY")) : 'blank',

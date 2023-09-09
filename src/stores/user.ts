@@ -32,6 +32,7 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 			
 			localStorage.removeItem('A_Theme_KEY')
 			localStorage.removeItem('B_Theme_KEY')
+			localStorage.removeItem('All_Themes_KEY')
 
 			localStorage.removeItem('userStore_KEY')
 			localStorage.removeItem('connected_KEY')

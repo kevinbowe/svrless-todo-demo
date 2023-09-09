@@ -261,12 +261,14 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 //				Initialize the page on reload.
-piniaStore.A_Theme = JSON.parse(localStorage.getItem("A_Theme_KEY"))
+piniaStore.A_Theme = localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light_custom',
+
 piniaStore.A_ThemeText = JSON.parse(localStorage.getItem("A_Theme_KEY"))
 piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
 piniaStore.A_ThemeColor = 'green'
 //
-piniaStore.B_Theme =  JSON.parse(localStorage.getItem("B_Theme_KEY"))
+piniaStore.B_Theme = localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark_custom',
+
 piniaStore.B_ThemeText =  JSON.parse(localStorage.getItem("B_Theme_KEY"))
 piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
 piniaStore.B_ThemeColor = 'red'

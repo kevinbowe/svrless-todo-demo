@@ -5,6 +5,9 @@ import { defineStore as definePiniaStore} from 'pinia'
 export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 	state: () => {
 		return {
+			Active_Theme: localStorage.getItem("Active_Theme_KEY") ? JSON.parse(localStorage.getItem("Active_Theme_KEY")) : 'light',
+			Inactive_Theme: localStorage.getItem("Inactive_Theme_KEY") ? JSON.parse(localStorage.getItem("Inactive_Theme_KEY")) : 'dark',
+
 			A_Theme: localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'dark_custom',
 			A_ThemeIcon: "",
 			A_ThemeColor: "",
@@ -22,6 +25,9 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 	},
 	actions: {
 		deleteAllStores() { 		
+			localStorage.removeItem('Active_Theme_KEY')
+			localStorage.removeItem('Inactive_Theme_KEY')
+
 			localStorage.removeItem('A_Theme_KEY')
 			localStorage.removeItem('B_Theme_KEY')
 			localStorage.removeItem('All_Themes_KEY')

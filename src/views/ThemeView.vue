@@ -23,6 +23,6 @@
 	const theme = useTheme();
 
 /* ----------------------------------------------------------------------------- */
-	theme.global.name.value = piniaStore.A_Theme
+theme.global.name.value = piniaStore.Active_Theme
 
 </script>

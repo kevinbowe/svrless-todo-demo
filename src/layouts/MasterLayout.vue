@@ -91,6 +91,8 @@
 					<p>Active Theme == [ {{ theme.global.name.value }} ]</p>
 				</v-col>
 				<v-col align="left" >
+					<p>pS.Active_Theme == [ {{ piniaStore.Active_Theme }} ] </p>
+					<p>pS.Inactive_Theme == [ {{ piniaStore.Inactive_Theme }} ]</p>
 				</v-col>
 			</v-row>
 		</v-app-bar>

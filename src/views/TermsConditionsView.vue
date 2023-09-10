@@ -40,5 +40,13 @@
 </template>
 
 <script lang="ts" setup>
-	import MasterLayout from "../layouts/MasterLayout.vue";
+import MasterLayout from "../layouts/MasterLayout.vue";
+import { useUserPiniaStore } from "../stores/user"
+import { useTheme } from "vuetify";
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const theme = useTheme();
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
+
+/* ----------------------------------------------------------------------------- */
+theme.global.name.value = piniaStore.Active_Theme
 </script>

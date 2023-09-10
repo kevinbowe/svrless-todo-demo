@@ -2,9 +2,13 @@
 <!-- ---------------------------------------------------------------------------
 	START DESKTOP -- Sync this with MOB Below.
 -------------------------------------------------------------------------------- -->
-<v-btn text="Load Saved" :color="!piniaStore.connected ? 'grey' : 'primary'" :disabled="!piniaStore.connected"  class="mx-2 mb-2" @click="loadSavedThemes"/>
+<v-btn text="Load Saved" :color="!piniaStore.connected ? 'grey' : 'primary'" 
+:disabled="!piniaStore.connected"  class="mx-2 mb-2" @click="loadSavedThemes"/>
+
 <v-btn text="Factory Reset" class="mx-2 mb-2" color="secondary" @click="factoryThemeReset"/>
-<v-btn text="Save New" :color="!piniaStore.connected ? 'grey' : 'primary'" :disabled="!piniaStore.connected" class="mx-2 mb-2" @click="saveNew"/>
+
+<v-btn text="Save New" :color="!piniaStore.connected ? 'grey' : 'primary'" 
+:disabled="!piniaStore.connected" class="mx-2 mb-2" @click="saveNew"/>
 
 <v-spacer style="height:2em;"></v-spacer>
 
@@ -100,34 +104,44 @@ const toggleTheme = () => {
 	piniaStore.B_ThemeIcon = piniaStore.B_ThemeIcon === 'mdi-toggle-switch-off' ? 'mdi-toggle-switch' : 'mdi-toggle-switch-off'
 	
 	//				Toggle the Active Theme
-	theme.global.name.value = theme.global.name.value === piniaStore.A_Theme ? piniaStore.B_Theme : piniaStore.A_Theme 
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setB_Theme = (themeArg) => { 
-	piniaStore.B_Theme = themeArg
-	piniaStore.B_ThemeIcon = "mdi-toggle-switch"
-	piniaStore.B_ThemeColor = "green"
-	
-	piniaStore.A_ThemeIcon = "mdi-toggle-switch-off"
-	piniaStore.A_ThemeColor = "red"
-
-	piniaStore.B_ThemeText = themeArg
-	theme.global.name.value = themeArg
+	piniaStore.Active_Theme =  theme.global.name.value === piniaStore.A_Theme ? piniaStore.B_Theme : piniaStore.A_Theme
+	piniaStore.Inactive_Theme = theme.global.name.value !== piniaStore.A_Theme ? piniaStore.B_Theme : piniaStore.A_Theme
+	theme.global.name.value = piniaStore.Active_Theme
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setA_Theme = (themeArg) => { 
 	piniaStore.A_Theme = themeArg
+	piniaStore.A_ThemeText = themeArg
+
+	piniaStore.Active_Theme = themeArg
+	piniaStore.Inactive_Theme = piniaStore.B_Theme
+
 	piniaStore.A_ThemeIcon = "mdi-toggle-switch"
 	piniaStore.A_ThemeColor = "green"
 	
 	piniaStore.B_ThemeIcon = "mdi-toggle-switch-off"
 	piniaStore.B_ThemeColor = "red"
 	
-	piniaStore.A_ThemeText = themeArg
 	theme.global.name.value = themeArg
 }
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const setB_Theme = (themeArg) => { 
+	piniaStore.B_Theme = themeArg
+	piniaStore.B_ThemeText = themeArg
+
+	piniaStore.Active_Theme = themeArg
+	piniaStore.Inactive_Theme = piniaStore.A_Theme
+
+	piniaStore.B_ThemeIcon = "mdi-toggle-switch"
+	piniaStore.B_ThemeColor = "green"
+	
+	piniaStore.A_ThemeIcon = "mdi-toggle-switch-off"
+	piniaStore.A_ThemeColor = "red"
+
+	theme.global.name.value = themeArg
+}
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function saveNew() {
 	//... if(BLOCKAPI("submitThemes function ")) { return }
@@ -157,11 +171,13 @@ const loadSavedThemes = async () => {
 		//				Set the piniaStores (Update localStorage)
 		//				When the piniaStores are updated, the localstorage will also ge updated.
 		//				This happens because of the 'watch' on the piniaStores
+		piniaStore.Active_Theme = user.attributes['custom:theme']
 		piniaStore.A_Theme = user.attributes['custom:theme']
 		piniaStore.A_ThemeText = user.attributes['custom:theme']
 		piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
 		piniaStore.A_ThemeColor = 'green'
 		//
+		piniaStore.Inactive_Theme = user.attributes['custom:theme-inactive']
 		piniaStore.B_Theme = user.attributes['custom:theme-inactive']
 		piniaStore.B_ThemeText = user.attributes['custom:theme-inactive']
 		piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
@@ -261,13 +277,25 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 //				Initialize the page on reload.
-piniaStore.A_Theme = localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light_custom',
-piniaStore.A_ThemeText =localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light_custom'
+
+if(localStorage.getItem("Active_Theme_KEY")){
+	piniaStore.A_Theme = JSON.parse(localStorage.getItem("Active_Theme_KEY"))
+	piniaStore.A_ThemeText = JSON.parse(localStorage.getItem("Active_Theme_KEY"))
+} else {
+	piniaStore.A_Theme = localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light',
+	piniaStore.A_ThemeText =localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light'
+}
 piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
 piniaStore.A_ThemeColor = 'green'
-//
-piniaStore.B_Theme = localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark_custom',
-piniaStore.B_ThemeText =  localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark_custom'
+
+//------------------------------------------------------------------------------
+if(localStorage.getItem("Inactive_Theme_KEY")){
+	piniaStore.B_Theme = JSON.parse(localStorage.getItem("Inactive_Theme_KEY"))
+	piniaStore.B_ThemeText = JSON.parse(localStorage.getItem("Inactive_Theme_KEY"))
+} else {
+	piniaStore.B_Theme = localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark',
+	piniaStore.B_ThemeText =localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark'
+}
 piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
 piniaStore.B_ThemeColor = 'red'
 

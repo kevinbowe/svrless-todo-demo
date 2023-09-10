@@ -52,6 +52,7 @@ return BLOCKAPIFLAG.value
 
 //				Do I need this ??? -- What is this here ???
 // theme.global.name.value = piniaStore.A_Theme
+theme.global.name.value = piniaStore.Active_Theme
 </script>
 
 <style>

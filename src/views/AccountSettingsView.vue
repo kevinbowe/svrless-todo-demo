@@ -102,8 +102,8 @@ getSession().then( (result) => {
 })
 
 /* ----------------------------------------------------------------------------- */
+theme.global.name.value = piniaStore.Active_Theme
 
-theme.global.name.value = piniaStore.A_Theme
 </script>
 
 <style>

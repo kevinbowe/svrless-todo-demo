@@ -23,5 +23,13 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useTheme } from "vuetify";
+import { useUserPiniaStore } from "../stores/user"
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const fav = ref(true);
+const theme = useTheme();
+const piniaStore = useUserPiniaStore(); //initialize the piniaStore
+/* ----------------------------------------------------------------------------- */
+
+theme.global.name.value = piniaStore.Active_Theme
 </script>

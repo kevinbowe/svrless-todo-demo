@@ -32,10 +32,6 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 			localStorage.removeItem('username_KEY')
 			localStorage.removeItem('preferred_username_KEY')
 		},
-		resetAllStores() {
-			this.A_Theme = "light"
-			this.B_Theme = "dark"
-		},
 		// empties the entire storage object for that domain.
 		clearAllStores() { localStorage.clear()}
 	},

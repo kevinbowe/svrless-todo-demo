@@ -5,8 +5,6 @@ import { defineStore as definePiniaStore} from 'pinia'
 export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 	state: () => {
 		return {
-			count: localStorage.getItem("counter_KEY") ? JSON.parse(localStorage.getItem("counter_KEY")) : -1,
-
 			A_Theme: localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'dark_custom',
 			A_ThemeIcon: "",
 			A_ThemeColor: "",
@@ -23,13 +21,7 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 		}
 	},
 	actions: {
-		increment(value = 1) { this.count += value },
-		decrement(value = 1) { this.count -= value },
-		reset() { this.count = 0 },
-		deleteCounterKeyStore() { localStorage.removeItem('counter_KEY')},
-		deleteAllStores() { 
-			localStorage.removeItem('counter_KEY')
-			
+		deleteAllStores() { 		
 			localStorage.removeItem('A_Theme_KEY')
 			localStorage.removeItem('B_Theme_KEY')
 			localStorage.removeItem('All_Themes_KEY')
@@ -41,7 +33,6 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 			localStorage.removeItem('preferred_username_KEY')
 		},
 		resetAllStores() {
-			this.count = 0
 			this.A_Theme = "light"
 			this.B_Theme = "dark"
 		},
@@ -49,8 +40,6 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 		clearAllStores() { localStorage.clear()}
 	},
 	getters: { 
-		doubleCount: (state) => { return state.count * 2 },
-		squareCount: (state) => { return state.count ** 2 } 
 	}
  });
 

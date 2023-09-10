@@ -26,8 +26,6 @@ watch (
 		//				If we get here one of the pinia_state variables has changed.
 		//				This will cause the localstorage to be updated based on the state data that is referenced.
 
-		localStorage.setItem( "counter_KEY", JSON.stringify(pinia_state.userPiniaStore.count))
-
 		localStorage.setItem( "A_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.A_Theme))
 		localStorage.setItem( "B_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.B_Theme))
 

@@ -2,9 +2,9 @@
 <!-- ---------------------------------------------------------------------------
 	START DESKTOP -- Sync this with MOB Below.
 -------------------------------------------------------------------------------- -->
-<v-btn text="Load Saved" class="mx-2 mb-2"  color="primary" @click="loadSavedThemes"/>
+<v-btn text="Load Saved" :color="!piniaStore.connected ? 'grey' : 'primary'" :disabled="!piniaStore.connected"  class="mx-2 mb-2" @click="loadSavedThemes"/>
 <v-btn text="Factory Reset" class="mx-2 mb-2" color="secondary" @click="factoryThemeReset"/>
-<v-btn text="Save New" class="mx-2 mb-2" color="primary" @click="saveNew"/>
+<v-btn text="Save New" :color="!piniaStore.connected ? 'grey' : 'primary'" :disabled="!piniaStore.connected" class="mx-2 mb-2" @click="saveNew"/>
 
 <v-spacer style="height:2em;"></v-spacer>
 

@@ -79,7 +79,8 @@ async function getSession(){
 getSession()
 /* ----------------------------------------------------------------------------- */
 
-theme.global.name.value = piniaStore.A_Theme
+//				Do I need this ??? -- What is this here ???
+//theme.global.name.value = piniaStore.A_Theme
 
 </script>
 <style></style>

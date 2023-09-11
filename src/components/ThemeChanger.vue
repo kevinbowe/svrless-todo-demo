@@ -14,7 +14,7 @@
 
 <v-row v-if="!mobile">
 	<v-col class="d-flex justify-center"><h1>A</h1>
-			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
+			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme('A')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
 					{{ piniaStore.A_ThemeText }}
@@ -26,7 +26,7 @@
 
 <v-row v-if="!mobile">
 	<v-col class="d-flex justify-center"><h1>B</h1>
-			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme">
+			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
 					{{ piniaStore.B_ThemeText }}
@@ -41,7 +41,7 @@
 -------------------------------------------------------------------------------- -->
 <v-row v-if="mobile">
 	<div class="ma-3">
-		<v-btn width="16em" rounded @click="toggleTheme">
+		<v-btn width="16em" rounded @click="toggleTheme('A')">
 			<div class="my-n4">
 				<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
 				{{ piniaStore.A_ThemeText }}
@@ -55,7 +55,7 @@
 
 <v-row v-if="mobile">
 	<div class="ma-3">
-		<v-btn width="16em" rounded  @click="toggleTheme">
+		<v-btn width="16em" rounded  @click="toggleTheme('B')">
 			<div class="my-n4">
 				<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
 				{{ piniaStore.B_ThemeText }}
@@ -95,27 +95,78 @@ const themeVals = Object.keys(theme.computedThemes.value);
 const { mobile } = useDisplay()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const toggleTheme = () => {
+const toggleTheme = (ab) => {
 	//				Toggle the colors and icons -- Leave the ThemeText alone
-	piniaStore.A_ThemeColor = piniaStore.A_ThemeColor === 'green' ? 'red' : 'green'
-	piniaStore.A_ThemeIcon = piniaStore.A_ThemeIcon === 'mdi-toggle-switch' ? 'mdi-toggle-switch-off' : 'mdi-toggle-switch'
+
+	if(ab === 'A'){
+		piniaStore.A_ThemeColor = 'green'
+		piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
+
+		piniaStore.B_ThemeColor = 'red'
+		piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
+	} else {
+		piniaStore.A_ThemeColor = 'red'
+		piniaStore.A_ThemeIcon = 'mdi-toggle-switch-off'
 	
-	piniaStore.B_ThemeColor = piniaStore.B_ThemeColor === 'red' ? 'green' : 'red'
-	piniaStore.B_ThemeIcon = piniaStore.B_ThemeIcon === 'mdi-toggle-switch-off' ? 'mdi-toggle-switch' : 'mdi-toggle-switch-off'
-	
+		piniaStore.B_ThemeColor = 'green'
+		piniaStore.B_ThemeIcon = 'mdi-toggle-switch'
+	}
+
 	//				Toggle the Active Theme
-	piniaStore.Active_Theme =  theme.global.name.value === piniaStore.A_Theme ? piniaStore.B_Theme : piniaStore.A_Theme
-	piniaStore.Inactive_Theme = theme.global.name.value !== piniaStore.A_Theme ? piniaStore.B_Theme : piniaStore.A_Theme
+	if(theme.global.name.value === piniaStore.A_Theme){
+		piniaStore.Active_Theme = piniaStore.B_Theme
+		piniaStore.Inactive_Theme = piniaStore.A_Theme
+
+		piniaStore.A_Theme = piniaStore.Active_Theme
+		piniaStore.B_Theme = piniaStore.Inactive_Theme
+	}
+	else {
+		piniaStore.Active_Theme = piniaStore.A_Theme
+		piniaStore.Inactive_Theme = piniaStore.B_Theme
+
+		piniaStore.B_Theme = piniaStore.Active_Theme
+		piniaStore.A_Theme = piniaStore.Inactive_Theme
+	}
+
 	theme.global.name.value = piniaStore.Active_Theme
 }
+// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+// const toggleTheme = (ab) => {
+// 	//				Toggle the colors and icons -- Leave the ThemeText alone
+// 	piniaStore.A_ThemeColor = piniaStore.A_ThemeColor === 'green' ? 'red' : 'green'
+// 	piniaStore.A_ThemeIcon = piniaStore.A_ThemeIcon === 'mdi-toggle-switch' ? 'mdi-toggle-switch-off' : 'mdi-toggle-switch'
+// 	
+// 	piniaStore.B_ThemeColor = piniaStore.B_ThemeColor === 'red' ? 'green' : 'red'
+// 	piniaStore.B_ThemeIcon = piniaStore.B_ThemeIcon === 'mdi-toggle-switch-off' ? 'mdi-toggle-switch' : 'mdi-toggle-switch-off'
+// 	
+// 	//				Toggle the Active Theme
+// 	if(theme.global.name.value === piniaStore.A_Theme){
+// 		piniaStore.Active_Theme = piniaStore.B_Theme
+// 		piniaStore.Inactive_Theme = piniaStore.A_Theme
+// 
+// 		piniaStore.A_Theme = piniaStore.Active_Theme
+// 		piniaStore.B_Theme = piniaStore.Inactive_Theme
+// 	}
+// 	else {
+// 		piniaStore.Active_Theme = piniaStore.A_Theme
+// 		piniaStore.Inactive_Theme = piniaStore.B_Theme
+// 
+// 		piniaStore.B_Theme = piniaStore.Active_Theme
+// 		piniaStore.A_Theme = piniaStore.Inactive_Theme
+// 	}
+// 
+// 	theme.global.name.value = piniaStore.Active_Theme
+// }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setA_Theme = (themeArg) => { 
 	piniaStore.A_Theme = themeArg
 	piniaStore.A_ThemeText = themeArg
-
+	piniaStore.Inactive_Theme = piniaStore.Active_Theme
 	piniaStore.Active_Theme = themeArg
-	piniaStore.Inactive_Theme = piniaStore.B_Theme
+
+	piniaStore.A_ThemeIcon = "mdi-toggle-switch-off"
+	piniaStore.A_ThemeColor = "red"
 
 	piniaStore.A_ThemeIcon = "mdi-toggle-switch"
 	piniaStore.A_ThemeColor = "green"
@@ -127,11 +178,12 @@ const setA_Theme = (themeArg) => {
 }
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setB_Theme = (themeArg) => { 
+
 	piniaStore.B_Theme = themeArg
 	piniaStore.B_ThemeText = themeArg
 
+	piniaStore.Inactive_Theme = piniaStore.Active_Theme
 	piniaStore.Active_Theme = themeArg
-	piniaStore.Inactive_Theme = piniaStore.A_Theme
 
 	piniaStore.B_ThemeIcon = "mdi-toggle-switch"
 	piniaStore.B_ThemeColor = "green"
@@ -277,26 +329,5 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 //				Initialize the page on reload.
-
-if(localStorage.getItem("Active_Theme_KEY")){
-	piniaStore.A_Theme = JSON.parse(localStorage.getItem("Active_Theme_KEY"))
-	piniaStore.A_ThemeText = JSON.parse(localStorage.getItem("Active_Theme_KEY"))
-} else {
-	piniaStore.A_Theme = localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light',
-	piniaStore.A_ThemeText =localStorage.getItem("A_Theme_KEY") ? JSON.parse(localStorage.getItem("A_Theme_KEY")) : 'light'
-}
-piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
-piniaStore.A_ThemeColor = 'green'
-
-//------------------------------------------------------------------------------
-if(localStorage.getItem("Inactive_Theme_KEY")){
-	piniaStore.B_Theme = JSON.parse(localStorage.getItem("Inactive_Theme_KEY"))
-	piniaStore.B_ThemeText = JSON.parse(localStorage.getItem("Inactive_Theme_KEY"))
-} else {
-	piniaStore.B_Theme = localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark',
-	piniaStore.B_ThemeText =localStorage.getItem("B_Theme_KEY") ? JSON.parse(localStorage.getItem("B_Theme_KEY")) : 'dark'
-}
-piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
-piniaStore.B_ThemeColor = 'red'
 
 </script>

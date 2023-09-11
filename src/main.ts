@@ -29,7 +29,14 @@ watch (
 		localStorage.setItem( "Inactive_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.Inactive_Theme))
 
 		localStorage.setItem( "A_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.A_Theme))
+		localStorage.setItem( "A_ThemeText_KEY", JSON.stringify(pinia_state.userPiniaStore.A_ThemeText))
+		localStorage.setItem( "A_ThemeIcon_KEY", JSON.stringify(pinia_state.userPiniaStore.A_ThemeIcon))
+		localStorage.setItem( "A_ThemeColor_KEY", JSON.stringify(pinia_state.userPiniaStore.A_ThemeColor))
+		
 		localStorage.setItem( "B_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.B_Theme))
+		localStorage.setItem( "B_ThemeText_KEY", JSON.stringify(pinia_state.userPiniaStore.B_ThemeText))
+		localStorage.setItem( "B_ThemeIcon_KEY", JSON.stringify(pinia_state.userPiniaStore.B_ThemeIcon))
+		localStorage.setItem( "B_ThemeColor_KEY", JSON.stringify(pinia_state.userPiniaStore.B_ThemeColor))
 
 		localStorage.setItem( "connected_KEY", JSON.stringify(pinia_state.userPiniaStore.connected))
 		

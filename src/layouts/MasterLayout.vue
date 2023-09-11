@@ -88,7 +88,7 @@
 				<v-col align="left" >
 					<p>pS.A_Theme == [ {{ piniaStore.A_Theme }} ] </p>
 					<p>pS.B_Theme == [ {{ piniaStore.B_Theme }} ]</p>
-					<p>Active Theme == [ {{ theme.global.name.value }} ]</p>
+					<p>GLOBAL Theme == [ {{ theme.global.name.value }} ]</p>
 				</v-col>
 				<v-col align="left" >
 					<p>pS.Active_Theme == [ {{ piniaStore.Active_Theme }} ] </p>

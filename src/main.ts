@@ -40,15 +40,7 @@ watch (
 		// 	This will return the whole userStore as a single localStorage object.
 		//		EXAMPLE: userPiniaStore == {"count":-1,"A_Theme":"dark_custom","connected":false, ...}
 		localStorage.setItem( "userStore_KEY", JSON.stringify(pinia_state.userPiniaStore))	
-		
-		//------------------------------------------------------------------------
-		//		Experimental Code. -- Create a Custom localStorage object
-		var allThemes = {
-			A_Theme: pinia_state.userPiniaStore.A_Theme,
-			B_Theme: pinia_state.userPiniaStore.B_Theme
-		}
-		localStorage.setItem( "All_Themes_KEY", JSON.stringify(allThemes))
-		
+				
 		//------------------------------------------------------------------------
 
 	},

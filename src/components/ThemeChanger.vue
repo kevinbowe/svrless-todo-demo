@@ -130,33 +130,6 @@ const toggleTheme = (ab) => {
 
 	theme.global.name.value = piniaStore.Active_Theme
 }
-// /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-// const toggleTheme = (ab) => {
-// 	//				Toggle the colors and icons -- Leave the ThemeText alone
-// 	piniaStore.A_ThemeColor = piniaStore.A_ThemeColor === 'green' ? 'red' : 'green'
-// 	piniaStore.A_ThemeIcon = piniaStore.A_ThemeIcon === 'mdi-toggle-switch' ? 'mdi-toggle-switch-off' : 'mdi-toggle-switch'
-// 	
-// 	piniaStore.B_ThemeColor = piniaStore.B_ThemeColor === 'red' ? 'green' : 'red'
-// 	piniaStore.B_ThemeIcon = piniaStore.B_ThemeIcon === 'mdi-toggle-switch-off' ? 'mdi-toggle-switch' : 'mdi-toggle-switch-off'
-// 	
-// 	//				Toggle the Active Theme
-// 	if(theme.global.name.value === piniaStore.A_Theme){
-// 		piniaStore.Active_Theme = piniaStore.B_Theme
-// 		piniaStore.Inactive_Theme = piniaStore.A_Theme
-// 
-// 		piniaStore.A_Theme = piniaStore.Active_Theme
-// 		piniaStore.B_Theme = piniaStore.Inactive_Theme
-// 	}
-// 	else {
-// 		piniaStore.Active_Theme = piniaStore.A_Theme
-// 		piniaStore.Inactive_Theme = piniaStore.B_Theme
-// 
-// 		piniaStore.B_Theme = piniaStore.Active_Theme
-// 		piniaStore.A_Theme = piniaStore.Inactive_Theme
-// 	}
-// 
-// 	theme.global.name.value = piniaStore.Active_Theme
-// }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const setA_Theme = (themeArg) => { 

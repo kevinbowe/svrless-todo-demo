@@ -27,7 +27,6 @@ import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-
 import { useTheme } from "vuetify";
 import { useUserPiniaStore } from "../stores/user"
 import  ThemeChanger from "../components/ThemeChanger.vue"
-import { Auth } from "aws-amplify";
 import { ref } from "vue";
 
 import colors from 'vuetify/lib/util/colors'
@@ -36,7 +35,6 @@ import colors from 'vuetify/lib/util/colors'
 // const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /**/					const BLOCKAPIFLAG = ref(false)										 /**/
@@ -50,8 +48,6 @@ return BLOCKAPIFLAG.value
 
 /* ----------------------------------------------------------------------------- */
 
-//				Do I need this ??? -- What is this here ???
-// theme.global.name.value = piniaStore.A_Theme
 theme.global.name.value = piniaStore.Active_Theme
 </script>
 

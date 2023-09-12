@@ -153,19 +153,19 @@ export const useUserPiniaStore = definePiniaStore("userPiniaStore", {
 // 		}
 // 	},
 	actions: {
-		deleteAllStores() { 		
-			localStorage.removeItem('Active_Theme_KEY')
-			localStorage.removeItem('Inactive_Theme_KEY')
+		deleteAllDevStores() { 		
+// 			localStorage.removeItem('Active_Theme_KEY')
+// 			localStorage.removeItem('Inactive_Theme_KEY')
+// 
+// 			localStorage.removeItem('A_Theme_KEY')
+// 			localStorage.removeItem('B_Theme_KEY')
+// 			localStorage.removeItem('All_Themes_KEY')
 
-			localStorage.removeItem('A_Theme_KEY')
-			localStorage.removeItem('B_Theme_KEY')
-			localStorage.removeItem('All_Themes_KEY')
-
-			//localStorage.removeItem('userStore_KEY')
-			localStorage.removeItem('connected_KEY')
-
-			localStorage.removeItem('username_KEY')
-			localStorage.removeItem('preferred_username_KEY')
+			localStorage.removeItem('userStore_KEY')
+// 			localStorage.removeItem('connected_KEY')
+// 
+// 			localStorage.removeItem('username_KEY')
+// 			localStorage.removeItem('preferred_username_KEY')
 		},
 		// empties the entire storage object for that domain.
 		clearAllStores() { localStorage.clear()}

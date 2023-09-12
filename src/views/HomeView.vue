@@ -10,7 +10,7 @@
 			<v-spacer style="height:2em;"></v-spacer>
 			
 			<!-- MOVE THIS BLOCK TO <ThemeChanger> or Account > Settings -->
-			<p><v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllStores()">Delete Dev LS</v-btn></p>
+			<p><v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllDevStores()">Delete Dev LS</v-btn></p>
 			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn><br>
 			This will Sign Out User
 		</MasterLayout>

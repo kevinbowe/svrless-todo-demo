@@ -14,6 +14,12 @@ import awsExports from './aws-exports'
 Amplify.configure(awsExports)
 import { registerLayouts } from './layouts/register';
 
+/* ----------------------------------------------------------------------------- */
+import { info, info1, info2 , info3, info4, info5, info6, info7 } from "./my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "./my-util-code/MyConsoleUtil"
+import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "./my-util-code/MyConsoleUtil"
+/* ----------------------------------------------------------------------------- */
+
 // Pinia -- State Management
 import { createPinia } from 'pinia';
 const pinia = createPinia()
@@ -23,6 +29,12 @@ const app = createApp(App);
 watch (
 	pinia.state,
 	(pinia_state) => {
+
+// 						enter1(`WATCH - > Pinia.State`)
+// 
+// 						info (`Pinia.State - > Active_Theme - > ${pinia_state.userPiniaStore.Active_Theme}`)
+// 						info2(`Pinia.State - > Inactive_Theme - > ${pinia_state.userPiniaStore.Inactive_Theme}`)
+
 		//				If we get here one of the pinia_state variables has changed.
 		//				This will cause the localstorage to be updated based on the state data that is referenced.
 		localStorage.setItem( "Active_Theme_KEY", JSON.stringify(pinia_state.userPiniaStore.Active_Theme))

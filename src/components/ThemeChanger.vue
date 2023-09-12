@@ -248,11 +248,13 @@ const factoryThemeReset = async () => {
 	theme.global.name.value = 'light'
 	//				NOTE:
 	//				When piniaStore is updated the localStore will also be updated
+	piniaStore.Active_Theme = 'light'
 	piniaStore.A_Theme = 'light'
 	piniaStore.A_ThemeText = 'light'
 	piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
 	piniaStore.A_ThemeColor = 'green'
 	//
+	piniaStore.Inactive_Theme = 'dark'
 	piniaStore.B_Theme = 'dark'
 	piniaStore.B_ThemeText = 'dark'
 	piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'

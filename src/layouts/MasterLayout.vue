@@ -260,10 +260,9 @@ const themeIcon = computed<string>(() => piniaStore.A_Theme  == 'dark' ? 'mdi-we
 //				Should be replaced with the equivelent code in ThemeChanger
 //			/*  FIX ME  */
 const onChangeSwitch = () => {
-	//				Toggle the light and dark themes based on the piniaStore [ C and B ]
-	theme.global.name.value = piniaStore.B_Theme
-	piniaStore.B_Theme =	piniaStore.A_Theme
-	piniaStore.A_Theme = theme.global.name.value
+	theme.global.name.value = piniaStore.Inactive_Theme
+	piniaStore.Inactive_Theme = piniaStore.Active_Theme
+	piniaStore.Active_Theme = theme.global.name.value
 };
 
 /* ----------------------------------------------------------------------------- */

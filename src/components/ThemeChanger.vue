@@ -108,8 +108,10 @@ const toggleTheme = (ab) => {
 			piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
 		}
 		//				Tobble GLOBAL Theme
-		if( piniaStore.A_Theme !== theme.global.name.value ) 
+		if( piniaStore.A_Theme !== theme.global.name.value ) {
 			theme.global.name.value = piniaStore.A_Theme
+			piniaStore.Active_Theme = piniaStore.A_Theme
+		}
 		return
 	}
 
@@ -121,8 +123,10 @@ const toggleTheme = (ab) => {
 			piniaStore.A_ThemeIcon = 'mdi-toggle-switch-off'
 	}
 	//				Toggle the GLOBAL theme 
-	if( piniaStore.B_Theme !== theme.global.name.value ) 
+	if( piniaStore.B_Theme !== theme.global.name.value ) {
 			theme.global.name.value = piniaStore.B_Theme
+			piniaStore.Active_Theme = piniaStore.B_Theme
+	}
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

@@ -13,7 +13,7 @@
 <v-spacer style="height:2em;"></v-spacer>
 
 <v-row v-if="!mobile">
-	<v-col class="d-flex justify-center"><h1>A</h1>
+	<v-col class="d-flex justify-center">
 			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme('A')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
@@ -25,7 +25,7 @@
 </v-row>
 
 <v-row v-if="!mobile">
-	<v-col class="d-flex justify-center"><h1>B</h1>
+	<v-col class="d-flex justify-center">
 			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
@@ -85,6 +85,7 @@ import {
 		from "../my-util-code/MyConsoleUtil"
 
 import { useUserPiniaStore } from "../stores/user"
+// I didn't add this --> import { popScopeId } from "vue";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
@@ -96,39 +97,32 @@ const { mobile } = useDisplay()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const toggleTheme = (ab) => {
-	//				Toggle the colors and icons -- Leave the ThemeText alone
 
-	if(ab === 'A'){
-		piniaStore.A_ThemeColor = 'green'
-		piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
-
-		piniaStore.B_ThemeColor = 'red'
-		piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
-	} else {
-		piniaStore.A_ThemeColor = 'red'
-		piniaStore.A_ThemeIcon = 'mdi-toggle-switch-off'
-	
-		piniaStore.B_ThemeColor = 'green'
-		piniaStore.B_ThemeIcon = 'mdi-toggle-switch'
+	if(ab==='A')
+	{
+		//				Toggle Icon and Color
+		if( piniaStore.A_ThemeColor==='red' ) {
+			piniaStore.A_ThemeColor = 'green'
+			piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
+			piniaStore.B_ThemeColor = 'red'
+			piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
+		}
+		//				Tobble GLOBAL Theme
+		if( piniaStore.A_Theme !== theme.global.name.value ) 
+			theme.global.name.value = piniaStore.A_Theme
+		return
 	}
 
-	//				Toggle the Active Theme
-	if(theme.global.name.value === piniaStore.A_Theme){
-		piniaStore.Active_Theme = piniaStore.B_Theme
-		piniaStore.Inactive_Theme = piniaStore.A_Theme
-
-		piniaStore.A_Theme = piniaStore.Active_Theme
-		piniaStore.B_Theme = piniaStore.Inactive_Theme
+	//				Toggle Icons and Color
+	if( piniaStore.A_ThemeColor==='green') {
+			piniaStore.B_ThemeColor = 'green'
+			piniaStore.B_ThemeIcon = 'mdi-toggle-switch'
+			piniaStore.A_ThemeColor = 'red'
+			piniaStore.A_ThemeIcon = 'mdi-toggle-switch-off'
 	}
-	else {
-		piniaStore.Active_Theme = piniaStore.A_Theme
-		piniaStore.Inactive_Theme = piniaStore.B_Theme
-
-		piniaStore.B_Theme = piniaStore.Active_Theme
-		piniaStore.A_Theme = piniaStore.Inactive_Theme
-	}
-
-	theme.global.name.value = piniaStore.Active_Theme
+	//				Toggle the GLOBAL theme 
+	if( piniaStore.B_Theme !== theme.global.name.value ) 
+			theme.global.name.value = piniaStore.B_Theme
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

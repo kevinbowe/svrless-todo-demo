@@ -111,6 +111,7 @@ const toggleTheme = (ab) => {
 		if( piniaStore.A_Theme !== theme.global.name.value ) {
 			theme.global.name.value = piniaStore.A_Theme
 			piniaStore.Active_Theme = piniaStore.A_Theme
+			piniaStore.Inactive_Theme = piniaStore.B_Theme
 		}
 		return
 	}
@@ -126,6 +127,7 @@ const toggleTheme = (ab) => {
 	if( piniaStore.B_Theme !== theme.global.name.value ) {
 			theme.global.name.value = piniaStore.B_Theme
 			piniaStore.Active_Theme = piniaStore.B_Theme
+			piniaStore.Inactive_Theme = piniaStore.A_Theme
 	}
 }
 

@@ -179,17 +179,36 @@
 			<slot></slot>
 		</v-main>
 		<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
+
+		<!-- PopUp Message Dialog -- Modal -->
+		<div v-if="showThemeChangerDialog" >
+			<v-dialog activator="parent" v-model="showThemeChangerDialog" persistent >
+
+				<v-card color="background_alt" border="lg" class="ma-auto pa-2" _height="10em" _width="20em" elevation="24">
+					<v-card-text> 
+						<v-row><v-spacer/>
+							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
+							class="mb-n10" icon="$close" size="large" variant="text" @click="showThemeChangerDialog=false"/>
+						</v-row>
+						<ThemeChanger></ThemeChanger>
+					</v-card-text>
+				</v-card>
+			</v-dialog>
+		</div>
 		
 		<!-- Footer -->
 		<v-footer app color="primary" >
 			<v-row justify="center" no-gutters>
-				<v-btn :to="link.url" color="white" variant="text" rounded="xl" 
-				v-for="link in footerLinks" :key="link.label" class="mx-2">
-					{{ link.label }}
-				</v-btn>
+				<v-btn :text="link.label" :to="link.url" color="white" variant="text" rounded="xl" 
+				v-for="link in footerLinks" :key="link.label" class="mx-2"/>
+
 				<v-col cols="12" class="text-center mt-4"> 
-					<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}
+					<v-btn color="white" variant="text" rounded="xl" @click="showThemeChangerDialog = true">
+						<v-icon icon="mdi-palette" style="padding-bottom:5px;padding-right:5px;" color="secondary"/> 
+						Theme Changer
+					</v-btn>
 				</v-col>
+				<v-col cols="12" class="text-center mt-4"> <strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}	</v-col>
 			</v-row>
 		</v-footer>
 	</v-layout>
@@ -208,6 +227,7 @@ import SignOut from "../components/SignOut.vue"
 import { Auth } from 'aws-amplify';
 import { useDisplay } from "vuetify";
 import { useUserPiniaStore } from '../stores/user'
+import ThemeChanger from '../components/ThemeChanger.vue'
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
 const mainTitle: string = "v3a-theme-pinia-v2"
@@ -248,8 +268,9 @@ const footerLinks = ref([
 ]);
 
 /* ----------------------------------------------------------------------------- */
-const theme = useTheme();
+const showThemeChangerDialog = ref(false)
 
+const theme = useTheme();
 const themeIcon = computed<string>(() => piniaStore.A_Theme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
 /* ----------------------------------------------------------------------------- */
 //				This is supports the Icon in the App-Bar.

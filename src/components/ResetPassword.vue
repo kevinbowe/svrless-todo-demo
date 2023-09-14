@@ -1,3 +1,8 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(false)
+	export default {inheritAttrs: false}
+</script>
+
 <template>
 <v-row justify="center">
 	<v-dialog __Step_1__ 
@@ -109,10 +114,6 @@
 </template>
 
 <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
-<script lang="ts">
-	export default {inheritAttrs: false}
-</script>
-
 <script setup lang="ts">
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -192,7 +193,6 @@ const exit = () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

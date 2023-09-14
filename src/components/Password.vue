@@ -1,3 +1,8 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(false)
+	export default {inheritAttrs: false}
+</script>
+
 <template>
 	<div class="ma-3">
 
@@ -79,10 +84,6 @@
 
 </template>
 
-<script lang="ts">
-	export default {inheritAttrs: false}
-</script>
-
 <script setup lang="ts">
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 				/*  */
@@ -141,11 +142,7 @@ async function submitPassword (event) {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/*																											*/
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
-/*																											*/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
-/*																											*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value) 

@@ -1,3 +1,8 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(true)
+	export default {inheritAttrs: false}
+</script>
+
 <template>
 	<div class="ma-3">
 	<!-- Access Delete User -->
@@ -93,10 +98,6 @@
 		</v-sheet>
 	</v-overlay>
 </template>
-
-<script lang="ts">
-	export default {inheritAttrs: false}
-</script>
 
 <script setup lang="ts">
 import { err, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
@@ -197,7 +198,6 @@ const buildDeleteConfirmationMessage = (email:string) => {
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(true)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

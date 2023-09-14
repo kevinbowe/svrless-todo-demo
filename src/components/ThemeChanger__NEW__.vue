@@ -1,3 +1,7 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(false)
+</script>
+
 <template>
 	<!-- <v-container __DESKTOP__> -->
 
@@ -82,7 +86,6 @@ const setA_Theme = (themeArg) => {
 
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

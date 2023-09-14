@@ -1,3 +1,8 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(false)
+</script>
+
+
 <template>
 <!-- ---------------------------------------------------------------------------
 	START DESKTOP -- Sync this with MOB Below.
@@ -293,7 +298,6 @@ const factoryThemeReset = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

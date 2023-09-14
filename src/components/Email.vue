@@ -1,3 +1,8 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(false)
+	export default {inheritAttrs: false}
+</script>
+
 <template>
 <div class="ma-3">
 
@@ -90,10 +95,6 @@
 	</v-card>
 </v-dialog>
 </template>
-
-<script lang="ts">
-	export default {inheritAttrs: false}
-</script>
 
 <script setup lang="ts">
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -216,18 +217,13 @@ const buildEmailConfirmationMessage = (email:string) => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/*																											*/
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
-/*																											*/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
-/*																											*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value) 
 		message ? info7(`${message} -- BLOCKED`) : info7("-- BLOCKED -- ")
 	return BLOCKAPIFLAG.value
 }
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 </script>
 

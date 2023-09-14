@@ -1,4 +1,10 @@
 <!-- src/views/HomeView.vue -->
+
+<script lang="ts">
+	const showDev = ref(true)
+	const BLOCKAPIFLAG = ref(false)
+</script>
+
 <template>
 	<v-app>
 		<MasterLayout>
@@ -8,11 +14,19 @@
 			<ThemeChanger></ThemeChanger>
 
 			<v-spacer style="height:2em;"></v-spacer>
-			
-			<!-- MOVE THIS BLOCK TO <ThemeChanger> or Account > Settings -->
-			<p><v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllDevStores()">Delete Dev LS</v-btn></p>
-			<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn><br>
-			This will Sign Out User
+
+			<v-row v-if="showDev">
+				<v-spacer/>
+				<v-col cols="2">
+					<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllDevStores()">Delete Dev LS</v-btn>
+				</v-col>
+				<v-col cols="3">
+					<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn>
+					This will Sign Out User
+				</v-col>
+				<v-spacer/>
+			</v-row>
+
 		</MasterLayout>
 	</v-app>
 </template>
@@ -36,8 +50,8 @@ import colors from 'vuetify/lib/util/colors'
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
 
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(false)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

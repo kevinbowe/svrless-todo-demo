@@ -1,3 +1,8 @@
+<script lang="ts">
+	const BLOCKAPIFLAG = ref(true)
+	export default {inheritAttrs: false}
+</script>
+
 <template>
 	<v-container >
 		<v-btn class="mx-2" text="Load Saved" color="primary" _variant="text" @click="loadSavedThemes"/>
@@ -91,10 +96,6 @@
 		</v-list-item>
 	</v-container>
 </template>
-
-<script lang="ts">
-	export default {inheritAttrs: false}
-</script>
 
 <script setup lang="ts">
 import { ref } from "vue";
@@ -257,7 +258,6 @@ const factoryThemeReset = async () => {
 }
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/**/					const BLOCKAPIFLAG = ref(true)										 /**/
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {

@@ -1,8 +1,25 @@
+<script lang="ts">
+	const showDev = ref(true)
+</script>
+
 <template>
 	<v-app>
 		<MasterLayout>
 			<h1 class="text-primary">Account Settings</h1>
 			<hr class="mb-10">
+
+			<v-row v-if="showDev">
+				<v-spacer/>
+				<v-col cols="2">
+					<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.deleteAllDevStores()">Delete Dev LS</v-btn>
+				</v-col>
+				<v-col cols="3">
+					<v-btn color="grey-darken-2" class="ma-1" @click="piniaStore.clearAllStores()">Delete ( Dev & Auth ) LS</v-btn>
+					This will Sign Out User
+				</v-col>
+				<v-spacer/>
+			</v-row>
+
 
 			<!-- Delete User -->
 			<DeleteUser :username="usernameModel" :email="emailModel" />

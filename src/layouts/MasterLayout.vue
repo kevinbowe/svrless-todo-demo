@@ -1,9 +1,8 @@
 <template >
 	<v-layout>
 		<!-- Burger Menu -->
-		
 		<!-- <v-navigation-drawer __DEV_ONLY__ __v-if="mobile" v-model="drawer" > -->
-		<v-navigation-drawer v-if="mobile" v-model="drawer" >
+		<v-navigation-drawer v-if="mobile" temporary v-model="drawerLeft" >
 
 			<v-list nav>
 				<v-list-item class="justify-start" to="/home"> 
@@ -73,6 +72,24 @@
 			</v-list>
 		</v-navigation-drawer>
 
+		<v-navigation-drawer v-model="drawerRight" _width="10em" temporary location="right">
+			<v-list nav>
+				<v-list-item class="justify-start"
+				:to="link.url" 
+				v-for="link in threeDots" 
+				:key="link.label" 
+				:value="link.label">
+					<v-icon 
+					:icon="link.icon" 
+					style="padding-bottom:5px;padding-right:5px;" 
+					:color="link.color"/> 
+
+					{{ link.label }}
+
+				</v-list-item>
+			</v-list>
+		</v-navigation-drawer>
+
 		<!-- Debugging Menu Bar DEV ONLY -->
 		<v-app-bar color="primary" style="height:75px;padding-top: 5px;" _density="compact" >
 			<v-row no-gutters class="ma-5">
@@ -101,8 +118,8 @@
 		<v-app-bar class="my-3" color="blue-grey-darken-1">
 
 			<!-- <v-app-bar-nav-icon __DEV_ONLY__ __v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon> -->
-			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon>
-		
+			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawerLeft=!drawerLeft"/>
+
 			<!-- Title -->
 			<v-toolbar-title style="text-align:start"> 
 				<a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a>
@@ -160,16 +177,8 @@
 			<v-icon @click=toggleTheme :icon="themeIcon"/>
 
 			<!-- Three Dots -->
-			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
-				<v-icon icon="mdi-dots-vertical" size="x-large"/>
-				<v-menu activator="parent">
-					<v-list>
-						<v-list-item :to="link.url" v-for="link in threeDots" :key="link.label" :value="link.label">
-							<v-icon :icon="link.icon" style="padding-bottom:5px;padding-right:5px;" :color="link.color"/> 
-							{{ link.label }}
-						</v-list-item>
-					</v-list>
-				</v-menu>
+			<v-btn icon @click.stop="drawerRight=!drawerRight">
+				<v-icon icon="mdi-dots-vertical"/> 
 			</v-btn>
 
 		</v-app-bar>
@@ -235,7 +244,8 @@ const mainTitle: string = "v3a-theme-pinia-v2"
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore()
-const drawer = ref(false)
+const drawerLeft = ref(false)
+const drawerRight = ref(false)
 const experiment = ref([
 	{title:'Dev 1', icon:'mdi-hammer-screwdriver', url:'/dev1'},
 	{title:'Dev 2', icon:'mdi-hammer-screwdriver', url:'/dev2'},

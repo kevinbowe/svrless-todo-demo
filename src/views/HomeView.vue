@@ -1,7 +1,7 @@
 <!-- src/views/HomeView.vue -->
 
 <script lang="ts">
-	const showDev = ref(true)
+	const showDev = ref(false)
 	const BLOCKAPIFLAG = ref(false)
 </script>
 
@@ -11,7 +11,7 @@
 			<h1 class="text-primary">Home</h1>
 			<hr class="mb-10">
 	
-			<ThemeChanger></ThemeChanger>
+			<!-- <ThemeChanger></ThemeChanger> -->
 
 			<v-spacer style="height:2em;"></v-spacer>
 

@@ -156,12 +156,8 @@
 			<!-- Sign In -->
 			<v-btn class="mx-1" text="Sign In" v-if="!piniaStore.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
 
-
-
-			<!-- Theme Switch -- FIX ME -->
-			<v-icon @click=onChangeSwitch :icon="themeIcon"/>
-
-
+			<!-- Theme Switch -->
+			<v-icon @click=toggleTheme :icon="themeIcon"/>
 
 			<!-- Three Dots -->
 			<v-btn style="min-width:2px; max-width: 2px;" class="mx-2">
@@ -256,13 +252,22 @@ const theme = useTheme();
 
 const themeIcon = computed<string>(() => piniaStore.A_Theme  == 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night')
 /* ----------------------------------------------------------------------------- */
-//				This is supports the Icon in the Menubar.
-//				Should be replaced with the equivelent code in ThemeChanger
-//			/*  FIX ME  */
-const onChangeSwitch = () => {
+//				This is supports the Icon in the App-Bar.
+const toggleTheme = () => {
 	theme.global.name.value = piniaStore.Inactive_Theme
 	piniaStore.Inactive_Theme = piniaStore.Active_Theme
 	piniaStore.Active_Theme = theme.global.name.value
+
+	//			Update the A|B Themes and related buttons.
+	piniaStore.A_Theme = piniaStore.Active_Theme
+	piniaStore.A_ThemeText = piniaStore.Active_Theme
+	piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
+	piniaStore.A_ThemeColor = 'green'
+	//
+	piniaStore.B_Theme =piniaStore.Inactive_Theme
+	piniaStore.B_ThemeText = piniaStore.Inactive_Theme
+	piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
+	piniaStore.B_ThemeColor = 'red'
 };
 
 /* ----------------------------------------------------------------------------- */

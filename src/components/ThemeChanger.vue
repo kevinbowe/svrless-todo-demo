@@ -14,7 +14,7 @@
 
 <v-row v-if="!mobile">
 	<v-col class="d-flex justify-center">
-			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme('A')">
+			<h1 class="mr-3">A</h1><v-btn width="16em" class="mr-3" rounded @click="toggleTheme('A')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
 					{{ piniaStore.A_ThemeText }}
@@ -26,7 +26,7 @@
 
 <v-row v-if="!mobile">
 	<v-col class="d-flex justify-center">
-			<v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
+			<h1 class="mr-3">B </h1><v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
 					{{ piniaStore.B_ThemeText }}
@@ -303,6 +303,16 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//				Initialize the page on reload.
+//				Initialize COMPONENT on reload.
+
+piniaStore.A_Theme = piniaStore.Active_Theme
+piniaStore.A_ThemeText = piniaStore.Active_Theme
+piniaStore.A_ThemeIcon = "mdi-toggle-switch"
+piniaStore.A_ThemeColor = "green"
+
+piniaStore.B_Theme =  piniaStore.Inactive_Theme
+piniaStore.B_ThemeText =  piniaStore.Inactive_Theme
+piniaStore.B_ThemeIcon = "mdi-toggle-switch-off"
+piniaStore.B_ThemeColor = "red"
 
 </script>

@@ -25,19 +25,23 @@
 					{{ piniaStore.A_ThemeText }}
 				</div>
 			</v-btn>
-			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> {{ theme }} </v-chip>
+			<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> 
+				{{ theme }} 
+			</v-chip>
 	</v-col>
 </v-row>
 
 <v-row v-if="!mobile">
 	<v-col class="d-flex justify-center">
-			<h1 class="mr-3">B </h1><v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
+			<h1 class="mr-3">B</h1><v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
 				<div class="my-n5">
 					<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
 					{{ piniaStore.B_ThemeText }}
 				</div>
 			</v-btn>
-			<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
+			<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> 
+				{{ theme }} 
+			</v-chip>
 	</v-col>
 </v-row>
 
@@ -46,29 +50,33 @@
 -------------------------------------------------------------------------------- -->
 <v-row v-if="mobile">
 	<div class="ma-3">
-		<v-btn width="16em" rounded @click="toggleTheme('A')">
-			<div class="my-n4">
+		<h1 class="mr-3">A</h1><v-btn width="16em" rounded class="mr-3" @click="toggleTheme('A')">
+			<!-- <div class="my-n4"> -->
+			<div class="my-n5">
 				<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
 				{{ piniaStore.A_ThemeText }}
 			</div>
 		</v-btn>
 	</div>
 	<div class="ma-3">
-		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> {{ theme }} </v-chip>
+		<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> 
+			{{ theme }} 
+		</v-chip>
 	</div>
 </v-row>
 
 <v-row v-if="mobile">
 	<div class="ma-3">
-		<v-btn width="16em" rounded  @click="toggleTheme('B')">
-			<div class="my-n4">
+		<h1 class="mr-3">B</h1><v-btn width="16em" rounded  class="mr-3" @click="toggleTheme('B')">
+			<!-- <div class="my-n4"> -->
+			<div class="my-n5">
 				<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
 				{{ piniaStore.B_ThemeText }}
 			</div>
 		</v-btn>
 	</div>
 	<div class="ma-3">
-		<v-chip v-for="theme in themeVals" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
+		<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
 	</div>
 </v-row>
 
@@ -96,7 +104,7 @@ import { useUserPiniaStore } from "../stores/user"
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 
 const theme = useTheme();
-const themeVals = Object.keys(theme.computedThemes.value);
+const themes = Object.keys(theme.computedThemes.value);
 
 const { mobile } = useDisplay()
 

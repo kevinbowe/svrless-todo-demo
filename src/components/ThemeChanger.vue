@@ -2,86 +2,42 @@
 	const BLOCKAPIFLAG = ref(false)
 </script>
 
-
 <template>
-<!-- ---------------------------------------------------------------------------
-	START DESKTOP -- Sync this with MOB Below.
--------------------------------------------------------------------------------- -->
-<v-btn text="Load Saved" :color="!piniaStore.connected ? 'grey' : 'primary'" 
-:disabled="!piniaStore.connected"  class="mx-2 mb-2" @click="loadSavedThemes"/>
+	<v-btn text="Load Saved" :color="!piniaStore.connected ? 'grey' : 'primary'" 
+	:disabled="!piniaStore.connected"  class="mx-2 mb-2" @click="loadSavedThemes"/>
 
-<v-btn text="Factory Reset" class="mx-2 mb-2" color="secondary" @click="factoryThemeReset"/>
+	<v-btn text="Factory Reset" class="mx-2 mb-2" color="secondary" @click="factoryThemeReset"/>
 
-<v-btn text="Save New" :color="!piniaStore.connected ? 'grey' : 'primary'" 
-:disabled="!piniaStore.connected" class="mx-2 mb-2" @click="saveNew"/>
+	<v-btn text="Save New" :color="!piniaStore.connected ? 'grey' : 'primary'" 
+	:disabled="!piniaStore.connected" class="mx-2 mb-2" @click="saveNew"/>
 
-<v-spacer style="height:2em;"></v-spacer>
+	<v-spacer style="height:2em;"></v-spacer>
 
-<v-row v-if="!mobile">
-	<v-col class="d-flex justify-center">
-			<h1 class="mr-3">A</h1><v-btn width="16em" class="mr-3" rounded @click="toggleTheme('A')">
-				<div class="my-n5">
-					<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
-					{{ piniaStore.A_ThemeText }}
-				</div>
-			</v-btn>
-			<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> 
-				{{ theme }} 
-			</v-chip>
-	</v-col>
-</v-row>
+	<!-- ------------------------------------------------------------------------ -->
+	<v-row v-if="mobile">
+		<div class="ma-3"> <ThemeChangerBtn id="A" /> </div> 
+		<div class="ma-3"> <ThemeChangerChip id="A" /> </div>
 
-<v-row v-if="!mobile">
-	<v-col class="d-flex justify-center">
-			<h1 class="mr-3">B</h1><v-btn width="16em" class="mr-3" rounded @click="toggleTheme('B')">
-				<div class="my-n5">
-					<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
-					{{ piniaStore.B_ThemeText }}
-				</div>
-			</v-btn>
-			<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> 
-				{{ theme }} 
-			</v-chip>
-	</v-col>
-</v-row>
+		<div class="ma-3"> <ThemeChangerBtn id="B" /> </div>
+		<div class="ma-3"> <ThemeChangerChip id="B" /> </div>
+	</v-row>
 
-<!-- ---------------------------------------------------------------------------
-	START MOBILE -- Get in Synx with DSK Above.
--------------------------------------------------------------------------------- -->
-<v-row v-if="mobile">
-	<div class="ma-3">
-		<h1 class="mr-3">A</h1><v-btn width="16em" rounded class="mr-3" @click="toggleTheme('A')">
-			<!-- <div class="my-n4"> -->
-			<div class="my-n5">
-				<v-icon size="60" :color="piniaStore.A_ThemeColor" :icon="piniaStore.A_ThemeIcon"/>
-				{{ piniaStore.A_ThemeText }}
-			</div>
-		</v-btn>
+	<!-- ------------------------------------------------------------------------ -->
+	<div v-else>
+		<v-row >
+			<v-col class="d-flex justify-center">
+				<ThemeChangerBtn id="A" />
+				<ThemeChangerChip id="A" />
+			</v-col>
+		</v-row>
+
+		<v-row>
+			<v-col class="d-flex justify-center">
+				<ThemeChangerBtn id="B" />
+				<ThemeChangerChip id="B" />
+			</v-col>
+		</v-row>
 	</div>
-	<div class="ma-3">
-		<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setA_Theme(theme)"> 
-			{{ theme }} 
-		</v-chip>
-	</div>
-</v-row>
-
-<v-row v-if="mobile">
-	<div class="ma-3">
-		<h1 class="mr-3">B</h1><v-btn width="16em" rounded  class="mr-3" @click="toggleTheme('B')">
-			<!-- <div class="my-n4"> -->
-			<div class="my-n5">
-				<v-icon size="60" :color="piniaStore.B_ThemeColor" :icon="piniaStore.B_ThemeIcon"/>
-				{{ piniaStore.B_ThemeText }}
-			</div>
-		</v-btn>
-	</div>
-	<div class="ma-3">
-		<v-chip v-for="theme in themes" class="ma-1" style="background-color:grey;" @click="setB_Theme(theme)"> {{ theme }} </v-chip>
-	</div>
-</v-row>
-
-	<!-- <v-spacer style="height:2em;"></v-spacer> -->
-	<!-- <v-btn color="secondary" @click="toggleTheme">Toggle Theme</v-btn> -->
 
 </template>
 
@@ -98,87 +54,13 @@ import {
 		from "../my-util-code/MyConsoleUtil"
 
 import { useUserPiniaStore } from "../stores/user"
-// I didn't add this --> import { popScopeId } from "vue";
 
+import ThemeChangerBtn from "../components/ThemeChangerParts/ThemeChangerBtn.vue"
+import ThemeChangerChip from "../components/ThemeChangerParts/ThemeChangerChip.vue"
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
-
 const theme = useTheme();
-const themes = Object.keys(theme.computedThemes.value);
-
 const { mobile } = useDisplay()
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const toggleTheme = (ab) => {
-
-	if(ab==='A')
-	{
-		//				Toggle Icon and Color
-		if( piniaStore.A_ThemeColor==='red' ) {
-			piniaStore.A_ThemeColor = 'green'
-			piniaStore.A_ThemeIcon = 'mdi-toggle-switch'
-			piniaStore.B_ThemeColor = 'red'
-			piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
-		}
-		//				Tobble GLOBAL Theme
-		if( piniaStore.A_Theme !== theme.global.name.value ) {
-			theme.global.name.value = piniaStore.A_Theme
-			piniaStore.Active_Theme = piniaStore.A_Theme
-			piniaStore.Inactive_Theme = piniaStore.B_Theme
-		}
-		return
-	}
-
-	//				Toggle Icons and Color
-	if( piniaStore.A_ThemeColor==='green') {
-			piniaStore.B_ThemeColor = 'green'
-			piniaStore.B_ThemeIcon = 'mdi-toggle-switch'
-			piniaStore.A_ThemeColor = 'red'
-			piniaStore.A_ThemeIcon = 'mdi-toggle-switch-off'
-	}
-	//				Toggle the GLOBAL theme 
-	if( piniaStore.B_Theme !== theme.global.name.value ) {
-			theme.global.name.value = piniaStore.B_Theme
-			piniaStore.Active_Theme = piniaStore.B_Theme
-			piniaStore.Inactive_Theme = piniaStore.A_Theme
-	}
-}
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setA_Theme = (themeArg) => { 
-	piniaStore.A_Theme = themeArg
-	piniaStore.A_ThemeText = themeArg
-	piniaStore.Inactive_Theme = piniaStore.Active_Theme
-	piniaStore.Active_Theme = themeArg
-
-	piniaStore.A_ThemeIcon = "mdi-toggle-switch-off"
-	piniaStore.A_ThemeColor = "red"
-
-	piniaStore.A_ThemeIcon = "mdi-toggle-switch"
-	piniaStore.A_ThemeColor = "green"
-	
-	piniaStore.B_ThemeIcon = "mdi-toggle-switch-off"
-	piniaStore.B_ThemeColor = "red"
-	
-	theme.global.name.value = themeArg
-}
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const setB_Theme = (themeArg) => { 
-
-	piniaStore.B_Theme = themeArg
-	piniaStore.B_ThemeText = themeArg
-
-	piniaStore.Inactive_Theme = piniaStore.Active_Theme
-	piniaStore.Active_Theme = themeArg
-
-	piniaStore.B_ThemeIcon = "mdi-toggle-switch"
-	piniaStore.B_ThemeColor = "green"
-	
-	piniaStore.A_ThemeIcon = "mdi-toggle-switch-off"
-	piniaStore.A_ThemeColor = "red"
-
-	theme.global.name.value = themeArg
-}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function saveNew() {

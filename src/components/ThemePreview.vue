@@ -1,5 +1,5 @@
 <template>
-<v-expansion-panels variant="popout">
+<v-expansion-panels style="max-width:40em"  class="ma-auto" variant="popout">
 	<v-expansion-panel>
 		<v-expansion-panel-title 
 		color="grey-lighten-3">

@@ -64,23 +64,26 @@ const chipVariant: any = "outlined";
 const colorFilter = ['background','surface','primary','secondary','info','error','success','warning','important','minor', 'major','link', 'surface_alt', 'border','border_alt']
 const themeLength = computedThemesKeysValue.length;
 
+type colorArrayType = { color: string; code: string }
+type themeObjsType = { theme: string, colorArray: colorArrayType[] }
+
 // Build data for Theme Preview, Theme Switcher, and Left/Right Selector
 const generateThemesWithAllColors = () => {
-	var themeObjs = [];
-	var colorArray: { color: string; code: string }[] = [];
+	let themeObjs: themeObjsType[] = [];
+	let colorArray: colorArrayType [] = [];
 	// Create array to store the themes and related VideoColorSpace
-	for (var i = 0; i < themeLength; i++) {
+	for (let i = 0; i < themeLength; i++) {
 		// Fetch the Theme name
-		var themeName = computedThemesKeysValue[i];
+		let themeName = computedThemesKeysValue[i];
 		// Fetch the Color elements
-		var themeColorProps = computedThemesEntriesValue[i][1].colors;
+		let themeColorProps = computedThemesEntriesValue[i][1].colors;
 		//	Look for matching colors
 		let matches = Object.entries(themeColorProps).filter(val => colorFilter.includes(val[0]) )
 		//	Hydrate the colorArray with matching colors
 		matches.forEach(match => colorArray.push( {color: match[0], code: match[1]} ) )
 		// create a themeObject
-		var o = { theme: themeName, colors: themeColorProps, colorArray: colorArray };
-		themeObjs.push(o);
+		let themeObj: themeObjsType = { theme: themeName, colorArray: colorArray };
+		themeObjs.push(themeObj);
 		// Clear the colorArray for the next theme
 		colorArray = [];
 	}

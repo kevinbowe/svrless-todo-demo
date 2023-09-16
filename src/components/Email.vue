@@ -56,10 +56,10 @@
 			@click="toggleConfirmEmail=false; workingEmailModel=''; showEmail = false;"/>
 		</v-row>
 		<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
-			<h1 class="ma-auto" v-html="emailConfirmationMessage.Title.value"></h1>
-			<p v-html="emailConfirmationMessage.Message.value"></p>
-			<p class="ma-auto" v-html="emailConfirmationMessage.Message2.value"></p>
-			<p class="ma-auto" v-html="emailConfirmationMessage.Message3.value"></p>
+			<h1 class="ma-auto" v-html="emailConfirmationMessage.Title"></h1>
+			<p v-html="emailConfirmationMessage.Message"></p>
+			<p class="ma-auto" v-html="emailConfirmationMessage.Message2"></p>
+			<p class="ma-auto" v-html="emailConfirmationMessage.Message3"></p>
 		</v-row>
 
 		<v-form validate-on="submit" @submit.prevent="applyEmailConfirmationCode">
@@ -128,7 +128,8 @@ const clearConfirmEmailCodeModelValidationError = () => confirmEmailCodeModelFie
 /* ----------------------------------------------------------------------------- */
 const toggleConfirmEmail:Ref<boolean> = ref(false)
 	
-const emailConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+type emailConfirmationMessageType = { Title: string, Message: string, Message2: string, Message3: string }
+let emailConfirmationMessage: emailConfirmationMessageType = { Title: "", Message: "", Message2: "", Message3: "" }
 const openDialogFlag = ref()
 
 const showEmail = ref(false)
@@ -141,7 +142,7 @@ async function submitEmail (event) {
 	}
 	
 	if(BLOCKAPI("submitEmail function ")){
-		emailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
+		emailConfirmationMessage = buildEmailConfirmationMessage(workingEmailModel.value)
 		toggleConfirmEmail.value = true
 		return
 	}
@@ -152,7 +153,7 @@ async function submitEmail (event) {
 	await Auth.updateUserAttributes(authUser, {'email': workingEmailModel.value })
 	await Auth.currentUserInfo().then(result => {
 		//				Prepare the Confirm UI message
-		emailConfirmationMessage.value = buildEmailConfirmationMessage(workingEmailModel.value)
+		emailConfirmationMessage = buildEmailConfirmationMessage(workingEmailModel.value)
 		//				Display the Confirmation UI
 		toggleConfirmEmail.value = true
 	})
@@ -203,16 +204,20 @@ const applyEmailConfirmationCode = async function (event) {
 	
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildEmailConfirmationMessage = (email:string) => {
-	emailConfirmationMessage.Title.value = "We Emailed You"
-	
-	emailConfirmationMessage.Message.value = 
+	emailConfirmationMessage.Title = "We Emailed You"
+	emailConfirmationMessage.Message = 
 	`To confirm this change, you must enter the ` +
 	`code we emailed to the new email address you provided.` 
 
-	let {name , domain} = parseEmail(email)
+	type parseEmailType = {name:string|undefined, domain:string | undefined} | null
+	let nameDomain: parseEmailType = parseEmail(email)
 
-	emailConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
-	emailConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+	emailConfirmationMessage.Message2 = `<div style="height:4em;"></div>`
+	if(nameDomain && nameDomain?.name && nameDomain?.domain) {
+		emailConfirmationMessage.Message2 = `<b>${nameDomain?.name[0]}***@${nameDomain?.domain[0]}***</b>`
+	}
+
+	emailConfirmationMessage.Message3 = `This may take a minuet to arrive.`
 	return emailConfirmationMessage
 }
 

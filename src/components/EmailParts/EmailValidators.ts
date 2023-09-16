@@ -49,15 +49,15 @@ export const checkWorkingEmailName = (emailArg) => {
 
 	//				Length check ( long & short ) ---->	64 char
 	//				0123456789_123456789_123456789_123456789_123456789_123456789_1234
-	let len = parsedEmail.name.length;
-	if(len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
-	if(len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
+	let len = parsedEmail.name?.length;
+	if(len === undefined || len > 64) return "FAIL checkEmailName() > Length Check: Max char allowed = 64 char"
+	if(len === undefined || len <= 0) return "FAIL checkEmailName() > Length Check: Min char allowed = 1 char"
 
 	//				Leading and trailing special char check. -- The trailing '_' has been removed from the check.
 	//			 	_asd@gmail.com		-asd@gmail.com		asd-@gmail.com
 	//				+asd@gmail.com		asd+@gmail.com		.asd@gmail.com		asd.@gmail.com
 	const rxLeadTrailChar = /^[-_+\\.]|[-+\\.]$/gm
-	let matchLeadTrailChar = parsedEmail.name.match(rxLeadTrailChar)
+	let matchLeadTrailChar = parsedEmail.name?.match(rxLeadTrailChar)
 	if(matchLeadTrailChar) return `[-_+.] can not be the first/last char of email name [ ${matchLeadTrailChar} ]`
 	return true
 }
@@ -65,17 +65,17 @@ export const checkWorkingEmailName = (emailArg) => {
 /* ----------------------------------------------------------------------------- */
 export const checkWorkingEmailDomain = (emailArg) => {
 
-	const emailDomain = parseEmail(emailArg).domain
+	const emailDomain = parseEmail(emailArg)?.domain
 
 	//			Length check ( long & short ) ----> 253 char
 	//			asd@_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789.com   */
-	let len = emailDomain.length;
-	if(len > 253) return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain.length}`
-	if(len <= 2) return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain.length}`
+	let len = emailDomain?.length;
+	if(len === undefined || len > 253) return `Max Valid Domain Length: 253 -- Actual Length: ${emailDomain?.length}`
+	if(len === undefined || len <= 2) return `Min Valid Domain Length: 3 -- Actual Length: ${emailDomain?.length}`
 
 	//			Split the domain and tld and check from both pieces.
 	const rxDomainAndTLD = /^(?<domain>.*)[\\.|\\s](?<tld>.*)/m
-	let matchDomainAndTLD = emailDomain.match(rxDomainAndTLD)
+	let matchDomainAndTLD = emailDomain?.match(rxDomainAndTLD)
 
 	//			Check Domain
 	if(matchDomainAndTLD?.groups?.domain.length === 0 || matchDomainAndTLD?.groups?.domain === undefined) 

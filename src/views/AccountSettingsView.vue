@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts"> 
 	const showDev = ref(true)
 </script>
 
@@ -78,27 +78,32 @@ const setPhone_number = (payload) => { phone_numberModel.value = payload.phone_n
 /* ----------------------------------------------------------------------------- */
 const setPreferred_username = (payload) => { usernameModel.value = payload.preferred_username }
 /* ----------------------------------------------------------------------------- */
-const setUserInfo = (payload) => { 
-	nicknameModel.value = payload.nickname
-	emailModel.value = payload.email
-	phone_numberModel.value = payload.phone_number
-	usernameModel.value = payload.username
-}
-	
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* Decl getSession */
+type attributesType = {nickname:string, email:string, phone_number:string, username: string, session: boolean}
+
 async function getSession(){
 	return await Auth.currentAuthenticatedUser({bypassCache: true })
 		.then((user) => {
-			return {
+			let attributes: attributesType = {
 				"nickname": user.attributes?.nickname,
 				"email": user.attributes?.email,
 				"phone_number": user.attributes?.phone_number,
 				"username": user.attributes?.preferred_username  ? user.attributes?.preferred_username : user.username,
 				"session": true
 			}
+			return attributes
+
 		}).catch((reason) => {
-			return {"session": false}
+			let attributes: attributesType = {
+				"nickname": "",
+				"email": "",
+				"phone_number": "",
+				"username": "",
+				"session": false
+			}
+			return attributes
 		} )
 	};
 	

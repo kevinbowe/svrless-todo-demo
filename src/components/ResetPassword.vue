@@ -141,15 +141,15 @@ const showOops = ref(false)
 const emit = defineEmits()
 /* ----------------------------------------------------------------------------- */
 const passwordModel = ref("")
-const passwordFieldRef = ref("")
+const passwordFieldRef = ref()
 const clearPasswordModelValidationError = () => passwordFieldRef.value.resetValidation()
 /* ----------------------------------------------------------------------------- */
 const usernameModel = ref("")
-const usernameFieldRef = ref("")
+const usernameFieldRef = ref()
 const clearUsernameModelValidationError = () => usernameFieldRef.value.resetValidation()
 /* ----------------------------------------------------------------------------- */
 const confcodeModel = ref("")
-const confcodeFieldRef = ref("")
+const confcodeFieldRef = ref()
 const clearConfcodeModelValidationError = () => confcodeFieldRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */

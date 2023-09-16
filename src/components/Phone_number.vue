@@ -63,7 +63,7 @@ const props = defineProps({phone_number: { type: String }})
 
 
 const workingPhone_numberModel = ref("")
-const phone_numberFieldRef = ref("")
+const phone_numberFieldRef = ref()
 const clearPhone_numberValidationError = () => phone_numberFieldRef.value.resetValidation()
 
 const showPhone_number = ref(false)

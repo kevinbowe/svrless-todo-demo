@@ -1,4 +1,4 @@
-<template>
+<template> 
 	<v-select  v-model="selectorModel" :items="props.selectorItems" :label="selectorLabel" :style="props.selectorWidth">	
 
 		<!-- <template v-slot:item="{ item, props: {onClick, title, value} }" >
@@ -35,7 +35,8 @@
 			<!-- /**			The 'onClick() controls displaying the selected item'
 							The '$emit()' fires an event and passes the selected item (selectorModel) and the selectSwitchFlag.
 							You need both.			 */				 -->
-			<v-list-item :title="item.title" @click="onClick(); $emit('onClickSelectorEvent', selectorModel, props.selectSwitchFlag)"/>
+			<v-list-item :title="item.title" @click="$emit('onClickSelectorEvent', selectorModel, props.selectSwitchFlag)"/>
+			<!-- <v-list-item :title="item.title" @click="onClick(); $emit('onClickSelectorEvent', selectorModel, props.selectSwitchFlag)"/> -->
 
 		</template>
 

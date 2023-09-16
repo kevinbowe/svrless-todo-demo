@@ -1,5 +1,5 @@
 <!-- src/views/HomeView.vue -->
-
+ 
 <script lang="ts">
 	const showDev = ref(false)
 	const BLOCKAPIFLAG = ref(false)
@@ -10,8 +10,6 @@
 		<MasterLayout>
 			<h1 class="text-primary">Home</h1>
 			<hr class="mb-10">
-	
-			<!-- <ThemeChanger></ThemeChanger> -->
 
 			<v-spacer style="height:2em;"></v-spacer>
 
@@ -34,7 +32,7 @@
 <script setup lang="ts">
 import MasterLayout from "../layouts/MasterLayout.vue";
 /* ----------------------------------------------------------------------------- */
-import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
+import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
@@ -43,13 +41,12 @@ import { useUserPiniaStore } from "../stores/user"
 import  ThemeChanger from "../components/ThemeChanger.vue"
 import { ref } from "vue";
 
-import colors from 'vuetify/lib/util/colors'
+//import colors from 'vuetify/lib/util/colors'
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 // const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore(); // initialize the piniaStore
 const theme = useTheme();
-
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* 				if(BLOCKAPI("submitEmail function "))return								*/
@@ -61,7 +58,6 @@ return BLOCKAPIFLAG.value
 }
 
 /* ----------------------------------------------------------------------------- */
-
 theme.global.name.value = piniaStore.Active_Theme
 </script>
 

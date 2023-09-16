@@ -158,10 +158,10 @@
 				<v-btn __X_IN_UPPER_RIGHT__ icon="$close" size="large" variant="text" @click="toggleUserConfirm=false"/>
 			</v-row>
 			<v-row class="pa-5" style="margin-top:-2.5em;" no-gutters>
-				<h1 class="ma-auto" v-html="userConfirmationMessage.Title.value"></h1>
-				<p v-html="userConfirmationMessage.Message.value"></p>
-				<p class="ma-auto" v-html="userConfirmationMessage.Message2.value"></p>
-				<p class="ma-auto" v-html="userConfirmationMessage.Message3.value"></p>
+				<h1 class="ma-auto" v-html="userConfirmationMessage.Title"></h1>
+				<p v-html="userConfirmationMessage.Message"></p>
+				<p class="ma-auto" v-html="userConfirmationMessage.Message2"></p>
+				<p class="ma-auto" v-html="userConfirmationMessage.Message3"></p>
 			</v-row>
 
 			<v-form validate-on="submit" @submit.prevent="confirmUserSignUp">
@@ -244,7 +244,9 @@ const passwordIcon2 = ref(false)
 
 const errorSigningInMessage = ref("")
 const errorSigningUpMessage =ref("")
-const userConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
+
+type userConfirmationMessageType = { Title: string, Message: string, Message2: string, Message3: string }
+let userConfirmationMessage: userConfirmationMessageType = { Title: "", Message: "", Message2: "", Message3: "" }
 
 const toggleUserConfirm:Ref<boolean> = ref(false)
 const restartConfirm = ref()
@@ -260,19 +262,19 @@ const confirmUserCodeModelFieldRef = ref()
 const clearConfirmUserCodeModelValidationError = () => confirmUserCodeModelFieldRef.value.resetValidation()
 
 const workingEmailModel =ref("")
-const workingEmailFieldRef = ref("")
+const workingEmailFieldRef = ref()
 const clearWorkingEmailModelValidationError = () => workingEmailFieldRef.value.resetValidation()
 
 const workingUsernameModel = ref("")
-const workingUsernameFieldRef = ref("")
+const workingUsernameFieldRef = ref()
 const clearWorkingUsernameModelValidationError = () => workingUsernameFieldRef.value.resetValidation()
 
 const workingPhone_numberModel = ref("")
-const workingPhone_numberFieldRef = ref("")
+const workingPhone_numberFieldRef = ref()
 const clearWorkingPhone_numberValidationError = () => workingPhone_numberFieldRef.value.resetValidation()
 
 const workingNicknameModel =  ref("")
-const workingNicknameFieldRef = ref("")
+const workingNicknameFieldRef = ref()
 const clearWorkingNicknameModelValidationError = () => workingNicknameFieldRef.value.resetValidation()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
@@ -285,8 +287,8 @@ const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value 
 		
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
-	userConfirmationMessage.Title.value = "We Emailed You"
-	userConfirmationMessage.Message.value = 
+	userConfirmationMessage.Title = "We Emailed You"
+	userConfirmationMessage.Message = 
 		`To confirm your new account, you must enter the ` +
 		`code we emailed to the new email address you provided.` 
 	if(restartConfirm) {
@@ -296,16 +298,26 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 		}
 		//			If we get here, we are retrying to confirm and the email is still available.
 		//				We DIDN'T reload the page.
-		let {name , domain} = parseEmail(email)
-		userConfirmationMessage.Message2.value = `<b>${name[0]}***@${domain[0]}***</b>`
+		type parseEmailType = {name:string|undefined, domain:string | undefined} | null
+		let nameDomain: parseEmailType = parseEmail(email)
+		
+		userConfirmationMessage.Message2 = `<div style="height:4em;"></div>`
+		if(nameDomain && nameDomain?.name && nameDomain?.domain) {
+			userConfirmationMessage.Message2 = `<b>${nameDomain?.name[0]}***@${nameDomain?.domain[0]}***</b>`
+		}
 		return userConfirmationMessage 
 	}
 	//			If we get here, we are on the SignUp Happypath
 	//			If we get here, the email arg contains data.
-	let {name , domain} = parseEmail(email)
-	let obscureEmail = `${name[0]}***@${domain[0]}***`
-	userConfirmationMessage.Message2.value = `<b>${obscureEmail}</b>`
-	userConfirmationMessage.Message3.value = `This may take a minuet to arrive.`
+	type parseEmailType = {name:string|undefined, domain:string | undefined} | null
+	let nameDomain: parseEmailType = parseEmail(email)
+		
+	userConfirmationMessage.Message2 = `<div style="height:4em;"></div>`
+	if(nameDomain && nameDomain?.name && nameDomain?.domain) {
+		userConfirmationMessage.Message2 = `<b>${nameDomain?.name[0]}***@${nameDomain?.domain[0]}***</b>`
+	}
+
+	userConfirmationMessage.Message3 = `This may take a minuet to arrive.`
 	return userConfirmationMessage
 }
 

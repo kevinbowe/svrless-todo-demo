@@ -9,6 +9,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+	//
+	//	ADD - 10/25/2023
+	"noEmit" : true,
+	"noUnusedLocals" : false,
 	//  
 	// ADD
 	"noImplicitAny": false,
@@ -18,7 +22,6 @@
       "DOM"
     ],
     "skipLibCheck": true,
-    "noEmit": true,
     "types": [
       "vite/client"
     ]

@@ -9,6 +9,10 @@
 					<v-icon class="mr-3">mdi-home</v-icon> Home
 				</v-list-item>
 
+				<v-list-item class="justify-start" to="/todo"> 
+					<v-icon class="mr-3" icon="mdi-information"/> Todo
+				</v-list-item>
+
 				<v-list-group value="Blogs">
 						<template v-slot:activator="{ props }">
 							<v-list-Item class="justify-start" v-bind="props">
@@ -124,10 +128,14 @@
 			<v-toolbar-title style="text-align:start"> 
 				<a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a>
 				<a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	
+
+				<!-- Todo -->
+				<v-btn v-if="!mobile" to="/todo" color="white" variant="plain" rounded="xl">Todo</v-btn>
 				
 				<!-- Profile -->
 				<v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn>
-				
+
+
 				<!-- Dev link -->
 				<v-btn text="Dev 1" v-if="!mobile" to="dev1" color="white" variant="plain"/>
 				<v-btn text="Dev 2" v-if="!mobile" to="dev2" color="white" variant="plain"/>

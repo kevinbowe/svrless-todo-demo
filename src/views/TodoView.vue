@@ -154,7 +154,7 @@ const usernameModel = ref()
 const usernameModelFieldRef = ref()
 const clearUsernameModelValidationError = () => usernameModelFieldRef.value.resetValidation()
 /* -------------------------------------------------------------------------- */
-const todoFormRef = ref(null)
+const todoFormRef = ref()
 
 /* -------------------------------------------------------------------------- */
 // log(`test-log`); warn(`test-warn`); err2(`test-err2`);
@@ -315,8 +315,8 @@ const loadTodoForm = async (todo) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 	// This seems to be causing a Production Build Issue
 	// Resolve this later
-const BLOCKAPI = (message = null) => {
-// const BLOCKAPI = (message:string|null|undefined = null) => {
+// const BLOCKAPI = (message = null) => {
+const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value)
 		message ? console.log(`${message} -- BLOCKED`) : console.log("-- BLOCKED -- ")
 	return BLOCKAPIFLAG.value

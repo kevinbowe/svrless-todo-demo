@@ -239,7 +239,7 @@ import { useUserPiniaStore } from '../stores/user'
 import ThemeChanger from '../components/ThemeChanger.vue'
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
-const mainTitle: string = "v3a-theme-pinia-v3"
+const mainTitle: string = "v3a-todo-theme-v1"
 
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()

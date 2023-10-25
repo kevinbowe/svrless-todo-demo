@@ -78,6 +78,16 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: "/todo", 
+		name: "todo",
+		props: true,
+		component: () =>
+			import("../views/TodoView.vue"),
+		meta: {
+			layout: "master",
+		},
+	},
+	{
 		path: "/blog1",
 		name: "Blog1",
 		component: () => import("../views/Blog1View.vue"),

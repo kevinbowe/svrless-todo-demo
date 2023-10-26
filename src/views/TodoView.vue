@@ -14,42 +14,47 @@
 			</v-row>
 			<v-form ref="todoFormRef" validate-on="submit" @submit.prevent>
 
-				<v-combobox bg-color="background"
-				label="Select User: [ boh | bowe | dabowe | kevin ]"
+				<v-combobox 					label="Select User: [ boh | bowe | dabowe | kevin ]"
+				bg-color="background"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="usernameModel" :items="['boh', 'bowe', 'dabowe', 'kevin']"
 				ref="usernameModelFieldRef" clearable @click:clear= "clearUsernameModelValidationError"
 				required :rules="[
+					value => !value ? 'User Required' : true,
 					value => !!value,
 					value => value.length <= 2 ? `Username is too short - 3 char min > Length = [ ${value.length} ]` : true
 				]"/>
 
-				<v-text-field 	bg-color="background"
-				label="Priority: [ 0-10 ]"
+				<v-text-field					label="Priority: [ 0-10 ]"
+				bg-color="background"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="priorityModel" type="number" min="0" max="10"
-				ref="priorityFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
+				ref="priorityModelFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
 				required :rules="[
-					value => !!value
+					value => !value ? 'Priority Required' : true,
+					value => !!value,
+					value => value < 0  || value > 10 ? 'Priority range: 0 to 10 -- Required' : true ,
 				]"/>
 
-				<v-select bg-color="background"
-				label="Select Status: [ ready | wip | done | hold ]"
+				<v-select 						label="Select Status: [ ready | wip | done | hold ]"
+				bg-color="background"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="statusModel" :items="['ready', 'wip', 'done', 'hold']"
 				ref="statusModelFieldRef" clearable @click:clear= "clearStatusModelValidationError"
 				required :rules="[
-					value => !!value
+					value => !value ? 'Status Required' : true,
+					value => !!value,
 				]" />
 
-				<v-text-field bg-color="background"
-				label="Create Todo"
+				<v-text-field 					label="Create Todo"
+				bg-color="background"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="todoModel"
 				ref="todoModelFieldRef" clearable @click:clear= "clearTodoModelValidationError"
 				required :rules="[
+					value => !value ? 'Todo is Required' : true,
 					value => !!value,
-					value => value.length <= 5 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
+					value => value.length <= 6 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
 				]" />
 
 				<v-row>

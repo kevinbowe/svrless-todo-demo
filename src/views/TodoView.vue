@@ -5,14 +5,17 @@
 <template >
 	<MasterLayout>
 		<div style="max-width: 500px;margin: 0 auto;">
-			<h1>Todo App -- 10/24/2023 - 9:25 am</h1>
-			<h5>svrless-todo-vtfy-v3</h5>
+
+			<h1 style="color:rgb(var(--v-theme-border))">Todo App -- 10/24/23 - 9:25 am</h1>
+			<h5 style="color:rgb(var(--v-theme-border))">svrless-todo-vtfy-v3</h5>
 			<v-row class="mb-5">
-				<v-col><v-btn @click="getUser(usernameModel)" type="submit" color="black" text="Fetch User" variant="tonal" size="x-large" block /></v-col>
+				<v-col><v-btn class="bg-deep-purple-lighten-2" variant="tonal" 
+				@click="getUser(usernameModel)" type="submit" text="Fetch User" size="x-large" block /></v-col>
 			</v-row>
 			<v-form ref="todoFormRef" validate-on="submit" @submit.prevent>
 
-				<v-combobox label="Select User: [ boh | bowe | dabowe | kevin ]"
+				<v-combobox bg-color="background"
+				label="Select User: [ boh | bowe | dabowe | kevin ]"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="usernameModel" :items="['boh', 'bowe', 'dabowe', 'kevin']"
 				ref="usernameModelFieldRef" clearable @click:clear= "clearUsernameModelValidationError"
@@ -21,7 +24,8 @@
 					value => value.length <= 2 ? `Username is too short - 3 char min > Length = [ ${value.length} ]` : true
 				]"/>
 
-				<v-text-field label="Priority: [ 0-10 ]"
+				<v-text-field 	bg-color="background"
+				label="Priority: [ 0-10 ]"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="priorityModel" type="number" min="0" max="10"
 				ref="priorityFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
@@ -29,7 +33,8 @@
 					value => !!value
 				]"/>
 
-				<v-select label="Select Status: [ ready | wip | done | hold ]"
+				<v-select bg-color="background"
+				label="Select Status: [ ready | wip | done | hold ]"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="statusModel" :items="['ready', 'wip', 'done', 'hold']"
 				ref="statusModelFieldRef" clearable @click:clear= "clearStatusModelValidationError"
@@ -37,7 +42,8 @@
 					value => !!value
 				]" />
 
-				<v-text-field label="Create Todo"
+				<v-text-field bg-color="background"
+				label="Create Todo"
 				variant="outlined" density="compact" class="mb-3"
 				v-model="todoModel"
 				ref="todoModelFieldRef" clearable @click:clear= "clearTodoModelValidationError"
@@ -45,13 +51,15 @@
 					value => !!value,
 					value => value.length <= 5 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
 				]" />
+
 				<v-row>
-					<v-col><v-btn @click="addTodo" type="submit" color="green" class="mb-2" text="Add" variant="tonal" size="x-large" block /></v-col>
-					<v-col><v-btn @click="updateTodo" type="submit" color="primary" class="mb-2" text="Update" variant="tonal" size="x-large" block /></v-col>
-					<v-col><v-btn @click="idModel = null" type="reset" color="pink" class="mb-2" text="Clear" variant="tonal" size="x-large" block /></v-col>
+					<v-col><v-btn @click="addTodo" type="submit" class="mb-2 bg-green-lighten-3" variant="tonal" text="Add" size="x-large" block /></v-col>
+					<v-col><v-btn @click="updateTodo" type="submit" class="mb-2 bg-deep-purple-lighten-2" variant="tonal" text="Update"  size="x-large" block /></v-col>
+					<v-col><v-btn @click="idModel = null" type="reset" class="mb-2 bg-pink-lighten-3" variant="tonal" text="Clear" size="x-large" block /></v-col>
 				</v-row>
 			</v-form>
-			<v-container class="pa-2" style="border-bottom:.5em solid #ffffff;background-color: #eee;" no-gutters v-for="todo in todos" :key="todo.id">
+			<v-container class="pa-2 divide-todo"
+			no-gutters v-for="todo in todos" :key="todo.id">
 				<v-row no-gutters>
 					<v-col class="d-flex justify-start"> Status: {{ todo.status }}</v-col>
 					<v-divider vertical :thickness="5"></v-divider>
@@ -63,9 +71,8 @@
 				<v-row >
 					<v-col> Todo: {{ todo.todo }} </v-col>
 					<v-col cols="2" class="d-flex justify-end">
-						<v-btn text="Edit" color="primary" variant="tonal" size="x-small" class="mr-2" @click="loadTodoForm(todo)"/>
-						<!-- This may be causing a Production build problem -->
-						<v-btn text="Delete" color="error" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
+						<v-btn text="Edit" cariant="tonal" size="x-small" class="mr-2" @click="loadTodoForm(todo)"/>
+						<v-btn text="Delete" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -75,25 +82,24 @@
 			<v-row >
 				<v-spacer/>
 				<v-col cols="8">
-
 					<v-row no-gutters style="color:rgb(var(--v-theme-secondary))">
-						<p class="ma-auto text-h4">{{ isSignedIn }} </p> </v-row>
+						<p class="ma-auto text-h4" style="color:rgb(var(--v-theme-border))">{{ isSignedIn }} </p> </v-row>
 
 					<v-row no-gutters class="text-h5 mt-5" style="color:rgb(var(--v-theme-secondary))">
 						Nick Name:</v-row>
-					<v-row no-gutters class="px-10 text-h7">{{ nicknameModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))">{{ nicknameModel }}</v-row>
 
 					<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
 						Email:</v-row>
-					<v-row no-gutters class="px-10 text-h7">{{ emailModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ emailModel }}</v-row>
 
-					<v-row no-gutters class="text-h5  mt-5"  style="color:rgb(var(--v-theme-secondary))">
+					<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
 						Phone Number:</v-row>
-					<v-row no-gutters class="px-10 text-h7">{{ phone_numberModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))">{{ phone_numberModel }}</v-row>
 					
 					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
 						User Name:</v-row>					
-					<v-row no-gutters class="px-10 text-h7">{{ usernameModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ usernameModel }}</v-row>
 
 				</v-col>
 				<v-spacer/>
@@ -355,11 +361,16 @@ async function getSession(){
 getSession()
 /* ----------------------------------------------------------------------------- */
 
-//				Do I need this ??? -- What is this here ???
-//theme.global.name.value = piniaStore.A_Theme
 theme.global.name.value = piniaStore.Active_Theme
 </script>
 
 <style>
 	.v-counter { display:none; }
+	.divide-todo {
+		color:rgb(var(--v-theme-border));
+		border-bottom:.2em solid;
+		/* border-bottom-color: #212121; */ /* grey-darken-4 */
+		/* border-bottom-color: lightgrey; */
+		/* border-bottom-color: deep-purple-lighten-2; */
+	}
 </style>

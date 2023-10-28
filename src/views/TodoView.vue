@@ -103,8 +103,12 @@
 					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))">{{ phone_numberModel }}</v-row>
 					
 					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
-						User Name:</v-row>					
+						Preferred User Name:</v-row>					
 					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ usernameModel }}</v-row>
+
+					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
+						System User Name:</v-row>					
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ systemUsernameModel }}</v-row>
 
 				</v-col>
 				<v-spacer/>
@@ -164,6 +168,8 @@ const clearPriorityModelValidationError = () => priorityModelFieldRef.value.rese
 const usernameModel = ref()
 const usernameModelFieldRef = ref()
 const clearUsernameModelValidationError = () => usernameModelFieldRef.value.resetValidation()
+/* -------------------------------------------------------------------------- */
+const systemUsernameModel = ref()
 /* -------------------------------------------------------------------------- */
 const todoFormRef = ref()
 
@@ -352,6 +358,7 @@ async function getSession(){
 			nicknameModel.value = user.attributes?.nickname
 			
 			usernameModel.value = user.username
+			systemUsernameModel.value = user.username
 			if (user.attributes?.preferred_username) 
 			usernameModel.value = user.attributes?.preferred_username
 			piniaStore.connected = true

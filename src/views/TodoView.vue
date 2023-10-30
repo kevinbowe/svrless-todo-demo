@@ -6,7 +6,7 @@
 	<MasterLayout>
 		<div style="max-width: 500px;margin: 0 auto;">
 
-			<h1 style="color:rgb(var(--v-theme-border))">Todo App -- 10/24/23 - 9:25 am</h1>
+			<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
 			<h5 style="color:rgb(var(--v-theme-border))">svrless-todo-vtfy-v3</h5>
 
 			<v-row class="mb-5">

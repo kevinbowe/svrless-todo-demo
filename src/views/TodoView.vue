@@ -8,10 +8,12 @@
 
 			<h1 style="color:rgb(var(--v-theme-border))">Todo App -- 10/24/23 - 9:25 am</h1>
 			<h5 style="color:rgb(var(--v-theme-border))">svrless-todo-vtfy-v3</h5>
+
 			<v-row class="mb-5">
-				<v-col><v-btn class="bg-deep-purple-lighten-2" variant="tonal" 
-				@click="getUser(usernameModel)" type="submit" text="Fetch User" size="x-large" block /></v-col>
+				<v-col><v-btn text="Fetch User" class="bg-deep-purple-lighten-2" variant="tonal" 
+				@click="getUser(system_usernameModel)" type="submit" size="x-large" block /></v-col>
 			</v-row>
+
 			<v-form ref="todoFormRef" validate-on="submit" @submit.prevent>
 
 				<v-text-field					label="Priority: [ 0-10 ]"
@@ -92,12 +94,12 @@
 					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))">{{ phone_numberModel }}</v-row>
 					
 					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
-						Preferred User Name:</v-row>					
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ usernameModel }}</v-row>
+					Preferred User Name:</v-row>					
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ preferred_usernameModel ? preferred_usernameModel : "{ empty }" }} </v-row>
 
 					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
-						System User Name:</v-row>					
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ systemUsernameModel }}</v-row>
+					(System) User Name:</v-row>					
+					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ system_usernameModel }}</v-row>
 
 				</v-col>
 				<v-spacer/>
@@ -174,11 +176,8 @@ const priorityModel = ref()
 const priorityModelFieldRef = ref()
 const clearPriorityModelValidationError = () => priorityModelFieldRef.value.resetValidation()
 /* -------------------------------------------------------------------------- */
-const usernameModel = ref()
-const usernameModelFieldRef = ref()
-const clearUsernameModelValidationError = () => usernameModelFieldRef.value.resetValidation()
-/* -------------------------------------------------------------------------- */
-const systemUsernameModel = ref()
+const system_usernameModel = ref()
+const preferred_usernameModel = ref()
 /* -------------------------------------------------------------------------- */
 const todoFormRef = ref()
 const openDialogFlag = ref(false)
@@ -206,7 +205,7 @@ const getUser = async (username) => {
 	todos.value = await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/ListByUser", {
 		method: "post",
 		headers: { "Content-Type": "application/json"},
-		body: `{"username": "${systemUsernameModel.value}"}`
+		body: `{"username": "${system_usernameModel.value}"}`
 	})
 	.then(response => { return response.json() })
 	.catch(err => { console.log(`error -> ${err.message}`) })
@@ -236,7 +235,7 @@ const updateTodo = async () => {
 
 	const newTodo = {
 		id: idModel.value,
-		username: usernameModel.value,
+		username: system_usernameModel.value,
 		todo: todoModel.value,
 		priority: priorityModel.value,
 		status: statusModel.value
@@ -276,7 +275,7 @@ const addTodo = async () => {
 
 	const newTodo = {
 		id: new Date().toISOString(),
-		username: systemUsernameModel.value,
+		username: system_usernameModel.value,
 		todo: todoModel.value,
 		priority: priorityModel.value,
 		status: statusModel.value
@@ -309,7 +308,6 @@ const removeTodo = async (todoId, todoUsername) => {
 
 /////////////////////////////////////////////////////////////////////////////
 const loadTodoForm = async (todo) => {
-		usernameModel.value = todo.username
 		priorityModel.value = todo.priority
 		statusModel.value = todo.status
 		todoModel.value = todo.todo
@@ -342,16 +340,11 @@ async function getSession(){
 			isSignedIn.value = "Signed In"
 			emailModel.value = user.attributes?.email
 			phone_numberModel.value =  user.attributes?.phone_number
-			nicknameModel.value = user.attributes?.nickname
-			
-			usernameModel.value = user.username
-			systemUsernameModel.value = user.username
-			if (user.attributes?.preferred_username) 
-			usernameModel.value = user.attributes?.preferred_username
+			system_usernameModel.value = user.username
+			preferred_usernameModel.value = user.attributes?.preferred_username
 			piniaStore.connected = true
-
 			//			Load the users Todo's
-			getUser(systemUsernameModel.value)
+			getUser(system_usernameModel.value)
 	})
 	.catch((error) => {
 		isSignedIn.value = "Not Signed In"

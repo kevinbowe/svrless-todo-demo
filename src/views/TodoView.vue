@@ -7,7 +7,7 @@
 		<div style="max-width: 500px;margin: 0 auto;">
 
 			<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
-			<h5 style="color:rgb(var(--v-theme-border))">svrless-todo-vtfy-v3</h5>
+			<h5 style="color:rgb(var(--v-theme-border))">v3a-todo-theme-v1</h5>
 
 			<v-row class="mb-5">
 				<v-col><v-btn text="Fetch User" class="bg-deep-purple-lighten-2" variant="tonal" 

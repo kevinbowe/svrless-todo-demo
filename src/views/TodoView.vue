@@ -14,17 +14,6 @@
 			</v-row>
 			<v-form ref="todoFormRef" validate-on="submit" @submit.prevent>
 
-				<v-combobox 					label="Select User: [ boh | bowe | dabowe | kevin ]"
-				bg-color="background"
-				variant="outlined" density="compact" class="mb-3"
-				v-model="usernameModel" :items="['boh', 'bowe', 'dabowe', 'kevin']"
-				ref="usernameModelFieldRef" clearable @click:clear= "clearUsernameModelValidationError"
-				required :rules="[
-					value => !value ? 'User Required' : true,
-					value => !!value,
-					value => value.length <= 2 ? `Username is too short - 3 char min > Length = [ ${value.length} ]` : true
-				]"/>
-
 				<v-text-field					label="Priority: [ 0-10 ]"
 				bg-color="background"
 				variant="outlined" density="compact" class="mb-3"
@@ -113,8 +102,28 @@
 				</v-col>
 				<v-spacer/>
 			</v-row>
-
 		</v-container>
+		<!-- PopUp Message Dialog -- Modal -->
+		<v-dialog v-if="openDialogFlag" v-model="openDialogFlag" persistent >
+			<v-card color="background_alt" border="lg" 
+			class="ma-auto" height="8em" width="15em" elevation="24">
+				<v-card-text class="text-center"> <h2>Please Sign In</h2> </v-card-text>
+				<v-card-actions>
+					<v-row no-gutters>
+						<v-spacer/>
+						<v-col class="pr-1">
+							<v-btn text="Cancel" @click="openDialogFlag = false" 
+							style="background-color:rgb(var(--v-theme-background_alt))"/>
+						</v-col>
+						<v-col>
+							<v-btn text="Sign In" to="/user" @click="openDialogFlag = false" 
+							color="surface" style="background-color:rgb(var(--v-theme-primary))"/>
+						</v-col>
+						<v-spacer/>
+					</v-row>
+				</v-card-actions>
+ 			</v-card>
+		</v-dialog>
 	</MasterLayout>
 </template>
 
@@ -172,7 +181,7 @@ const clearUsernameModelValidationError = () => usernameModelFieldRef.value.rese
 const systemUsernameModel = ref()
 /* -------------------------------------------------------------------------- */
 const todoFormRef = ref()
-
+const openDialogFlag = ref(false)
 /* -------------------------------------------------------------------------- */
 // log(`test-log`); warn(`test-warn`); err2(`test-err2`);
 // pass(`test-pass`); fail(`test-fail`);
@@ -188,36 +197,23 @@ const todoFormRef = ref()
 const getUser = async (username) => {
 	//				Clear the list of todos.
 	todos.value = null
-	if(!username) {
-		todos.value = await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/ListAll")
-		.then(response => { return response.json() })
-
-		//	Sort the results by Username (desc) and priority (asc)
-		todos.value.sort(function(a,b) {
-			if(a.username === b.username) return (a.priority-b.priority)
-					else if(a.username > b.username) return 1
-					else if(a.username < b.username) return -1
-		})
-		return
-	}
-	//------------------------------------------------------
+	//				If no username is available, set flag to display sign in dialog.
+	if(!username) { openDialogFlag.value = true; return }
+	
 	//	If we get here, start search for a specific username.
 
 	//				Fetch the filtered todos
 	todos.value = await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/ListByUser", {
 		method: "post",
 		headers: { "Content-Type": "application/json"},
-		body: `{"username": "${username}"}`
+		body: `{"username": "${systemUsernameModel.value}"}`
 	})
-	.then(response => {
-		//				Return the results for display in Ui
-		return response.json()
-	})
-	.catch(err => {
-		console.log(`error -> ${err.message}`)
-	})
+	.then(response => { return response.json() })
+	.catch(err => { console.log(`error -> ${err.message}`) })
 
-	//	Sort the results by Username (desc) and priority (asc)
+	//	If we get here, the 'await fetch' has compled.
+
+	//	Sort the results (todos.value) by Username (desc) and priority (asc)
 	todos.value.sort(function(a,b) {
 		if(a.username === b.username) return (a.priority-b.priority)
 		else if(a.username > b.username) return 1
@@ -251,16 +247,13 @@ const updateTodo = async () => {
 		headers: { "Content-Type": "application/json"},
 		body: JSON.stringify(newTodo)
 	})
-	//	//	This may be causing Pruduction Build errors
+	
 	todos.value = todos.value.filter(e  => { return e.id != newTodo.id })
-	// todos.value = todos.value.filter(e  => { return e.id != newTodo.id })
-	// todos.value = todos.value.filter((e: { id: any; }) => { return e.id != newTodo.id })
 
-	//	Add the Update Todo
+	//				Add the Update Todo
 	todos.value.push(newTodo)
-	// todoModel.value = ""
 
-	//	Sort the results by Username (desc) and priority (asc)
+	//				Sort the results by Username (desc) and priority (asc)
 	todos.value.sort(function(a,b) {
 		if(a.username === b.username) return (a.priority-b.priority)
 		else if(a.username > b.username) return 1
@@ -283,7 +276,7 @@ const addTodo = async () => {
 
 	const newTodo = {
 		id: new Date().toISOString(),
-		username: usernameModel.value,
+		username: systemUsernameModel.value,
 		todo: todoModel.value,
 		priority: priorityModel.value,
 		status: statusModel.value
@@ -295,7 +288,6 @@ const addTodo = async () => {
 		body: JSON.stringify(newTodo)
 	})
 	todos.value.push(newTodo)
-	// todoModel.value = ""
 	
 	//	Sort the results by Username (desc) and priority (asc)
 	todos.value.sort(function(a,b) {
@@ -306,14 +298,12 @@ const addTodo = async () => {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//	// This function may be causing Production Build errors
 const removeTodo = async (todoId, todoUsername) => {
 	await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/DeleteTodo", {
 		method: "delete",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ id: todoId, username: todoUsername})
 	})
-		//	This may be causing Pruduction Build errors
 	todos.value = todos.value.filter(t => t.id !== todoId)
 }
 
@@ -330,9 +320,6 @@ const loadTodoForm = async (todo) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* 				if(BLOCKAPI("submitEmail function "))return							*/
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-	// This seems to be causing a Production Build Issue
-	// Resolve this later
-// const BLOCKAPI = (message = null) => {
 const BLOCKAPI = (message:string|null|undefined = null) => {
 	if(BLOCKAPIFLAG.value)
 		message ? console.log(`${message} -- BLOCKED`) : console.log("-- BLOCKED -- ")
@@ -362,6 +349,9 @@ async function getSession(){
 			if (user.attributes?.preferred_username) 
 			usernameModel.value = user.attributes?.preferred_username
 			piniaStore.connected = true
+
+			//			Load the users Todo's
+			getUser(systemUsernameModel.value)
 	})
 	.catch((error) => {
 		isSignedIn.value = "Not Signed In"

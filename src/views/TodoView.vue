@@ -10,17 +10,31 @@
 					<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
 				</v-col>
 				<v-col>
-					<v-btn :text="!showForm ? 'New Oggi' : 'Close - Back to Work'" 
-					:class="!showForm && 'bg-green-lighten-3'" class="bg-deep-purple-lighten-2" variant="tonal" 
-					@click="showForm = !showForm" type="submit" size="x-large" block />
+					<v-btn v-if="!showZoom && !showForm" text="New Oggi" 
+					class="bg-green-lighten-3" variant="tonal" 
+					@click="showForm = !showForm;" type="submit" size="x-large" block />
+					<!-- <v-btn v-if="!showZoom && !showForm" :text="!showForm ? 'New Oggi' : 'Close'" 
+					class="bg-green-lighten-3" variant="tonal" 
+					@click="showForm = !showForm;" type="submit" size="x-large" block /> -->
+
+					<v-btn v-else text="Close" 
+					class="bg-deep-purple-lighten-2" variant="tonal" 
+					@click="showZoom = false; showForm = false" type="submit" size="x-large" block />
 				</v-col>
 			</v-row>
+			<v-container v-if="showZoom" class="pa-4" no-gutters >
+				<v-row no-gutters>
+					<v-col class="d-flex justify-start text-h5 "> Status: {{ statusModel }} </v-col>
+					<v-col class="d-flex justify-start px-2  text-h5"> Priority: {{ priorityModel }} </v-col>
+				</v-row>
+				<div class="divide-todo my-4"></div>
+				<v-row> <v-col style="display:inline-block; text-align:left; line-height: 1.6;" class="text-h5"> Oggi: {{ todoModel }} </v-col></v-row>
+			</v-container>
 			<v-form ref="todoFormRef" v-if="showForm" validate-on="submit" @submit.prevent>
 				<v-row>
 					<v-col>
 						<v-text-field					label="Priority: [ 0-10 ]"
-						bg-color="background"
-						variant="outlined" density="compact" class="mb-3"
+						bg-color="background" variant="outlined" density="compact" class="mb-3"
 						v-model="priorityModel" type="number" min="0" max="10"
 						ref="priorityModelFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
 						required :rules="[
@@ -41,10 +55,6 @@
 						]" />
 					</v-col>
 				</v-row>
-
-
-
-
 				<v-textarea 					label="Create Todo"
 				auto-grow rows="2" bg-color="background" variant="outlined" density="compact" class="mb-3"
 				v-model="todoModel" ref="todoModelFieldRef" clearable @click:clear= "clearTodoModelValidationError"
@@ -59,52 +69,52 @@
 					<v-col><v-btn @click="idModel = null" type="reset" class="mb-2 bg-pink-lighten-3" variant="tonal" text="Clear" size="x-large" block /></v-col>
 				</v-row>
 			</v-form>
-			<v-container class="pa-2 divide-todo"
+			<v-container v-if="!showZoom" class="pa-2 divide-todo"
 			no-gutters v-for="todo in todos" :key="todo.id">
 				<v-row no-gutters>
 					<v-col class="d-flex justify-start"> Status: {{ todo.status }}</v-col>
-					<v-divider vertical :thickness="5"></v-divider>
 					<v-col class="d-flex justify-start px-2"> Priority: {{ todo.priority }}</v-col>
-					<v-divider vertical :thickness="5"></v-divider>
-					<v-col cols="6" class="d-flex justify-start px-2"> User Name: {{ todo.username }}</v-col>
+					<v-col cols="2" class="d-flex justify-end">
+						<v-btn icon="mdi-arrow-expand-all"
+						@click="loadTodoForm(todo); showZoom = true"
+						class="mt-n3" color="secondary" variant="plain"/>`
+						<v-btn text="Edit" size="x-small" class="mr-2 bg-deep-purple-lighten-2" variant="tonal" @click="loadTodoForm(todo); showForm = true"/>
+						<v-btn text="Delete" class="bg-grey-darken-4" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
+					</v-col>
 				</v-row>
 				<v-divider></v-divider>
 				<v-row>
 					<v-col style="display:inline-block; text-align:left;" > Todo: {{ todo.todo }} </v-col>
-					<v-col cols="2" class="d-flex justify-end">
-						<v-btn text="Edit" cariant="tonal" size="x-small" class="mr-2" @click="loadTodoForm(todo); showForm = true"/>
-						<v-btn text="Delete" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
-					</v-col>
 				</v-row>
 			</v-container>
 		</div>
 		<v-container class="text-center">
-			<hr class="mb-10">
+			<hr class="mb-2">
 			<v-row >
 				<v-spacer/>
 				<v-col cols="8">
-					<v-row no-gutters style="color:rgb(var(--v-theme-secondary))">
-						<p class="ma-auto text-h4" style="color:rgb(var(--v-theme-border))">{{ isSignedIn }} </p> </v-row>
+					<v-row no-gutters class="text-h6 mt-1" style="color:rgb(var(--v-theme-border))">
+						{{ isSignedIn }} </v-row>
 
-					<v-row no-gutters class="text-h5 mt-5" style="color:rgb(var(--v-theme-secondary))">
+					<v-row no-gutters class="text-h9 mt-1" style="color:rgb(var(--v-theme-secondary))">
 						Nick Name:</v-row>
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))">{{ nicknameModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h9" style="color:rgb(var(--v-theme-border))">{{ nicknameModel }}</v-row>
 
-					<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
+					<v-row no-gutters class="text-h9  mt-1" style="color:rgb(var(--v-theme-secondary))">
 						Email:</v-row>
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ emailModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h9" style="color:rgb(var(--v-theme-border))" >{{ emailModel }}</v-row>
 
-					<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
+					<v-row no-gutters class="text-h9  mt-1" style="color:rgb(var(--v-theme-secondary))">
 						Phone Number:</v-row>
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))">{{ phone_numberModel }}</v-row>
+					<v-row no-gutters class="px-10 text-h9" style="color:rgb(var(--v-theme-border))">{{ phone_numberModel }}</v-row>
 					
-					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
-					Preferred User Name:</v-row>					
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ preferred_usernameModel ? preferred_usernameModel : "{ empty }" }} </v-row>
+					<v-row no-gutters class="text-h9 mt-1"  style="color:rgb(var(--v-theme-secondary))">
+						Preferred User Name:</v-row>					
+					<v-row no-gutters class="px-10 text-h9" style="color:rgb(var(--v-theme-border))" >{{ preferred_usernameModel ? preferred_usernameModel : "{ empty }" }} </v-row>
 
-					<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
-					(System) User Name:</v-row>					
-					<v-row no-gutters class="px-10 text-h7" style="color:rgb(var(--v-theme-border))" >{{ system_usernameModel }}</v-row>
+					<v-row no-gutters class="text-h9 mt-1"  style="color:rgb(var(--v-theme-secondary))">
+						(System) User Name:</v-row>					
+					<v-row no-gutters class="px-10 text-h9" style="color:rgb(var(--v-theme-border))" >{{ system_usernameModel }}</v-row>
 
 				</v-col>
 				<v-spacer/>
@@ -156,7 +166,7 @@ import { log, warn, err2, err, progress, joy, infob, infog, infoy, infoo, infop,
 	from "../my-util-code/MyConsoleUtil" // Cant find this in Prod Build
 /* -------------------------------------------------------------------------- */
 
-	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const piniaStore = useUserPiniaStore(); //initialize the piniaStore
 const theme = useTheme();
 const nicknameModel = ref()
@@ -187,6 +197,7 @@ const preferred_usernameModel = ref()
 const todoFormRef = ref()
 const openDialogFlag = ref(false)
 const showForm = ref(false)
+const showZoom = ref(false)
 /* -------------------------------------------------------------------------- */
 // log(`test-log`); warn(`test-warn`); err2(`test-err2`);
 // pass(`test-pass`); fail(`test-fail`);
@@ -345,6 +356,7 @@ async function getSession(){
 		.then((user) => {
 			isSignedIn.value = "Signed In"
 			emailModel.value = user.attributes?.email
+			nicknameModel.value = user.attributes?.nickname
 			phone_numberModel.value =  user.attributes?.phone_number
 			system_usernameModel.value = user.username
 			preferred_usernameModel.value = user.attributes?.preferred_username

@@ -5,49 +5,54 @@
 <template >
 	<MasterLayout>
 		<div style="max-width: 500px;margin: 0 auto;">
-
-			<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
-			<h5 style="color:rgb(var(--v-theme-border))">v3a-todo-theme-v1</h5>
-
-			<v-row class="mb-5">
-				<v-col><v-btn text="Fetch User" class="bg-deep-purple-lighten-2" variant="tonal" 
-				@click="getUser(system_usernameModel)" type="submit" size="x-large" block /></v-col>
+			<v-row _class="mb-5">
+				<v-col cols="4">
+					<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
+				</v-col>
+				<v-col>
+					<v-btn :text="!showForm ? 'New Oggi' : 'Close - Back to Work'" 
+					:class="!showForm && 'bg-green-lighten-3'" class="bg-deep-purple-lighten-2" variant="tonal" 
+					@click="showForm = !showForm" type="submit" size="x-large" block />
+				</v-col>
 			</v-row>
+			<v-form ref="todoFormRef" v-if="showForm" validate-on="submit" @submit.prevent>
+				<v-row>
+					<v-col>
+						<v-text-field					label="Priority: [ 0-10 ]"
+						bg-color="background"
+						variant="outlined" density="compact" class="mb-3"
+						v-model="priorityModel" type="number" min="0" max="10"
+						ref="priorityModelFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
+						required :rules="[
+							value => !value ? 'Priority Required' : true,
+							value => !!value,
+							value => value < 0  || value > 10 ? 'Priority range: 0 to 10 -- Required' : true ,
+						]"/>
+					</v-col>
+					<v-col>
+						<v-select 						label="Select Status: [ ready | wip | done | hold ]"
+						bg-color="background"
+						variant="outlined" density="compact" class="mb-3"
+						v-model="statusModel" :items="['ready', 'wip', 'done', 'hold']"
+						ref="statusModelFieldRef" clearable @click:clear= "clearStatusModelValidationError"
+						required :rules="[
+							value => !value ? 'Status Required' : true,
+							value => !!value,
+						]" />
+					</v-col>
+				</v-row>
 
-			<v-form ref="todoFormRef" validate-on="submit" @submit.prevent>
 
-				<v-text-field					label="Priority: [ 0-10 ]"
-				bg-color="background"
-				variant="outlined" density="compact" class="mb-3"
-				v-model="priorityModel" type="number" min="0" max="10"
-				ref="priorityModelFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
-				required :rules="[
-					value => !value ? 'Priority Required' : true,
-					value => !!value,
-					value => value < 0  || value > 10 ? 'Priority range: 0 to 10 -- Required' : true ,
-				]"/>
 
-				<v-select 						label="Select Status: [ ready | wip | done | hold ]"
-				bg-color="background"
-				variant="outlined" density="compact" class="mb-3"
-				v-model="statusModel" :items="['ready', 'wip', 'done', 'hold']"
-				ref="statusModelFieldRef" clearable @click:clear= "clearStatusModelValidationError"
-				required :rules="[
-					value => !value ? 'Status Required' : true,
-					value => !!value,
-				]" />
 
-				<v-text-field 					label="Create Todo"
-				bg-color="background"
-				variant="outlined" density="compact" class="mb-3"
-				v-model="todoModel"
-				ref="todoModelFieldRef" clearable @click:clear= "clearTodoModelValidationError"
+				<v-textarea 					label="Create Todo"
+				auto-grow rows="2" bg-color="background" variant="outlined" density="compact" class="mb-3"
+				v-model="todoModel" ref="todoModelFieldRef" clearable @click:clear= "clearTodoModelValidationError"
 				required :rules="[
 					value => !value ? 'Todo is Required' : true,
 					value => !!value,
 					value => value.length <= 6 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
 				]" />
-
 				<v-row>
 					<v-col><v-btn @click="addTodo" type="submit" class="mb-2 bg-green-lighten-3" variant="tonal" text="Add" size="x-large" block /></v-col>
 					<v-col><v-btn @click="updateTodo" type="submit" class="mb-2 bg-deep-purple-lighten-2" variant="tonal" text="Update"  size="x-large" block /></v-col>
@@ -64,10 +69,10 @@
 					<v-col cols="6" class="d-flex justify-start px-2"> User Name: {{ todo.username }}</v-col>
 				</v-row>
 				<v-divider></v-divider>
-				<v-row >
-					<v-col> Todo: {{ todo.todo }} </v-col>
+				<v-row>
+					<v-col style="display:inline-block; text-align:left;" > Todo: {{ todo.todo }} </v-col>
 					<v-col cols="2" class="d-flex justify-end">
-						<v-btn text="Edit" cariant="tonal" size="x-small" class="mr-2" @click="loadTodoForm(todo)"/>
+						<v-btn text="Edit" cariant="tonal" size="x-small" class="mr-2" @click="loadTodoForm(todo); showForm = true"/>
 						<v-btn text="Delete" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
 					</v-col>
 				</v-row>
@@ -181,6 +186,7 @@ const preferred_usernameModel = ref()
 /* -------------------------------------------------------------------------- */
 const todoFormRef = ref()
 const openDialogFlag = ref(false)
+const showForm = ref(false)
 /* -------------------------------------------------------------------------- */
 // log(`test-log`); warn(`test-warn`); err2(`test-err2`);
 // pass(`test-pass`); fail(`test-fail`);

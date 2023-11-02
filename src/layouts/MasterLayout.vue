@@ -13,7 +13,7 @@
 					<v-icon class="mr-3" icon="mdi-information"/> Todo
 				</v-list-item>
 
-				<v-list-group value="Blogs">
+				<!-- <v-list-group value="Blogs">
 						<template v-slot:activator="{ props }">
 							<v-list-Item class="justify-start" v-bind="props">
 								<v-icon class="mr-3" icon="mdi-script"/> Blogs
@@ -22,22 +22,22 @@
 						<v-list-item _style="margin-left:-2em;" class="justify-start" :to="blog.url" v-for="blog in blogs">
 							<v-icon class="mr-3" :icon=blog.icon /> {{ blog.title }}
 						</v-list-item>
-				</v-list-group>
+				</v-list-group> -->
 
 				<v-list-item class="justify-start" to="/profile"> 
 					<v-icon class="mr-3" icon="mdi-information"/> Profile
 				</v-list-item>
 
-					<v-list-group value="Experiment">
-						<template v-slot:activator="{ props }">
-							<v-list-Item class="justify-start" v-bind="props">
-								<v-icon class="mr-3" icon="mdi-microscope"/>	Experiment
-							</v-list-Item>
-						</template>
+				<!-- <v-list-group value="Experiment">
+					<template v-slot:activator="{ props }">
+						<v-list-Item class="justify-start" v-bind="props">
+							<v-icon class="mr-3" icon="mdi-microscope"/>	Experiment
+						</v-list-Item>
+					</template>
 
-						<v-list-item _style="margin-left:-2em;" class="justify-start" :to="exp.url" v-for="exp in experiment">
-							<v-icon class="mr-3" :icon="exp.icon" /> {{ exp.title }}
-						</v-list-item>
+					<v-list-item _style="margin-left:-2em;" class="justify-start" :to="exp.url" v-for="exp in experiment">
+						<v-icon class="mr-3" :icon="exp.icon" /> {{ exp.title }}
+					</v-list-item>
 
 					<v-list-group style="width:30em" value="DevActions">
 						<template v-slot:activator="{ props }">
@@ -52,15 +52,15 @@
 
 					</v-list-group>
 
-				</v-list-group>
+				</v-list-group> -->
 					
 				<v-list-group v-if="piniaStore.connected" value="Account">
 					<template v-slot:activator="{ props }">
-						<v-list-Item class="justify-start" _prepend-icon="mdi-account" v-bind="props">
+						<v-list-Item class="justify-start" v-bind="props">
 							<v-icon class="mr-3" icon="mdi-account"/>	Account
 						</v-list-Item>
 					</template>
-					<v-list-item :to="acct.url" _:prepend-icon=acct.icon _:title=acct.title class="justify-start" v-for="acct in account">
+					<v-list-item :to="acct.url" class="justify-start" v-for="acct in account">
 						<v-icon :icon="acct.icon" class="mr-3"/>{{ acct.title }}
 					</v-list-item>
 				</v-list-group>
@@ -76,7 +76,7 @@
 			</v-list>
 		</v-navigation-drawer>
 
-		<v-navigation-drawer v-model="drawerRight" _width="10em" temporary location="right">
+		<v-navigation-drawer v-model="drawerRight" temporary location="right">
 			<v-list nav>
 				<v-list-item class="justify-start"
 				:to="link.url" 
@@ -136,8 +136,8 @@
 
 
 				<!-- Dev link -->
-				<v-btn text="Dev 1" v-if="!mobile" to="dev1" color="white" variant="plain"/>
-				<v-btn text="Dev 2" v-if="!mobile" to="dev2" color="white" variant="plain"/>
+				<!-- <v-btn text="Dev 1" v-if="!mobile" to="dev1" color="white" variant="plain"/> -->
+				<!-- <v-btn text="Dev 2" v-if="!mobile" to="dev2" color="white" variant="plain"/> -->
 
 				<!-- <v-btn v-if="!mobile" color="white" variant="plain"> Exp
 					<v-menu activator="parent">
@@ -166,7 +166,7 @@
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item __ACCOUNT__>
-								<v-icon icon="mdi-cog" _class="pa-5"/>
+								<v-icon icon="mdi-cog"/>
 								<v-btn text="Settings" to="/account" variant="plain"/>
 							</v-list-item>							
 							<v-list-item __SIGN_OUT__>
@@ -191,7 +191,7 @@
 		</v-app-bar>
 
 		<!-- |||||| START Content insertion here |||||||||||||||||||||||||||||| -->
-		<v-main class="my-5" _class="mb-5">
+		<v-main class="my-5" >
 			<slot></slot>
 		</v-main>
 		<!-- |||||| END Content insertion here |||||||||||||||||||||||||||||||| -->
@@ -200,7 +200,7 @@
 		<div v-if="showThemeChangerDialog" >
 			<v-dialog activator="parent" v-model="showThemeChangerDialog" persistent >
 
-				<v-card color="background_alt" border="lg" class="ma-auto pa-2" _height="10em" _width="20em" elevation="24">
+				<v-card color="background_alt" border="lg" class="ma-auto pa-2" elevation="24">
 					<v-card-text> 
 						<v-row><v-spacer/>
 							<v-btn __THIS_IS_THE_X_IN_UPPER_RIGHT__ 
@@ -217,7 +217,7 @@
 			<v-row justify="start" no-gutters>
 
 				<v-btn :text="link.label" :to="link.url" color="white" variant="text" rounded="xl" 
-				v-for="link in footerLinks" :key="link.label" _class="mx-1"/>
+				v-for="link in footerLinks" :key="link.label" />
 
 				<v-btn color="white" variant="text" rounded="xl" @click="showThemeChangerDialog = true">
 					<v-icon icon="mdi-palette" style="padding-bottom:5px;padding-right:5px;" color="secondary"/> 
@@ -257,14 +257,14 @@ const { mobile } = useDisplay()
 const piniaStore = useUserPiniaStore()
 const drawerLeft = ref(false)
 const drawerRight = ref(false)
-const experiment = ref([
-	{title:'Dev 1', icon:'mdi-hammer-screwdriver', url:'/dev1'},
-	{title:'Dev 2', icon:'mdi-hammer-screwdriver', url:'/dev2'},
-])
-const blogs = ref([
-	{title:'Blog 1', icon:'mdi-post-outline', url:'/blog1'},
-	{title:'Article 1', icon:'mdi-school', url:'/article1'},
-])
+// const experiment = ref([
+// 	{title:'Dev 1', icon:'mdi-hammer-screwdriver', url:'/dev1'},
+// 	{title:'Dev 2', icon:'mdi-hammer-screwdriver', url:'/dev2'},
+// ])
+// const blogs = ref([
+// 	{title:'Blog 1', icon:'mdi-post-outline', url:'/blog1'},
+// 	{title:'Article 1', icon:'mdi-school', url:'/article1'},
+// ])
 const account = ref([
 	{title:'Settings', icon:'mdi-cog-outline', url:'/account'},
 ])
@@ -274,12 +274,12 @@ const threeDots = ref([
 	{ label: "Themes", url: "/theme", icon: "mdi-palette", color:"secondary" },
 
 ]);
-const cruds = ref([
-	{title:'Create', icon:'mdi-plus-outline',url: "/future" },
-	{title:'Read', icon:'mdi-file-outline', url: "/future"},
-	{title:'Update', icon:'mdi-update', url: "/future"},
-	{title:'Delete', icon:'mdi-delete', url: "/future"},
-])
+// const cruds = ref([
+// 	{title:'Create', icon:'mdi-plus-outline',url: "/future" },
+// 	{title:'Read', icon:'mdi-file-outline', url: "/future"},
+// 	{title:'Update', icon:'mdi-update', url: "/future"},
+// 	{title:'Delete', icon:'mdi-delete', url: "/future"},
+// ])
 const footerLinks = ref([
 	{ label: "Home", url: "/" },
 	{ label: "About Us", url: "/about" },

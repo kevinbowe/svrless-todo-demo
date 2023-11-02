@@ -2,11 +2,7 @@
 <!-- <v-app> -->
 <MasterLayout>
 	<v-container class="text-align:start">
-
-		<h1 class="text-primary" style="text-align: center;">Terms and Conditions Page</h1>
-
 		<h1 style="text-align: center;">Terms and Conditions</h1>
-		
 		<v-row>
 			<v-spacer></v-spacer>
 			<v-col cols="4" style="text-align: center;">

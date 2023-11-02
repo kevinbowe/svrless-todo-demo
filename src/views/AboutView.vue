@@ -1,7 +1,5 @@
 <template>
 <v-app>
-
-	<h1 class="text-primary">About Us Page Content</h1>
 	<v-btn class="pa-3 ma-5" to="/">Go To Home</v-btn>
 	<v-row justify="center" >
 		<v-col  sm="5" >

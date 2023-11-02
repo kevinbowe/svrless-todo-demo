@@ -6,9 +6,6 @@
 <template>
 <v-app>
 <MasterLayout>
-	<h1 class="text-primary">User</h1>
-	<hr class="mb-10">
-
 	<!-- SignIn & SignUp Forms -->
 	<v-row no-gutters v-if="!piniaStore.connected">
 		<v-col :lg="4" :md="6" :sm="8" :xs="12" class="ma-auto" >
@@ -224,6 +221,8 @@ import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 import ResetPassword from "../components/ResetPassword.vue"
 import router from "../router";
 import { useUserPiniaStore } from "../stores/user"
+
+import { useTheme } from "vuetify";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -478,4 +477,9 @@ Auth.currentAuthenticatedUser({bypassCache: true})
 .catch( () => { })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+const theme = useTheme();
+	/* ----------------------------------------------------------------------------- */
+	theme.global.name.value = piniaStore.Active_Theme
+	
 </script>

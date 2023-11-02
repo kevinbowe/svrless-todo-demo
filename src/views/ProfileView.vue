@@ -2,10 +2,6 @@
 	<v-app>
 		<MasterLayout>
 			<v-container class="text-center">
-				<h1 class="text-primary">Profile</h1>
-				<hr class="mb-10">
-
-				<!-- User Info -->
 				<v-row >
 					<v-spacer/>
 					<v-col cols="8">

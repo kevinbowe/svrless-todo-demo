@@ -8,10 +8,6 @@
 <template>
 	<v-app>
 		<MasterLayout>
-			<h1 class="text-primary">Home</h1>
-			<hr class="mb-10">
-
-			<v-spacer style="height:2em;"></v-spacer>
 
 			<v-row v-if="showDev">
 				<v-spacer/>

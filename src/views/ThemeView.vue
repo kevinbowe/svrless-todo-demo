@@ -1,12 +1,8 @@
 <template>
 <v-app>
 <MasterLayout>
-
-	<h1 class="text-primary">Theme</h1>
-	<hr class="mb-10">
-		<ThemeChanger/>
-		<ThemePreview/>
-		
+	<ThemeChanger/>
+	<ThemePreview/>
 </MasterLayout>
 </v-app>
 </template>

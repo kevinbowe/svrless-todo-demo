@@ -1,5 +1,5 @@
 <template>
-<!-- <v-app> -->
+<v-app>
 <MasterLayout>
 	<v-container class="text-align:start">
 
@@ -18,9 +18,16 @@
 
 	</v-container>
 </MasterLayout>
-<!-- </v-app> -->
+</v-app>
 </template>
 
 <script lang="ts" setup>
 	import MasterLayout from "../layouts/MasterLayout.vue";
+	import { useTheme } from "vuetify";
+	import { useUserPiniaStore } from "../stores/user"
+	
+	const piniaStore = useUserPiniaStore(); // initialize the piniaStore
+	const theme = useTheme();
+	/* ----------------------------------------------------------------------------- */
+	theme.global.name.value = piniaStore.Active_Theme
 </script>

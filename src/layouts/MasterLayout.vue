@@ -215,18 +215,22 @@
 		
 		<!-- Footer -->
 		<v-footer app color="primary" >
-			<v-row justify="center" no-gutters>
-				<v-btn :text="link.label" :to="link.url" color="white" variant="text" rounded="xl" 
-				v-for="link in footerLinks" :key="link.label" class="mx-2"/>
+			<v-row justify="start" no-gutters>
 
-				<v-col cols="12" class="text-center mt-4"> 
-					<v-btn color="white" variant="text" rounded="xl" @click="showThemeChangerDialog = true">
-						<v-icon icon="mdi-palette" style="padding-bottom:5px;padding-right:5px;" color="secondary"/> 
+				<v-btn :text="link.label" :to="link.url" color="white" variant="text" rounded="xl" 
+				v-for="link in footerLinks" :key="link.label" _class="mx-1"/>
+
+				<v-btn color="white" variant="text" rounded="xl" @click="showThemeChangerDialog = true">
+					<v-icon icon="mdi-palette" style="padding-bottom:5px;padding-right:5px;" color="secondary"/> 
 						Theme Changer
-					</v-btn>
-				</v-col>
-				<v-col cols="12" class="text-center mt-4"> <strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}	</v-col>
+				</v-btn>
+				
 			</v-row>
+
+			<v-row justify="end" no-gutters>
+				<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}	
+			</v-row>
+
 		</v-footer>
 	</v-layout>
 </template>
@@ -281,8 +285,8 @@ const footerLinks = ref([
 	{ label: "Home", url: "/" },
 	{ label: "About Us", url: "/about" },
 	{ label: "Profile", url: "/profile" },
-	{ label: "Terms & Conditions", url: "/tandc" },
 	{ label: "Contact", url: "/contact" },
+	{ label: "Terms & Conditions", url: "/tandc" },
 ]);
 
 /* ----------------------------------------------------------------------------- */

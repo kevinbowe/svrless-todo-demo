@@ -195,6 +195,7 @@
 </MasterLayout></v-app></template>
 
 <script lang="ts" setup>
+/////////////////////////////////////////////////////////////////////////////
 import MasterLayout from "../layouts/MasterLayout.vue"
 import { Auth } from 'aws-amplify'
 import { ref } from 'vue'
@@ -215,8 +216,7 @@ import { log, warn, err2, err, progress, joy, infob, infog, infoy, infoo, infop,
 		exe, exe1, exe2, exe3, exe4, exe5, exe6, exe7, }
 	from "../my-util-code/MyConsoleUtil" // Cant find this in Prod Build
 /* -------------------------------------------------------------------------- */
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+/////////////////////////////////////////////////////////////////////////////
 const piniaStore = useUserPiniaStore()
 const theme = useTheme()
 const nicknameModel = ref()
@@ -225,7 +225,6 @@ const emailModel = ref()
 const system_usernameModel = ref()
 const preferred_usernameModel = ref()
 const idModel = ref()
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /////////////////////////////////////////////////////////////////////////////
 /* -------------------------------------------------------------------------- */
 const todoModel = ref()
@@ -247,10 +246,8 @@ const showForm = ref(false)
 const showZoom = ref(false)
 const showAllTodos = ref(false)
 const isSignedIn = ref()
-/* -------------------------------------------------------------------------- */
-//				The key is ALWAYS a string
-enum statusEnum { wip = 1, hold = 2, ready = 3, done = 4 }
-/* -------------------------------------------------------------------------- */
+enum statusEnum { wip = 1, hold = 2, ready = 3, done = 4 } // The key is ALWAYS a string
+/////////////////////////////////////////////////////////////////////////////
 // log(`test-log`); warn(`test-warn`); err2(`test-err2`);
 // pass(`test-pass`); fail(`test-fail`);
 // err(`test-err`); success(`test-sucess`); progress(`test-progress`); joy(`test-joy`);
@@ -468,7 +465,7 @@ theme.global.name.value = piniaStore.Active_Theme
 </script>
 
 <style>
-	.v-counter { display:none; }
+	.v-counter { display: none; }
 	.divide-todo {
 		color:rgb(var(--v-theme-border));
 		border-bottom:.2em solid;
@@ -476,11 +473,10 @@ theme.global.name.value = piniaStore.Active_Theme
 		/* border-bottom-color: lightgrey; */
 		/* border-bottom-color: deep-purple-lighten-2; */
 	}
-	.inputPriority input[type='number'] {
-    	-moz-appearance:textfield;
-		}
+	/* --------------------------------------------------------------------------
+	This block hides the numeric spinner in the  Priority <v-text-field> element */
+	.inputPriority input[type='number'] { -moz-appearance:textfield; }
 	.inputPriority input::-webkit-outer-spin-button,
-	.inputPriority input::-webkit-inner-spin-button {
-    	-webkit-appearance: none;
-	}
+	.inputPriority input::-webkit-inner-spin-button { -webkit-appearance: none; }
+	/* -------------------------------------------------------------------------- */
 </style>

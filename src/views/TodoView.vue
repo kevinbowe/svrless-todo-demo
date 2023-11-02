@@ -3,34 +3,59 @@
 </script>
 
 <template >
+	<v-app>
 	<MasterLayout>
 		<div style="max-width: 500px;margin: 0 auto;">
-			<v-row _class="mb-5">
-				<v-col cols="4">
+
+			<v-row __TOP_ROW_CONTAINER__ class="my-5" _class="mb-5">
+				<v-col cols="3">
 					<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
 				</v-col>
 				<v-col>
-					<v-btn v-if="!showZoom && !showForm" text="New Oggi" 
-					class="bg-green-lighten-3" variant="tonal" 
-					@click="showForm = !showForm;" type="submit" size="x-large" block />
-					<!-- <v-btn v-if="!showZoom && !showForm" :text="!showForm ? 'New Oggi' : 'Close'" 
-					class="bg-green-lighten-3" variant="tonal" 
-					@click="showForm = !showForm;" type="submit" size="x-large" block /> -->
-
-					<v-btn v-else text="Close" 
-					class="bg-deep-purple-lighten-2" variant="tonal" 
-					@click="showZoom = false; showForm = false" type="submit" size="x-large" block />
+					<v-row v-if="!showZoom && !showForm">
+						<v-col cols="4">
+							<v-btn text="New" class="bg-green-lighten-3" variant="tonal" 
+							@click="newTodo()" type="submit" size="x-large" block />
+						</v-col>
+						<v-col cols="4">
+							<v-btn text="Top" class="bg-pink-lighten-3" variant="tonal" 
+							@click="getTopTodo();" type="submit" size="x-large" block />
+						</v-col>
+						<v-col cols="4">
+							<v-btn :text="!showAllTodos ? 'All' : 'Hide All'" 
+							class="bg-blue-lighten-3" variant="tonal" 
+							@click="getAllTodos()" type="submit" size="x-large" block />
+						</v-col>
+					</v-row>
+					<v-row v-else no-gutters>
+						<v-btn text="Close" class="bg-deep-purple-lighten-2" variant="tonal" 
+						@click="showZoom = false; showForm = false" type="submit" size="x-large" block />
+					</v-row>
 				</v-col>
 			</v-row>
-			<v-container v-if="showZoom" class="pa-4" no-gutters >
-				<v-row no-gutters>
-					<v-col class="d-flex justify-start text-h5 "> Status: {{ statusModel }} </v-col>
-					<v-col class="d-flex justify-start px-2  text-h5"> Priority: {{ priorityModel }} </v-col>
-				</v-row>
-				<div class="divide-todo my-4"></div>
-				<v-row> <v-col style="display:inline-block; text-align:left; line-height: 1.6;" class="text-h5"> Oggi: {{ todoModel }} </v-col></v-row>
+
+			<v-container __ZOOM_CONTAINER__ v-if="showZoom" class="pa-4" no-gutters>
+				<v-sheet elevation="20" rounded="lg" border="lg" color="background" class="pa-2">
+					<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
+
+						<v-col cols="3" class="d-flex justify-start text-h5 "> Status:	</v-col>
+						<v-col class="d-flex justify-start text-h5 " style="color: initial;"> {{ statusModel }}</v-col>
+						
+						<v-col cols="3" class="d-flex justify-start text-h5"> Priority:</v-col>
+						<v-col class="d-flex justify-start text-h5" style="color: initial;"> {{ priorityModel }}</v-col>
+						
+					</v-row>
+					<div class="divide-todo my-4"></div>
+					<v-row style="color:rgb(var(--v-theme-secondary));"> 
+
+						<v-col cols="2" class="text-h5"> Oggi:	</v-col>
+						<v-col class="text-h5" style="display:inline-block; text-align:left; line-height: 1.6; white-space: pre-wrap; color: initial" > {{ todoModel }}</v-col>
+						
+					</v-row>
+				</v-sheet>
 			</v-container>
-			<v-form ref="todoFormRef" v-if="showForm" validate-on="submit" @submit.prevent>
+
+			<v-form __FORM_CONTIANER__ ref="todoFormRef" v-if="showForm" validate-on="submit" @submit.prevent>
 				<v-row>
 					<v-col>
 						<v-text-field					label="Priority: [ 0-10 ]"
@@ -61,7 +86,7 @@
 				required :rules="[
 					value => !value ? 'Todo is Required' : true,
 					value => !!value,
-					value => value.length <= 6 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
+					value => value.length <= 2 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
 				]" />
 				<v-row>
 					<v-col><v-btn @click="addTodo" type="submit" class="mb-2 bg-green-lighten-3" variant="tonal" text="Add" size="x-large" block /></v-col>
@@ -69,26 +94,33 @@
 					<v-col><v-btn @click="idModel = null" type="reset" class="mb-2 bg-pink-lighten-3" variant="tonal" text="Clear" size="x-large" block /></v-col>
 				</v-row>
 			</v-form>
-			<v-container v-if="!showZoom" class="pa-2 divide-todo"
+
+			<v-container __TODOS_LIST_CONTAINER__ v-if="showAllTodos" class="pa-2 divide-todo"
 			no-gutters v-for="todo in todos" :key="todo.id">
-				<v-row no-gutters>
-					<v-col class="d-flex justify-start"> Status: {{ todo.status }}</v-col>
-					<v-col class="d-flex justify-start px-2"> Priority: {{ todo.priority }}</v-col>
+				<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
+
+					<v-col cols="2" class="d-flex justify-start"> Status: </v-col>
+					<v-col class="d-flex justify-start" style="color: initial;"> {{ todo.status }} </v-col>
+					<v-col cols="2" class="d-flex justify-start"> Priority: </v-col>
+					<v-col class="d-flex justify-start" style="color: initial;"> {{ todo.priority }} </v-col>
+					<v-spacer></v-spacer>
 					<v-col cols="2" class="d-flex justify-end">
 						<v-btn icon="mdi-arrow-expand-all"
 						@click="loadTodoForm(todo); showZoom = true"
-						class="mt-n3" color="secondary" variant="plain"/>`
+						class="mt-n3" color="secondary" variant="plain"/>
 						<v-btn text="Edit" size="x-small" class="mr-2 bg-deep-purple-lighten-2" variant="tonal" @click="loadTodoForm(todo); showForm = true"/>
 						<v-btn text="Delete" class="bg-grey-darken-4" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
 					</v-col>
 				</v-row>
-				<v-divider></v-divider>
-				<v-row>
-					<v-col style="display:inline-block; text-align:left;" > Todo: {{ todo.todo }} </v-col>
+
+				<v-divider> </v-divider>
+				<v-row style="color:rgb(var(--v-theme-secondary));">
+					<v-col cols="2" class="text-left" > Todo: </v-col>
+					<v-col style="display:inline-block; text-align:left; white-space: pre-wrap; color:initial;" > {{ todo.todo }}</v-col>
 				</v-row>
 			</v-container>
 		</div>
-		<v-container class="text-center">
+		<!-- <v-container __PROFILE_DEBUG_CONTAINER__ class="text-center">
 			<hr class="mb-2">
 			<v-row >
 				<v-spacer/>
@@ -119,7 +151,7 @@
 				</v-col>
 				<v-spacer/>
 			</v-row>
-		</v-container>
+		</v-container> -->
 		<!-- PopUp Message Dialog -- Modal -->
 		<v-dialog v-if="openDialogFlag" v-model="openDialogFlag" persistent >
 			<v-card color="background_alt" border="lg" 
@@ -142,6 +174,7 @@
  			</v-card>
 		</v-dialog>
 	</MasterLayout>
+</v-app>
 </template>
 
 <script lang="ts" setup>
@@ -198,6 +231,10 @@ const todoFormRef = ref()
 const openDialogFlag = ref(false)
 const showForm = ref(false)
 const showZoom = ref(false)
+const showAllTodos = ref(false)
+/* -------------------------------------------------------------------------- */
+//				The key is ALWAYS a string
+enum statusEnum { wip = 1, hold = 2, ready = 3, done = 4 }
 /* -------------------------------------------------------------------------- */
 // log(`test-log`); warn(`test-warn`); err2(`test-err2`);
 // pass(`test-pass`); fail(`test-fail`);
@@ -208,7 +245,65 @@ const showZoom = ref(false)
 // start (`test-start`); fini(`test-fini`); exit(`test-exit`); pause(`test-pause`); resume(`test-resume`);
 // bar(`test-bar`); greybar(`test-greybar`); whitebar (`test-whitebar`); bluebar(`test-bluebar`); redbar(`test-redbar`); greenbar (`test-greenbar`); orangebar(`test-orangebar`);
 // exe(`test-exe`); exe1(`test-exe1`); exe2(`test-exe2`); exe3(`test-exe3`); exe4(`test-exe4`); exe5(`test-exe5`); exe6(`test-exe6`); exe7(`test-exe7`);
+/////////////////////////////////////////////////////////////////////////////
+const newTodo = () => {
+	//				Make sure Cx is signed in.
+	if(!piniaStore.connected) {
+		openDialogFlag.value = true;
+		return
+	}
+	showForm.value = !showForm.value
+}
+/////////////////////////////////////////////////////////////////////////////
+const getAllTodos = () => {
+	//				Make sure Cx is signed in.
+	if(!piniaStore.connected) {
+		openDialogFlag.value = true;
+		return
+	}
+	showAllTodos.value = !showAllTodos.value
+}
+/////////////////////////////////////////////////////////////////////////////
+const getTopTodo = () => {
+	//				Make sure Cx is signed in.
+	if(!piniaStore.connected) {
+		openDialogFlag.value = true;
+		return
+	}
+	showZoom.value = true
 
+	//				This is a precaution. -- The data should already be properly sorted.
+	sortTodos()
+	//				Hydrate the models.
+	statusModel.value = todos.value[0].status
+	priorityModel.value = todos.value[0].priority
+	todoModel.value = todos.value[0].todo
+}
+
+/////////////////////////////////////////////////////////////////////////////
+const sortTodos = () => {
+	todos.value.sort(function(left, right) {
+		let leftStatus = statusEnum[left.status]
+		let leftPriority = Number(left.priority)
+
+		let rightStatus = statusEnum[right.status]
+		let rightPriority = Number(right.priority)
+
+		if(leftStatus === rightStatus){
+			//			If we get here, the Statuses are equal.
+
+			//			Check the Priorities.
+			if( leftPriority > rightPriority ) return 1
+			if( leftPriority < rightPriority ) return -1
+			//			If we get here the Prorities are equal
+			return
+		}
+		//				This handles the case where the Statuses are not equal
+		if( leftStatus > rightStatus ) return 1
+
+		if( leftStatus < rightStatus ) return -1
+	})
+}
 /////////////////////////////////////////////////////////////////////////////
 const getUser = async (username) => {
 	//				Clear the list of todos.
@@ -229,14 +324,9 @@ const getUser = async (username) => {
 
 	//	If we get here, the 'await fetch' has compled.
 
-	//	Sort the results (todos.value) by Username (desc) and priority (asc)
-	todos.value.sort(function(a,b) {
-		if(a.username === b.username) return (a.priority-b.priority)
-		else if(a.username > b.username) return 1
-		else if(a.username < b.username) return -1
-	})
+	//			Sort the results by Status (enum) and then priority (asc)
+	sortTodos()
 }
-
 /////////////////////////////////////////////////////////////////////////////
 const updateTodo = async () => {
 
@@ -266,17 +356,12 @@ const updateTodo = async () => {
 	
 	todos.value = todos.value.filter(e  => { return e.id != newTodo.id })
 
-	//				Add the Update Todo
+	//			Add the Update Todo
 	todos.value.push(newTodo)
 
-	//				Sort the results by Username (desc) and priority (asc)
-	todos.value.sort(function(a,b) {
-		if(a.username === b.username) return (a.priority-b.priority)
-		else if(a.username > b.username) return 1
-		else if(a.username < b.username) return -1
-	})
+	//			Sort the results by Status (enum) and then priority (asc)
+	sortTodos()
 }
-
 /////////////////////////////////////////////////////////////////////////////
 const addTodo = async () => {
 
@@ -305,14 +390,9 @@ const addTodo = async () => {
 	})
 	todos.value.push(newTodo)
 	
-	//	Sort the results by Username (desc) and priority (asc)
-	todos.value.sort(function(a,b) {
-		if(a.username === b.username) return (a.priority-b.priority)
-		else if(a.username > b.username) return 1
-		else if(a.username < b.username) return -1
-	})
+	// 			Sort the results by Status (enum) and then priority (asc)
+	sortTodos()
 }
-
 /////////////////////////////////////////////////////////////////////////////
 const removeTodo = async (todoId, todoUsername) => {
 	await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/DeleteTodo", {
@@ -322,7 +402,6 @@ const removeTodo = async (todoId, todoUsername) => {
 	})
 	todos.value = todos.value.filter(t => t.id !== todoId)
 }
-
 /////////////////////////////////////////////////////////////////////////////
 const loadTodoForm = async (todo) => {
 		priorityModel.value = todo.priority
@@ -330,7 +409,6 @@ const loadTodoForm = async (todo) => {
 		todoModel.value = todo.todo
 		idModel.value = todo.id
 }
-
 /////////////////////////////////////////////////////////////////////////////
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* 				if(BLOCKAPI("submitEmail function "))return							*/
@@ -351,7 +429,7 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /* GetSession Decl */
 async function getSession(){
-		//				Check to see if there is an active session.
+		//			Check to see if there is an active session.
 		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
 		.then((user) => {
 			isSignedIn.value = "Signed In"
@@ -361,7 +439,7 @@ async function getSession(){
 			system_usernameModel.value = user.username
 			preferred_usernameModel.value = user.attributes?.preferred_username
 			piniaStore.connected = true
-			//			Load the users Todo's
+			//		Load the users Todo's
 			getUser(system_usernameModel.value)
 	})
 	.catch((error) => {

@@ -2,34 +2,38 @@
 	const BLOCKAPIFLAG = ref(false)
 </script>
 
-<template >
-	<v-app>
-	<MasterLayout>
-		<div style="max-width: 500px;margin: 0 auto;">
+<template><v-app><MasterLayout>
+		<v-container __MAIN_CONTAINER__ style="max-width: 500px;margin: 0 auto;">
 
-			<v-row __TOP_ROW_CONTAINER__ class="my-5" _class="mb-5">
+			<v-row __TOP_ROW_CONTAINER__ class="my-5">
 				<v-col cols="3">
 					<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
 				</v-col>
 				<v-col>
 					<v-row v-if="!showZoom && !showForm">
 						<v-col cols="4">
-							<v-btn text="New" class="bg-green-lighten-3" variant="tonal" 
-							@click="newTodo()" type="submit" size="x-large" block />
+							<v-btn text="New" 
+							variant="tonal" size="x-large" block class="bg-green-lighten-3"  
+							type="submit" @click="newTodo()"/>
 						</v-col>
 						<v-col cols="4">
-							<v-btn text="Top" class="bg-pink-lighten-3" variant="tonal" 
-							@click="getTopTodo();" type="submit" size="x-large" block />
+							<v-btn text="Top" 
+							variant="tonal" size="x-large" block class="bg-pink-lighten-3" 
+							type="submit" @click="getTopTodo()" 
+							/>
 						</v-col>
 						<v-col cols="4">
 							<v-btn :text="!showAllTodos ? 'All' : 'Hide All'" 
-							class="bg-blue-lighten-3" variant="tonal" 
-							@click="getAllTodos()" type="submit" size="x-large" block />
+							variant="tonal" size="x-large" block class="bg-blue-lighten-3" 
+							type="submit" @click="getAllTodos()" 
+							 />
 						</v-col>
 					</v-row>
 					<v-row v-else no-gutters>
-						<v-btn text="Close" class="bg-deep-purple-lighten-2" variant="tonal" 
-						@click="showZoom = false; showForm = false" type="submit" size="x-large" block />
+						<v-btn text="Close" 
+						variant="tonal" size="x-large" block class="bg-deep-purple-lighten-2" 
+						type="submit" @click="showZoom = false; showForm = false" 
+						/>
 					</v-row>
 				</v-col>
 			</v-row>
@@ -58,35 +62,41 @@
 			<v-form __FORM_CONTIANER__ ref="todoFormRef" v-if="showForm" validate-on="submit" @submit.prevent>
 				<v-row>
 					<v-col>
-						<v-text-field					label="Priority: [ 0-10 ]"
-						bg-color="background" variant="outlined" density="compact" class="mb-3"
-						v-model="priorityModel" type="number" min="0" max="10"
-						ref="priorityModelFieldRef" clearable @click:clear= "clearPriorityModelValidationError"
-						required :rules="[
-							value => !value ? 'Priority Required' : true,
+						<v-text-field label="Priority:" hint="Value from 0 to 10"
+						ref="priorityModelFieldRef"
+						variant="outlined" density="compact" hide-spin-buttons=true clearable 
+						bg-color="background" class="mb-3 inputPriority"
+						v-model="priorityModel" type="number" min="0" max="10" 
+						@click:clear= "clearPriorityModelValidationError"
+						required 
+						:rules="[
+							value => !value ? 'Priority Required [ 0 to 10 ]' : true,
 							value => !!value,
 							value => value < 0  || value > 10 ? 'Priority range: 0 to 10 -- Required' : true ,
 						]"/>
 					</v-col>
 					<v-col>
-						<v-select 						label="Select Status: [ ready | wip | done | hold ]"
-						bg-color="background"
-						variant="outlined" density="compact" class="mb-3"
-						v-model="statusModel" :items="['ready', 'wip', 'done', 'hold']"
-						ref="statusModelFieldRef" clearable @click:clear= "clearStatusModelValidationError"
-						required :rules="[
+						<v-select label="Status:" ref="statusModelFieldRef" 
+						variant="outlined" density="compact" clearable 
+						bg-color="background" class="mb-3"
+						v-model="statusModel" :items="['wip', 'hold', 'ready', 'done']"
+						@click:clear= "clearStatusModelValidationError"
+						required 
+						:rules="[
 							value => !value ? 'Status Required' : true,
 							value => !!value,
-						]" />
+						]"/>
 					</v-col>
 				</v-row>
-				<v-textarea 					label="Create Todo"
-				auto-grow rows="2" bg-color="background" variant="outlined" density="compact" class="mb-3"
-				v-model="todoModel" ref="todoModelFieldRef" clearable @click:clear= "clearTodoModelValidationError"
-				required :rules="[
+				<v-textarea label="Todo:" ref="todoModelFieldRef" 
+				variant="outlined" density="compact" auto-grow rows="2" clearable bg-color="background" class="mb-3"
+				v-model="todoModel" 
+				@click:clear= "clearTodoModelValidationError"
+				required 
+				:rules="[
 					value => !value ? 'Todo is Required' : true,
 					value => !!value,
-					value => value.length <= 2 ? `Todo is too short - 6 char min > Length = [ ${value.length} ]` : true
+					value => value.length <= 2 ? `Todo is too short - 2 char min > Length = [ ${value.length} ]` : true
 				]" />
 				<v-row>
 					<v-col><v-btn @click="addTodo" type="submit" class="mb-2 bg-green-lighten-3" variant="tonal" text="Add" size="x-large" block /></v-col>
@@ -106,10 +116,16 @@
 					<v-spacer></v-spacer>
 					<v-col cols="2" class="d-flex justify-end">
 						<v-btn icon="mdi-arrow-expand-all"
-						@click="loadTodoForm(todo); showZoom = true"
-						class="mt-n3" color="secondary" variant="plain"/>
-						<v-btn text="Edit" size="x-small" class="mr-2 bg-deep-purple-lighten-2" variant="tonal" @click="loadTodoForm(todo); showForm = true"/>
-						<v-btn text="Delete" class="bg-grey-darken-4" variant="tonal" size="x-small" @click="removeTodo(todo.id, todo.username)"/>
+						color="secondary" variant="plain" class="mt-n3" 
+						@click="loadTodoForm(todo); showZoom = true"/>
+
+						<v-btn text="Edit" 
+						variant="tonal" size="x-small" class="mr-2 bg-deep-purple-lighten-2" 
+						@click="loadTodoForm(todo); showForm = true"/>
+
+						<v-btn text="Delete" 
+						variant="tonal" size="x-small" class="bg-grey-darken-4" 
+						@click="removeTodo(todo.id, todo.username)"/>
 					</v-col>
 				</v-row>
 
@@ -119,9 +135,10 @@
 					<v-col style="display:inline-block; text-align:left; white-space: pre-wrap; color:initial;" > {{ todo.todo }}</v-col>
 				</v-row>
 			</v-container>
-		</div>
-		<!-- <v-container __PROFILE_DEBUG_CONTAINER__ class="text-center">
-			<hr class="mb-2">
+		</v-container>
+
+		<v-container __PROFILE_DEBUG_CONTAINER__ class="text-center">
+			<!-- <hr class="mb-2">
 			<v-row >
 				<v-spacer/>
 				<v-col cols="8">
@@ -150,39 +167,39 @@
 
 				</v-col>
 				<v-spacer/>
-			</v-row>
-		</v-container> -->
-		<!-- PopUp Message Dialog -- Modal -->
-		<v-dialog v-if="openDialogFlag" v-model="openDialogFlag" persistent >
-			<v-card color="background_alt" border="lg" 
-			class="ma-auto" height="8em" width="15em" elevation="24">
+			</v-row> -->
+		</v-container>
+		
+		<v-dialog __POPUP_MESSAGE_DIALOG__ v-if="openDialogFlag" v-model="openDialogFlag" persistent >
+			<v-card color="background_alt" border="lg" height="8em" width="15em" elevation="24"  class="ma-auto" >
 				<v-card-text class="text-center"> <h2>Please Sign In</h2> </v-card-text>
 				<v-card-actions>
 					<v-row no-gutters>
 						<v-spacer/>
 						<v-col class="pr-1">
-							<v-btn text="Cancel" @click="openDialogFlag = false" 
-							style="background-color:rgb(var(--v-theme-background_alt))"/>
+							<v-btn text="Cancel" 
+							style="background-color:rgb(var(--v-theme-background_alt))"
+							@click="openDialogFlag = false" />
 						</v-col>
 						<v-col>
-							<v-btn text="Sign In" to="/user" @click="openDialogFlag = false" 
-							color="surface" style="background-color:rgb(var(--v-theme-primary))"/>
+							<v-btn text="Sign In" 
+							to="/user" color="surface" 
+							style="background-color:rgb(var(--v-theme-primary))"
+							@click="openDialogFlag = false" />
 						</v-col>
 						<v-spacer/>
 					</v-row>
 				</v-card-actions>
  			</v-card>
 		</v-dialog>
-	</MasterLayout>
-</v-app>
-</template>
+</MasterLayout></v-app></template>
 
 <script lang="ts" setup>
-import MasterLayout from "../layouts/MasterLayout.vue";
-import { Auth } from 'aws-amplify';
+import MasterLayout from "../layouts/MasterLayout.vue"
+import { Auth } from 'aws-amplify'
 import { ref } from 'vue'
 import { useUserPiniaStore } from "../stores/user"
-import { useTheme } from "vuetify";
+import { useTheme } from "vuetify"
 /* ----------------------------------------------------------------------------- */
 import { bluebar, info, info1, info2 , info3, info4, info5, info6, info7, infor, pass, fail }
 	from "../my-util-code/MyConsoleUtil" // Cant find this in Prod Build
@@ -200,17 +217,16 @@ import { log, warn, err2, err, progress, joy, infob, infog, infoy, infoo, infop,
 /* -------------------------------------------------------------------------- */
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const piniaStore = useUserPiniaStore(); //initialize the piniaStore
-const theme = useTheme();
+const piniaStore = useUserPiniaStore()
+const theme = useTheme()
 const nicknameModel = ref()
 const phone_numberModel = ref()
 const emailModel = ref()
-const isSignedIn = ref()
+const system_usernameModel = ref()
+const preferred_usernameModel = ref()
+const idModel = ref()
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 /////////////////////////////////////////////////////////////////////////////
-const todos = ref()
-/* -------------------------------------------------------------------------- */
-const idModel = ref()
 /* -------------------------------------------------------------------------- */
 const todoModel = ref()
 const todoModelFieldRef = ref()
@@ -224,14 +240,13 @@ const priorityModel = ref()
 const priorityModelFieldRef = ref()
 const clearPriorityModelValidationError = () => priorityModelFieldRef.value.resetValidation()
 /* -------------------------------------------------------------------------- */
-const system_usernameModel = ref()
-const preferred_usernameModel = ref()
-/* -------------------------------------------------------------------------- */
+const todos = ref()
 const todoFormRef = ref()
 const openDialogFlag = ref(false)
 const showForm = ref(false)
 const showZoom = ref(false)
 const showAllTodos = ref(false)
+const isSignedIn = ref()
 /* -------------------------------------------------------------------------- */
 //				The key is ALWAYS a string
 enum statusEnum { wip = 1, hold = 2, ready = 3, done = 4 }
@@ -249,7 +264,7 @@ enum statusEnum { wip = 1, hold = 2, ready = 3, done = 4 }
 const newTodo = () => {
 	//				Make sure Cx is signed in.
 	if(!piniaStore.connected) {
-		openDialogFlag.value = true;
+		openDialogFlag.value = true
 		return
 	}
 	showForm.value = !showForm.value
@@ -258,7 +273,7 @@ const newTodo = () => {
 const getAllTodos = () => {
 	//				Make sure Cx is signed in.
 	if(!piniaStore.connected) {
-		openDialogFlag.value = true;
+		openDialogFlag.value = true
 		return
 	}
 	showAllTodos.value = !showAllTodos.value
@@ -267,7 +282,7 @@ const getAllTodos = () => {
 const getTopTodo = () => {
 	//				Make sure Cx is signed in.
 	if(!piniaStore.connected) {
-		openDialogFlag.value = true;
+		openDialogFlag.value = true
 		return
 	}
 	showZoom.value = true
@@ -279,7 +294,6 @@ const getTopTodo = () => {
 	priorityModel.value = todos.value[0].priority
 	todoModel.value = todos.value[0].todo
 }
-
 /////////////////////////////////////////////////////////////////////////////
 const sortTodos = () => {
 	todos.value.sort(function(left, right) {
@@ -334,7 +348,7 @@ const updateTodo = async () => {
 	.then(response => {return response.valid})
 
 	if (!isValid) {
-		console.log(`Validation - updateTodo(~) -- Failed`);
+		console.log(`Validation - updateTodo(~) -- Failed`)
 		return
 	}
 
@@ -369,7 +383,6 @@ const addTodo = async () => {
 	.then(response => {return response.valid})
 
 	if (!isValid) {
-		console.log(`Validation - addTodo(~) -- Failed`);
 		return
 	}
 
@@ -410,24 +423,24 @@ const loadTodoForm = async (todo) => {
 		idModel.value = todo.id
 }
 /////////////////////////////////////////////////////////////////////////////
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* 				if(BLOCKAPI("submitEmail function "))return							*/
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const BLOCKAPI = (message:string|null|undefined = null) => {
+
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+	/* 				if(BLOCKAPI("submitEmail function "))return							*/
+	/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
 	if(BLOCKAPIFLAG.value)
 		message ? console.log(`${message} -- BLOCKED`) : console.log("-- BLOCKED -- ")
 	return BLOCKAPIFLAG.value
 }
-
-/////////////////////////////////////////////////////////////////////////////
-////				Keep for debugging
+/* *******  For Debug  *****************************************************
 // onMounted(async () => {
 // 	todos.value = await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/ListAll")
 // 	.then(response => { return response.json() })
-// });
+// })
+*/
 
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-/* GetSession Decl */
+/////////////////////////////////////////////////////////////////////////////
 async function getSession(){
 		//			Check to see if there is an active session.
 		await Auth.currentAuthenticatedUser({bypassCache: true /* false */})
@@ -447,12 +460,11 @@ async function getSession(){
 		piniaStore.connected = false
 	} )
 }
-
-/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+////////////////////////////////////////////////////////////////////////////
 getSession()
-/* ----------------------------------------------------------------------------- */
 
 theme.global.name.value = piniaStore.Active_Theme
+
 </script>
 
 <style>
@@ -463,5 +475,12 @@ theme.global.name.value = piniaStore.Active_Theme
 		/* border-bottom-color: #212121; */ /* grey-darken-4 */
 		/* border-bottom-color: lightgrey; */
 		/* border-bottom-color: deep-purple-lighten-2; */
+	}
+	.inputPriority input[type='number'] {
+    	-moz-appearance:textfield;
+		}
+	.inputPriority input::-webkit-outer-spin-button,
+	.inputPriority input::-webkit-inner-spin-button {
+    	-webkit-appearance: none;
 	}
 </style>

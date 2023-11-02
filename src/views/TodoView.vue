@@ -7,7 +7,7 @@
 
 			<v-row __TOP_ROW_CONTAINER__ class="my-5">
 				<v-col cols="3">
-					<h1 style="color:rgb(var(--v-theme-border))">Oggi</h1>
+					<h1 style="color:rgb(var(--v-theme-border))">Ohggi</h1>
 				</v-col>
 				<v-col>
 					<v-row v-if="!showZoom && !showForm">
@@ -52,8 +52,8 @@
 					<div class="divide-todo my-4"></div>
 					<v-row style="color:rgb(var(--v-theme-secondary));"> 
 
-						<v-col cols="2" class="text-h5"> Oggi:	</v-col>
-						<v-col class="text-h5" style="display:inline-block; text-align:left; line-height: 1.6; white-space: pre-wrap; color: initial" > {{ todoModel }}</v-col>
+						<v-col cols="3" class="text-h5 d-flex justify-left"> Ohggi: </v-col>
+						<v-col class="text-h5 todo-text" > {{ todoModel }}</v-col>
 						
 					</v-row>
 				</v-sheet>
@@ -132,7 +132,7 @@
 				<v-divider> </v-divider>
 				<v-row style="color:rgb(var(--v-theme-secondary));">
 					<v-col cols="2" class="text-left" > Todo: </v-col>
-					<v-col style="display:inline-block; text-align:left; white-space: pre-wrap; color:initial;" > {{ todo.todo }}</v-col>
+					<v-col class="todo-text"> {{ todo.todo }}</v-col>
 				</v-row>
 			</v-container>
 		</v-container>
@@ -260,10 +260,12 @@ enum statusEnum { wip = 1, hold = 2, ready = 3, done = 4 } // The key is ALWAYS 
 /////////////////////////////////////////////////////////////////////////////
 const newTodo = () => {
 	//				Make sure Cx is signed in.
-	if(!piniaStore.connected) {
-		openDialogFlag.value = true
-		return
-	}
+	if(!piniaStore.connected) return openDialogFlag.value = true
+	//			Clear the models
+	statusModel.value = null
+	priorityModel.value = null
+	todoModel.value = null
+	//			Display form
 	showForm.value = !showForm.value
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -472,6 +474,13 @@ theme.global.name.value = piniaStore.Active_Theme
 		/* border-bottom-color: #212121; */ /* grey-darken-4 */
 		/* border-bottom-color: lightgrey; */
 		/* border-bottom-color: deep-purple-lighten-2; */
+	}
+	.todo-text {
+		display:inline-block; 
+		text-align:left; 
+		line-height: 1.6; 
+		white-space: pre-wrap; 
+		color: initial;
 	}
 	/* --------------------------------------------------------------------------
 	This block hides the numeric spinner in the  Priority <v-text-field> element */

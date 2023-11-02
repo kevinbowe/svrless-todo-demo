@@ -95,9 +95,8 @@
 		</v-navigation-drawer>
 
 		<!-- Debugging Menu Bar DEV ONLY -->
-		<v-app-bar color="primary" style="height:75px;padding-top: 5px;" _density="compact" >
+		<!-- <v-app-bar color="primary" style="height:75px;padding-top: 5px;" _density="compact" >
 			<v-row no-gutters class="ma-5">
-				<!-- <v-col > -->
 				<v-col align="left" >
 					<div v-if="mobile">MOB</div> <div v-if="!mobile">DSK</div>
 					<div v-if="piniaStore.connected">
@@ -116,10 +115,10 @@
 					<p>pS.Inactive_Theme == [ {{ piniaStore.Inactive_Theme }} ]</p>
 				</v-col>
 			</v-row>
-		</v-app-bar>
+		</v-app-bar> -->
 
 		<!-- Main Menu Bar -->	
-		<v-app-bar class="my-3" color="blue-grey-darken-1">
+		<v-app-bar _class="my-3" color="blue-grey-darken-1">
 
 			<!-- <v-app-bar-nav-icon __DEV_ONLY__ __v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon> -->
 			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawerLeft=!drawerLeft"/>

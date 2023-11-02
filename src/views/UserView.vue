@@ -63,6 +63,18 @@
 							<v-form validate-on="submit" @submit.prevent="signUpUser">
 								<v-row no-gutters>
 									<v-col cols="12">
+										<v-text-field id="usernameSuId" v-model="workingUsernameModel" 
+										ref="workingUsernameFieldRef"
+										clearable @click:clear="clearWorkingUsernameModelValidationError"
+										:rules="[
+											value => checkWorkingUsernameTooShort(value),
+											value => checkWorkingUsernameFirstChar(value),
+											value => checkWorkingUsernameSpecialCharExceptions(value)
+										]" 
+										density="compact" variant="outlined" label="Username" required />
+									</v-col>
+
+									<v-col cols="12">
 										<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
 											prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
 											@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
@@ -80,17 +92,8 @@
 										]"
 										density="compact" variant="outlined" label="Email" required />
 									</v-col>
-									<v-col cols="12">
-										<v-text-field id="usernameSuId" v-model="workingUsernameModel" 
-										ref="workingUsernameFieldRef"
-										clearable @click:clear="clearWorkingUsernameModelValidationError"
-										:rules="[
-											value => checkWorkingUsernameTooShort(value),
-											value => checkWorkingUsernameFirstChar(value),
-											value => checkWorkingUsernameSpecialCharExceptions(value)
-										]" 
-										density="compact" variant="outlined" label="Username" required />
-									</v-col>
+
+
 									<v-col cols="12">
 										<v-text-field id="phone_numberSuId" v-model="workingPhone_numberModel" 
 										ref="workingPhone_numberFieldRef"
@@ -99,7 +102,7 @@
 											value => checkPhone_number(value),
 											value => checkPhone_numberInvalidCountryCode(value),
 										]"
-										density="compact" variant="outlined" label="Phone number"/>
+										density="compact" variant="outlined" label="Phone number (optional)"/>
 									</v-col>
 									<v-col cols="12">
 										<v-text-field id="nicknameSuId" v-model="workingNicknameModel" 
@@ -113,8 +116,10 @@
 											value => checkNicknameLastChar(value),
 											value => checkNicknameSpecialChars(value),
 										]"
-										density="compact" variant="outlined" label="Nickname"/>
+										density="compact" variant="outlined" label="Nickname (optional)"/>
 									</v-col>
+
+
 									<v-btn :disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel"
 											block size="large" color="primary" class="mb-3" type="submit" > 
 												Sign Up 

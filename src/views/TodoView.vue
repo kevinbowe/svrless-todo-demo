@@ -6,11 +6,11 @@
 		<v-container __MAIN_CONTAINER__ style="max-width: 500px;margin: 0 auto;">
 
 			<v-row __TOP_ROW_CONTAINER__ class="my-5">
-				<v-col cols="3">
+				<v-col cols="4">
 					<h1 style="color:rgb(var(--v-theme-border))">Ohggi</h1>
 				</v-col>
 				<v-col>
-					<v-row v-if="!showZoom && !showForm">
+					<v-row v-if="!showForm">
 						<v-col cols="4">
 							<v-btn text="New" 
 							variant="tonal" size="x-large" block class="bg-green-lighten-3"  
@@ -19,14 +19,12 @@
 						<v-col cols="4">
 							<v-btn text="Top" 
 							variant="tonal" size="x-large" block class="bg-pink-lighten-3" 
-							type="submit" @click="getTopTodo()" 
-							/>
+							type="submit" @click="getTopTodo()" />
 						</v-col>
 						<v-col cols="4">
-							<v-btn :text="!showAllTodos ? 'All' : 'Hide All'" 
+							<v-btn text="All" 
 							variant="tonal" size="x-large" block class="bg-blue-lighten-3" 
-							type="submit" @click="getAllTodos()" 
-							 />
+							type="submit" @click="getAllTodos()" />
 						</v-col>
 					</v-row>
 					<v-row v-else no-gutters>
@@ -284,7 +282,7 @@ const getTopTodo = () => {
 		openDialogFlag.value = true
 		return
 	}
-	showZoom.value = true
+	showZoom.value = !showZoom.value
 
 	//				This is a precaution. -- The data should already be properly sorted.
 	sortTodos()

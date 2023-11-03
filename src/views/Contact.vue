@@ -3,7 +3,7 @@
 <MasterLayout>
 	<v-container>
 		<v-col class="d-flex justify-center">
-			<v-card width="50%" color="secondary" variant="tonal" class="text-h4">Contact-Info</v-card>
+			<v-card width="60%" color="secondary" variant="tonal" class="text-h4">Contact-Info</v-card>
 		</v-col>
 
 		<p class="mt-5"> www.DaBowe.com</p>

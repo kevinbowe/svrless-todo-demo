@@ -1,21 +1,18 @@
 <template>
 <v-app>
 <MasterLayout>
-	<v-container class="text-align:start">
+	<v-container>
+		<v-col class="d-flex justify-center">
+			<v-card width="50%" color="secondary" variant="tonal" class="text-h4">Contact-Info</v-card>
+		</v-col>
 
-		<h1 style="text-align: center;">Contact Info</h1>
-		
-		<v-row>
-			<v-spacer></v-spacer>
-			<v-col cols="4" style="text-align: center;">
-					<p>www.DaBowe.com</p>
-					221a Baker Street, 
-					<p>Durham, North Carolina 27703</p>
-					<p>919 333-4444</p>
-			</v-col>
-			<v-spacer></v-spacer>
-		</v-row>
+		<p class="mt-5"> www.DaBowe.com</p>
 
+		<p class="mt-5">828 Glenco Rd,</p>
+		<p>Durham, North Carolina 27703</p>
+		<p>919 272-7866</p>
+
+		<p class="mt-5">Kevin Bowe (KB)</p>
 	</v-container>
 </MasterLayout>
 </v-app>

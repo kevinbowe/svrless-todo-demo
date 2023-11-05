@@ -1,5 +1,5 @@
 <script lang="ts">
-	const BLOCKAPIFLAG = ref(true)
+	const BLOCKAPIFLAG = ref(false)
 	export default {inheritAttrs: false}
 </script>
 
@@ -106,14 +106,15 @@ import { bar, whitebar, greybar} from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
 import { ref, Ref } from 'vue'
 import { Auth } from 'aws-amplify';
-
+import { useUserPiniaStore } from "../stores/user"
 import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 	from "../components/ConfirmationParts/ComfirmationValidators"
 import { parseEmail } from "../components/EmailParts/EmailValidators"
+import router from "../router";
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const emit = defineEmits()
-
+const piniaStore = useUserPiniaStore(); 
 /* ----------------------------------------------------------------------------- */
 const props = defineProps({
 	username: { type: String }, 
@@ -126,7 +127,6 @@ const confirmDeleteCodeModelFieldRef = ref()
 const clearConfirmDeleteCodeModelValidationError = () => confirmDeleteCodeModelFieldRef.value.resetValidation()
 /* ----------------------------------------------------------------------------- */
 const toggleConfirmDelete:Ref<boolean> = ref(false)
-// const deleteConfirmationMessage = { Title: ref(""), Message: ref(""), Message2: ref(""), Message3: ref("") }
 
 type  deleteConfirmationMessageType = { Title: string, Message: string, Message2: string, Message3: string }
 let deleteConfirmationMessage: deleteConfirmationMessageType = { Title: "", Message: "", Message2: "", Message3: "" }
@@ -172,6 +172,11 @@ const applyDeleteConfirmationCode = async (event) => {
 		openDialogFlag.value = true // open the Popup Dialog
 		confirmDeleteCodeModel.value = ""
 	})
+	//			Deletion is successful
+	
+	//			Send the Cx to the SignIn page
+	piniaStore.connected = false;
+	router.push({name:'User'})
 }
 
 /* ----------------------------------------------------------------------------- */

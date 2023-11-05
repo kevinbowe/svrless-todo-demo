@@ -11,7 +11,7 @@
 
 						<v-row no-gutters class="text-h5 mt-5" style="color:rgb(var(--v-theme-secondary))">
 							Nick Name:</v-row>
-						<v-row no-gutters class="px-10 text-h7">{{ nicknameModel }}</v-row>
+						<v-row no-gutters class="px-10 text-h7">{{ nicknameModel ? nicknameModel : "< empty >" }}</v-row>
 
 						<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
 							Email:</v-row>

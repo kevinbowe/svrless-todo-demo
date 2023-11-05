@@ -102,15 +102,15 @@
 											value => checkPhone_number(value),
 											value => checkPhone_numberInvalidCountryCode(value),
 										]"
-										density="compact" variant="outlined" label="Phone number (optional)"/>
+										density="compact" variant="outlined" label="Phone number"/>
 									</v-col>
 									<v-col cols="12">
 										<v-text-field id="nicknameSuId" v-model="workingNicknameModel" 
 										ref="workingNicknameFieldRef"
 										clearable @click:clear="clearWorkingNicknameModelValidationError"
 										:rules="[
-											value => checkNicknameReserved(value),
 											value => checkNicknameTooShort(value),
+											value => checkNicknameReserved(value),
 											value => checkNicknameNumericFirstChar(value),
 											value => checkNicknameFirstChar(value),
 											value => checkNicknameLastChar(value),

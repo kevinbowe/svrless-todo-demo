@@ -78,7 +78,7 @@
 										<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
 											prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
 											@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
-											label="Password*" required > 
+											label="Password" required > 
 										</v-text-field></v-col>
 
 									<v-col cols="12">

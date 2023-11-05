@@ -24,9 +24,9 @@
 						</v-list-item>
 				</v-list-group> -->
 
-				<v-list-item class="justify-start" to="/profile"> 
+				<!-- <v-list-item class="justify-start" to="/profile"> 
 					<v-icon class="mr-3" icon="mdi-information"/> Profile
-				</v-list-item>
+				</v-list-item> -->
 
 				<!-- <v-list-group value="Experiment">
 					<template v-slot:activator="{ props }">
@@ -125,14 +125,16 @@
 
 			<!-- Title -->
 			<v-toolbar-title style="text-align:start"> 
-				<a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a>
-				<a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	
+				<!-- <a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a> -->
+				<!-- <a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	 -->
+				<!-- <a href="/home" class="text-decoration-none"> Home </a>	 -->
+				<v-btn to="/" color="white" variant="plain" rounded="xl">Home</v-btn>
 
 				<!-- Todo -->
 				<v-btn v-if="!mobile" to="/todo" color="white" variant="plain" rounded="xl">Todo</v-btn>
 				
 				<!-- Profile -->
-				<v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn>
+				<!-- <v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn> -->
 
 
 				<!-- Dev link -->
@@ -168,7 +170,13 @@
 							<v-list-item __ACCOUNT__>
 								<v-icon icon="mdi-cog"/>
 								<v-btn text="Settings" to="/account" variant="plain"/>
-							</v-list-item>							
+							</v-list-item>
+							
+							<v-list-item __PROFILE__>
+								<v-icon icon="mdi-microscope"/>
+								<v-btn text="Profile" to="/profile" variant="plain"/>
+							</v-list-item>
+
 							<v-list-item __SIGN_OUT__>
 								<SignOut/>
 							</v-list-item>
@@ -266,6 +274,7 @@ const drawerRight = ref(false)
 // 	{title:'Article 1', icon:'mdi-school', url:'/article1'},
 // ])
 const account = ref([
+	{title:'Profile', icon:'mdi-microscope', url:'/profile'},
 	{title:'Settings', icon:'mdi-cog-outline', url:'/account'},
 ])
 const threeDots = ref([

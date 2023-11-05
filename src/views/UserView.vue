@@ -411,7 +411,7 @@ const signInUser = async () => {
 				username: user.attributes?.preferred_username ?? user.username,
 			})
 			piniaStore.connected = true
-			router.push({name:'home'})
+			router.push({name:'Home'})
 		}
 	}
 	catch (error) { 

@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: "/",
-		name: "root",
+		name: "Root",
 		component: () => import("../views/HomeView.vue"),
 		meta: {
 			layout: "master",
@@ -53,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
 	},	
 	{
 		path: "/home",
-		name: "home",
+		name: "Home",
 		component: () => import("../views/HomeView.vue"),
 		meta: {
 			layout: "master",
@@ -69,7 +69,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: "/profile/:p1?/:p2?/:p3?/:p4?", 
-		name: "profile",
+		name: "Profile",
 		props: true,
 		component: () =>
 			import("../views/ProfileView.vue"),
@@ -79,7 +79,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: "/todo", 
-		name: "todo",
+		name: "Todo",
 		props: true,
 		component: () =>
 			import("../views/TodoView.vue"),

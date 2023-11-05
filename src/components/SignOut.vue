@@ -24,7 +24,7 @@ const signOutUser = async () => {
 			piniaStore.preferred_username = ""
 
 			//				Redirect to Home View
-			router.push({name:'home'})
+			router.push({name:'Home'})
 		})
 		.catch(error => {
 			piniaStore.connected = true

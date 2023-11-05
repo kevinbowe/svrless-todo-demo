@@ -14,7 +14,7 @@
 	<p class="my-5">Kevin Bowe (KB)</p>
 	<p class="my-5 text-h5">Last Updated: May 19, 2023</p>
 
-	<v-container>
+	<v-container :style="mobile ? 'width:100%;' : 'width:60%;' ">
 			<v-row style="text-align:left;">
 				<p class="mb-5 text-h4">Introduction</p>
 				<p class="mx-10">These Terms and Conditions... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -35,11 +35,11 @@
 <script lang="ts" setup>
 import MasterLayout from "../layouts/MasterLayout.vue";
 import { useUserPiniaStore } from "../stores/user"
-import { useTheme } from "vuetify";
+import { useTheme, useDisplay } from "vuetify";
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const theme = useTheme();
 const piniaStore = useUserPiniaStore(); //initialize the piniaStore
-
+const { mobile } = useDisplay()
 /* ----------------------------------------------------------------------------- */
 theme.global.name.value = piniaStore.Active_Theme
 </script>

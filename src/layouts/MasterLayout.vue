@@ -5,12 +5,12 @@
 		<v-navigation-drawer v-if="mobile" temporary v-model="drawerLeft" >
 
 			<v-list nav>
-				<v-list-item class="justify-start" to="/home"> 
+				<!-- <v-list-item class="justify-start" to="/home"> 
 					<v-icon class="mr-3">mdi-home</v-icon> Home
-				</v-list-item>
+				</v-list-item> -->
 
 				<v-list-item class="justify-start" to="/todo"> 
-					<v-icon class="mr-3" icon="mdi-information"/> Todo
+					<v-icon class="mr-3" icon="mdi-information"/> Ohggi
 				</v-list-item>
 
 				<!-- <v-list-group value="Blogs">
@@ -118,7 +118,8 @@
 		</v-app-bar> -->
 
 		<!-- Main Menu Bar -->	
-		<v-app-bar _class="my-3" color="blue-grey-darken-1">
+		<v-app-bar _class="my-3" color="primary">
+		<!-- <v-app-bar _class="my-3" color="blue-grey-darken-1"> -->
 
 			<!-- <v-app-bar-nav-icon __DEV_ONLY__ __v-if="mobile" variant="text" @click.stop="drawer=!drawer"></v-app-bar-nav-icon> -->
 			<v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawerLeft=!drawerLeft"/>
@@ -127,11 +128,10 @@
 			<v-toolbar-title style="text-align:start"> 
 				<!-- <a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a> -->
 				<!-- <a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	 -->
-				<!-- <a href="/home" class="text-decoration-none"> Home </a>	 -->
-				<v-btn to="/" color="white" variant="plain" rounded="xl">Home</v-btn>
+				<!-- <v-btn to="/" color="white" variant="plain" rounded="xl">Home</v-btn> -->
 
 				<!-- Todo -->
-				<v-btn v-if="!mobile" to="/todo" color="white" variant="plain" rounded="xl">Todo</v-btn>
+				<v-btn v-if="!mobile" to="/todo" color="white" variant="text" rounded="xl">Ohggi</v-btn>
 				
 				<!-- Profile -->
 				<!-- <v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn> -->
@@ -278,7 +278,7 @@ const account = ref([
 	{title:'Settings', icon:'mdi-cog-outline', url:'/account'},
 ])
 const threeDots = ref([
-	{ label: "About Us", url: "/about", icon: "mdi-information-outline", color:"info" },
+	{ label: "About", url: "/about", icon: "mdi-information-outline", color:"info" },
 	{ label: "Terms & Conditions", url: "/tandc", icon: "mdi-scale-balance", color:"warning" },
 	{ label: "Themes", url: "/theme", icon: "mdi-palette", color:"secondary" },
 
@@ -291,7 +291,7 @@ const threeDots = ref([
 // ])
 const footerLinks = ref([
 	{ label: "Home", url: "/" },
-	{ label: "About Us", url: "/about" },
+	{ label: "About", url: "/about" },
 	{ label: "Profile", url: "/profile" },
 	{ label: "Contact", url: "/contact" },
 	{ label: "Terms & Conditions", url: "/tandc" },

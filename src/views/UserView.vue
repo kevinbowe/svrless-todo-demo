@@ -78,7 +78,11 @@
 										<v-text-field v-model="workingPasswordModel" :append-inner-icon="passwordIcon2 ? 'mdi-eye' : 'mdi-eye-off'" 
 											prepend-inner-icon="mdi-lock-outline" :type="passwordIcon2 ? 'text' : 'password'"  
 											@click:append-inner="passwordIcon2 = !passwordIcon2" clearable density="compact" variant="outlined" 
-											label="Password" required > 
+											label="Password" required 
+											:rules="[ 
+												value => checkPasswordTooShort(value),
+												value => checkPasswordSpecialChars(value),
+											]"> 
 										</v-text-field></v-col>
 
 									<v-col cols="12">
@@ -118,12 +122,7 @@
 										]"
 										density="compact" variant="outlined" label="Nickname (optional)"/>
 									</v-col>
-
-
-									<v-btn :disabled="!workingEmailModel || !workingUsernameModel || !workingPasswordModel"
-											block size="large" color="primary" class="mb-3" type="submit" > 
-												Sign Up 
-									</v-btn>
+									<v-btn text="Sign Up" block size="large" color="primary" class="mb-3" type="submit" />
 								</v-row>
 							</v-form>
 						</v-window-item>
@@ -207,6 +206,10 @@ import { Auth, Hub } from 'aws-amplify';
 import { ref, Ref, computed } from 'vue'
 /* ----------------------------------------------------------------------------- */
 import MasterLayout from "../layouts/MasterLayout.vue";
+
+import { checkPasswordTooShort, checkPasswordSpecialChars } 
+	from "../components/PasswordParts/PasswordValidators"
+
 import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkWorkingEmailDomain } 
 	from "../components/EmailParts/EmailValidators"
 

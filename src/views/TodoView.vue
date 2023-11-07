@@ -3,28 +3,18 @@
 </script>
 
 <template><v-app><MasterLayout>
-		<v-container __MAIN_CONTAINER__ style="max-width: 500px;margin: 0 auto;">
-
-			<v-row __TOP_ROW_CONTAINER__ class="my-5">
+		<v-container __MAIN_CONTAINER__ style="max-width: 500px;" class="mt-n7">
+			<v-row __TOP_ROW_CONTAINER__ class="mb-3" no-gutters>
 				<v-col cols="4">
 					<h1 style="color:rgb(var(--v-theme-border))">Ohggi</h1>
 				</v-col>
+
 				<v-col>
-					<v-row v-if="!showForm">
-						<v-col cols="4">
+					<v-row v-if="!showForm" no-gutters>
+						<v-col _cols="4">
 							<v-btn text="New" 
 							variant="tonal" size="x-large" block class="bg-green-lighten-3"  
 							type="submit" @click="newTodo()"/>
-						</v-col>
-						<v-col cols="4">
-							<v-btn text="Top" 
-							variant="tonal" size="x-large" block class="bg-pink-lighten-3" 
-							type="submit" @click="getTopTodo()" />
-						</v-col>
-						<v-col cols="4">
-							<v-btn text="All" 
-							variant="tonal" size="x-large" block class="bg-blue-lighten-3" 
-							type="submit" @click="getAllTodos()" />
 						</v-col>
 					</v-row>
 					<v-row v-else no-gutters>
@@ -36,6 +26,19 @@
 				</v-col>
 			</v-row>
 
+			<v-row v-if="!showForm" no-gutters >
+				<v-col _cols="4" class="mx-2">
+					<v-btn :text="showZoom ? 'Clost Top' : 'Show Top'"
+					variant="tonal" size="x-large" block class="bg-pink-lighten-3" 
+					type="submit" @click="getTopTodo()" />
+				</v-col>
+				<v-col _cols="4">
+					<v-btn :text="showAllTodos ? 'Close All' : 'Show All' " 
+					variant="tonal" size="x-large" block class="bg-blue-lighten-3" 
+					type="submit" @click="getAllTodos()" />
+				</v-col>
+			</v-row>
+
 			<v-container __ZOOM_CONTAINER__ v-if="showZoom" class="pa-4" no-gutters>
 				<v-sheet elevation="20" rounded="lg" border="lg" color="background" class="pa-2">
 					<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
@@ -43,15 +46,15 @@
 						<v-col cols="3" class="d-flex justify-start text-h5 "> Status:	</v-col>
 						<v-col class="d-flex justify-start text-h5 " style="color: initial;"> {{ statusModel }}</v-col>
 						
-						<v-col cols="3" class="d-flex justify-start text-h5"> Priority:</v-col>
-						<v-col class="d-flex justify-start text-h5" style="color: initial;"> {{ priorityModel }}</v-col>
+						<v-col cols="2" class="d-flex justify-end text-h5"> Priority:</v-col>
+						<v-col class="d-flex justify-center text-h5" style="color: initial;"> {{ priorityModel }}</v-col>
 						
 					</v-row>
 					<div class="divide-todo my-4"></div>
 					<v-row style="color:rgb(var(--v-theme-secondary));"> 
 
-						<v-col cols="3" class="text-h5 d-flex justify-left"> Ohggi: </v-col>
-						<v-col class="text-h5 todo-text" > {{ todoModel }}</v-col>
+						<v-col cols="4" class="text-h5 d-flex justify-left"> Fini Ohggi: </v-col>
+						<v-col class="text-h6 todo-text" > {{ todoModel }}</v-col>
 						
 					</v-row>
 				</v-sheet>
@@ -107,12 +110,15 @@
 			no-gutters v-for="todo in todos" :key="todo.id">
 				<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
-					<v-col cols="2" class="d-flex justify-start"> Status: </v-col>
+					<v-col cols="3" class="d-flex justify-start"> Status: </v-col>
 					<v-col class="d-flex justify-start" style="color: initial;"> {{ todo.status }} </v-col>
+					
 					<v-col cols="2" class="d-flex justify-start"> Priority: </v-col>
 					<v-col class="d-flex justify-start" style="color: initial;"> {{ todo.priority }} </v-col>
+					
 					<v-spacer></v-spacer>
-					<v-col cols="2" class="d-flex justify-end">
+					<v-col v-if="todo.username === ''" cols="2" class="my-4"></v-col>
+					<v-col v-else cols="2" class="d-flex justify-end">
 						<v-btn icon="mdi-arrow-expand-all"
 						color="secondary" variant="plain" class="mt-n3" 
 						@click="loadTodoForm(todo); showZoom = true"/>
@@ -129,8 +135,8 @@
 
 				<v-divider> </v-divider>
 				<v-row style="color:rgb(var(--v-theme-secondary));">
-					<v-col cols="2" class="text-left" > Todo: </v-col>
-					<v-col class="todo-text"> {{ todo.todo }}</v-col>
+					<v-col cols="3" class="text-left" > Fini Ohggi: </v-col>
+					<v-col class="todo-text" style="margin-left:-7px;"> {{ todo.todo }}</v-col>
 				</v-row>
 			</v-container>
 		</v-container>
@@ -335,8 +341,17 @@ const getUser = async (username) => {
 
 	//	If we get here, the 'await fetch' has compled.
 
+	if(todos.value.length === 0){
+		//			If we get here, there are no todos associated with this account.
+		//			Generate 1x placeholder 
+		todos.value = [{"username": "", "id": "123XYZ","priority" : "Inspired", "status" : "", "todo": "Coliere Ohggi... Seize Today!"}]
+		showAllTodos.value = true
+		showZoom.value = false
+		return
+	}
 	//			Sort the results by Status (enum) and then priority (asc)
 	sortTodos()
+	showAllTodos.value = true
 }
 /////////////////////////////////////////////////////////////////////////////
 const updateTodo = async () => {
@@ -398,8 +413,10 @@ const addTodo = async () => {
 		headers: { "Content-Type": "application/json"},
 		body: JSON.stringify(newTodo)
 	})
+	//				Discard the 'blank todo if it exists'
+	todos.value = todos.value.filter(e  => {return e.username != ""})
+	//				Push the new Todo to the list of todos	
 	todos.value.push(newTodo)
-	
 	// 			Sort the results by Status (enum) and then priority (asc)
 	sortTodos()
 }
@@ -411,6 +428,8 @@ const removeTodo = async (todoId, todoUsername) => {
 		body: JSON.stringify({ id: todoId, username: todoUsername})
 	})
 	todos.value = todos.value.filter(t => t.id !== todoId)
+
+	if(todos.value.length === 0) getUser(todoUsername)
 }
 /////////////////////////////////////////////////////////////////////////////
 const loadTodoForm = async (todo) => {
@@ -455,6 +474,13 @@ async function getSession(){
 	.catch((error) => {
 		isSignedIn.value = "Not Signed In"
 		piniaStore.connected = false
+
+		//			Show the blank Todo
+		todos.value = [{"username": "", "id": "123XYZ","priority" : "Inspiration", "status" : "", "todo": "Coliere Ohggi... Seize Today!"}]
+		showAllTodos.value = true
+		showZoom.value = false
+		return
+
 	} )
 }
 ////////////////////////////////////////////////////////////////////////////

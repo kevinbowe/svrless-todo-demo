@@ -5,9 +5,9 @@
 		<v-navigation-drawer v-if="mobile" temporary v-model="drawerLeft" >
 
 			<v-list nav>
-				<!-- <v-list-item class="justify-start" to="/home"> 
+				<v-list-item class="justify-start" to="/home"> 
 					<v-icon class="mr-3">mdi-home</v-icon> Home
-				</v-list-item> -->
+				</v-list-item>
 
 				<v-list-item class="justify-start" to="/todo"> 
 					<v-icon class="mr-3" icon="mdi-information"/> Ohggi
@@ -126,13 +126,14 @@
 
 			<!-- Title -->
 			<v-toolbar-title style="text-align:start"> 
-				<!-- <a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a> -->
-				<!-- <a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	 -->
-				<!-- <v-btn to="/" color="white" variant="plain" rounded="xl">Home</v-btn> -->
+				<!-- <a v-if="!mobile" href="/home" class="text-decoration-none"> {{ mainTitle }} </a>
+				<a v-if="mobile" href="/home" class="text-decoration-none"> ( {{ mainTitle.slice(-3) }} ) </a>	 -->
+
+				<v-btn v-if="!mobile && ( routName !== 'Home' && routName !== 'Root') " to="/" color="white"><p style="font-size:1.5em;" >Home</p></v-btn>
 
 				<!-- Todo -->
-				<v-btn v-if="!mobile" to="/todo" color="white" variant="text" rounded="xl">Ohggi</v-btn>
-				
+				<v-btn v-if="!mobile && routName !== 'Todo'" to="/todo" color="white"><p style="font-size:1.5em;" >Ohggi</p></v-btn>
+
 				<!-- Profile -->
 				<!-- <v-btn v-if="!mobile" to="/profile" color="white" variant="plain" rounded="xl">Profile</v-btn> -->
 
@@ -162,9 +163,10 @@
 
 			<!-- Account : [ Settings | Theme | Sign Out ] -->
 			<div v-if="piniaStore.connected">
-				<v-btn color="white" variant="plain"> 
+				<v-btn color="white" > 
 					<v-icon v-if="mobile" icon="mdi-account" size="x-large" /> 
-					<p v-else> Account </p>
+					<p v-else style="font-size:1.5em;" > Account </p>
+
 					<v-menu activator="parent">
 						<v-list>
 							<v-list-item __ACCOUNT__>
@@ -186,7 +188,9 @@
 			</div>
 
 			<!-- Sign In -->
-			<v-btn class="mx-1" text="Sign In" v-if="!piniaStore.connected" to="/user" color="white" variant="tonal" rounded="xl"/>
+			<v-btn v-if="!piniaStore.connected && routName !== 'User' " to="/user" class="mx-1" color="white">
+				<p style="font-size:1.5em;"> Sign In </p>
+			</v-btn>
 
 			<!-- Theme Switch -->
 			<v-icon @click=toggleTheme :icon="themeIcon"/>
@@ -256,6 +260,7 @@ import { Auth } from 'aws-amplify';
 import { useDisplay } from "vuetify";
 import { useUserPiniaStore } from '../stores/user'
 import ThemeChanger from '../components/ThemeChanger.vue'
+import { useRouter } from 'vue-router'
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
 const mainTitle: string = "v3a-todo-theme-v1"
@@ -320,7 +325,8 @@ const toggleTheme = () => {
 	piniaStore.B_ThemeIcon = 'mdi-toggle-switch-off'
 	piniaStore.B_ThemeColor = 'red'
 };
-
+/* ----------------------------------------------------------------------------- */
+const routName = computed(() => { return useRouter().currentRoute.value.name })
 /* ----------------------------------------------------------------------------- */
 //	Win Listener -- Page -- Load / Reload
 window.addEventListener("beforeunload",(event) => { /* Do something here */ }) 

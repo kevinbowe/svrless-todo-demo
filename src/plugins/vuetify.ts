@@ -13,11 +13,10 @@ import { createVuetify, ThemeDefinition } from 'vuetify';
 const light: ThemeDefinition = {
 	dark: false,
 	colors: {
-		// background: colors.red.darken1, // This works
 		background: '#ffffff',
-		border: '#000000', // .............. // black
+		border: '#000000', 
 		border_alt: '#ffffff',
-		surface: '#E0E0E0', // ............. // grey-lighten-2
+		surface: '#E0E0E0',
 		surface_alt: '#ffffff',
 		primary:'#6F3AB0',
 		secondary: '#00838F',
@@ -26,19 +25,9 @@ const light: ThemeDefinition = {
 		success: '#006304',
 		warning: '#FF9800',
 		important: '#795548',
-		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
-		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
-		link:   '#0D47A1' // // ............... // blue-darken-4 // #0D47A1
-		// background: 'white',
-		// surface: "grey-darken-3",
-		// primary:'deep-purple',
-		// secondary: 'teal',
-
-		// info: 'indigo-darken-4',
-		// success: 'green-darken-4',
-		// warning: 'amber-darken-2',
-		// important: 'brown',
-		// error: 'red',
+		minor: '#FFCDD2', 
+		major: '#FF80AB',
+		link:   '#0D47A1' 
 	},
 }
 const dark: ThemeDefinition = {
@@ -47,72 +36,58 @@ const dark: ThemeDefinition = {
 		background: '#000000',
 		border: '#ffffff', 
 		border_alt: '#000000', 
-		surface: '#e0e0e0', // .............. // grey-lighten-2
+		surface: '#e0e0e0', 
 		surface_alt: '#F5F5F5',
-		primary:'#311B92',
+		primary:'#392056',
 		secondary: '#00BCD4',
 		error: '#FF1744',
 		info: '#283593',
 		success: '#00E676',
 		warning: '#EEFF41',
 		important: '#795548',
-		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
-		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
-		link: '#2196F3', // ............... // blue
-		// error: 'red',
-		// info: 'indigo-darken-4',
-		// success: 'green-darken-4',
-		// warning: 'amber-darken-2',
-		// important: 'brown',
+		minor: '#FFCDD2', 
+		major: '#FF80AB',
+		link: '#2196F3'
 	},
 }
 const light_custom: ThemeDefinition = {
 	dark: false,
 	colors: {
-		background: '#E0E0E0', 
-		// surface: '#424242', // .......... // grey-darken-3
-		surface: '#bdbdbd', // .......... // grey-lighten-1
-		primary:'#FF9800',
-		secondary: '#40F576',
-		error: '#B00020',
-		info: '#2196F3',
+		background: '#ffffff', // WHITE
+		border: '#000000', // BLACK
+		border_alt: '#ffffff', // WHITE
+		surface: '#E0E0E0', // GREY-LIGHTEN-2
+		surface_alt: '#ffffff', // WHITE
+		primary:'#36653b', // GREEN
+		secondary: '#5171a4', // BLUE
+		error: '#FF1744',
+		info: '#283593',
 		success: '#006304',
 		warning: '#FF9800',
 		important: '#795548',
-		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
-		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
-		link:  '#0D47A1' // ............... // blue-darken-4 // #0D47A1
-
-		// error: 'red',
-		// info: 'indigo-darken-4',
-		// success: 'green-darken-4',
-		// warning: 'amber-darken-2',
-		// important: 'brown',
-		//major: 'pink-accent-1', // .............. // pink-accent-1 // FF80AB // WORKS
+		minor: '#a4519b', // PURPLE
+		major: '#a48451', // GOLD
+		link:   '#0D47A1' 
 	},
 }
 const dark_custom: ThemeDefinition = {
 	dark: true,
 	colors: {
-		background: '#424242', 
-		surface: '#000000',
-		primary:'#E74C3C',
-		secondary: '#8E44AD',
-		error: '#B00020',
-		info: '#2196F3',
-		success: '#4CAF50',
-		warning: '#FB8C00',
+		background: '#000000', // BLACK
+		border: '#FFFFFF', // WHITE
+		border_alt: '#000000', // BLACK
+		surface: '#E0E0E0', // GREY-LIGHTEN-2
+		surface_alt: '#ffffff', // WHITE
+		primary:'#36653b', // GREEN
+		secondary: '#5171a4', // BLUE
+		error: '#FF1744',
+		info: '#283593',
+		success: '#006304',
+		warning: '#FF9800',
 		important: '#795548',
-		minor: '#FFCDD2', // .............. // red-lighten-4 // #FFCDD2 // WORKS
-		major: '#FF80AB', // .............. // pink-accent-1 // FF80AB // WORKS
-		link: '#2196F3', // ............... // blue // #2196F3
-
-		// error: 'red',
-		// info: 'indigo-darken-4',
-		// success: 'green-darken-4',
-		// warning: 'amber-darken-2',
-		// important: 'brown',
-		// minor: 'red-lighten-4', // .............. // red-lighten-4 // #FFCDD2 // WORKS
+		minor: '#a4519b', // PURPLE
+		major: '#a48451', // GOLD
+		link:   '#0D47A1' 
 	}
 }
 

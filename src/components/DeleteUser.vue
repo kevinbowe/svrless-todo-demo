@@ -135,6 +135,41 @@ const openDialogFlag = ref()
 const showDeleteUser = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const deleteUserData = async (username) => {
+	if(BLOCKAPI("deleteUserData function ")) return 
+
+	//				Chec to see if the account has been deleted.
+	if (!piniaStore.connected) {
+		//			If we get here, the account deletion failed.
+		return
+	}
+
+	//				Fetch the filtered todos
+	const todos = await fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/ListByUser", {
+		method: "post",
+		headers: { "Content-Type": "application/json"},
+		body: `{"username": "${username}"}`
+	})
+	.then(response => { return response.json() })
+	.catch(err => { console.log(`error -> ${err.message}`) })
+
+	//				Check to see if there are any todos to delete.
+	if(todos.length <= 0) return
+
+	//	If we get here, We have all of the todos associated with the user account.
+
+	//				Delete all user data associated with the account.
+ 	todos.forEach(e =>{
+ 		//				This will delete each todo in the Ddb
+ 		fetch("https://ce117ewaci.execute-api.us-east-1.amazonaws.com/DeleteTodo", {
+			method: "delete",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ id: e.id, username: e.username})
+ 		})
+	})
+}
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const sendDeleteUser = async () => {
 	if(BLOCKAPI("sendDeleteUser function ")) { 
 		deleteConfirmationMessage = buildDeleteConfirmationMessage(props.email)
@@ -167,16 +202,20 @@ const applyDeleteConfirmationCode = async (event) => {
 		showDeleteUser.value = false
 		openDialogFlag.value = false
 		toggleConfirmDelete.value = false;
+		piniaStore.connected = false;
 	})
 	.catch((e) => {
 		openDialogFlag.value = true // open the Popup Dialog
 		confirmDeleteCodeModel.value = ""
 	})
 	//			Deletion is successful
+
+	deleteUserData(piniaStore.username)
 	
-	//			Send the Cx to the SignIn page
+	//			Send the Cx to the Home page
 	piniaStore.connected = false;
-	router.push({name:'User'})
+	router.push({name:'Home'})
+
 }
 
 /* ----------------------------------------------------------------------------- */

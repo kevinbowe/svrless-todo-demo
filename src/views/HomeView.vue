@@ -1,6 +1,5 @@
 <script lang="ts">
 	const BLOCKAPIFLAG = ref(false)
-	// Touch
 </script>
 
 <template>

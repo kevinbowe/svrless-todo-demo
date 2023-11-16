@@ -22,7 +22,7 @@
 					<template v-slot:prepend>
 						<v-avatar color="grey-darken-3" size="40px">
 							<img height="40" src="../assets/bearddabowe.svg"/>
-							<!-- <v-img src="./src/assets/bearddabowe.svg"/> -->
+							<!-- <v-img src="./src/assets/bearddabowe.svg"/> Touch -->
 						</v-avatar>
 					</template>
 

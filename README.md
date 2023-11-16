@@ -1,25 +1,13 @@
-# A Vue 3 user's guide to creating complex layouts
+# Serverless-todo-demo
 
-Vue.js is a JavaScript framework for creating reactive user interfaces. It has gained a lot of popularity and for good reasons. You can easily build fast, scalable, and user-friendly applications with it. In this blog post, we'll be discussing how to use layouts to change the look of your app dynamically.
+This is a fully functioning web app 'framework'.
 
-You can read the full article **[here](https://blog.izem.dev/a-vue-3-users-guide-to-creating-complex-layouts)**
+The client utilizes Vue3, Vuetify, TypeScript/Javascript, Material and Bootstrap.
+The server is completly based on Amazon products including DynamoDB, Lambda, API Gateway, Cognito.
+Hosting is also completely based on Amazon products including Route53, AWS Amplify, IAM.
 
-# Project setup
+# Responsive
 
-1. Clone the project
+# 100% Self-Serve Account management.
 
-```
-git clone https://github.com/izemomar/vue-multi-layouts
-```
-
-2. Install packages
-
-```
-npm install
-```
-
-3. Run the server
-
-```
-npm run dev
-```
+# Light/Dark/Custom Theme management.

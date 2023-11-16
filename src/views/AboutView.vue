@@ -21,10 +21,9 @@
 				<v-list-item>
 					<template v-slot:prepend>
 						<v-avatar color="grey-darken-3">
-							<v-img src="./src/assets/bearddabowe.svg"/>
+							<img src="../assets/bearddabowe.svg"/>
+							<!-- <v-img src="./src/assets/bearddabowe.svg"/> -->
 						</v-avatar>
-						<!-- <v-avatar color="grey-darken-3" image="./src/assets/bearddabowe.svg" /> -->
-						<!-- <v-avatar color="grey-darken-3" image="./src/assets/Beard_DaBowe.svg" /> -->
 					</template>
 
 					<v-list-item-title>Kevin Bowe (KB)</v-list-item-title>

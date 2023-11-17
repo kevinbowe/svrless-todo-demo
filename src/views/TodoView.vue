@@ -44,10 +44,17 @@
 					<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
 						<v-col cols="3" class="d-flex justify-start text-h5 "> Status:	</v-col>
-						<v-col class="d-flex justify-start text-h5 " style="color: initial;"> {{ statusModel }}</v-col>
+
+						<v-col class="d-flex justify-start text-h5 " style="color:rgb(var(--v-theme-border))"> 
+						<!-- <v-col class="d-flex justify-start text-h5 " style="color: initial;">  -->
+							{{ statusModel }}
+						</v-col>
 						
 						<v-col cols="2" class="d-flex justify-end text-h5"> Priority:</v-col>
-						<v-col class="d-flex justify-center text-h5" style="color: initial;"> {{ priorityModel }}</v-col>
+						<v-col class="d-flex justify-center text-h5" style="color:rgb(var(--v-theme-border))"> 
+						<!-- <v-col class="d-flex justify-center text-h5" style="color: initial;">  -->
+							{{ priorityModel }}
+						</v-col>
 						
 					</v-row>
 					<div class="divide-todo my-4"></div>
@@ -115,10 +122,17 @@
 				<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
 					<v-col cols="3" class="d-flex justify-start"> Status: </v-col>
-					<v-col class="d-flex justify-start" style="color: initial;"> {{ todo.status }} </v-col>
+					<v-col class="d-flex justify-start" style="color:rgb(var(--v-theme-border))"> 
+					<!-- <v-col class="d-flex justify-start" style="color: initial;">  -->
+						{{ todo.status }} 
+					</v-col>
 					
 					<v-col cols="2" class="d-flex justify-start"> Priority: </v-col>
-					<v-col class="d-flex justify-start" style="color: initial;"> {{ todo.priority }} </v-col>
+
+					<v-col class="d-flex justify-start" style="color:rgb(var(--v-theme-border))"> 
+					<!-- <v-col class="d-flex justify-start" style="color: initial;">  -->
+						{{ todo.priority }} 
+					</v-col>
 					
 					<v-spacer></v-spacer>
 					<v-col v-if="todo.username === ''" cols="2" class="my-4"></v-col>
@@ -143,7 +157,7 @@
 
 					
 
-					<v-col class="todo-text" style="margin-left:-7px;color:rgb(var(--v-theme-border))">
+					<v-col class="todo-text" style="margin-left:-7px;color:rgb(var(--v-theme-border)">
 						 {{ todo.todo }}
 					</v-col>
 					<!-- <v-col class="todo-text" style="margin-left:-7px;"> {{ todo.todo }}</v-col> -->

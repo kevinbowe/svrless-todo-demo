@@ -44,15 +44,12 @@
 					<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
 						<v-col cols="3" class="d-flex justify-start text-h5 "> Status:	</v-col>
-
 						<v-col class="d-flex justify-start text-h5 " style="color:rgb(var(--v-theme-border))"> 
-						<!-- <v-col class="d-flex justify-start text-h5 " style="color: initial;">  -->
 							{{ statusModel }}
 						</v-col>
 						
 						<v-col cols="2" class="d-flex justify-end text-h5"> Priority:</v-col>
 						<v-col class="d-flex justify-center text-h5" style="color:rgb(var(--v-theme-border))"> 
-						<!-- <v-col class="d-flex justify-center text-h5" style="color: initial;">  -->
 							{{ priorityModel }}
 						</v-col>
 						
@@ -115,24 +112,18 @@
 				</v-row>
 			</v-form>
 
-
-
-
-
 			<v-container __TODOS_LIST_CONTAINER__ v-if="showAllTodos" class="pa-2 divide-todo"
 			no-gutters v-for="todo in todos" :key="todo.id">
 				<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
 					<v-col cols="3" class="d-flex justify-start"> Status: </v-col>
 					<v-col class="d-flex justify-start" style="color:rgb(var(--v-theme-border))"> 
-					<!-- <v-col class="d-flex justify-start" style="color: initial;">  -->
 						{{ todo.status }} 
 					</v-col>
 					
 					<v-col cols="2" class="d-flex justify-start"> Priority: </v-col>
 
 					<v-col class="d-flex justify-start" style="color:rgb(var(--v-theme-border))"> 
-					<!-- <v-col class="d-flex justify-start" style="color: initial;">  -->
 						{{ todo.priority }} 
 					</v-col>
 					
@@ -156,15 +147,9 @@
 				<v-divider> </v-divider>
 				<v-row style="color:rgb(var(--v-theme-secondary));">
 					<v-col cols="3" class="text-left" > Fini Ohggi: </v-col>
-
-					
-
-					<v-col class="todo-text" style="margin-left:-7px;color:rgb(var(--v-theme-border)">
+					<v-col class="todo-text" style="margin-left:-7px;color:rgb(var(--v-theme-border))">
 						 {{ todo.todo }}
 					</v-col>
-					<!-- <v-col class="todo-text" style="margin-left:-7px;"> {{ todo.todo }}</v-col> -->
-
-
 
 				</v-row>
 			</v-container>
@@ -537,7 +522,7 @@ theme.global.name.value = piniaStore.Active_Theme
 	}
 	/* --------------------------------------------------------------------------
 	This block hides the numeric spinner in the  Priority <v-text-field> element */
-	.inputPriority input[type='number'] { -moz-appearance:textfield; }
+	.inputPriority input[type='number'] { -moz-appearance:textfield; appearance: textfield; }
 	.inputPriority input::-webkit-outer-spin-button,
 	.inputPriority input::-webkit-inner-spin-button { -webkit-appearance: none; }
 	/* -------------------------------------------------------------------------- */

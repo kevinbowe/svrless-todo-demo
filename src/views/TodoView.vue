@@ -106,6 +106,10 @@
 				</v-row>
 			</v-form>
 
+
+
+
+
 			<v-container __TODOS_LIST_CONTAINER__ v-if="showAllTodos" class="pa-2 divide-todo"
 			no-gutters v-for="todo in todos" :key="todo.id">
 				<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
@@ -136,7 +140,16 @@
 				<v-divider> </v-divider>
 				<v-row style="color:rgb(var(--v-theme-secondary));">
 					<v-col cols="3" class="text-left" > Fini Ohggi: </v-col>
-					<v-col class="todo-text" style="margin-left:-7px;"> {{ todo.todo }}</v-col>
+
+					
+
+					<v-col class="todo-text" style="margin-left:-7px;color:rgb(var(--v-theme-border))">
+						 {{ todo.todo }}
+					</v-col>
+					<!-- <v-col class="todo-text" style="margin-left:-7px;"> {{ todo.todo }}</v-col> -->
+
+
+
 				</v-row>
 			</v-container>
 		</v-container>

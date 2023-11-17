@@ -61,7 +61,9 @@
 					<v-row style="color:rgb(var(--v-theme-secondary));"> 
 
 						<v-col cols="4" class="text-h5 d-flex justify-left"> Fini Ohggi: </v-col>
-						<v-col class="text-h6 todo-text" > {{ todoModel }}</v-col>
+						<v-col class="text-h6 todo-text" style="color:rgb(var(--v-theme-border))"> 
+							{{ todoModel }}
+						</v-col>
 						
 					</v-row>
 				</v-sheet>

@@ -43,21 +43,21 @@
 				<v-sheet elevation="20" rounded="lg" border="lg" color="background" class="pa-2">
 					<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
-						<v-col cols="3" class="d-flex justify-start text-h5 "> Status:	</v-col>
+						<v-col cols="4" class="d-flex justify-start text-h5 "> Status:	</v-col>
 						<v-col class="d-flex justify-start text-h5 " style="color:rgb(var(--v-theme-border))"> 
 							{{ statusModel }}
 						</v-col>
 						
-						<v-col cols="2" class="d-flex justify-end text-h5"> Priority:</v-col>
+						<v-col cols="4" class="d-flex justify-end text-h5"> Priority:</v-col>
 						<v-col class="d-flex justify-center text-h5" style="color:rgb(var(--v-theme-border))"> 
 							{{ priorityModel }}
 						</v-col>
-						
+
 					</v-row>
 					<div class="divide-todo my-4"></div>
 					<v-row style="color:rgb(var(--v-theme-secondary));"> 
 
-						<v-col cols="4" class="text-h5 d-flex justify-left"> Fini Ohggi: </v-col>
+						<v-col cols="4" class="text-h5 d-flex justify-left mr-n3"> Ohggi: </v-col>
 						<v-col class="text-h6 todo-text" style="color:rgb(var(--v-theme-border))"> 
 							{{ todoModel }}
 						</v-col>

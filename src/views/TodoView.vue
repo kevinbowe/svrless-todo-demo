@@ -116,14 +116,14 @@
 			no-gutters v-for="todo in todos" :key="todo.id">
 				<v-row no-gutters style="color:rgb(var(--v-theme-secondary));">
 
-					<v-col cols="3" class="d-flex justify-start"> Status: </v-col>
+					<v-col cols="2" class="d-flex justify-start mr-1"> Status: </v-col>
 					<v-col class="d-flex justify-start" style="color:rgb(var(--v-theme-border))"> 
 						{{ todo.status }} 
 					</v-col>
 					
-					<v-col cols="2" class="d-flex justify-start"> Priority: </v-col>
+					<v-col cols="2" class="d-flex justify-start ml-n1"> Priority: </v-col>
 
-					<v-col class="d-flex justify-start" style="color:rgb(var(--v-theme-border))"> 
+					<v-col class="d-flex justify-start ml-2" style="color:rgb(var(--v-theme-border))"> 
 						{{ todo.priority }} 
 					</v-col>
 					
@@ -146,7 +146,7 @@
 
 				<v-divider> </v-divider>
 				<v-row style="color:rgb(var(--v-theme-secondary));">
-					<v-col cols="3" class="text-left" > Fini Ohggi: </v-col>
+					<v-col cols="2" class="text-left mr-1" > Ohggi: </v-col>
 					<v-col class="todo-text" style="margin-left:-7px;color:rgb(var(--v-theme-border))">
 						 {{ todo.todo }}
 					</v-col>

@@ -14,7 +14,9 @@
 					<v-row class="text-h6"> 
 						<v-icon icon="mdi-email" class="mr-2"/> Change Email w/ conf
 					</v-row>
-					<v-row class="mx-5">{{ props.email }}</v-row>
+					<v-row class="mx-5">
+						{{ truncEmail(props.email) }}
+					</v-row>
 				</v-col>
 				<v-col cols="2" align-self="center">
 					<v-row justify="end">
@@ -133,6 +135,19 @@ let emailConfirmationMessage: emailConfirmationMessageType = { Title: "", Messag
 const openDialogFlag = ref()
 
 const showEmail = ref(false)
+
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+const truncEmail = (emailStr :string|null|undefined, emailLength :number|null|undefined, trimedEnding :string|null|undefined) => {
+	if (emailLength === undefined || emailLength === null) emailLength = 28
+	if (trimedEnding === undefined || trimedEnding === null) trimedEnding = '...'
+	if (emailStr === null || emailStr === undefined) return
+
+ 	if(emailStr.length > emailLength) 
+		return emailStr.substring(0, emailLength - trimedEnding.length) + trimedEnding
+
+ 	//			If we get here, the email string didn't get trimmed
+	return emailStr
+}
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function submitEmail (event) {

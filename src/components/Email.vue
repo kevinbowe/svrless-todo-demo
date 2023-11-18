@@ -14,13 +14,20 @@
 					<v-row class="text-h6"> 
 						<v-icon icon="mdi-email" class="mr-2"/> Change Email w/ conf
 					</v-row>
-					<v-row class="mx-5">
-						{{ truncEmail(props.email) }}
+					<v-row v-if="!showEmail" class="mx-7">
+						<p _style="overflow-wrap:anywhere;">
+							{{  truncEmail(props.email) }}
+						</p>
+					</v-row>
+					<v-row v-else >
+						<p style="overflow-wrap:anywhere;" class="mx-10">
+							{{ props.email }}
+						</p>
 					</v-row>
 				</v-col>
-				<v-col cols="2" align-self="center">
+				<v-col  v-if="!showEmail" cols="2" align-self="center">
 					<v-row justify="end">
-						<v-btn text="Edit" v-if="!showEmail" color="secondary" @click="showEmail=!showEmail"/>
+						<v-btn text="Edit" color="secondary" @click="showEmail=!showEmail"/>
 					</v-row>
 				</v-col>
 			</v-row>
@@ -107,6 +114,7 @@ import { enter, enter0, enter1,
 /* ----------------------------------------------------------------------------- */
 import { ref, Ref } from 'vue'
 import { Auth } from 'aws-amplify';
+import { useDisplay } from "vuetify";
 
 import { checkConfirmationTooShort, checkConfirmationSpecialChars,}
 	from "../components/ConfirmationParts/ComfirmationValidators"
@@ -118,6 +126,7 @@ import { parseEmail, checkWorkingEmailSpecialChar, checkWorkingEmailName, checkW
 const emit = defineEmits()
 
 /* ----------------------------------------------------------------------------- */
+const { mobile } = useDisplay()
 const props = defineProps({ email: { type: String }})
 
 const workingEmailModel =ref("")
@@ -129,16 +138,15 @@ const confirmEmailCodeModelFieldRef = ref()
 const clearConfirmEmailCodeModelValidationError = () => confirmEmailCodeModelFieldRef.value.resetValidation()
 /* ----------------------------------------------------------------------------- */
 const toggleConfirmEmail:Ref<boolean> = ref(false)
-	
 type emailConfirmationMessageType = { Title: string, Message: string, Message2: string, Message3: string }
+
 let emailConfirmationMessage: emailConfirmationMessageType = { Title: "", Message: "", Message2: "", Message3: "" }
+
 const openDialogFlag = ref()
-
 const showEmail = ref(false)
-
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const truncEmail = (emailStr :string|null|undefined, emailLength :number|null|undefined = null, trimedEnding :string|null|undefined = null) => {
-	if (emailLength === undefined || emailLength === null) emailLength = 28
+	if (emailLength === undefined || emailLength === null) emailLength = mobile.value ? 25 : 45
 	if (trimedEnding === undefined || trimedEnding === null) trimedEnding = '...'
 	if (emailStr === null || emailStr === undefined) return
 

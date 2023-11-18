@@ -137,7 +137,7 @@ const openDialogFlag = ref()
 const showEmail = ref(false)
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-const truncEmail = (emailStr :string|null|undefined, emailLength :number|null|undefined, trimedEnding :string|null|undefined) => {
+const truncEmail = (emailStr :string|null|undefined, emailLength :number|null|undefined = null, trimedEnding :string|null|undefined = null) => {
 	if (emailLength === undefined || emailLength === null) emailLength = 28
 	if (trimedEnding === undefined || trimedEnding === null) trimedEnding = '...'
 	if (emailStr === null || emailStr === undefined) return

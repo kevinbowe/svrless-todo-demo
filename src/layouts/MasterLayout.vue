@@ -232,7 +232,8 @@
 				</v-btn>
 			</v-row>
 			<v-row justify="end" no-gutters>				
-				<v-btn color="white" variant="text" rounded="xl" to="/" >
+				<v-btn color="white" variant="plain" rounded="xl" to="/" >
+				<!-- <v-btn color="white" variant="text" rounded="xl" to="/" > -->
 					<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}	
 				</v-btn>
 			</v-row>

@@ -2,28 +2,36 @@
 	<v-app>
 		<MasterLayout>
 			<v-container class="text-center">
+
+				<v-row no-gutters style="color:rgb(var(--v-theme-secondary))">
+					<p class="ma-auto text-h4">{{ isSignedIn }} </p> 
+				</v-row>
+
 				<v-row >
 					<v-spacer/>
-					<v-col cols="8">
+					<v-col>
+						<div v-if="isSignedIn === 'Signed In'">
 
-						<v-row no-gutters style="color:rgb(var(--v-theme-secondary))">
-							<p class="ma-auto text-h4">{{ isSignedIn }} </p> </v-row>
+							<v-row no-gutters class="text-h5 mt-5" style="color:rgb(var(--v-theme-secondary))">
+								Nick Name:</v-row>
+							<v-row no-gutters class="px-10 text-h7">{{ nicknameModel ? nicknameModel : "< empty >" }}</v-row>
 
-						<v-row no-gutters class="text-h5 mt-5" style="color:rgb(var(--v-theme-secondary))">
-							Nick Name:</v-row>
-						<v-row no-gutters class="px-10 text-h7">{{ nicknameModel ? nicknameModel : "< empty >" }}</v-row>
+							<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
+								Email:</v-row>
+							<v-row no-gutters class="px-10 text-h7">{{ emailModel }}</v-row>
 
-						<v-row no-gutters class="text-h5  mt-5" style="color:rgb(var(--v-theme-secondary))">
-							Email:</v-row>
-						<v-row no-gutters class="px-10 text-h7">{{ emailModel }}</v-row>
+							<v-row no-gutters class="text-h5  mt-5"  style="color:rgb(var(--v-theme-secondary))">
+								Phone Number:</v-row>
+							<v-row no-gutters class="px-10 text-h7">{{ phone_numberModel }}</v-row>
+							
+							<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
+								Preferred User Name:</v-row>					
+							<v-row no-gutters class="px-10 text-h7">{{ usernameModel }}</v-row>
 
-						<v-row no-gutters class="text-h5  mt-5"  style="color:rgb(var(--v-theme-secondary))">
-							Phone Number:</v-row>
-						<v-row no-gutters class="px-10 text-h7">{{ phone_numberModel }}</v-row>
-						
-						<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
-							User Name:</v-row>					
-						<v-row no-gutters class="px-10 text-h7">{{ usernameModel }}</v-row>
+							<v-row no-gutters class="text-h5 mt-5"  style="color:rgb(var(--v-theme-secondary))">
+								User Name:</v-row>					
+							<v-row no-gutters class="px-10 text-h7">{{ piniaStore.username }}</v-row>
+						</div>
 
 					</v-col>
 					<v-spacer/>

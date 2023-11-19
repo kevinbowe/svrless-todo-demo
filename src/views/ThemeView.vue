@@ -2,6 +2,7 @@
 <v-app>
 <MasterLayout>
 	<ThemeChanger/>
+	<div class="my-5"></div>
 	<ThemePreview/>
 </MasterLayout>
 </v-app>

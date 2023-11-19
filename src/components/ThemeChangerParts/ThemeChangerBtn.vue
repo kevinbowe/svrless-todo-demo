@@ -1,6 +1,6 @@
 
 <template>
-	<h1 class="mr-3">{{ props.id }}</h1>
+	<!-- <h1 class="mr-3">{{ props.id }}</h1> -->
 	<v-btn width="16em" rounded class="mr-3" @click="toggleTheme(`${props.id}`)">
 		<div class="my-n5">
 			<v-icon size="60" 

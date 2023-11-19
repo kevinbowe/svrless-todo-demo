@@ -98,6 +98,11 @@ export default createVuetify({
 	theme: {
 		// defaultTheme: 'light',
 		// defaultTheme: 'dark',
+		variations: {
+			colors: ['primary', 'secondary'],
+			lighten: 3,
+			darken: 3,
+		 },
 		themes: {
 			light,
 			dark,

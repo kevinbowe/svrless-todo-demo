@@ -61,10 +61,9 @@
 						</v-list-Item>
 					</template>
 					<v-list-item :to="acct.url" class="justify-start" v-for="acct in account">
-						<v-icon :icon="acct.icon" class="mr-3"/>{{ acct.title }}
+						<v-icon :icon="acct.icon" :color="acct.color" class="mr-3"/>{{ acct.title }}
 					</v-list-item>
 				</v-list-group>
-					
 				<v-list-item v-if="piniaStore.connected">
 					<SignOut/>
 				</v-list-item>
@@ -227,21 +226,16 @@
 		<!-- Footer -->
 		<v-footer app color="primary" >
 			<v-row justify="start" no-gutters>
-
-				<v-btn :text="link.label" :to="link.url" color="white" variant="text" rounded="xl" 
-				v-for="link in footerLinks" :key="link.label" />
-
-				<v-btn color="white" variant="text" rounded="xl" @click="showThemeChangerDialog = true">
-					<v-icon icon="mdi-palette" style="padding-bottom:5px;padding-right:5px;" color="secondary"/> 
-						Theme Changer
+				<v-btn color="white" variant="text" rounded="xl" class="ml-n3" @click="showThemeChangerDialog = true">
+					<v-icon icon="mdi-palette" style="padding-bottom:5px;padding-right:5px;" class="text-secondary-lighten-3"/> 
+						Theme
 				</v-btn>
-				
 			</v-row>
-
-			<v-row justify="end" no-gutters>
-				<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}	
+			<v-row justify="end" no-gutters>				
+				<v-btn color="white" variant="text" rounded="xl" to="/" >
+					<strong>DaBowe.com</strong> &copy {{ new Date().getFullYear() }}	
+				</v-btn>
 			</v-row>
-
 		</v-footer>
 	</v-layout>
 </template>
@@ -279,11 +273,18 @@ const drawerRight = ref(false)
 // 	{title:'Article 1', icon:'mdi-school', url:'/article1'},
 // ])
 const account = ref([
-	{title:'Profile', icon:'mdi-microscope', url:'/profile'},
-	{title:'Settings', icon:'mdi-cog-outline', url:'/account'},
+	// {title:'Profile', icon:'mdi-microscope', url:'/profile'},
+	// {title:'Settings', icon:'mdi-cog-outline', url:'/account'},
+	{ title: "About",   url: "/about", icon: "mdi-information-outline", color:"info" },
+	{ title: "Contact", url: "/contact", icon: "mdi-phone", color:"info"},
+	{ title: "Profile", url: "/profile", icon:'mdi-microscope', color:"info"},
+	{ title: "Terms & Conditions", url: "/tandc", icon: "mdi-scale-balance", color:"warning" },
+	{ title: "Themes", url: "/theme", icon: "mdi-palette", color:"secondary" },
 ])
 const threeDots = ref([
-	{ label: "About", url: "/about", icon: "mdi-information-outline", color:"info" },
+	{ label: "About",   url: "/about", icon: "mdi-information-outline", color:"info" },
+	{ label: "Contact", url: "/contact", icon: "mdi-phone", color:"info"},
+	{ label: "Profile", url: "/profile", icon:'mdi-microscope', color:"info"},
 	{ label: "Terms & Conditions", url: "/tandc", icon: "mdi-scale-balance", color:"warning" },
 	{ label: "Themes", url: "/theme", icon: "mdi-palette", color:"secondary" },
 
@@ -294,13 +295,14 @@ const threeDots = ref([
 // 	{title:'Update', icon:'mdi-update', url: "/future"},
 // 	{title:'Delete', icon:'mdi-delete', url: "/future"},
 // ])
-const footerLinks = ref([
-	{ label: "Home", url: "/" },
-	{ label: "About", url: "/about" },
-	{ label: "Profile", url: "/profile" },
-	{ label: "Contact", url: "/contact" },
-	{ label: "Terms & Conditions", url: "/tandc" },
-]);
+
+// const footerLinks = ref([
+	// { label: "Home", url: "/" },
+	// { label: "About", url: "/about" },
+	// { label: "Profile", url: "/profile" },
+	// { label: "Contact", url: "/contact" },
+	// { label: "Terms & Conditions", url: "/tandc" },
+// ]);
 
 /* ----------------------------------------------------------------------------- */
 const showThemeChangerDialog = ref(false)

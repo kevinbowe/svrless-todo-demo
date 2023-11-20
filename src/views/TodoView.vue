@@ -28,7 +28,7 @@
 
 			<v-row v-if="!showForm" no-gutters >
 				<v-col _cols="4" class="mx-2">
-					<v-btn :text="showZoom ? 'Clost Top' : 'Show Top'"
+					<v-btn :text="showZoom ? 'Close Top' : 'Show Top'"
 					variant="tonal" size="x-large" block class="bg-pink-lighten-3" 
 					type="submit" @click="getTopTodo()" />
 				</v-col>

@@ -9,7 +9,8 @@
 				<v-row align="center" no-gutters class="mt-n5">
 					<v-col><img :height="mobile? 280:600" src="../assets/hero.svg"/></v-col>
 					<v-col>
-						<div :class="mobile? 'text-h4':'text-h3'">Welcome to Ohggi</div>
+						<div :class="mobile? 'text-h4':'text-h3'">Welcome to Ohggi </div>
+						<div class="text-h6">(v3)</div>
 						<div>by DaBowe.com</div>
 						<v-btn to="/todo" color="primary" text="select to continue" class="mt-4"></v-btn>
 					</v-col>

@@ -258,7 +258,7 @@ import ThemeChanger from '../components/ThemeChanger.vue'
 import { useRouter } from 'vue-router'
 /* ----------------------------------------------------------------------------- */
 // <v-app-bar-title>
-const mainTitle: string = "v3a-todo-theme-v1"
+const mainTitle: string = "v3a-todo-theme-v3"
 
 /* ----------------------------------------------------------------------------- */
 const { mobile } = useDisplay()

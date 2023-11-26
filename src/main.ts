@@ -8,7 +8,7 @@ import router from './router';
 
 // Amplify
 import { Amplify } from 'aws-amplify'
-import AmplifyVue from '@aws-amplify/ui-vue'
+//import AmplifyVue from '@aws-amplify/ui-vue'
 //	NOTE: aws-exports.js had to be renamed to aws-exports.ts
 import awsExports from './aws-exports'
 Amplify.configure(awsExports)
@@ -39,7 +39,7 @@ watch (
 
 app.use(pinia)
 app.use(router);
-app.use(AmplifyVue)
+// app.use(AmplifyVue)
 app.use(vuetify);
 
 registerLayouts(app);

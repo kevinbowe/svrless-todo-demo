@@ -47,7 +47,7 @@ import { enter, enter0, enter1, enter2, enter3, enter4, enter5, enter6, enter7 }
 import { bar, whitebar, greybar, redbar, greenbar, orangebar } from "../my-util-code/MyConsoleUtil"
 /* ----------------------------------------------------------------------------- */
 import { Auth } from 'aws-amplify';
-import "@aws-amplify/ui-vue/styles.css";
+// import "@aws-amplify/ui-vue/styles.css";
 /* ----------------------------------------------------------------------------- */
 // import User from "../components/User.vue"
 import Nickname from "../components/Nickname.vue"

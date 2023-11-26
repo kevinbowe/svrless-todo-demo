@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@aws-amplify/ui-vue": "^3.1.14",
     "@aws-sdk/client-cognito-identity-provider": "^3.332.0",
     "@mdi/font": "^7.1.96",
     "add": "^2.0.6",

@@ -197,7 +197,7 @@
 
 import { info, info1, info2 , info3, info4, info5, info6, info7 } from "../my-util-code/MyConsoleUtil"
 import { exe, exe1, exe2 } from "../my-util-code/MyConsoleUtil"
-import { enter, enter1, enter2, exit } from "../my-util-code/MyConsoleUtil"
+import { enter, enter0, enter1, enter2, enter3, enter4, exit } from "../my-util-code/MyConsoleUtil"
 import { bar, whitebar, greybar } from "../my-util-code/MyConsoleUtil"
 import { err } from "../my-util-code/MyConsoleUtil"
 
@@ -294,6 +294,7 @@ const isCompleteUserSignIn = computed<boolean>(() => workingUsernameModel.value 
 		
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:Boolean = false) => {
+	info(`Executing -- buildUserConfirmationMessage(~)`)
 	userConfirmationMessage.Title = "We Emailed You"
 	userConfirmationMessage.Message = 
 		`To confirm your new account, you must enter the ` +
@@ -330,6 +331,8 @@ const buildUserConfirmationMessage = (email:string|null = null, restartConfirm:B
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const confirmUserSignUp = async (event) => {
+	info(`calling confirmUserSignUp(~)`)
+	info(`-- Setting User state to Confirmed`)
 	// if(BLOCKAPI("confirmUserSignUp function "))return
 	const results = await event
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
@@ -347,6 +350,7 @@ const confirmUserSignUp = async (event) => {
 			piniaStore.connected = true
 			restartConfirm.value = false	// Lower the Confirm flag
 		} 
+		info(`calling -- signInUser(~) from confirmUserSighUp(~)`)
 		signInUser()
 	} catch (error) {
 		err('error confirming sign up', error);
@@ -357,6 +361,7 @@ const confirmUserSignUp = async (event) => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 async function resendUserConfirmationCode(username) {
+	info(`calling resendUserConfirmationCode(~)`)
 	// if(BLOCKAPI("resendUserConfirmationCode function "))return
 
 	confirmUserCodeModel.value = undefined
@@ -366,6 +371,7 @@ async function resendUserConfirmationCode(username) {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signUpUser = async (event) => {
+	info(`calling signUpUser(~) -- Creating Conf Code`)
 	const results = await event
 	if(!results.valid) return /* Cancel Submission if validation FAILED */
 	// if(BLOCKAPI("signUpUser function "))return
@@ -393,6 +399,7 @@ const signUpUser = async (event) => {
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 const signInUser = async () => {
+	info(`calling signInUser(~) -- Is user confirmed ?`)
 	try { 
 		errorSigningInMessage.value = ""
 		const user = await Auth.signIn(workingUsernameModel.value, workingPasswordModel.value)
@@ -404,9 +411,15 @@ const signInUser = async () => {
 			restartConfirm.value = true
 			//				Initialize the Invalid Confirm Code model and message
 			confirmUserCodeModel.value = undefined
+
+							error(`SignInUser(~) Failed/Not Confirmed`)
+							info(`Calling buildUserConfiormationMessage(~) in signInUser(~)`)
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 		})
 		if (user) {
+							info(`SignInUser(~) Succeeded/Confirmed -- User is Confirmed`)
+
+			//				This emit doesn't appear to be getting used.
 			emit( 'onSignIn', { 
 				nickname: user.attributes?.nickname, 
 				email: user.attributes?.email,
@@ -419,6 +432,7 @@ const signInUser = async () => {
 	}
 	catch (error) { 
 							err('error signing in', error)
+
 			errorSigningInMessage.value = "Undefined Sign In Error. Please try again." 
 	}
 }
@@ -436,28 +450,29 @@ const BLOCKAPI = (message:string|null|undefined = null) => {
 Hub.listen('auth', (data) => {
 	switch(data.payload.event) {
 		case "signUp" :
-			// bar()
-			// enter0("Hub.listen => Case SignUp")
+			//bar()
+			//enter0("Hub.listen => Case SignUp")
 			confirmUserCodeModel.value = null 
 			toggleUserConfirm.value = true // Display Confirm Ui
 			restartConfirm.value = false
+						info(`Calling buildUserConfirmationMessage(~) from Hub.Listen => Case SignUp`)
 			buildUserConfirmationMessage(workingEmailModel.value, restartConfirm.value)
 			return
 		case "confirmSignUp" :
-			// bar()
-			// enter1("Hub.listen => Case CONFIRM SignUp")
+			//bar()
+			//enter1("Hub.listen => Case CONFIRM SignUp")
 			toggleUserConfirm.value = false // Hide Confirm Ui
 			return
 		case "autoSignIn" :
-				// bar()
-				// enter2("Hub.listen => Case AUTO SignIn")
+				//bar()
+				//enter2("Hub.listen => Case AUTO SignIn")
 				workingNicknameModel.value = ""
 				workingEmailModel.value = ""
 				workingPreferred_usernameModel.value = ""
 				return
 		case "signIn" :
-				// bar()
-				// enter3("Hub.listen => Case SignIn")
+				//bar()
+				//enter3("Hub.listen => Case SignIn")
 				Auth.currentAuthenticatedUser({bypassCache: true})
 				.then(results => {
 					emailModel.value = results.attributes.email
@@ -470,11 +485,14 @@ Hub.listen('auth', (data) => {
 				piniaStore.connected = true
 				return
 		case "signOut" :
+		//bar()
+				//enter4("Hub.listen => Case signOut")
 					return
 	} 
 })
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+				info(`Fetching Current Authenticated User <bottom of scripts>`)
 Auth.currentAuthenticatedUser({bypassCache: true})
 .then(results => {
 	nicknameModel.value =  results.attributes.nickname
